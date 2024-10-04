@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
+
 return [
 
     /*
@@ -13,7 +17,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Citygo'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,5 +126,11 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    'aliases' => Facade::defaultAliases()->merge([
+        // 'Example' => App\Facades\Example::class,
+        'FrontHelper' => App\Helpers\FrontHelper::class,
+        'BackHelper' => App\Helpers\BackHelper::class,
+    ])->toArray(),
 
 ];
