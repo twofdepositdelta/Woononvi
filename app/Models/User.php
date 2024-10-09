@@ -20,6 +20,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'firstname',
+        'lastname',
+        'phone',
+        'date_of_birth',
+        'city_id', // Assurez-vous que ce champ correspond au nom de la clé étrangère
+        'gender',
+        'npi',
+        'is_verified',
     ];
 
     /**
@@ -43,5 +51,56 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class); // Assurez-vous d'importer le modèle City
+    }
+
+    public function rides()
+    {
+        return $this->hasMany(Ride::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function ride_requests()
+    {
+        return $this->hasMany(RideRequest::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function ride_matches()
+    {
+        return $this->hasMany(RideMatch::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function preferences()
+
+   {
+        return $this->hasMany(Prefernce::class); // Assurez-vous d'importer le modèle Booking
     }
 }
