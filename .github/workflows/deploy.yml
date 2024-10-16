@@ -15,7 +15,7 @@ jobs:
       - name: Install SSH Key
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}  # Clé privée
+          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}  # Clé privée secrète
 
       - name: Copy CityGo project files to Hostinger
         run: |
