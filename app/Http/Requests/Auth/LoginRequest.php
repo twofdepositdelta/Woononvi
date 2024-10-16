@@ -37,20 +37,48 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    // public function authenticate(): void
+    // {
+    //     $this->ensureIsNotRateLimited();
+
+    //     if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+    //         RateLimiter::hit($this->throttleKey());
+
+    //         throw ValidationException::withMessages([
+    //             'email' => trans('auth.failed'),
+    //         ]);
+    //     }
+
+    //     RateLimiter::clear($this->throttleKey());
+    // }
+
+    public function authenticate()
     {
-        $this->ensureIsNotRateLimited();
+        $credentials = $this->only('email', 'password');
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        // Authentifier l'utilisateur avec les informations d'identification fournies
+        if (Auth::attempt($credentials)) {
+            // Vérifier si l'utilisateur est actif (is_verified)
+            $user = Auth::user();
+            if (!$user->is_verified) {
+                // Si l'utilisateur n'est pas vérifié, déconnecter et lancer une exception
+                Auth::logout();
+                throw ValidationException::withMessages([
+                    'email' => 'Votre compte n\'est pas vérifié. Veuillez contacter le support.',
+                ]);
+            }
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
+            // Régénérer la session si l'authentification est réussie
+            $this->session()->regenerate();
+
+            return true;
         }
 
-        RateLimiter::clear($this->throttleKey());
+        throw ValidationException::withMessages([
+            'email' => 'Ces identifiants ne correspondent à aucun de nos enregistrements.',
+        ]);
     }
+
 
     /**
      * Ensure the login request is not rate limited.

@@ -21,7 +21,7 @@
                 <div class="header-top-right">
                     <div class="header-top-link">
                         <a href="{{ route('login') }}"><i class="far fa-arrow-right-to-bracket"></i> Login</a>
-                        <a href="{{ route('register') }}"><i class="far fa-user-vneck"></i> Register</a>
+                        {{-- <a href="{{ route('register') }}"><i class="far fa-user-vneck"></i> Register</a> --}}
                     </div>
                     <div class="header-top-social">
                         <span>Follow Us: </span>
@@ -51,10 +51,10 @@
                 </div>
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav">
-                        
+
                         <li class="nav-item"><a class="nav-link active" href="#">Accueil</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">A Propos</a></li>
-                        
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
                             <ul class="dropdown-menu fade-down">
@@ -68,7 +68,7 @@
                         <li class="nav-item"><a class="nav-link" href="#">Nous-contacter</a></li>
                     </ul>
                     <div class="nav-right">
-                        
+
                         <div class="nav-right-btn mt-2">
                             <a href="#" class="theme-btn"><span class="fas fa-download"></span>Télécharger App</a>
                         </div>
