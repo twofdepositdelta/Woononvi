@@ -1,27 +1,37 @@
-<script>
-    var hostUrl = "assets/index.html";
-    </script>
 
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/scripts.bundle.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/index.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/xy.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/percent.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/radar.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/themes/Animated.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/map.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/geodata/worldLow.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/geodata/continentsLow.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/geodata/usaLow.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/widgets.bundle.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/custom/widgets.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/custom/apps/chat/chat.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/custom/utilities/modals/create-app.js') }}"></script>
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/custom/utilities/modals/users-search.js') }}"></script>
-</body>
-</html>
+    <!-- jQuery library js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-3.7.1.min.js') }}"></script>
+    <!-- Bootstrap js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
+    <!-- Apex Chart js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/apexcharts.min.js') }}"></script>
+    <!-- Data Table js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/dataTables.min.js') }}"></script>
+    <!-- Iconify Font js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/iconify-icon.min.js') }}"></script>
+    <!-- jQuery UI js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-ui.min.js') }}"></script>
+    <!-- Vector Map js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-jvectormap-2.0.5.min.js') }}"></script>
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-jvectormap-world-mill-en.js') }}"></script>
+    <!-- Popup js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/magnifc-popup.min.js') }}"></script>
+    <!-- Slick Slider js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/slick.min.js') }}"></script>
+    <!-- prism js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/prism.js') }}"></script>
+    <!-- file upload js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/file-upload.js') }}"></script>
+    <!-- audioplayer -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/audioplayer.js') }}"></script>
+
+    <!-- main js -->
+    <script>
+        $('.remove-button').on('click', function() {
+            $(this).closest('.alert').addClass('d-none')
+        });
+    </script>
+    
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
+    @yield('customJS')
+
