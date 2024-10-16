@@ -1,0 +1,26 @@
+name: Deploy CityGo Project to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # déclenche sur la branche principale
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}  # Clé privée
+
+      - name: Copy CityGo project files to Hostinger
+        run: |
+          rsync -avz --exclude '.env' --exclude '.git' ./ u289187343@62.72.37.71:/home/u289187343/domains/twoftechnolgies.com/public_html/citygo
+
+      - name: Run Composer install on Hostinger
+        run: |
+          ssh u289187343@62.72.37.71 "cd /ome/u289187343/domains/twoftechnolgies.com/public_html/citygo && composer install --no-dev && php artisan migrate --force"
