@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
                 'email' => strtolower(str_replace(' ', '', trim($role))) . '@citygo.com', // Format d'email
                 'password' => Hash::make('Pass*24'), // Hasher le mot de passe
                 'phone' => '6000000' . $index, // Exemples de numéros de téléphone
-                'date_of_birth' => '1990-01-01',
+                'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
                 'gender' => $index % 2 != 0 ?  'male' : 'female', // Alternance entre les genres
                 'npi' => rand(1000000000, 9999999999), // Générer un NPI aléatoire de 10 chiffres
                 'city_id' => $activeCities->random()->id, // Associer à une ville active aléatoire
