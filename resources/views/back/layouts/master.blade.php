@@ -6,7 +6,7 @@
 
     <main class="dashboard-main">
 
-        @include('back.layouts.partials.navbar')
+        @include('back.layouts.partials.header')
 
         <div class="dashboard-main-body">
 

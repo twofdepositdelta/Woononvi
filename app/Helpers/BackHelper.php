@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App;
 use App\Models\Setting;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,5 +19,10 @@ class BackHelper
         }
 
         return $folder;
+    }
+
+    public static function getFullname(User $user)
+    {
+        return strtoupper($user->firstname) . ' ' . ucfirst(strtolower($user->lastname));
     }
 }
