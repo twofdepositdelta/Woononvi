@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
                 $user = User::create([
                     'firstname' => ucfirst($role), // Mettre la première lettre en majuscule
                     'lastname' => 'Test',
-                    'username' => strtolower($role) . 'user' . ($i + 1), // Format d'utilisateur unique
+                    'username' => strtolower($role) . 'user' . ($i > 0 ? ($i + 1) : ''), // Format d'utilisateur unique
                     'email' => strtolower(str_replace(' ', '', trim($role))) . ($i > 0 ? ($i + 1) : '') . '@citygo.com', // Format d'email unique
                     'password' => Hash::make('Pass*24'), // Hasher le mot de passe
                     'phone' => '600000' . $index . $i, // Numéro de téléphone unique par occurrence
