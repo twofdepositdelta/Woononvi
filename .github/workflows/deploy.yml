@@ -19,8 +19,8 @@ jobs:
 
       - name: Copy CityGo project files to Hostinger
         run: |
-          rsync -avz --exclude '.env' --exclude '.git' ./ u289187343@62.72.37.71:/home/u289187343/domains/twoftechnolgies.com/public_html/citygo
+          rsync -avz --exclude '.env' --exclude '.git' ./ u289187343@62.72.37.71:/home/u289187343/domains/twoftechnolgies.fr/public_html/citygo
 
       - name: Run Composer install on Hostinger
         run: |
-          ssh u289187343@62.72.37.71 "cd /ome/u289187343/domains/twoftechnolgies.com/public_html/citygo && composer install --no-dev && php artisan migrate --force"
+          ssh u289187343@62.72.37.71 "cd /ome/u289187343/domains/twoftechnolgies.fr/public_html/citygo && composer install --no-dev && php artisan migrate --force"
