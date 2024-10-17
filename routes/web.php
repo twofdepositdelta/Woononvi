@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
 
     // Settings
 
-    Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
+    // Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
 });
 
 require __DIR__.'/auth.php';
