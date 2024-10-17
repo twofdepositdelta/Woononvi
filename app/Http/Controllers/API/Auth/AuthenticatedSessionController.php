@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
-class AuthApiController extends Controller
+class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle user authentication and return a JSON response.
