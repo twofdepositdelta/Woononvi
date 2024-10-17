@@ -66,7 +66,7 @@ class AuthenticatedSessionController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'npi' => 'required|string|max:255',
+            'npi' => 'required|string|max:255|unique:users',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:users',
