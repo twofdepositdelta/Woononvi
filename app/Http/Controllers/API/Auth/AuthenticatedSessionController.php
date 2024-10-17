@@ -69,7 +69,7 @@ class AuthenticatedSessionController extends Controller
             'npi' => 'required|string|max:255',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
+            'phone' => 'required|string|max:255|unique:users',
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
