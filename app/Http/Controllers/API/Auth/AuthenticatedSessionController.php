@@ -82,9 +82,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::create([
             'npi' => $request->npi,
-            'fullname' => $request->fullname,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'phone' => $request->phone,
+            'birth_of_date' => $request->birth_of_date,
             'email' => $request->email,
-            'email_verified_at' => null,
+            'city_id' => $request->city_id,
+            // 'email_verified_at' => null,
             'password' => Hash::make($request->password),
         ]);
 
