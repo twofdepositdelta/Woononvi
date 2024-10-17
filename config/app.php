@@ -127,10 +127,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // 'providers' => [
+    //     Intervention\Image\ImageServiceProvider::class,
+    // ],
+
+
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'FrontHelper' => App\Helpers\FrontHelper::class,
         'BackHelper' => App\Helpers\BackHelper::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 
 ];

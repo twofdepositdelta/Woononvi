@@ -32,8 +32,8 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'firstname' => ucfirst($role), // Mettre la première lettre en majuscule
                 'lastname' => 'Test',
-                'username' => strtolower($role) . 'user', // Format d'utilisateur unique
-                'email' => strtolower(str_replace(' ', '', trim($role))) . '@example.com', // Format d'email
+                'username' => strtolower(str_replace(' ', '', $role)) . 'user', // Format d'utilisateur unique
+                'email' => strtolower(str_replace(' ', '', trim($role))) . '@exemple.com', // Format d'email
                 'password' => Hash::make('Pass*24'), // Hasher le mot de passe
                 'phone' => '6000000' . $index, // Exemples de numéros de téléphone
                 'date_of_birth' => '1990-01-01',
