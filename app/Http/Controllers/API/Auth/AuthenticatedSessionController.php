@@ -89,7 +89,7 @@ class AuthenticatedSessionController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'phone' => $request->phone,
-            'birth_of_date' => $request->birth_of_date,
+            'date_of_birth' => $request->birth_of_date,
             'email' => $request->email,
             'city_id' => $request->city_id,
             // 'email_verified_at' => null,

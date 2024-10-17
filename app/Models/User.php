@@ -20,14 +20,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'firstname',
         'lastname',
         'phone',
         'date_of_birth',
-        'city_id', // Assurez-vous que ce champ correspond au nom de la clé étrangère
+        'city_id', 
         'gender',
         'npi',
         'is_verified',
