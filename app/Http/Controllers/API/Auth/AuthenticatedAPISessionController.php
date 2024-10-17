@@ -19,7 +19,7 @@ class AuthenticatedAPISessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function authenticate(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
