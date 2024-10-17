@@ -29,23 +29,29 @@ class UserSeeder extends Seeder
 
         // Création d'utilisateurs avec des NPI uniques
         foreach ($roles as $index => $role) {
-            $user = User::create([
-                'firstname' => ucfirst($role), // Mettre la première lettre en majuscule
-                'lastname' => 'Test',
-                'username' => strtolower(str_replace(' ', '', $role)) . 'user', // Format d'utilisateur unique
-                'email' => strtolower(str_replace(' ', '', trim($role))) . '@exemple.com', // Format d'email
-                'password' => Hash::make('Pass*24'), // Hasher le mot de passe
-                'phone' => '6000000' . $index, // Exemples de numéros de téléphone
-                'date_of_birth' => '1990-01-01',
-                'gender' => $index % 2 != 0 ?  'male' : 'female', // Alternance entre les genres
-                'npi' => rand(1000000000, 9999999999), // Générer un NPI aléatoire de 10 chiffres
-                'city_id' => $activeCities->random()->id, // Associer à une ville active aléatoire
-                'is_verified' => true,
-                'email_verified_at' => now(),
-            ]);
+            // Vérifier si le rôle est 'driver' ou 'passenger'
+            $iterations = in_array($role, ['driver', 'passenger']) ? 2 : 1;
 
-            // Associer le rôle à l'utilisateur
-            $user->assignRole($role);
+            // Répéter la création d'utilisateur pour 1 ou 2 occurrences selon le rôle
+            for ($i = 0; $i < $iterations; $i++) {
+                $user = User::create([
+                    'firstname' => ucfirst($role), // Mettre la première lettre en majuscule
+                    'lastname' => 'Test',
+                    'username' => strtolower($role) . 'user' . ($i > 0 ? ($i + 1) : ''), // Format d'utilisateur unique
+                    'email' => strtolower(str_replace(' ', '', trim($role))) . ($i > 0 ? ($i + 1) : '') . '@citygo.com', // Format d'email unique
+                    'password' => Hash::make('Pass*24'), // Hasher le mot de passe
+                    'phone' => '600000' . $index . $i, // Numéro de téléphone unique par occurrence
+                    'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'), // Date de naissance aléatoire
+                    'gender' => $index % 2 != 0 ? 'male' : 'female', // Alternance entre les genres
+                    'npi' => rand(1000000000, 9999999999), // Générer un NPI aléatoire de 10 chiffres
+                    'city_id' => $activeCities->random()->id, // Associer à une ville active aléatoire
+                    'is_verified' => true,
+                    'email_verified_at' => now(),
+                ]);
+
+                // Associer le rôle à l'utilisateur
+                $user->assignRole($role);
+            }
         }
     }
 }

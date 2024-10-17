@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/check-username', [UserController::class, 'checkUsername'])->name('check.username');
     // Settings
 
-    Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
+    // Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
 });
 
 require __DIR__.'/auth.php';
