@@ -28,47 +28,33 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // return response()->json([
-            //     'success' => false,
-            //     'message' => 'Revoyez les champs svp.',
-            //     'errors' => $validator->errors()
-            // ], 422);
-
-            return response()->error([
-               'errors' => $validator->errors(),
-            ], 'Revoyez les champs svp..', 422);
+            return response()->json([
+                'success' => false,
+                'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             if($user->hasrole('passenger|driver')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
-                // return response()->json([
-                //     'success' => true,
-                //     'message' => 'Authentification réussie.',
-                //     'token' => $token
-                // ], 200);
-
-                return response()->success([
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Authentification réussie.',
                     'token' => $token
-                ], 'Authentification réussie.', 200);
+                ], 200);
             } else {
-                // return response()->json([
-                //     'success' => false,
-                //     'message' => "Vous n'êtes pas autorisés à vous connecter !",
-                // ], 200);
-
-                return response()->error([
-                ], 'Vous n\'êtes pas autorisés à vous connecter !', 200);
+                return response()->json([
+                    'success' => false,
+                    'message' => "Vous n'êtes pas autorisés à vous connecter !",
+                ], 200);
             }
         } else {
-            // return response()->json([
-            //     'success' => false,
-            //     'message' => 'Les identifiants ne correspondent pas.'
-            // ], 401);
-
-            return response()->error([
-            ], 'Les identifiants ne correspondent pas.', 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Les identifiants ne correspondent pas.'
+            ], 401);
         }
     }
 
