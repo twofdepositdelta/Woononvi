@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\CustomResetPassword;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\AccountConfirmation;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
@@ -102,11 +103,16 @@ class User extends Authenticatable
 
     public function preferences()
     {
-        return $this->hasMany(Prefernce::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Preference::class); // Assurez-vous d'importer le modèle Booking
     }
 
-    public function sendPasswordResetNotification($token)
+    // public function sendPasswordResetNotification($token)
+    // {
+    //     $this->notify(new CustomResetPassword($token));
+    // }
+
+    public function sendAccountConfirmationNotification($token)
     {
-        $this->notify(new CustomResetPassword($token));
+        $this->notify(new AccountConfirmation($this, $token));
     }
 }
