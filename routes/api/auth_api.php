@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:api')->group(function () {
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('api.register');
+    Route::post('register', [AuthenticatedSessionController::class, 'register'])->name('api.register');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
     // Route::post('reset-password', [NewPasswordController::class, 'store'])->name('api.password.store');
