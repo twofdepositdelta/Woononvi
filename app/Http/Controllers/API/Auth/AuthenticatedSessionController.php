@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
-class AuthenticatedAPISessionController extends Controller
+class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle user authentication and return a JSON response.
@@ -21,6 +21,7 @@ class AuthenticatedAPISessionController extends Controller
      */
     public function store(Request $request)
     {
+        return 1;
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
