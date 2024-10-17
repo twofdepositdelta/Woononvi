@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,33 +28,47 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
-            ], 422);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Revoyez les champs svp.',
+            //     'errors' => $validator->errors()
+            // ], 422);
+
+            return response()->error([
+               'errors' => $validator->errors(),
+            ], 'Revoyez les champs svp..', 422);
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             if($user->hasrole('passenger|driver')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Authentification réussie.',
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => 'Authentification réussie.',
+                //     'token' => $token
+                // ], 200);
+
+                return response()->success([
                     'token' => $token
-                ], 200);
+                ], 'Authentification réussie.', 200);
             } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Vous n'êtes pas autorisés à vous connecter !",
-                ], 200);
+                // return response()->json([
+                //     'success' => false,
+                //     'message' => "Vous n'êtes pas autorisés à vous connecter !",
+                // ], 200);
+
+                return response()->error([
+                ], 'Vous n\'êtes pas autorisés à vous connecter !', 200);
             }
         } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Les identifiants ne correspondent pas.'
-            ], 401);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Les identifiants ne correspondent pas.'
+            // ], 401);
+
+            return response()->error([
+            ], 'Les identifiants ne correspondent pas.', 401);
         }
     }
 
@@ -73,7 +88,7 @@ class AuthenticatedSessionController extends Controller
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
         if ($validator->fails()) {
