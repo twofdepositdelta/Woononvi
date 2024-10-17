@@ -65,12 +65,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function register(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'npi' => 'required|string|max:255',
-        //     'fullname' => 'required|string|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:8|confirmed',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'npi' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'birth_of_date' => 'required|date|max:10',
+            'city_id' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
