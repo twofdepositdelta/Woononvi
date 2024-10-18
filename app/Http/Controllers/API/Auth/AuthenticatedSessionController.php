@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -66,10 +67,14 @@ class AuthenticatedSessionController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'npi' => 'required|string|max:255',
-            'fullname' => 'required|string|max:255',
+            'npi' => 'required|string|max:255|unique:users',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'phone' => 'required|string|max:255|unique:users',
+            'birth_of_date' => 'required|date|max:10',
+            'city_id' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
         if ($validator->fails()) {
@@ -82,9 +87,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::create([
             'npi' => $request->npi,
-            'fullname' => $request->fullname,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->birth_of_date,
             'email' => $request->email,
-            'email_verified_at' => null,
+            'city_id' => $request->city_id,
+            // 'email_verified_at' => null,
             'password' => Hash::make($request->password),
         ]);
 

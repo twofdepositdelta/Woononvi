@@ -6,7 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+<<<<<<< HEAD
+        "intervention/image": "^3.8",
+=======
         "essa/api-tool-kit": "^2.1",
+>>>>>>> 0ecc19a6130e338f690f72a508520edee071f061
         "laravel/breeze": "^2.2",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",

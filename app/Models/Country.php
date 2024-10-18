@@ -12,9 +12,10 @@ class Country extends Model
     // Les attributs qui peuvent être assignés en masse
     protected $fillable = [
         'name',
+        'indicatif',
         'code', // Si vous avez un code de pays
         'icon', // Si vous avez un attribut pour l'icône
-        'status', // Pour l'état d'activation
+        'is_active', // Pour l'état d'activation
     ];
 
     /**

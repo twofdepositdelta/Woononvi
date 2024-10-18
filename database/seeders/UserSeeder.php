@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
         foreach ($roles as $index => $role) {
             // Vérifier si le rôle est 'driver' ou 'passenger'
             $iterations = in_array($role, ['driver', 'passenger']) ? 2 : 1;
-        
+
             // Répéter la création d'utilisateur pour 1 ou 2 occurrences selon le rôle
             for ($i = 0; $i < $iterations; $i++) {
                 $user = User::create([
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
                     'is_verified' => true,
                     'email_verified_at' => now(),
                 ]);
-        
+
                 // Associer le rôle à l'utilisateur
                 $user->assignRole($role);
             }
