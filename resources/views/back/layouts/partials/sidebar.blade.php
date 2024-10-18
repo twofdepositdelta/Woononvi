@@ -18,12 +18,12 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="index.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> AI</a>
+                        <a href="index.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Back office</a>
                     </li>
                     <li>
-                        <a href="index-2.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> CRM</a>
+                        <a href="index-2.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Vue d'ensemble</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="index-3.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> eCommerce</a>
                     </li>
                     <li>
@@ -31,9 +31,11 @@
                     </li>
                     <li>
                         <a href="index-5.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Investment</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
+
+
             <li class="sidebar-menu-group-title">Application</li>
             {{-- <li>
                 <a href="email.php">
@@ -162,7 +164,7 @@
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
-                    <span>RAPPORT & ANALYSES</span>
+                    <span>RAPPORTS</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
@@ -242,10 +244,10 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="company.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
+                        <a href="{{route('settings')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
                     </li>
                     <li>
-                        <a href="notification.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
+                        <a href="{{route('setting.city')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
                     </li>
                     <li>
                         <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
@@ -254,6 +256,20 @@
                         <a href="theme.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Preferences</a>
                     </li>
                 </ul>
+            </li>
+
+              <li>
+                <a href="{{route('profile.edit')}}">
+                    <iconify-icon icon="solar:user-linear" class="menu-icon "></iconify-icon>
+                    <span>Profil</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="{{ route('logout') }}">
+                    <iconify-icon icon="lucide:power" class="menu-icon"></iconify-icon> Déconnexion
+                </a>
             </li>
         </ul>
     </div>

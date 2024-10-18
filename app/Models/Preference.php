@@ -20,7 +20,7 @@ class Preference extends Model
     {
         return $this->belongsTo(User::class); // Assurez-vous d'importer le modèle User
 
-   }
+    }
 
 
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Country;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -94,6 +96,59 @@ class DashboardController extends Controller
     {
         //
         $settings=Setting::all();
-        return view('back.pages.setting_edit',compact('settings'));
+        return view('back.pages.settings.index',compact('settings'));
     }
+
+    public function city()
+{
+    $countries = Country::orderBy('created_at', 'asc')->paginate(20);
+
+
+
+    $countryactives = Country::where('is_active', true)->get();
+
+    // Récupérer les villes dont le pays est actif
+    $cities = City::whereHas('country', function ($query) {
+        $query->where('is_active', true);
+    })->paginate(20);
+
+    return view('back.pages.settings.gestcity', compact('countries','cities','countryactives'));
 }
+
+public function countryStatus(Request $request, Country $country)
+{
+    $country->update([
+        'is_active' => $country->is_active ? 0 : 1
+    ]);
+
+    return redirect()->back();
+}
+
+public function cityStatus(Request $request, City $city)
+{
+    $city->update([
+        'status' => $city->status ? 0 : 1
+    ]);
+
+    return redirect()->back();
+}
+
+
+
+    public function filterCitiesByCountry(Request $request)
+    {
+        $countryId = $request->input('country_id');
+
+        // Récupérer les villes selon le pays sélectionné
+        $cities = City::when($countryId, function ($query) use ($countryId) {
+            return $query->where('country_id', $countryId);
+        })->paginate(20);
+
+        // Retourner la vue partielle avec les villes filtrées
+        return view('back.pages.settings.city_table', compact('cities'));
+    }
+
+
+
+}
+
