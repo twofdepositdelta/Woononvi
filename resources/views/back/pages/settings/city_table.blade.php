@@ -1,4 +1,4 @@
-<table class="table bordered-table sm-table mb-0" id="citiesTable">
+<table class="table bordered-table sm-table mb-0"  id="ville-table">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -27,16 +27,12 @@
 
 
 
-                
+
             </div>
         @endforeach
 
-
-
     </tbody>
 </table>
-
-
 
 
 <script>
@@ -49,7 +45,7 @@
                 type: 'GET',
                 data: { country_id: countryId },
                 success: function(response) {
-                    $('table').html(response);
+                    $('#ville-table').html(response);
                 },
                 error: function(xhr) {
                     console.error(xhr);

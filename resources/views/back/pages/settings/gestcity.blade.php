@@ -1,34 +1,33 @@
 @extends('back.layouts.master')
 @section('title', 'Paramétres de ville ')
 @section('content')
-    <div class="row gy-4">
-
-        <div class="col-lg-10">
+    <div class="row gy-2 mb-4">
+        <div class="col-lg-12">
             <div class="card h-100">
                 <div class="card-body p-24">
                     <ul class="nav border-gradient-tab nav-pills mb-20 d-inline-flex" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link d-flex align-items-center px-24 active" id="pills-edit-profile-tab"
+                            <button class="nav-link d-flex align-items-center px-24" id="pills-edit-profile-tab"
                                 data-bs-toggle="pill" data-bs-target="#pills-edit-profile" type="button" role="tab"
                                 aria-controls="pills-edit-profile" aria-selected="true">
-                                Pays
+                                 Paramétre Pays
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link d-flex align-items-center px-24" id="pills-change-passwork-tab"
                                 data-bs-toggle="pill" data-bs-target="#pills-change-passwork" type="button" role="tab"
                                 aria-controls="pills-change-passwork" aria-selected="false" tabindex="-1">
-                                Ville
+                                Configuration Ville
                             </button>
                         </li>
 
                     </ul>
 
                     <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-edit-profile" role="tabpanel"
+                        <div class="tab-pane fade show" id="pills-edit-profile" role="tabpanel"
                             aria-labelledby="pills-edit-profile-tab" tabindex="0">
 
-                            <table class="table bordered-table sm-table mb-0">
+                            <table class="table bordered-table sm-table mb-0" id="pays-table">
                                 <thead>
                                     <tr>
                                         <th scope="col">
@@ -85,42 +84,42 @@
                                         </tr>
 
 
-                                        <!-- Modal Bootstrap -->
-                                        <div class="modal fade" id="confirmationModal" tabindex="-1"
-                                            aria-labelledby="confirmationModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content radius-8 shadow-lg border-0">
-                                                    <div class="modal-header bg-warning-600 text-white">
-                                                        <h5 class="modal-title text-white " id="confirmationModalLabel">
-                                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                                            Confirmation de changement
-                                                        </h5>
-                                                        <button type="button" class="btn-close btn-close-white"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body text-center py-4 ">
-                                                        <i class="bi bi-question-circle text-warning display-4 mb-3"></i>
-                                                        <p id="modalMessage" class="fs-5 text-secondary text-justify"></p>
-                                                    </div>
-                                                    <div class="modal-footer d-flex justify-content-center">
-                                                        <button type="button" class="btn btn-secondary "
-                                                            data-bs-dismiss="modal">Annuler</button>
-                                                        <a id="confirmAction" class="btn btn-warning ">Confirmer</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
 
-                                </tbody>
+                                    </tbody>
                             </table>
 
+                                <!-- Modal Bootstrap -->
+                                <div class="modal fade" id="confirmationModal" tabindex="-1"
+                                    aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content radius-8 shadow-lg border-0">
+                                            <div class="modal-header bg-warning-600 text-white">
+                                                <h5 class="modal-title text-white " id="confirmationModalLabel">
+                                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                                    Confirmation de changement
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center py-4 ">
+                                                <i class="bi bi-question-circle text-warning display-4 mb-3"></i>
+                                                <p id="modalMessage" class="fs-5 text-secondary text-justify"></p>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-center">
+                                                <button type="button" class="btn btn-secondary "
+                                                    data-bs-dismiss="modal">Annuler</button>
+                                                <a id="confirmAction" class="btn btn-warning ">Confirmer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                             {{-- pagination --}}
 
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                                <span>Showing {{ $countries->firstItem() }} to {{ $countries->lastItem() }} of
-                                    {{ $countries->total() }} entries</span>
+                                <span>Affichage  {{ $countries->firstItem() }} de {{ $countries->lastItem() }} a
+                                    {{ $countries->total() }} entrées</span>
                                 <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
                                     {{-- Previous Page Link --}}
                                     @if ($countries->onFirstPage())
@@ -196,7 +195,9 @@
                                 <select id="countrySelect" class="form-select">
                                     <option value="">Tous les pays</option>
                                     @foreach ($countryactives as $countryactive)
-                                        <option value="{{ $countryactive->id }}">{{ $countryactive->name }}</option>
+                                        <option value="{{ $countryactive->id }}" {{ $countryactive->code == 'BJ' ? 'selected' : '' }}>
+                                            {{ $countryactive->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -232,7 +233,7 @@
                               {{-- pagination --}}
                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
                                     <span>Showing {{ $cities->firstItem() }} to {{ $cities->lastItem() }} of
-                                        {{ $cities->total() }} entries</span>
+                                        {{ $cities->total() }} entrées</span>
                                     <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
                                         {{-- Previous Page Link --}}
                                         @if ($cities->onFirstPage())
@@ -307,35 +308,36 @@
 
 
 
+    {{-- message country --}}
+        <script>
+            function openConfirmationModal(actionUrl, is_active, countryName) {
+                let modalMessage = '';
 
-    <script>
-        function openConfirmationModal(actionUrl, is_active, countryName) {
-            let modalMessage = '';
+                // Ajuster le message en fonction du statut (activation/désactivation) et inclure le nom du pays
+                if (is_active) {
+                    modalMessage =
+                        `Attention! Vous êtes sur le point d'interrompre Wononvi dans le pays ${countryName}. Cela impliquera la cessation de toute activité  dans ce pays. Voulez-vous vraiment continuez?`;
+                } else {
+                    modalMessage =
+                        `Vous êtes sur le point de lancer officiellement   Wononvi dans le pays ${countryName}. Voulez-vous vraiment continuez ?`;
+                }
 
-            // Ajuster le message en fonction du statut (activation/désactivation) et inclure le nom du pays
-            if (is_active) {
-                modalMessage =
-                    `Attention! Vous êtes sur le point d'interrompre Wononvi dans le pays ${countryName}. Cela impliquera la cessation de toute activité  dans ce pays. Voulez-vous vraiment continuez?`;
-            } else {
-                modalMessage =
-                    `Vous êtes sur le point de lancer officiellement   Wononvi dans le pays ${countryName}. Voulez-vous vraiment continuez ?`;
+                // Mettre à jour le texte du message dans le modal
+                document.getElementById('modalMessage').innerText = modalMessage;
+
+                // Mettre à jour le lien d'action
+                document.getElementById('confirmAction').setAttribute('href', actionUrl);
+
+                // Ouvrir le modal
+                var myModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {
+                    keyboard: false
+                });
+                myModal.show();
             }
+        </script>
+    {{-- message end --}}
 
-            // Mettre à jour le texte du message dans le modal
-            document.getElementById('modalMessage').innerText = modalMessage;
-
-            // Mettre à jour le lien d'action
-            document.getElementById('confirmAction').setAttribute('href', actionUrl);
-
-            // Ouvrir le modal
-            var myModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {
-                keyboard: false
-            });
-            myModal.show();
-        }
-    </script>
-
-   {{-- message city --}}
+      {{-- message city --}}
         <script>
         function openConfirmationModalcity(actionUrlcity, status, cityName) {
             let modalMessage = '';
@@ -362,10 +364,66 @@
             myModal.show();
         }
         </script>
-    {{-- message end --}}
+      {{-- message end --}}
 
+    {{-- activation onglet --}}
+        <script>
+            // Vérifie si un onglet a été mémorisé dans le stockage local
+            document.addEventListener("DOMContentLoaded", function() {
+                // Récupère l'onglet actif à partir du stockage local ou définit un onglet par défaut
+                const activeTab = localStorage.getItem('activeTab') || 'pills-edit-profile-tab';
 
+                // Supprime l'état actif de tous les onglets
+                document.querySelectorAll('.nav-link').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
 
+                // Supprime l'affichage de tous les contenus d'onglets
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active');
+                });
+
+                // Affiche l'onglet actif
+                const tab = document.getElementById(activeTab);
+                if (tab) {
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+
+                    // Affiche le contenu de l'onglet actif
+                    const target = tab.getAttribute('data-bs-target');
+                    document.querySelector(target).classList.add('show', 'active');
+                }
+
+                // Ajoute un écouteur d'événements pour chaque bouton d'onglet
+                document.querySelectorAll('.nav-link').forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Supprime l'état actif de tous les onglets
+                        document.querySelectorAll('.nav-link').forEach(btn => {
+                            btn.classList.remove('active');
+                            btn.setAttribute('aria-selected', 'false');
+                        });
+
+                        // Supprime l'affichage de tous les contenus d'onglets
+                        document.querySelectorAll('.tab-pane').forEach(pane => {
+                            pane.classList.remove('show', 'active');
+                        });
+
+                        // Définit l'onglet actif
+                        this.classList.add('active');
+                        this.setAttribute('aria-selected', 'true');
+
+                        // Affiche le contenu de l'onglet
+                        const target = this.getAttribute('data-bs-target');
+                        document.querySelector(target).classList.add('show', 'active');
+
+                        // Enregistre l'onglet actif dans le stockage local
+                        localStorage.setItem('activeTab', this.id);
+                    });
+                });
+            });
+        </script>
+    {{-- activation onglet --}}
 
 
 

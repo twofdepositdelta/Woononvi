@@ -252,9 +252,7 @@
                     <li>
                         <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
                     </li>
-                    <li>
-                        <a href="theme.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Preferences</a>
-                    </li>
+                    
                 </ul>
             </li>
 
