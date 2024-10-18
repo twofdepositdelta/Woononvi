@@ -14,7 +14,7 @@
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
-                    <span>Dashboard</span>
+                    <span>Tableau de bord</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
@@ -35,7 +35,7 @@
                 </ul>
             </li>
             <li class="sidebar-menu-group-title">Application</li>
-            <li>
+            {{-- <li>
                 <a href="email.php">
                     <iconify-icon icon="mage:email" class="menu-icon"></iconify-icon>
                     <span>Email</span>
@@ -58,277 +58,200 @@
                     <iconify-icon icon="material-symbols:map-outline" class="menu-icon"></iconify-icon>
                     <span>Kanban</span>
                 </a>
-            </li>
+            </li> --}}
+
+            {{-- trajets --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="hugeicons:invoice-03" class="menu-icon"></iconify-icon>
-                    <span>Invoice</span>
+                    <iconify-icon icon="ic:baseline-directions-car" class="menu-icon"></iconify-icon>
+                    <span>TRAJETS</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="invoice-list.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> List</a>
+                        <a href="invoice-list.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="invoice-preview.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Preview</a>
+                        <a href="invoice-preview.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
                     </li>
                     <li>
-                        <a href="invoice-add.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add new</a>
+                        <a href="invoice-add.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
                     </li>
                     <li>
-                        <a href="invoice-edit.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Edit</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <i class="ri-robot-2-line"></i>
-                    <span>Ai Application</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="text-generator.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Text Generator</a>
-                    </li>
-                    <li>
-                        <a href="code-generator.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Code Generator</a>
-                    </li>
-                    <li>
-                        <a href="image-generator.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Image Generator</a>
-                    </li>
-                    <li>
-                        <a href="voice-generator.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Voice Generator</a>
-                    </li>
-                    <li>
-                        <a href="video-generator.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Video Generator</a>
+                        <a href="invoice-edit.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="sidebar-menu-group-title">UI Elements</li>
-
+            {{-- demandes --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:document-text-outline" class="menu-icon"></iconify-icon>
-                    <span>Components</span>
+                    <i class="ri-question-line"></i>
+                    <span>DEMANDES</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="typography.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Typography</a>
+                        <a href="text-generator.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Colors</a>
+                        <a href="code-generator.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
                     </li>
                     <li>
-                        <a href="button.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Button</a>
-                    </li>
-                    <li>
-                        <a href="dropdown.php"><i class="ri-circle-fill circle-icon text-lilac-600 w-auto"></i> Dropdown</a>
-                    </li>
-                    <li>
-                        <a href="alert.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Alerts</a>
-                    </li>
-                    <li>
-                        <a href="card.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Card</a>
-                    </li>
-                    <li>
-                        <a href="carousel.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Carousel</a>
-                    </li>
-                    <li>
-                        <a href="avatar.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Avatars</a>
-                    </li>
-                    <li>
-                        <a href="progress.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Progress bar</a>
-                    </li>
-                    <li>
-                        <a href="tabs.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Tab & Accordion</a>
-                    </li>
-                    <li>
-                        <a href="pagination.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Pagination</a>
-                    </li>
-                    <li>
-                        <a href="badges.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Badges</a>
-                    </li>
-                    <li>
-                        <a href="tooltip.php"><i class="ri-circle-fill circle-icon text-lilac-600 w-auto"></i> Tooltip & Popover</a>
-                    </li>
-                    <li>
-                        <a href="videos.php"><i class="ri-circle-fill circle-icon text-cyan w-auto"></i> Videos</a>
-                    </li>
-                    <li>
-                        <a href="star-rating.php"><i class="ri-circle-fill circle-icon text-indigo w-auto"></i> Star Ratings</a>
-                    </li>
-                    <li>
-                        <a href="tags.php"><i class="ri-circle-fill circle-icon text-purple w-auto"></i> Tags</a>
-                    </li>
-                    <li>
-                        <a href="list.php"><i class="ri-circle-fill circle-icon text-red w-auto"></i> List</a>
-                    </li>
-                    <li>
-                        <a href="calendar.php"><i class="ri-circle-fill circle-icon text-yellow w-auto"></i> Calendar</a>
-                    </li>
-                    <li>
-                        <a href="radio.php"><i class="ri-circle-fill circle-icon text-orange w-auto"></i> Radio</a>
-                    </li>
-                    <li>
-                        <a href="switch.php"><i class="ri-circle-fill circle-icon text-pink w-auto"></i> Switch</a>
-                    </li>
-                    <li>
-                        <a href="image-upload.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Upload</a>
+                        <a href="image-generator.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
                     </li>
                 </ul>
             </li>
+
+            {{-- <li class="sidebar-menu-group-title">UI Elements</li> --}}
+
+            {{-- transactions --}}
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:transfer" class="menu-icon"></iconify-icon>
+                    <span>TRANSACTIONS</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="typography.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                    </li>
+                    <li>
+                        <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Nouvelle transac</a>
+                    </li>
+                    <li>
+                        <a href="button.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
+                    </li>
+                </ul>
+            </li>
+
+             {{-- avis --}}
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:comment-text-outline" class="menu-icon"></iconify-icon>
+                    <span>AVIS</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Signaler</a>
+                    </li>
+                    <li>
+                        <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Commentaire</a>
+                    </li>
+                </ul>
+            </li>
+
+            {{-- support --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
-                    <span>Forms</span>
+                    <span>SUPPORT</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Input Forms</a>
+                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
                     </li>
                     <li>
-                        <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Input Layout</a>
+                        <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
                     </li>
                     <li>
-                        <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Form Validation</a>
-                    </li>
-                    <li>
-                        <a href="wizard.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Form Wizard</a>
+                        <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
                     </li>
                 </ul>
             </li>
+
+
+            {{-- rapport --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="mingcute:storage-line" class="menu-icon"></iconify-icon>
-                    <span>Table</span>
+                    <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
+                    <span>RAPPORT & ANALYSES</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Basic Table</a>
+                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Ville</a>
                     </li>
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Data Table</a>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Pays</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Trajet</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Utilisateur</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Véhicules</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Transaction</a>
                     </li>
                 </ul>
             </li>
+
+            {{-- actualité --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:pie-chart-outline" class="menu-icon"></iconify-icon>
-                    <span>Chart</span>
+                    <iconify-icon icon="mdi:rss" class="menu-icon"></iconify-icon>
+                    <span>ACTUALITES</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="line-chart.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Line Chart</a>
+                        <a href="line-chart.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="column-chart.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Column Chart</a>
+                        <a href="column-chart.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li>
                     <li>
-                        <a href="pie-chart.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Pie Chart</a>
+                        <a href="pie-chart.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="widgets.php">
-                    <iconify-icon icon="fe:vector" class="menu-icon"></iconify-icon>
-                    <span>Widgets</span>
-                </a>
-            </li>
+
+            {{-- utilisateur --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>Users</span>
+                    <span>UTILISATEURS</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="users-list.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
+                        <a href="{{route('users.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="users-grid.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Users Grid</a>
+                        <a href="users-grid.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
                     </li>
                     <li>
-                        <a href="add-user.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
+                        <a href="add-user.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
                     </li>
-                    <li>
-                        <a href="view-profile.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> View Profile</a>
-                    </li>
+
                 </ul>
             </li>
 
-            <li class="sidebar-menu-group-title">Application</li>
 
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="simple-line-icons:vector" class="menu-icon"></iconify-icon>
-                    <span>Authentication</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="sign-in.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Sign In</a>
-                    </li>
-                    <li>
-                        <a href="sign-up.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="forgot-password.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Forgot Password</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="gallery.php">
-                    <iconify-icon icon="solar:gallery-wide-linear" class="menu-icon"></iconify-icon>
-                    <span>Gallery</span>
-                </a>
-            </li>
-            <li>
-                <a href="pricing.php">
-                    <iconify-icon icon="hugeicons:money-send-square" class="menu-icon"></iconify-icon>
-                    <span>Pricing</span>
-                </a>
-            </li>
-            <li>
-                <a href="faq.php">
-                    <iconify-icon icon="mage:message-question-mark-round" class="menu-icon"></iconify-icon>
-                    <span>FAQs.</span>
-                </a>
-            </li>
-            <li>
-                <a href="error.php">
-                    <iconify-icon icon="streamline:straight-face" class="menu-icon"></iconify-icon>
-                    <span>404</span>
-                </a>
-            </li>
-            <li>
-                <a href="terms-condition.php">
-                    <iconify-icon icon="octicon:info-24" class="menu-icon"></iconify-icon>
-                    <span>Terms & Conditions</span>
-                </a>
-            </li>
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icon-park-outline:setting-two" class="menu-icon"></iconify-icon>
-                    <span>Settings</span>
+                    <span>Paramètres</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="company.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Company</a>
+                        <a href="company.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
                     </li>
                     <li>
-                        <a href="notification.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Notification</a>
+                        <a href="notification.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
                     </li>
                     <li>
-                        <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Notification Alert</a>
+                        <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
                     </li>
                     <li>
-                        <a href="theme.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Theme</a>
-                    </li>
-                    <li>
-                        <a href="currencies.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Currencies</a>
-                    </li>
-                    <li>
-                        <a href="language.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Languages</a>
-                    </li>
-                    <li>
-                        <a href="payment-gateway.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Payment Gateway</a>
+                        <a href="theme.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Preferences</a>
                     </li>
                 </ul>
             </li>

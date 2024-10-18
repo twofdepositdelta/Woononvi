@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -17,8 +19,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Settings
+    Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
+    Route::put('/settings/update', [DashboardController::class, 'update'])->name('settings.update');
 
-    // Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
+
+    Route::resource('users', UserController::class)->parameters([
+        'users' => 'user:email',
+    ]);
 });
+
 
 require __DIR__.'/auth.php';
