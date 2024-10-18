@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProfileSeeder::class,
             UserNotificationSettingSeeder::class,
+            SettingsSeeder::class
         ]);
     }
 }
