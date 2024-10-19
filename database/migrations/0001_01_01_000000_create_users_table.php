@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('npi')->unique();
             $table->rememberToken();
             $table->foreignIdFor(City::class);
+            $table->boolean('status')->default(true);
             $table->boolean('is_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();

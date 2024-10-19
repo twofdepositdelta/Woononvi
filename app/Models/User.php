@@ -27,10 +27,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'lastname',
         'phone',
         'date_of_birth',
-        'city_id', 
+        'city_id',
         'gender',
         'npi',
         'is_verified',
+        'status',
     ];
 
     /**
@@ -63,22 +64,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function rides()
     {
-        return $this->hasMany(Ride::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Ride::class, 'driver_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Booking::class, 'passenger_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function reviews()
     {
-        return $this->hasMany(Review::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Review::class, 'reviewer_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Vehicle::class, 'driver_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function profile()
@@ -88,12 +89,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function ride_requests()
     {
-        return $this->hasMany(RideRequest::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(RideRequest::class, 'passenger_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function ride_matches()
     {
-        return $this->hasMany(RideMatch::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(RideMatch::class, 'passenger_id'); // Assurez-vous d'importer le modèle Booking
     }
 
     public function notifications()
