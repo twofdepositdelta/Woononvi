@@ -250,9 +250,9 @@
                         <a href="{{route('setting.city')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
                     </li>
                     <li>
-                        <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
+                        <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
                     </li>
-                    
+
                 </ul>
             </li>
 

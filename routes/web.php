@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 
@@ -28,10 +29,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/city', [DashboardController::class, 'city'])->name('setting.city');
     Route::get('/countries/update/{country}', [DashboardController::class, 'countryStatus'])->name('country.updatestatus');
 
-
     Route::get('/cities/update/{city}', [DashboardController::class, 'cityStatus'])->name('city.updatestatus');
 
     Route::get('/filter-cities', [DashboardController::class, 'filterCitiesByCountry'])->name('filter.cities');
+
+
+    Route::get('/apis/edit', [ApiController::class, 'api'])->name('apis');
+    Route::put('/apis/update', [ApiController::class, 'update'])->name('apis.update');
 
 
 
