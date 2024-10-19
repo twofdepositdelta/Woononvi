@@ -37,5 +37,8 @@
     <link rel="stylesheet" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.2.2/css/flag-icons.min.css">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     @yield('customCSS')
 </head>
+

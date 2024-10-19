@@ -1,5 +1,5 @@
 @extends('back.layouts.master')
-@section('title', 'Parametre ')
+@section('title', 'Paramétres ')
 @section('content')
 
     <!-- Content -->
@@ -18,7 +18,7 @@
                             @foreach ($settings as $setting)
                                 <div class="col-12 d-flex">
                                     <label class="form-label col-3" for="{{ $setting->key }}">
-                                        {{ ucfirst(str_replace('_', ' ', $setting->key)) }}
+                                        {{ __('settings.' . $setting->key) }}
                                         @if ($setting->description)
                                         <span class="text-secondary " style="font-style: italic;">
                                             {{ $setting->description }}
@@ -45,6 +45,5 @@
             </div>
         </div>
     </div>
-
     <!-- / Content -->
 @endsection

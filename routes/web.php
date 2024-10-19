@@ -25,6 +25,14 @@ Route::middleware('auth')->group(function () {
     // Settings
     Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
     Route::put('/settings/update', [DashboardController::class, 'update'])->name('settings.update');
+    Route::get('/city', [DashboardController::class, 'city'])->name('setting.city');
+    Route::get('/countries/update/{country}', [DashboardController::class, 'countryStatus'])->name('country.updatestatus');
+
+
+    Route::get('/cities/update/{city}', [DashboardController::class, 'cityStatus'])->name('city.updatestatus');
+
+    Route::get('/filter-cities', [DashboardController::class, 'filterCitiesByCountry'])->name('filter.cities');
+
 
     Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');
     Route::resource('users', UserController::class)->parameters([
