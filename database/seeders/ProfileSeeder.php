@@ -17,7 +17,7 @@ class ProfileSeeder extends Seeder
     public function run()
     {
         // Récupérer les 7 premiers utilisateurs (ou les utilisateurs existants)
-        $users = User::limit(7)->get();
+        $users = User::limit(9)->get();
 
         foreach ($users as $user) {
             Profile::create([

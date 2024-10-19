@@ -26,12 +26,14 @@
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/audioplayer.js') }}"></script>
 
     <!-- main js -->
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
     <script>
         $('.remove-button').on('click', function() {
             $(this).closest('.alert').addClass('d-none')
         });
     </script>
-    
-    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
+    <script>
+        let table = new DataTable('#dataTable');
+    </script>
     @yield('customJS')
 

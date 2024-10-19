@@ -26,10 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings/edit', [DashboardController::class, 'setting'])->name('settings');
     Route::put('/settings/update', [DashboardController::class, 'update'])->name('settings.update');
 
-
+    Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');
     Route::resource('users', UserController::class)->parameters([
         'users' => 'user:email',
     ]);
+    Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
+    Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
 });
 
 
