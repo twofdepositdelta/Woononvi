@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Ride;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('rating');
             $table->text('comment');
-            $table->foreignIdFor(Ride::class);
+            $table->foreignIdFor(Booking::class);
             $table->foreignId('reviewer_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

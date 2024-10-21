@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'npi',
         'is_verified',
         'status',
+        'balance',
     ];
 
     /**
@@ -74,7 +75,26 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'reviewer_id'); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function averageRating()
+    {
+        $totalRating = $this->reviews()->sum('rating'); // Somme des notes
+        $numberOfReviews = $this->reviews()->count(); // Nombre d'avis
+
+        if ($numberOfReviews === 0) {
+            return 0; // Pas d'avis, on retourne 0
+        }
+
+        return ($totalRating / $numberOfReviews); // Calcul de la moyenne
+    }
+
+    // Calcul de la moyenne sur 5 étoiles
+    public function averageRatingOutOfFive()
+    {
+        $average = $this->averageRating(); // Appel de la méthode moyenne
+        return ($average / 5) * 100; // Conversion en pourcentage
     }
 
     public function vehicles()
@@ -115,5 +135,30 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendAccountConfirmationNotification($token)
     {
         $this->notify(new AccountConfirmation($this, $token));
+    }
+
+    public function totalTrips()
+    {
+        // Si l'utilisateur est conducteur
+        return $this->rides()->count() + $this->ride_requests()->count(); // Total des trajets effectués et des demandes
+    }
+
+    public function totalAmount()
+    {
+        // Calculez le montant total des réservations ou des trajets
+        return $this->bookings()->sum('total_price'); // Remplacez 'amount' par le champ correct dans votre table
+    }
+
+    public function totalRideRequests()
+    {
+        return $this->ride_requests()->count(); // Nombre total de demandes de trajet
+    }
+
+    public function receivedReviews()
+    {
+        return $this->hasManyThrough(Review::class, Booking::class, 'passenger_id', 'booking_id', 'id', 'id')
+            ->orWhereHas('ride', function($query) {
+                $query->where('driver_id', $this->id);
+            });
     }
 }

@@ -385,8 +385,6 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                 </div>
                             </div>
                         </form>
-
-
                     </div>
                 </div>
             </div>

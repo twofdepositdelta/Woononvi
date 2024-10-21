@@ -46,6 +46,7 @@ class UserSeeder extends Seeder
                     'npi' => rand(1000000000, 9999999999), // Générer un NPI aléatoire de 10 chiffres
                     'city_id' => $activeCities->random()->id, // Associer à une ville active aléatoire
                     'is_verified' => true,
+                    'balance' => $role == 'driver' ? 2000 : null,
                     'email_verified_at' => now(),
                 ]);
 

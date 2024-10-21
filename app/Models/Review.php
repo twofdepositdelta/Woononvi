@@ -11,14 +11,14 @@ class Review extends Model
     protected $fillable = [
         'rating',
         'comment',
-        'ride_id', // Clé étrangère pour le trajet
+        'booking_id', // Clé étrangère pour le trajet
         'reviewer_id', // Clé étrangère pour l'utilisateur qui laisse le commentaire
     ];
 
-    // Relation avec le trajet
-    public function ride()
+    // Relation avec la reservation
+    public function booking()
     {
-        return $this->belongsTo(Ride::class, 'ride_id'); // Assurez-vous d'importer le modèle Ride
+        return $this->belongsTo(Booking::class); // Assurez-vous d'importer le modèle Ride
     }
 
     // Relation avec l'utilisateur qui a laissé l'avis

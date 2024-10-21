@@ -15,14 +15,14 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->integer('seats_reserved');
-            $table->integer('total_price'); // Heure de départ prévue
+            $table->integer('total_price');
             $table->enum('status', ['confirmed', 'cancelled'])->default('confirmed'); // Statut du trajet (pending, completed, canceled)
             $table->foreignIdFor(Ride::class);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

@@ -30,11 +30,6 @@ class Ride extends Model
         return $this->hasMany(Booking::class); // Assurez-vous d'importer le modèle User
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class); // Assurez-vous d'importer le modèle User
-    }
-
     public function commissions()
     {
         return $this->hasMany(Commission::class); // Assurez-vous d'importer le modèle User

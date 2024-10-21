@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->boolean('is_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
+            $table->integer('balance')->nullable();
             $table->timestamps();
         });
 

@@ -19,7 +19,7 @@ class Booking extends Model
     // Relation avec le trajet
     public function ride()
     {
-        return $this->belongsTo(Ride::class, 'ride_id'); // Assurez-vous d'importer le modèle Ride
+        return $this->belongsTo(Ride::class); // Assurez-vous d'importer le modèle Ride
     }
 
     // Relation avec le passager
@@ -31,5 +31,10 @@ class Booking extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class, 'booking_id'); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class); // Assurez-vous d'importer le modèle User
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Review;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -93,7 +94,27 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $receivedReviewsCount = Review::whereHas('booking.ride', function ($query) use ($user) {
+            $query->where('driver_id', $user->id); // Avis reçus en tant que conducteur
+        })->orWhereHas('booking', function ($subQuery) use ($user) {
+            $subQuery->where('passenger_id', $user->id); // Avis reçus en tant que passager
+        })->count();
+
+        $averageRating = $user->averageRatingOutOfFive();
+
+        // Si aucun avis n'a été donné
+        if (is_null($averageRating)) {
+            $averageRating = 0;
+        }
+
+        return view('back.pages.users.show', [
+            'receivedReviewsCount' => $receivedReviewsCount,
+            'averageRating' => $averageRating,
+            'totalTrips' => $user->totalTrips(),
+            'totalAmount' => $user->totalAmount(),
+            'totalRideRequests' => $user->totalRideRequests(),
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -148,7 +169,7 @@ class UserController extends Controller
         $user->save();
 
         // Redirection avec un message de succès
-        return redirect()->route('users.index')->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
+        return back()->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
     }
 
 
