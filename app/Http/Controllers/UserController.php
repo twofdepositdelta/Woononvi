@@ -78,7 +78,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+        return view('back.pages.users.create', compact('roles'));
     }
 
     /**
@@ -111,7 +112,6 @@ class UserController extends Controller
             'receivedReviewsCount' => $receivedReviewsCount,
             'averageRating' => $averageRating,
             'totalTrips' => $user->totalTrips(),
-            'totalAmount' => $user->totalAmount(),
             'totalRideRequests' => $user->totalRideRequests(),
             'user' => $user,
         ]);

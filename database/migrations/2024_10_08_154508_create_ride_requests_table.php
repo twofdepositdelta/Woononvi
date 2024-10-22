@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('departure');
             $table->string('destination');
             $table->timestamp('preferred_time'); // Heure de départ prévue
-            $table->integer('preferred_amount'); // Nombre de places disponibles
+            $table->integer('preferred_amount'); 
             $table->enum('status', ['open', 'responded', 'cancelled'])->default('open'); // Statut du trajet (pending, completed, canceled)
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
