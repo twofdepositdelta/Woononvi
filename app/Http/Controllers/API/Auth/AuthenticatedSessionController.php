@@ -91,7 +91,7 @@ class AuthenticatedSessionController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => implode("• ", $validator->errors()->all())
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
