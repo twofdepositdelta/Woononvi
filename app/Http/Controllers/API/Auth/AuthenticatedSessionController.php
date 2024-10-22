@@ -91,7 +91,7 @@ class AuthenticatedSessionController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
+                'errors' => implode("\n. ", $validator->errors()->all())
             ], 422);
         }
 
@@ -108,43 +108,42 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user = User::create([
-            'npi' => $request->npi,
+            'step' => $request->step,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'phone' => $request->phone,
-            'date_of_birth' => $request->birth_of_date,
             'email' => $request->email,
-            'city_id' => $request->city_id,
             'password' => Hash::make($request->password),
         ]);
 
-        // $token = Str::random(60);
+        if($request->step == 1) {
+            // Générer un OTP aléatoire (par exemple, 6 chiffres)
+            $otp = rand(100000, 999999);
 
-        // Générer un OTP aléatoire (par exemple, 6 chiffres)
-        $otp = rand(100000, 999999);
+            DB::table('user_confirmations')->insert([
+                'user_id' => $user->id,
+                'otp_code' => $otp,
+                'created_at' => now(),
+            ]);
 
-        DB::table('user_confirmations')->insert([
-            'user_id' => $user->id,
-            'otp_code' => $otp,
-            'created_at' => now(),
-        ]);
+            // Envoyer la notification de confirmation
+            $user->sendAccountConfirmationNotification($otp);
 
-        // DB::table('user_confirmations')->insert([
-        //     'user_id' => $user->id,
-        //     'code_otp' => hash('sha256', $token),
-        //     'created_at' => now(),
-        // ]);
+            $role = $request->role == "Passager" ? "passenger" : "driver";
 
-        // Envoyer la notification de confirmation
-        $user->sendAccountConfirmationNotification($otp);
+            $user->assignRole($role);
 
-        $user->assignRole('passenger');
+            // $token = $user->createToken('mobile--token')->plainTextToken;
 
-        // $token = $user->createToken('mobile--token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Inscription réussie.',
-        ], 201);
+            return response()->json([
+                'success' => true,
+                'message' => 'Inscription réussie.',
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'Vous vous êtes déjà inscrits.',
+            ], 201);
+        }
     }
 }
