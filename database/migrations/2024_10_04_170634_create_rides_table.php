@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('available_seats'); // Nombre de places disponibles
             $table->integer('price_per_km');
             $table->boolean('is_nearby_ride')->default(false);
-            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active'); // Statut du trajet (pending, completed, canceled)
+            $table->enum('status', ['active','pending', 'completed', 'cancelled','suspend'])->default('pending'); // Statut du trajet (pending, completed, canceled)
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

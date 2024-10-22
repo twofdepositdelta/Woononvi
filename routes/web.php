@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RideRequestController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -39,9 +41,26 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');
+
+    Route::get('/demande/create', [RideRequestController::class, 'create'])->name('ride_requests.create');
+    Route::post('/demande/edit', [RideRequestController::class, 'store'])->name('ride_requests.store');
+    Route::get('/demande/liste', [RideRequestController::class, 'index'])->name('ride_requests.index');
+    Route::get('/demande/detail', [RideRequestController::class, 'show'])->name('ride_requests.show');
+    Route::get('/demande/{rideRequest}/{status}', [RideRequestController::class, 'updatestatus'])->name('ride_requests.status');
+    Route::get('/demande/historique', [RideRequestController::class, 'historique'])->name('ride_requests.historique');
+
     Route::resource('users', UserController::class)->parameters([
         'users' => 'user:email',
     ]);
+
+    Route::resource('rides', RideController::class)->parameters([
+        'rides' => 'ride',
+    ]);
+    Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
+    Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
+
+
+
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
 });

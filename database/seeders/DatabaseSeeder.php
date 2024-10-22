@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             ProfileSeeder::class,
             UserNotificationSettingSeeder::class,
             SettingsSeeder::class,
-            ApiSeeder::class
+            ApiSeeder::class,
+            RideSeeder::class
         ]);
     }
 }

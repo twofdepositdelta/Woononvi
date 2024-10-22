@@ -3,7 +3,8 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Nom de la ville</th>
-            <th scope="col" class="text-center">Status</th>
+            <th scope="col">Statut</th>
+            <th scope="col" class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -17,13 +18,21 @@
                         </div>
                     </div>
                 </td>
+
+                <td>
+                    <a href="javascript:void(0)"
+                       class=" badge bg-{{ $city->status ? 'success' : 'danger' }}">
+                        {{ $city->status ? 'Active' : ' Inactive' }}
+                    </a>
+                </td>
                 <td class="text-center">
                     <a href="javascript:void(0)" onclick="openConfirmationModalcity('{{ route('city.updatestatus', $city) }}', {{ $city->status }}, '{{ $city->name }}')"
-                       class="bg-{{ $city->status ? 'success' : 'neutral' }}-focus text-{{ $city->status ? 'success' : 'neutral' }}-600 border border-{{ $city->status ? 'success' : 'neutral' }}-main px-24 py-4 radius-4 fw-medium text-sm">
-                        {{ $city->status ? 'Activé' : 'Désactivé' }}
+                        class="btn btn-{{ $city->status ? 'warning' : 'primary' }}-600 radius-8 px-14 py-6 text-sm">
+                        {{ $city->status ? ' Désactiver ' : 'Activer' }}
                     </a>
                 </td>
             </tr>
+
 
 
 
