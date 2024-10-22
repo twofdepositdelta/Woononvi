@@ -46,7 +46,7 @@ class AuthenticatedSessionController extends Controller
                 ], 401); // Statut 401 pour indiquer que l'authentification est refusée
             }
 
-            if($user->hasrole('passenger|driver')) {
+            if($user->hasrole('passenger|driver|manager|super-admin')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
                 return response()->json([
                     'success' => true,
@@ -82,6 +82,7 @@ class AuthenticatedSessionController extends Controller
             'phone' => 'required|string|max:255|unique:users',
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -114,7 +115,6 @@ class AuthenticatedSessionController extends Controller
             'date_of_birth' => $request->birth_of_date,
             'email' => $request->email,
             'city_id' => $request->city_id,
-            // 'email_verified_at' => null,
             'password' => Hash::make($request->password),
         ]);
 
@@ -136,7 +136,7 @@ class AuthenticatedSessionController extends Controller
         // ]);
 
         // Envoyer la notification de confirmation
-        $user->sendAccountConfirmationNotification($token);
+        $user->sendAccountConfirmationNotification($otp);
 
         $user->assignRole('passenger');
 
