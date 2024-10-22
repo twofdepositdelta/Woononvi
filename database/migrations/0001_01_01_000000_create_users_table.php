@@ -19,13 +19,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->unique();
-            $table->date('date_of_birth');
+            $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->string('npi')->unique();
             $table->rememberToken();
             $table->foreignIdFor(City::class);
             $table->boolean('status')->default(true);
             $table->boolean('is_verified')->default(false);
+            $table->boolean('is_certified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('balance')->nullable();
             $table->timestamps();

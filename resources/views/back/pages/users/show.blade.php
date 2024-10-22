@@ -8,13 +8,11 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
 @endphp
 <div class="dashboard-main-body">
     <div class="row gy-4">
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div class="user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100">
-                <img src="{{ asset('storage/back/assets/images/user-grid/user-grid-bg' . ($user->profile->genre == 'male' ? '10' : '7') . '.png') }}"
+                <img src="{{ asset('storage/back/assets/images/user-grid/user-grid-bg3.png') }}"
                     alt="" class="w-100 object-fit-cover">
-                {{-- <img
-                    src="{{ asset('storage/back/assets/images/user-grid/user-grid-bg'. $user->profile->genre == 'male' ? '10' : '7' .'.png') }}"
-                    alt="" class="w-100 object-fit-cover"> --}}
+
                 <div class="pb-24 ms-16 mb-24 me-16 mt--100">
                     <div class="text-center border border-top-0 border-start-0 border-end-0">
                         <img src="{{ asset($user->profile->avatar ? $user->profile->avatar : 'storage/back/assets/images/user-grid/user-grid-img14.png') }}"
@@ -23,6 +21,11 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                         <h6 class="mb-0 mt-16">{{ strtoupper($user->lastname) . ' ' .
                             ucfirst(strtolower($user->firstname)) }}</h6>
                         <span class="text-secondary-light mb-16">{{ $user->email }}</span>
+                        @if ($user->is_certified) <!-- Remplacez is_verified par is_certified -->
+                            <span class="badge bg-primary">
+                                <i class="ri-check-line"></i> <!-- Utilisez une icône de votre choix -->
+                            </span>
+                        @endif
                     </div>
                     <div class="mt-24">
                         <h6 class="text-xl mb-16">Informations Personnelles</h6>
@@ -110,7 +113,7 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
 
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <div class="card">
                 <div class="card-body p-20">
                     <div class="row g-3">
@@ -133,17 +136,15 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                         </div>
                         <div class="col-md-8">
                             <div class="row g-3">
-                                @if ($user->hasrole('driver'))
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="radius-8 h-100 text-center p-20 bg-info-focus">
                                         <span class="w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-xl mb-12 bg-info-200 border border-info-400 text-info-600">
                                             <i class="ri-briefcase-line"></i> <!-- Icône pour "Total Revenu" -->
                                         </span>
                                         <span class="text-neutral-700 d-block">Balance</span>
-                                        <h6 class="mb-0 mt-4">{{ $user->balance }} XOF</h6> <!-- Décommenter si vous avez une variable pour le revenu total -->
+                                        <h6 class="mb-0 mt-4">{{ $user->balance ?? '0' }} XOF</h6> <!-- Décommenter si vous avez une variable pour le revenu total -->
                                     </div>
                                 </div>
-                                @endif
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="radius-8 h-100 text-center p-20 bg-purple-light">
                                         <span class="w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-xl mb-12 bg-lilac-200 border border-lilac-400 text-lilac-600">
@@ -162,15 +163,27 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                         <h6 class="mb-0 mt-4">{{ $user->bookings()->count() }}</h6>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-xs-6">
-                                    <div class="radius-8 h-100 text-center p-20 bg-success-100">
-                                        <span class="w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-xl mb-12 bg-success-200 border border-success-400 text-success-600">
-                                            <i class="ri-money-dollar-circle-line"></i> <!-- Icône pour "Total Montant" -->
-                                        </span>
-                                        <span class="text-neutral-700 d-block">Total Montant</span>
-                                        <h6 class="mb-0 mt-4">{{ $totalAmount }} XOF</h6>
+                                @if ($user->hasrole('driver'))
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="radius-8 h-100 text-center p-20 bg-success-100">
+                                            <span class="w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-xl mb-12 bg-success-200 border border-success-400 text-success-600">
+                                                <i class="ri-money-dollar-circle-line"></i> <!-- Icône pour "Total Montant" -->
+                                            </span>
+                                            <span class="text-neutral-700 d-block">Total Reçu</span>
+                                            <h6 class="mb-0 mt-4">{{ $user->totalAmountReceived() }} XOF</h6>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="radius-8 h-100 text-center p-20 bg-warning-100">
+                                            <span class="w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-xl mb-12 bg-warning-200 border border-warning-400 text-success-600">
+                                                <i class="ri-money-dollar-circle-line"></i> <!-- Icône pour "Total Montant" -->
+                                            </span>
+                                            <span class="text-neutral-700 d-block">Total Payé</span>
+                                            <h6 class="mb-0 mt-4">{{ $user->totalAmountPaid() }} XOF</h6>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

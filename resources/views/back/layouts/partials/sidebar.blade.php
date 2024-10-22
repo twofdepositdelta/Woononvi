@@ -223,13 +223,13 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('users.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
+                        <a href="{{ route('users.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="users-grid.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
+                        <a href="{{ route('users.create') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
                     </li>
                     <li>
-                        <a href="add-user.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
+                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
                     </li>
 
                 </ul>

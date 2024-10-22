@@ -33,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_verified',
         'status',
         'balance',
+        'is_certified',
     ];
 
     /**
@@ -143,10 +144,30 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->rides()->count() + $this->ride_requests()->count(); // Total des trajets effectués et des demandes
     }
 
-    public function totalAmount()
+    // Relation pour obtenir les réservations où l'utilisateur est le conducteur
+    public function driverBookings()
     {
-        // Calculez le montant total des réservations ou des trajets
-        return $this->bookings()->sum('total_price'); // Remplacez 'amount' par le champ correct dans votre table
+        return $this->hasMany(Booking::class, 'ride_id')
+                    ->join('rides', 'rides.id', '=', 'bookings.ride_id')
+                    ->where('rides.driver_id', $this->id);
+    }
+
+    // Montant total reçu par le conducteur
+    public function totalAmountReceived()
+    {
+        return $this->driverBookings()->sum('total_price'); // Remplacez 'total_price' par le champ correct
+    }
+
+    // Relation pour obtenir les réservations où l'utilisateur est le passager
+    public function passengerBookings()
+    {
+        return $this->hasMany(Booking::class, 'passenger_id');
+    }
+
+    // Montant total payé par le client
+    public function totalAmountPaid()
+    {
+        return $this->passengerBookings()->sum('total_price'); // Remplacez 'total_price' par le champ correct
     }
 
     public function totalRideRequests()

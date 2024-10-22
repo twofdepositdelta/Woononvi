@@ -47,6 +47,7 @@ class UserSeeder extends Seeder
                     'city_id' => $activeCities->random()->id, // Associer à une ville active aléatoire
                     'is_verified' => true,
                     'balance' => $role == 'driver' ? 2000 : null,
+                    'is_certified' => $role == 'driver' ? true : false,
                     'email_verified_at' => now(),
                 ]);
 

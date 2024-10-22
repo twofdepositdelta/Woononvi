@@ -76,12 +76,12 @@ class AuthenticatedSessionController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'npi' => 'required|string|max:255|unique:users',
+            'npi' => 'required_if:step,2|string|max:255|unique:users',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:users',
-            'birth_of_date' => 'required|date|max:10',
-            'city_id' => 'required|string|max:255',
+            'birth_of_date' => 'required_if:step,2|date|max:10',
+            'city_id' => 'required_if:step,2|string|max:255',
             'role' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
@@ -95,16 +95,18 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-        $birthDate = new \DateTime($request->birth_of_date);
-        $today = new \DateTime();
-        $age = $today->diff($birthDate)->y;
+        if($request->step != 1) {
+            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+            $birthDate = new \DateTime($request->birth_of_date);
+            $today = new \DateTime();
+            $age = $today->diff($birthDate)->y;
 
-        if ($age < 18) {
-            return response()->json([
-                'success' => false,
-                'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
-            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            if ($age < 18) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
+                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            }
         }
 
         $user = User::create([
