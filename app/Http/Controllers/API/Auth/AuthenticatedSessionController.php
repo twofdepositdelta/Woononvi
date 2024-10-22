@@ -95,16 +95,18 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-        $birthDate = new \DateTime($request->birth_of_date);
-        $today = new \DateTime();
-        $age = $today->diff($birthDate)->y;
+        if($request->step != 1) {
+            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+            $birthDate = new \DateTime($request->birth_of_date);
+            $today = new \DateTime();
+            $age = $today->diff($birthDate)->y;
 
-        if ($age < 18) {
-            return response()->json([
-                'success' => false,
-                'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
-            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            if ($age < 18) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
+                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            }
         }
 
         $user = User::create([
