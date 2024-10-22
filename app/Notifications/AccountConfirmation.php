@@ -44,13 +44,13 @@ class AccountConfirmation extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/confirm-account/'.$this->token);
+        // $url = url('/confirm-account/'.$this->token);
 
         return (new MailMessage)
                     ->subject('Confirmez votre compte')
-                    ->greeting('Bonjour ' . $this->user->name . ',')
-                    ->line('Merci de vous être inscrit sur notre site. Veuillez confirmer votre compte en cliquant sur le bouton ci-dessous.')
-                    ->action('Confirmer le compte', $url)
+                    ->greeting('Bonjour ' . $this->user->firstname . ' ' . $this->user->lastname . ',')
+                    ->line('Merci de vous être inscrit sur Wononvi. Veuillez utiliser le code OTP ci-dessous pour valider votre compte.')
+                    ->action($this->token, '#')
                     ->line('Si vous n\'avez pas créé de compte, aucune autre action n\'est requise.');
     }
 
