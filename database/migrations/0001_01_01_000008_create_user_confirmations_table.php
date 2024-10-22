@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_confirmations', function (Blueprint $table) {
             $table->id();
+            $table->string('otp_code');
             $table->unsignedBigInteger('user_id');
-            $table->string('token')->unique();
-            $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

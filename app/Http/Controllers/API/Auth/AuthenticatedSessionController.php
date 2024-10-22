@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -37,6 +37,15 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
+
+            // Vérification si l'utilisateur est vérifié
+            if (!$user->is_verified) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Votre compte n'est pas encore vérifié.",
+                ], 401); // Statut 401 pour indiquer que l'authentification est refusée
+            }
+
             if($user->hasrole('passenger|driver')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
                 return response()->json([
@@ -85,6 +94,18 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
+        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+        $birthDate = new \DateTime($request->birth_of_date);
+        $today = new \DateTime();
+        $age = $today->diff($birthDate)->y;
+
+        if ($age < 18) {
+            return response()->json([
+                'success' => false,
+                'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
+            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+        }
+
         $user = User::create([
             'npi' => $request->npi,
             'firstname' => $request->firstname,
@@ -97,56 +118,33 @@ class AuthenticatedSessionController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = Str::random(60);
+        // $token = Str::random(60);
+
+        // Générer un OTP aléatoire (par exemple, 6 chiffres)
+        $otp = rand(100000, 999999);
 
         DB::table('user_confirmations')->insert([
             'user_id' => $user->id,
-            'token' => hash('sha256', $token),
+            'otp_code' => $otp,
             'created_at' => now(),
         ]);
+
+        // DB::table('user_confirmations')->insert([
+        //     'user_id' => $user->id,
+        //     'code_otp' => hash('sha256', $token),
+        //     'created_at' => now(),
+        // ]);
 
         // Envoyer la notification de confirmation
         $user->sendAccountConfirmationNotification($token);
 
         $user->assignRole('passenger');
 
-        $token = $user->createToken('mobile--token')->plainTextToken;
+        // $token = $user->createToken('mobile--token')->plainTextToken;
 
         return response()->json([
             'success' => true,
             'message' => 'Inscription réussie.',
-            'token' => $token
         ], 201);
-    }
-
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Quelque chose s\'est mal produite !.',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $userId = $request->user_id;
-
-        $user = User::findOrFail($userId);
-        $user->tokens()->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Utilisateur déconnecté avec succès !'
-        ], 200);
     }
 }
