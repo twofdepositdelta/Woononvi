@@ -24,6 +24,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($rides->isEmpty())
+                         <tr>
+                            <td colspan="7"  class="text-danger text-center">Aucun trajet enregistré</td>
+                         </tr>
+                        @else
+
                         @foreach ($rides as $index => $ride)
                             <tr>
                                 <td>{{ $index+1 }}</td>
@@ -53,11 +59,12 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @endif
                     </tbody>
                 </table>
+                @if (!$rides->isEmpty())
 
                 {{-- pagination --}}
-
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
                         <span>Affichage {{ $rides->firstItem() }} de {{ $rides->lastItem() }} a
                             {{ $rides->total() }} entrées</span>
@@ -122,8 +129,9 @@
                             @endif
                         </ul>
                     </div>
-
                 {{-- endpagination --}}
+
+                @endif
             </div>
         </div>
         <!-- / Content -->

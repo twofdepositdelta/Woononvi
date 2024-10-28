@@ -24,50 +24,56 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($rides as $index => $ride)
-                            <tr>
-                                <td>{{ $index+1 }}</td>
-                                <td>{{ $ride->departure }}</td>
-                                <td>{{ $ride->destination }}</td>
-                                <td>{{ $ride->departure_time }}</td>
-                                <td>{{ $ride->available_seats }}</td>
-                                <td>
-                                    @if ($ride->status == 'active')
-                                        <span class="badge bg-success">Actif</span>
-                                    @elseif ($ride->status == 'completed')
-                                        <span class="badge bg-info">Complété</span>
-                                    @elseif ($ride->status == 'cancelled')
-                                        <span class="badge bg-danger">Annulé</span>
-                                    @elseif ($ride->status == 'pending')
-                                        <span class="badge bg-warning">En attente</span>
-                                    @elseif ($ride->status == 'suspend')
-                                        <span class="badge bg-secondary">Suspendu</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center gap-10 justify-content-center">
-                                        <!-- View -->
+                        @if ($rides->isEmpty())
+                        <tr>
+                            <td colspan="7"  class="text-danger text-center">Aucun trajet enregistré</td>
+                         </tr>
+                        @else
+                            @foreach ($rides as $index => $ride)
+                                <tr>
+                                    <td>{{ $index+1 }}</td>
+                                    <td>{{ $ride->departure }}</td>
+                                    <td>{{ $ride->destination }}</td>
+                                    <td>{{ $ride->departure_time }}</td>
+                                    <td>{{ $ride->available_seats }}</td>
+                                    <td>
+                                        @if ($ride->status == 'active')
+                                            <span class="badge bg-success">Actif</span>
+                                        @elseif ($ride->status == 'completed')
+                                            <span class="badge bg-info">Complété</span>
+                                        @elseif ($ride->status == 'cancelled')
+                                            <span class="badge bg-danger">Annulé</span>
+                                        @elseif ($ride->status == 'pending')
+                                            <span class="badge bg-warning">En attente</span>
+                                        @elseif ($ride->status == 'suspend')
+                                            <span class="badge bg-secondary">Suspendu</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center gap-10 justify-content-center">
+                                            <!-- View -->
 
-                                        <a href="{{ route('rides.show',$ride) }}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                        </a>
+                                            <a href="{{ route('rides.show',$ride) }}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                            </a>
 
 
+                                                <form action="{{ route('rides.status',[$ride,'status'=> 'suspend']) }}" method="GET">
+                                                    <button type="submit" class="btn btn-primary text-sm "
+                                                        {{ $ride->status != 'pending' ? 'disabled' : '' }}>
+                                                        Suspendre
+                                                    </button>
+                                                </form>
 
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                                            <form action="{{ route('rides.status',[$ride,'status'=> 'suspend']) }}" method="GET">
-                                                <button type="submit" class="btn btn-primary text-sm "
-                                                    {{ $ride->status != 'pending' ? 'disabled' : '' }}>
-                                                    Suspendre
-                                                </button>
-                                            </form>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                        @endif
                     </tbody>
                 </table>
+                @if (!$rides->isEmpty())
 
                 {{-- pagination --}}
 
@@ -137,6 +143,8 @@
                     </div>
 
                 {{-- endpagination --}}
+
+                @endif
             </div>
         </div>
         <!-- / Content -->

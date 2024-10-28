@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TypeNewController;
+use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideRequestController;
 
@@ -51,6 +53,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class)->parameters([
         'users' => 'user:email',
+    ]);
+
+    Route::resource('typenews', TypeNewController::class)->parameters([
+        'typenews' => 'typenew:slug',
+    ]);
+
+    Route::resource('actualities', ActualityController::class)->parameters([
+        'actualities' => 'actuality:slug',
     ]);
 
     Route::resource('rides', RideController::class)->parameters([
