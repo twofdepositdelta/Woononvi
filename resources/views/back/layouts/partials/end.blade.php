@@ -1,3 +1,5 @@
+    <!-- Quill JavaScript -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <!-- jQuery library js -->
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-3.7.1.min.js') }}"></script>
@@ -27,6 +29,7 @@
 
     <!-- main js -->
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
+
     <script>
         $('.remove-button').on('click', function() {
             $(this).closest('.alert').addClass('d-none')

@@ -47,17 +47,17 @@
                 </a>
                 <!-- Bouton Activer/Désactiver -->
                 @if($user->status)
-                <a href="{{ route('users.updateStatus', $user) }}"
-                    class="bg-info-focus bg-hover-info-200 text-dark-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
-                    onclick="return confirm('Êtes-vous sûr de vouloir désactiver {{ $user->firstname }} {{ $user->lastname }} ?');">
-                    <iconify-icon icon="mdi:account-off-outline" class="menu-icon"></iconify-icon>
-                </a>
+                    <a href="{{ route('users.updateStatus', $user) }}"
+                        class="bg-info-focus bg-hover-info-200 text-dark-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
+                        onclick="return confirm('Êtes-vous sûr de vouloir désactiver {{ $user->firstname }} {{ $user->lastname }} ?');">
+                        <iconify-icon icon="mdi:account-off-outline" class="menu-icon"></iconify-icon>
+                    </a>
                 @else
-                <a href="{{ route('users.updateStatus', $user) }}"
-                    class="bg-success-focus bg-hover-success-200 text-success-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
-                    onclick="return confirm('Êtes-vous sûr de vouloir activer {{ $user->firstname }} {{ $user->lastname }} ?');">
-                    <iconify-icon icon="mdi:account-check-outline" class="menu-icon"></iconify-icon>
-                </a>
+                    <a href="{{ route('users.updateStatus', $user) }}"
+                        class="bg-success-focus bg-hover-success-200 text-success-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
+                        onclick="return confirm('Êtes-vous sûr de vouloir activer {{ $user->firstname }} {{ $user->lastname }} ?');">
+                        <iconify-icon icon="mdi:account-check-outline" class="menu-icon"></iconify-icon>
+                    </a>
                 @endif
             </div>
         </td>
