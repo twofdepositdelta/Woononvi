@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.2.2/css/flag-icons.min.css">
     <script  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCl0wex-ScEv-bJH9Tt9JLsKK4B0nbHQP8&libraries=places"></script>
+    <!-- Quill CSS (Snow Theme) -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
+    Route::get('/users/certified/{user}', [UserController::class, 'updateIsCertified'])->name('users.updateIsCertified');
 });
 
 

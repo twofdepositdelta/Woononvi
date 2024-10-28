@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Profile;
 use App\Models\User;
+use App\Models\City;
 use App\Models\Review;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Permission;
 use App\Helpers\BackHelper;
+use App\Http\Requests\StoreUserRequest;
+use App\Mail\UserCreated;
 
 class UserController extends Controller
 {
@@ -78,17 +86,50 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return view('back.pages.users.create', compact('roles'));
+        $roles = Role::whereNotIn('name', ['developer', 'driver', 'passenger'])->get();
+        $cities = City::all();
+        return view('back.pages.users.create', compact('roles', 'cities'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+
+
+    public function store(StoreUserRequest $request)
     {
-        //
+        // Générer un mot de passe aléatoire
+        $password = Str::random(10);
+
+        // Créer le nouvel utilisateur
+        $user = User::create([
+            'firstname' => $request->firstname,
+            'lastname'  => $request->lastname,
+            'email'     => $request->email.'@wononvi.com',
+            'phone'     => $request->phone,
+            'gender'    => $request->gender,
+            'city_id'    => $request->city,
+            'npi'       => $request->npi,
+            'password'  => Hash::make($password), // Hash du mot de passe
+        ]);
+
+        Profile::create([
+            'avatar' => BackHelper::getEnvFolder() . 'storage/back/assets/images/users/person.png',
+            'bio' => 'Travaille à Wononvi en tant que'. $request->role,
+            'address' => $user->city->name,
+            'user_id' => $user->id,
+        ]);
+
+        // Assigner le rôle à l'utilisateur
+        $user->roles()->attach($request->role);
+
+        // Envoi d'un email au nouvel utilisateur
+        Mail::to($user->email)->send(new UserCreated($user, $password));
+
+        // Rediriger avec un message de succès
+        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès. Un email lui a été envoyé.');
     }
+
 
     /**
      * Display the specified resource.
@@ -170,6 +211,23 @@ class UserController extends Controller
 
         // Redirection avec un message de succès
         return back()->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
+    }
+
+    public function updateIsCertified(User $user)
+    {
+        if (!$user->is_certified) {
+            // Changer le statut de l'utilisateur
+            $user->is_certified = !$user->is_certified;
+            $user->save();
+
+            // Redirection avec un message de succès
+            return back()->with('success', 'L\'utilisateur a été certifié avec succès.');
+        }
+        else
+        {
+            return back()->with('warning', 'L\'utilisateur a été déjà certifié donc ne peut  pas être dé-certifié à nouveau.');
+        }
+
     }
 
 
