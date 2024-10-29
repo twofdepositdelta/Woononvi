@@ -98,10 +98,8 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        // Générer un mot de passe aléatoire
         $password = Str::random(10);
 
-        // Créer le nouvel utilisateur
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname'  => $request->lastname,
@@ -110,20 +108,23 @@ class UserController extends Controller
             'gender'    => $request->gender,
             'city_id'    => $request->city,
             'npi'       => $request->npi,
-            'password'  => Hash::make($password), // Hash du mot de passe
+            'is_verified' => true,
+            'email_verified_at' => now(),
+            'password'  => Hash::make($password),
         ]);
+
+        $roleName = Role::where('name', $request->role)->first()->role;
 
         Profile::create([
             'avatar' => BackHelper::getEnvFolder() . 'storage/back/assets/images/users/person.png',
-            'bio' => 'Travaille à Wononvi en tant que'. $request->role,
+            'bio' => 'Travaille à Wononvi en tant que ' . $roleName,
             'address' => $user->city->name,
             'user_id' => $user->id,
         ]);
 
-        // Assigner le rôle à l'utilisateur
-        $user->roles()->attach($request->role);
+        // $user->roles()->attach($request->role);
+        $user->assignRole($request->role);
 
-        // Envoi d'un email au nouvel utilisateur
         Mail::to($user->email)->send(new UserCreated($user, $password));
 
         // Rediriger avec un message de succès
