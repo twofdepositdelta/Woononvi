@@ -78,14 +78,14 @@ class AuthenticatedSessionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'npi' => 'required_if:step,2|string|max:255|unique:users',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'phone' => 'required|string|max:255|unique:users',
+            'firstname' => 'required_if:step,1|string|max:255',
+            'lastname' => 'required_if:step,1|string|max:255',
+            'phone' => 'required_if:step,1|string|max:255|unique:users',
             'birth_of_date' => 'required_if:step,2|date|max:10',
-            'city_id' => 'required|string|max:255',
-            'role' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
+            'city_id' => 'required_if:step,1|string|max:255',
+            'role' => 'required_if:step,1|string|max:255',
+            'email' => 'required_if:step,2|string|email|max:255|unique:users',
+            'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
         if ($validator->fails()) {
