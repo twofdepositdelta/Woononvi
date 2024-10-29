@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\City;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -81,7 +82,7 @@ class AuthenticatedSessionController extends Controller
             'lastname' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:users',
             'birth_of_date' => 'required_if:step,2|date|max:10',
-            'city_id' => 'required_if:step,2|string|max:255',
+            'city_id' => 'required|string|max:255',
             'role' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
@@ -105,17 +106,21 @@ class AuthenticatedSessionController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
+                    'age' => $age
                 ], 401); // Statut 401 pour indiquer que l'inscription est refusée
             }
         }
 
+        $city = City::whereIndicatif($request->city_id)->first();
+
         $user = User::create([
-            'step' => $request->step,
+            // 'step' => $request->step,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'city_id' => $city->id
         ]);
 
         if($request->step == 1) {
