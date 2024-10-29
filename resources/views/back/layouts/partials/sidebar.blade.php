@@ -70,16 +70,16 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="invoice-list.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                        <a href="{{route('rides.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="invoice-preview.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
+                        <a href="{{route('rides.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
                     </li>
                     <li>
                         <a href="invoice-add.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
                     </li>
                     <li>
-                        <a href="invoice-edit.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
+                        <a href="{{route('rides.historique')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>
@@ -92,13 +92,13 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="text-generator.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
+                        <a href="{{route('ride_requests.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="code-generator.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
+                        <a href="{{route('ride_requests.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
                     </li>
                     <li>
-                        <a href="image-generator.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
+                        <a href="{{route('ride_requests.historique')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
                     </li>
                 </ul>
             </li>

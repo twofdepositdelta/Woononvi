@@ -186,6 +186,7 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                 @endif
                             </div>
                         </div>
+
                     </div>
                     <div class="row g-3">
                         <div class="col-12">
@@ -216,6 +217,36 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                         </span>
                                         <span class="text-neutral-700 d-block">Total Demande</span>
                                         <h6 class="mb-0 mt-4">{{ $totalRideRequests }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="card h-100 p-0">
+                                <div class="card-header border-bottom bg-base py-16 px-24">
+                                    <h6 class="text-lg fw-semibold mb-0">Actions</h6>
+                                </div>
+                                <div class="card-body p-24">
+                                    <div class="d-flex flex-wrap align-items-center gap-3">
+                                        <a href="{{ route('users.updateStatus', $user) }}"
+                                            class="btn rounded-pill btn-{{ $user->status ? 'warning' : 'success' }}-600 radius-8 px-20 py-11"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir {{ $user->status ? 'activer' : 'désactiver' }} {{ $user->firstname }} {{ $user->lastname }} ?');">
+                                            {{ $user->status ? 'Désactiver' : 'Activer' }}
+                                        </a>
+                                        <a href="{{ route('users.delete', $user) }}"
+                                            class="btn rounded-pill btn-danger-600 radius-8 px-20 py-11"
+                                            onclick="return confirm('Attention ! cette action est très dangereuse, êtes-vous sûr de vouloir supprimer {{ $user->firstname }} {{ $user->lastname }} ?');">
+                                            Supprimer
+                                        </a>
+                                        @if (!$user->is_certified)
+                                            <a href="{{ route('users.updateIsCertified', $user) }}"
+                                                class="btn rounded-pill btn-success-600 radius-8 px-20 py-11"
+                                                onclick="return confirm('Attention ! cette action est irreversible, êtes-vous sûr de vouloir certifier {{ $user->firstname }} {{ $user->lastname }} ?');">
+                                                Certifier
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

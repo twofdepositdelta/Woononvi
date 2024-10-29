@@ -39,8 +39,8 @@
                                         <th scope="col">Nom du pays</th>
                                         <th scope="col">Code</th>
                                         <th scope="col">Indicatif</th>
-
-                                        <th scope="col" class="text-center">Status</th>
+                                        <th scope="col">Statut</th>
+                                        <th scope="col" class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,12 +71,17 @@
 
                                             <td>{{$country->indicatif}}</td>
 
-
+                                            <td>
+                                                <a href="#"
+                                                    class="badge bg-{{ $country->is_active ? 'success' : 'danger' }}">
+                                                    {{ $country->is_active ? 'Actif' : ' Inactif' }}
+                                                </a>
+                                            </td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0)"
                                                     onclick="openConfirmationModal('{{ route('country.updatestatus', $country) }}', {{ $country->is_active }}, '{{ $country->name }}')"
-                                                    class="bg-{{ $country->is_active ? 'success' : 'neutral' }}-focus text-{{ $country->is_active ? 'success' : 'neutral' }}-600 border border-{{ $country->is_active ? 'success' : 'neutral' }}-main px-24 py-4 radius-4 fw-medium text-sm">
-                                                    {{ $country->is_active ? 'Activé' : 'Désactivé' }}
+                                                   class="btn btn-{{ $country->is_active ? 'warning' : 'primary' }}-600 radius-8 px-14 py-6 text-sm">
+                                                    {{ $country->is_active ? ' Désactiver ' : 'Activer' }}
                                                 </a>
                                             </td>
 
