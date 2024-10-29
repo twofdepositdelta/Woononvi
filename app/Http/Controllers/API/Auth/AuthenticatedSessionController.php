@@ -171,8 +171,6 @@ class AuthenticatedSessionController extends Controller
                 ->where('expired_at', '>', Carbon::now())
                 ->first();
 
-            return $otp;
-
             if (!$otp) {
                 return response()->json([
                     'success' => false,
