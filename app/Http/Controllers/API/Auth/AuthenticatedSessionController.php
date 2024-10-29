@@ -163,29 +163,36 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::whereEmail($request->email)->first();
 
-        $otp = DB::table('user_confirmations')
-            ->where('email', $user->email)
-            ->where('otp_code', $request->otp)
-            ->where('expired_at', '>', Carbon::now())
-            ->first();
+        if($user) {
+            $otp = DB::table('user_confirmations')
+                ->where('email', $user->email)
+                ->where('otp_code', $request->otp)
+                ->where('expired_at', '>', Carbon::now())
+                ->first();
 
-        if (!$otp) {
+            if (!$otp) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'OTP invalide ou expiré !',
+                ], 422);
+            }
+
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+            // Supprimer l'OTP après vérification
+            $otp->delete();
+
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'message' => 'E-mail vérifié avec succès !',
+            ], 200);
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'OTP invalide ou expiré !',
+                'message' => 'Nom d\'utilisateur invalide !',
             ], 422);
         }
-
-        $user->email_verified_at = Carbon::now();
-        $user->save();
-
-        // Supprimer l'OTP après vérification
-        $otp->delete();
-
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'message' => 'E-mail vérifié avec succès !',
-        ], 200);
     }
 }
