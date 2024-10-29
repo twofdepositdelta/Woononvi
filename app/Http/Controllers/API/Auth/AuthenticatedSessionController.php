@@ -155,7 +155,7 @@ class AuthenticatedSessionController extends Controller
         }
     }
 
-    public function emailVerify(Request $request) {
+    public function verifyOtp(Request $request) {
         $validator = Validator::make($request->all(), [
             'otp' => 'required|integer|size:4',
             'email' => 'required|string|max:255',
