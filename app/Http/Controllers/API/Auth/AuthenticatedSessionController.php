@@ -163,6 +163,8 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::whereEmail($request->email)->first();
 
+        return $user;
+
         if($user) {
             $otp = DB::table('user_confirmations')
                 ->where('user_id', $user->user_id)
