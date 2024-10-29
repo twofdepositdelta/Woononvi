@@ -84,6 +84,7 @@ class AuthenticatedSessionController extends Controller
             'phone' => 'required_if:step,1|string|max:255|unique:users',
             'birth_of_date' => 'required_if:step,2|date|max:10',
             'city_id' => 'required_if:step,2|string|max:255',
+            'country_id' => 'required_if:step,1|string|max:255',
             'role' => 'required_if:step,1|string|max:255',
             'email' => 'required_if:step,2|string|email|max:255|unique:users',
             'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
@@ -112,7 +113,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        $city = Country::whereIndicatif($request->city_id)->first();
+        $country = Country::whereIndicatif($request->country_id)->first();
 
         $user = User::create([
             // 'step' => $request->step,
@@ -121,7 +122,7 @@ class AuthenticatedSessionController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'city_id' => $city->id
+            'city_id' => $country->id
         ]);
 
         if($request->step == 1) {
