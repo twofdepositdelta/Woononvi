@@ -5,6 +5,12 @@
     <div class="card-body p-24">
         <div class="row justify-content-center">
             <div class="col-xxl-6 col-xl-10 col-lg-10">
+                <div class="card-header">
+                    <div class="d-flex mb-3 align-items-center">
+                        <h5 class="card-title mb-2" style="margin-bottom: 15px !important">Création d'un utilisateur</h5>
+                        <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm ms-auto">Liste Utilisateur</a>
+                    </div>
+                </div>
                 <div class="card border">
                     <div class="card-body">
                         <h6 class="text-md text-primary-light mb-16">Nouveau Utilisateur</h6>
@@ -80,7 +86,7 @@
                                     <select class="form-control radius-8 form-select" id="role" name="role" required>
                                         <option value="" disabled selected>Sélectionner le rôle</option>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" {{ old('role') == $role->id ? 'selected' : '' }}>
+                                            <option value="{{ $role->name }}" {{ old('role') == $role->id ? 'selected' : '' }}>
                                                 {{ \Spatie\Permission\Models\Role::where('name', $role->name)->first()->role
                                             }}
                                             </option>
