@@ -163,7 +163,6 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::whereEmail($request->email)->first();
 
-        return $user;
 
         if($user) {
             $otp = DB::table('user_confirmations')
@@ -171,6 +170,8 @@ class AuthenticatedSessionController extends Controller
                 ->where('otp_code', $request->otp)
                 // ->where('expired_at', '>', Carbon::now())
                 ->first();
+
+            return $otp;
 
             if (!$otp) {
                 return response()->json([
