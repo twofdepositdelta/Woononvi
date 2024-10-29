@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users'); // Clé étrangère vers la table users
-            $table->boolean('smoking_allowed')->default(false);   // Si fumer est autorisé
-            $table->enum('music_preference', ['none', 'soft', 'loud'])->nullable(); // Préférence musicale
-            $table->boolean('pet_allowed')->default(false);       // Si les animaux sont autorisés
+            $table->boolean('smoking_allowed')->default(true);   // Si fumer est autorisé
+            $table->enum('music_preference', ['none', 'soft', 'loud', 'all'])->default('all'); // Préférence musicale
+            $table->boolean('pet_allowed')->default(true);       // Si les animaux sont autorisés
             $table->text('other_preferences')->nullable();        // Autres préférences
             $table->timestamps();
         });

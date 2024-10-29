@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
+use Carbon\Carbon;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -113,25 +114,25 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        $country = Country::whereIndicatif($request->country_id)->first();
-
-        $user = User::create([
-            // 'step' => $request->step,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'city_id' => $country->id
-        ]);
-
         if($request->step == 1) {
+            $country = Country::whereIndicatif($request->country_id)->first();
+
+            $user = User::create([
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'city_id' => $country->id
+            ]);
+
             // Générer un OTP aléatoire (par exemple, 6 chiffres)
-            $otp = rand(100000, 999999);
+            $otp = rand(1000, 9999);
 
             DB::table('user_confirmations')->insert([
                 'user_id' => $user->id,
                 'otp_code' => $otp,
+                'expired_at' => Carbon::now()->addMinutes(60),
                 'created_at' => now(),
             ]);
 
@@ -141,8 +142,6 @@ class AuthenticatedSessionController extends Controller
             $role = $request->role == "Passager" ? "passenger" : "driver";
 
             $user->assignRole($role);
-
-            // $token = $user->createToken('mobile--token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
@@ -154,5 +153,38 @@ class AuthenticatedSessionController extends Controller
                 'message' => 'Vous vous êtes déjà inscrits.',
             ], 201);
         }
+    }
+
+    public function emailVerify(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required|integer|size:4',
+            'email' => 'required|string|max:255',
+        ]);
+
+        $otp = DB::table('user_confirmations')
+            ->where('email', $request->email)
+            ->where('otp_code', $request->otp)
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if (!$otp) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP invalide ou expiré !',
+            ], 422);
+        }
+
+        $user = User::whereEmail($request->email)->first();
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        // Supprimer l'OTP après vérification
+        $otp->delete();
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'message' => 'E-mail vérifié avec succès !',
+        ], 200);
     }
 }
