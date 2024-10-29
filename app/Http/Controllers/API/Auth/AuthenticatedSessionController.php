@@ -161,8 +161,10 @@ class AuthenticatedSessionController extends Controller
             'email' => 'required|string|max:255',
         ]);
 
+        $user = User::whereEmail($request->email)->first();
+
         $otp = DB::table('user_confirmations')
-            ->where('email', $request->email)
+            ->where('email', $user->email)
             ->where('otp_code', $request->otp)
             ->where('expired_at', '>', Carbon::now())
             ->first();
@@ -174,7 +176,6 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        $user = User::whereEmail($request->email)->first();
         $user->email_verified_at = Carbon::now();
         $user->save();
 
