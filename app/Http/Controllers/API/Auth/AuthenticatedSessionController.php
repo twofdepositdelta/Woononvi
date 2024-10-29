@@ -168,7 +168,7 @@ class AuthenticatedSessionController extends Controller
             $otp = DB::table('user_confirmations')
                 ->where('user_id', $user->id)
                 ->where('otp_code', $request->otp)
-                // ->where('expired_at', '>', Carbon::now())
+                ->where('expired_at', '>', Carbon::now())
                 ->first();
 
             return $otp;
