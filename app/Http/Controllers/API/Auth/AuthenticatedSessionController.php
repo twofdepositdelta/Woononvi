@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\City;
+use App\Models\Country;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -111,7 +112,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        $city = City::whereIndicatif($request->city_id)->first();
+        $city = Country::whereIndicatif($request->city_id)->first();
 
         $user = User::create([
             // 'step' => $request->step,

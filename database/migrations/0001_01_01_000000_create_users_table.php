@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
-            $table->string('npi')->unique();
+            $table->string('npi')->nullable()->unique();
             $table->rememberToken();
-            $table->foreignIdFor(City::class);
+            $table->foreignIdFor(City::class)->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_certified')->default(false);
