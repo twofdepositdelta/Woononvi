@@ -30,7 +30,8 @@
                         <!-- Description -->
                         <div class="col-12">
                             <label class="form-label" for="description">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Entrez la description de l'actualité" rows="3" required>{{ old('description', $actuality->description) }}</textarea>
+                            <input type="hidden" name="description" id="description" value="{{ old('description', $actuality->description) }}">
+                            <div id="editor" class="form-control">{!! old('description', $actuality->description) !!}</div>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -45,10 +46,11 @@
                             @enderror
                         </div>
 
-                        <!-- Type d'Actualité -->
-                        <div class="col-12">
+
+                         <!-- Type d'Actualité -->
+                         <div class="col-12">
                             <label class="form-label" for="type_new_id">Type d'Actualité</label>
-                            <select class="form-select @error('type_new_id') is-invalid @enderror" id="type_new_id" name="type_new_id" required>
+                            <select class="form-select @error('type_new_id') is-invalid @enderror" id="type_new" name="type_new_id" required>
                                 <option value="">Sélectionnez un type</option>
                                 @foreach($typenews as $typenew)
                                     <option value="{{ $typenew->id }}" {{ $typenew->id === $actuality->type_new_id ? 'selected' : '' }}>{{ $typenew->name }}</option>
@@ -60,6 +62,20 @@
                         </div>
 
                         <div class="col-12">
+                            <label class="form-label">Sélectionnez un Rôle</label>
+                            <select class="form-select @error('roles') is-invalid @enderror" name="roles[]" id="roles" multiple required style="width: 100%; height: 150px;">
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->id }}" {{ $actuality->roles->pluck('id')->contains($role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('roles')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+
+                        <div class="col-12 d-none" id="status">
                             <label class="form-label">Statut de Publication</label>
                             <div class="d-flex align-items-center flex-wrap gap-28">
                                 <div class="form-check d-flex align-items-center gap-2">
@@ -95,7 +111,47 @@
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let typenew = document.getElementById('type_new');
+        let status = document.getElementById('status');
 
+        // Écoutez les changements sur le select
+        typenew.addEventListener('change', function() {
+            // Vérifiez si le type sélectionné est celui qui nécessite d'afficher le statut
+            if (typenew.value === '3') { // Remplacez '1' par l'ID du type qui doit afficher le statut
+                status.classList.remove('d-none'); // Affiche le statut
+            } else {
+                status.classList.add('d-none'); // Cache le statut
+            }
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialisation de Quill avec le thème Snow
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        // Mettre à jour le champ caché lors des changements dans l'éditeur
+        quill.on('text-change', function() {
+            // Récupérer le contenu HTML de l'éditeur
+            var content = document.querySelector('input[name=description]');
+            content.value = quill.root.innerHTML;
+        });
+
+        // Transférer le contenu de l'éditeur dans le champ caché lors de la soumission du formulaire
+        var form = document.querySelector('form');
+        form.onsubmit = function() {
+            // Récupérer le contenu HTML de l'éditeur (bien que cela soit déjà fait à chaque changement)
+            var content = document.querySelector('input[name=description]');
+            content.value = quill.root.innerHTML;
+        };
+    });
+</script>
 
 
 @endsection

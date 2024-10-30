@@ -38,8 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/filter-cities', [DashboardController::class, 'filterCitiesByCountry'])->name('filter.cities');
 
 
-    Route::get('/apis/edit', [ApiController::class, 'api'])->name('apis');
-    Route::put('/apis/update', [ApiController::class, 'update'])->name('apis.update');
+    Route::get('/apis/edit/', [ApiController::class, 'api'])->name('apis');
+    Route::put('/apis/update/', [ApiController::class, 'update'])->name('apis.update');
 
 
     Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');

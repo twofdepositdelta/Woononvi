@@ -19,7 +19,7 @@
                   <div class="col mt-5">
                     <div class="mb-3">
                         <h6>Description :</h6>
-                        <p>{{ $actuality->description }}</p>
+                        <p>{!! $actuality->description !!}</p>
                     </div>
 
                     <div class="mb-3">

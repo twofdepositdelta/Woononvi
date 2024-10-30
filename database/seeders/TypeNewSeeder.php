@@ -16,34 +16,28 @@ class TypeNewSeeder extends Seeder
     {
         DB::table('type_news')->insert([
             [
-                'name' => 'mise à jour',
-                'slug'=>Str::slug('mise a jour'),
-                'description' => 'Informations sur les nouvelles versions ou fonctionnalités',
+                'name' => 'Notification',
+                'slug' => Str::slug('Notification'),
+                'description' => 'Annonces essentielles concernant des mises à jour ou des changements importants.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
-                'name' => 'promotion',
-                'slug'=>Str::slug('promotion'),
-                'description' => 'Annonces de codes promotionnels et offres spéciales',
+                'name' => 'Message email',
+                'slug' => Str::slug('Message email'),
+                'description' => 'Annonces de promotions, offres spéciales et communications envoyées par email.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
-                'name' => 'sécurité',
-                'slug'=>Str::slug('sécurité'),
-                'description' => 'Conseils et nouveautés en matière de sécurité',
-
+                'name' => 'Blog',
+                'slug' => Str::slug('Blog'),
+                'description' => 'Articles et conseils sur divers sujets, y compris la sécurité et les meilleures pratiques.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [
-                'name' => 'information',
-                'slug'=>Str::slug('information'),
-                'description' => 'Informations générales ou changements de service',
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
+           
         ]);
+
     }
 }

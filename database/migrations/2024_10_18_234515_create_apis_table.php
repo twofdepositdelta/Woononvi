@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Environment;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,6 +14,8 @@ return new class extends Migration
     {
         Schema::create('apis', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->string('maps')->nullable();
             $table->string('feedpay_public')->nullable();
             $table->string('feedpay_private')->nullable();
@@ -20,7 +23,7 @@ return new class extends Migration
             $table->string('kkiapay_public')->nullable();
             $table->string('kkiapay_private')->nullable();
             $table->string('kkiapay_secret')->nullable();
-
+            $table->foreignIdFor(Environment::class)->nullable();
             $table->timestamps();
         });
     }

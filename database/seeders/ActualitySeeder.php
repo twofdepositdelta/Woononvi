@@ -45,16 +45,7 @@ class ActualitySeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
-            [
-                'titre' => 'Expansion du service',
-                'slug'=>Str::slug('Expansion du service'),
-                'description' => 'Notre service est maintenant disponible dans la région Ouest !',
-                'image_url' => '/images/expansion.png',
-                'type_new_id' => 4, // ID de "information"
-                 'published'=> true,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
+           
         ]);
     }
 }

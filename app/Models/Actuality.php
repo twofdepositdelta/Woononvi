@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,5 +24,10 @@ class Actuality extends Model
     public function typeactualite()
     {
         return $this->belongsTo(TypeNew::class, 'type_new_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'actuality_role');
     }
 }

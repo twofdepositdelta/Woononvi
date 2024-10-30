@@ -1,5 +1,5 @@
     <!-- Quill JavaScript -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
     <!-- jQuery library js -->
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/lib/jquery-3.7.1.min.js') }}"></script>
