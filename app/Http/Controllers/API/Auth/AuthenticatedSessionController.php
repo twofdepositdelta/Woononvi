@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\City;
+use App\Models\Country;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
+use Carbon\Carbon;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -76,15 +79,17 @@ class AuthenticatedSessionController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'npi' => 'required_if:step,2|string|max:255|unique:users',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'phone' => 'required|string|max:255|unique:users',
+            'step' => 'required',
+            'npi' => 'required_if:step,2|string|size:9|unique:users',
+            'firstname' => 'required_if:step,1|string|max:255',
+            'lastname' => 'required_if:step,1|string|max:255',
+            'phone' => 'required_if:step,1|string|max:255|unique:users',
             'birth_of_date' => 'required_if:step,2|date|max:10',
             'city_id' => 'required_if:step,2|string|max:255',
-            'role' => 'required|string|max:255',
+            'country_id' => 'required_if:step,1|string|max:255',
+            'role' => 'required_if:step,1|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
         if ($validator->fails()) {
@@ -95,36 +100,25 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        if($request->step != 1) {
-            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-            $birthDate = new \DateTime($request->birth_of_date);
-            $today = new \DateTime();
-            $age = $today->diff($birthDate)->y;
-
-            if ($age < 18) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
-                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
-            }
-        }
-
-        $user = User::create([
-            'step' => $request->step,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
         if($request->step == 1) {
+            $country = Country::whereIndicatif($request->country_id)->first();
+
+            $user = User::create([
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'city_id' => $country->id
+            ]);
+
             // Générer un OTP aléatoire (par exemple, 6 chiffres)
-            $otp = rand(100000, 999999);
+            $otp = rand(1000, 9999);
 
             DB::table('user_confirmations')->insert([
                 'user_id' => $user->id,
                 'otp_code' => $otp,
+                'expired_at' => Carbon::now()->addMinutes(60),
                 'created_at' => now(),
             ]);
 
@@ -135,17 +129,96 @@ class AuthenticatedSessionController extends Controller
 
             $user->assignRole($role);
 
-            // $token = $user->createToken('mobile--token')->plainTextToken;
-
             return response()->json([
                 'success' => true,
                 'message' => 'Inscription réussie.',
             ], 201);
         } else {
-            return response()->json([
-                'success' => true,
-                'message' => 'Vous vous êtes déjà inscrits.',
-            ], 201);
+            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+            $birthDate = new \DateTime($request->birth_of_date);
+            $today = new \DateTime();
+            $age = $today->diff($birthDate)->y;
+
+            if ($age < 18) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Vous devez avoir au moins 18 ans pour continuer.",
+                    'age' => $age
+                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            }
+
+            $user = User::whereEmail($request->email)->first();
+
+            if($user) {
+                $user->update([
+                    'birth_date' => $request->birth_date,
+                    'npi' => $request->npi,
+                    'gender' => $request->gender,
+                    'city_id' => $request->city_id,
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Votre inscription a été finalisée avec succès.',
+                    'user' => $user,
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Il y a un souci avec l\'utilisateur.',
+                ], 422);
+            }
         }
     }
+
+    public function verifyOtp(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required|integer|size:4',
+            'email' => 'required|string|max:255',
+        ]);
+
+        $user = User::whereEmail($request->email)->first();
+
+
+        if($user) {
+            $otp = DB::table('user_confirmations')
+                ->where('user_id', $user->id)
+                ->where('otp_code', $request->otp)
+                ->where('expired_at', '>', Carbon::now())
+                ->first();
+
+            if (!$otp) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'OTP invalide ou expiré !',
+                ], 422);
+            }
+
+            $user->email_verified_at = Carbon::now();
+            $user->is_verified = true;
+            $user->save();
+
+            // Supprimer l'OTP après vérification
+            DB::table('user_confirmations')
+                ->where('user_id', $user->id)
+                ->where('otp_code', $request->otp)
+                ->where('expired_at', '>', Carbon::now())
+                ->delete();
+
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'message' => 'E-mail vérifié avec succès !',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nom d\'utilisateur invalide !',
+            ], 422);
+        }
+    }
+
+    // public function forgotPassword(Request $request) {
+
+    // }
 }

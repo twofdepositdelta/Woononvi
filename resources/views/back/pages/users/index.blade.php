@@ -4,7 +4,10 @@
 
 <div class="card basic-data-table">
     <div class="card-header">
-        <h5 class="card-title mb-2" style="margin-bottom: 15px !important">Liste des utilisateurs</h5>
+        <div class="d-flex mb-3 align-items-center">
+            <h5 class="card-title mb-2" style="margin-bottom: 15px !important">Liste des utilisateurs</h5>
+            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm ms-auto">+ Utilisateur</a>
+        </div>
         <div class="d-flex align-items-center">
             <!-- Filtre par rôle -->
             <label for="role" class="me-2">Rôle:</label>
