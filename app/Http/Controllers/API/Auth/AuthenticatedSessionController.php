@@ -79,6 +79,7 @@ class AuthenticatedSessionController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'step' => 'required',
             'npi' => 'required_if:step,2|string|max:255|unique:users',
             'firstname' => 'required_if:step,1|string|max:255',
             'lastname' => 'required_if:step,1|string|max:255',
@@ -148,18 +149,25 @@ class AuthenticatedSessionController extends Controller
 
             $user = User::whereEmail($request->email)->first();
 
-            $user->update([
-                'birth_date' => $request->birth_date,
-                'npi' => $request->npi,
-                'gender' => $request->gender,
-                'city_id' => $request->city_id,
-            ]);
+            if($user) {
+                $user->update([
+                    'birth_date' => $request->birth_date,
+                    'npi' => $request->npi,
+                    'gender' => $request->gender,
+                    'city_id' => $request->city_id,
+                ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Votre inscription a été finalisée avec succès.',
-                'user' => $user,
-            ], 201);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Votre inscription a été finalisée avec succès.',
+                    'user' => $user,
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Il y a un soucis avec l\'utilisateur.',
+                ], 422);
+            }
         }
     }
 
