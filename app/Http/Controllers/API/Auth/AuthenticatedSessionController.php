@@ -87,7 +87,7 @@ class AuthenticatedSessionController extends Controller
             'city_id' => 'required_if:step,2|string|max:255',
             'country_id' => 'required_if:step,1|string|max:255',
             'role' => 'required_if:step,1|string|max:255',
-            'email' => 'required_if:step,2|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -97,21 +97,6 @@ class AuthenticatedSessionController extends Controller
                 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
-        }
-
-        if($request->step != 1) {
-            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-            $birthDate = new \DateTime($request->birth_of_date);
-            $today = new \DateTime();
-            $age = $today->diff($birthDate)->y;
-
-            if ($age < 18) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Vous devez avoir au moins 18 ans pour vous inscrire.",
-                    'age' => $age
-                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
-            }
         }
 
         if($request->step == 1) {
@@ -148,9 +133,32 @@ class AuthenticatedSessionController extends Controller
                 'message' => 'Inscription réussie.',
             ], 201);
         } else {
+            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+            $birthDate = new \DateTime($request->birth_of_date);
+            $today = new \DateTime();
+            $age = $today->diff($birthDate)->y;
+
+            if ($age < 18) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Vous devez avoir au moins 18 ans pour continuer.",
+                    'age' => $age
+                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+            }
+
+            $user = User::whereEmail($request->email)->first();
+
+            $user->update([
+                'birth_date' => $request->birth_date,
+                'npi' => $request->npi,
+                'gender' => $request->gender,
+                'city_id' => $request->city_id,
+            ]);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Vous vous êtes déjà inscrits.',
+                'message' => 'Votre inscription a été finalisée avec succès.',
+                'user' => $user,
             ], 201);
         }
     }
@@ -179,6 +187,7 @@ class AuthenticatedSessionController extends Controller
             }
 
             $user->email_verified_at = Carbon::now();
+            $user->is_verified = true;
             $user->save();
 
             // Supprimer l'OTP après vérification
@@ -200,4 +209,8 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
     }
+
+    // public function forgotPassword(Request $request) {
+
+    // }
 }
