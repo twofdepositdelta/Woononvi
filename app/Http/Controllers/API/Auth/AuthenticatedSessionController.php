@@ -80,7 +80,7 @@ class AuthenticatedSessionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'step' => 'required',
-            'npi' => 'required_if:step,2|string|max:255|unique:users',
+            'npi' => 'required_if:step,2|string|size:9|unique:users',
             'firstname' => 'required_if:step,1|string|max:255',
             'lastname' => 'required_if:step,1|string|max:255',
             'phone' => 'required_if:step,1|string|max:255|unique:users',
@@ -165,7 +165,7 @@ class AuthenticatedSessionController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Il y a un soucis avec l\'utilisateur.',
+                    'message' => 'Il y a un souci avec l\'utilisateur.',
                 ], 422);
             }
         }
