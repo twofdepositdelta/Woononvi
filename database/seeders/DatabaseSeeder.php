@@ -24,13 +24,10 @@ class DatabaseSeeder extends Seeder
             EnvironmentSeeder::class,
             ApiSeeder::class,
             RideSeeder::class,
-<<<<<<< HEAD
             ConversationSeeder::class,
             MessageSeeder::class,
-=======
             TypeNewSeeder::class,
             ActualitySeeder::class
->>>>>>> 902eafe4ed2d85c27d0ad528effc278d8fd1de33
         ]);
     }
 }
