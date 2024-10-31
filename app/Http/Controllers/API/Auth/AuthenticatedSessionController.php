@@ -88,7 +88,16 @@ class AuthenticatedSessionController extends Controller
             'city_id' => 'required_if:step,2|string|max:255',
             'country_id' => 'required_if:step,1|string|max:255',
             'role' => 'required_if:step,1|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            // 'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->when($request->input('step') == 1, function ($query) {
+                    return $query;
+                })
+            ],
             'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
