@@ -79,27 +79,50 @@ class AuthenticatedSessionController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'step' => 'required',
-            'npi' => 'required_if:step,2|string|size:9|unique:users',
-            'firstname' => 'required_if:step,1|string|max:255',
-            'lastname' => 'required_if:step,1|string|max:255',
-            'phone' => 'required_if:step,1|string|max:255|unique:users',
-            'birth_of_date' => 'required_if:step,2|date|max:10',
-            'city_id' => 'required_if:step,2|string|max:255',
-            'country_id' => 'required_if:step,1|string|max:255',
-            'role' => 'required_if:step,1|string|max:255',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->when($request->input('step') == 1, function ($query) {
-                    return $query;
-                })
-            ],
-            'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'step' => 'required',
+        //     'npi' => 'required_if:step,2|string|size:9|unique:users',
+        //     'firstname' => 'required_if:step,1|string|max:255',
+        //     'lastname' => 'required_if:step,1|string|max:255',
+        //     'phone' => 'required_if:step,1|string|max:255|unique:users',
+        //     'birth_of_date' => 'required_if:step,2|date|max:10',
+        //     'city_id' => 'required_if:step,2|string|max:255',
+        //     'country_id' => 'required_if:step,1|string|max:255',
+        //     'role' => 'required_if:step,1|string|max:255',
+        //     'email' => [
+        //         'required',
+        //         'string',
+        //         'email',
+        //         'max:255',
+        //         Rule::unique('users')->when($request->input('step') == 1, function ($query) {
+        //             return $query;
+        //         })
+        //     ],
+        //     'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
+        // ]);
+
+        if ($request->input('step') == 1) {
+            $rules = [
+                'step' => 'required',
+                'firstname' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'phone' => 'required|string|max:255|unique:users',
+                'country_id' => 'required|string|max:255',
+                'role' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
+            ];
+        } elseif ($request->input('step') == 2) {
+            $rules = [
+                'step' => 'required',
+                'npi' => 'required|string|size:9|unique:users',
+                'birth_of_date' => 'required|date|max:10',
+                'city_id' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255', // sans unique pour step 2
+            ];
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
