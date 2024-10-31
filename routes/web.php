@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideRequestController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -59,11 +60,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
 
-
-
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
     Route::get('/users/certified/{user}', [UserController::class, 'updateIsCertified'])->name('users.updateIsCertified');
+    Route::get('/conversations/{id}/messages', [ChatController::class, 'fetchMessages']);
+
+    Route::get('/support/chat/conversation', [ChatController::class, 'fetchMessages'])->name('chat.fetchMessages');
 });
 
 
