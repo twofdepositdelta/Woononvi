@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class Noti extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'message',
+        'data',
         'user_id', // Clé étrangère pour l'utilisateur qui reçoit la notification
         'ride_id', // Clé étrangère pour le trajet associé
         'notification_type',
@@ -28,6 +28,6 @@ class Notification extends Model
         return $this->belongsTo(Ride::class, 'ride_id'); // Assurez-vous d'importer le modèle Ride
     }
 
-   
+
 
 }

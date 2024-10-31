@@ -3,8 +3,9 @@
 namespace App\Helpers;
 
 use App;
-use App\Models\Setting;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -53,5 +54,12 @@ class FrontHelper
         }
 
         return $status;
+    }
+
+    public static function getAdminUsers()
+    {
+        $data = User::role('driver')->get();
+
+        return $data;
     }
 }
