@@ -222,15 +222,16 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                         <div class="mb-20">
                                             <label for="phone" class="form-label fw-semibold text-primary-light text-sm mb-8">Téléphone <span class="text-danger-600">*</span></label>
                                             <div class="d-flex">
-                                                <select id="indicatif" name="indicatif" class="form-select radius-8 me-2" style="width: 50%;">
+                                                <select id="indicatif" name="indicatif" class="form-select radius-8 me-2 flex-grow-1" style="max-width: 150px;">
                                                     @foreach($countries as $country)
                                                         <option value="{{ $country->indicatif }}" {{ Auth::user()->city->country->code == $country->code ? 'selected' : '' }}>
                                                             ({{ $country->indicatif }})
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                <input type="text" class="form-control radius-8" id="phone" name="phone" placeholder="Entrer le numéro de téléphone" value="{{ old('phone', Auth::user()->phone) }}">
+                                                <input type="text" class="form-control radius-8 flex-grow-1" id="phone" name="phone" placeholder="Entrer le numéro de téléphone" value="{{ old('phone', Auth::user()->phone) }}">
                                             </div>
+
                                             @error('phone')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror

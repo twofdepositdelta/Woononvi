@@ -204,13 +204,13 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="line-chart.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        <a href="{{route('actualities.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="column-chart.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                        <a href="{{route('actualities.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li>
                     <li>
-                        <a href="pie-chart.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
+                        <a href="{{route('typenews.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
                     </li>
                 </ul>
             </li>
