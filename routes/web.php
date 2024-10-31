@@ -11,6 +11,7 @@ use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -73,9 +74,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
     Route::get('/users/certified/{user}', [UserController::class, 'updateIsCertified'])->name('users.updateIsCertified');
-    Route::get('/conversations/{id}/messages', [ChatController::class, 'fetchMessages']);
 
-    Route::get('/support/chat/conversation', [ChatController::class, 'fetchMessages'])->name('chat.fetchMessages');
+    // Support Chat
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/messages/{conversation}', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+
 });
 
 
