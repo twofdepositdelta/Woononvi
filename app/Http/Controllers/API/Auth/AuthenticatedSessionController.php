@@ -89,7 +89,6 @@ class AuthenticatedSessionController extends Controller
             'city_id' => 'required_if:step,2|string|max:255',
             'country_id' => 'required_if:step,1|string|max:255',
             'role' => 'required_if:step,1|string|max:255',
-            // 'email' => 'required|string|email|max:255|unique:users',
             'email' => [
                 'required',
                 'string',
