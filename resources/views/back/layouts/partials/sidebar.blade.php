@@ -148,7 +148,7 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
+                        <a href="{{ route('chat.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
                     </li>
                     <li>
                         <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>

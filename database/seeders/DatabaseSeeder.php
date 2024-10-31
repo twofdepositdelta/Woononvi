@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             EnvironmentSeeder::class,
             ApiSeeder::class,
             RideSeeder::class,
+            ConversationSeeder::class,
+            MessageSeeder::class,
             TypeNewSeeder::class,
             ActualitySeeder::class,
             BookingSeeder::class,
