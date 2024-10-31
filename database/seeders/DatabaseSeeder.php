@@ -25,7 +25,11 @@ class DatabaseSeeder extends Seeder
             ApiSeeder::class,
             RideSeeder::class,
             TypeNewSeeder::class,
-            ActualitySeeder::class
+            ActualitySeeder::class,
+            BookingSeeder::class,
+            ReviewSeeder::class,
+            RideSearcheSeeder::class
+
         ]);
     }
 }

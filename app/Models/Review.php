@@ -12,7 +12,8 @@ class Review extends Model
         'rating',
         'comment',
         'booking_id', // Clé étrangère pour le trajet
-        'reviewer_id', // Clé étrangère pour l'utilisateur qui laisse le commentaire
+        'reviewer_id',// Clé étrangère pour l'utilisateur qui laisse le commentaire
+        
     ];
 
     // Relation avec la reservation

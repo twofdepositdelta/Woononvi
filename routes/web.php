@@ -5,10 +5,12 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\RideRequestController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -65,6 +67,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('rides', RideController::class)->parameters([
         'rides' => 'ride',
+    ]);
+
+    Route::resource('reviews', ReviewController::class)->parameters([
+        'reviews' => 'review',
+    ]);
+
+    Route::resource('ridesearches', RideSearchController::class)->parameters([
+        'ridesearches' => 'ridesearche',
     ]);
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
