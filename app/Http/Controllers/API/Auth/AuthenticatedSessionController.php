@@ -73,7 +73,8 @@ class AuthenticatedSessionController extends Controller
                     'success' => true,
                     'reason' => false,
                     'message' => 'Authentification réussie.',
-                    'token' => $token
+                    'token' => $token,
+                    'user' => $user
                 ], 200);
             } else {
                 return response()->json([
