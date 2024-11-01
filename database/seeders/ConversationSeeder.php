@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Conversation;
 use App\Models\User;
+use Illuminate\Support\Arr;
 
 class ConversationSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class ConversationSeeder extends Seeder
                 Conversation::create([
                     'user_id' => $passenger->id,
                     'support_id' => $support->id,
-                    'status' => array_rand(['open', 'resolved', 'closed'])
+                    'status' => Arr::random(['open', 'resolved', 'closed'])
                 ]);
             }
         }

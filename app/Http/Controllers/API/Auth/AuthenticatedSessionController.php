@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Preference;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -55,7 +56,7 @@ class AuthenticatedSessionController extends Controller
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
                 return response()->json([
                     'success' => true,
-                    'cities' => City::whereCountryId($user->city_id)->get(),
+                    'cities' => City::whereCountryId($user->country_id)->get(),
                     'token' => $token,
                     'reason' => true,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
@@ -186,6 +187,10 @@ class AuthenticatedSessionController extends Controller
                 'npi' => $request->npi,
                 'gender' => $request->gender,
                 'city_id' => $request->city_id,
+            ]);
+
+            Preference::create([
+                'user_id' => $user->id,
             ]);
 
             return response()->json([
