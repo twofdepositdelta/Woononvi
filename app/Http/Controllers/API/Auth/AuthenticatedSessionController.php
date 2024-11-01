@@ -188,7 +188,7 @@ class AuthenticatedSessionController extends Controller
 
         if($user) {
             $user->update([
-                'birth_date' => $request->birth_date,
+                'date_of_birth' => $request->birth_date,
                 'npi' => $request->npi,
                 'gender' => $request->gender,
                 'city_id' => $city->id,
