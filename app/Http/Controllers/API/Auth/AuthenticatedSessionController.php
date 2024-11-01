@@ -182,13 +182,14 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user = User::whereEmail($request->email)->first();
+        $city = City::whereName($request->city_id)->first();
 
         if($user) {
             $user->update([
                 'birth_date' => $request->birth_date,
                 'npi' => $request->npi,
                 'gender' => $request->gender,
-                'city_id' => $request->city_id,
+                'city_id' => $city->id,
             ]);
 
             Preference::create([
