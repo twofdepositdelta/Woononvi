@@ -55,6 +55,7 @@ class AuthenticatedSessionController extends Controller
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
                 return response()->json([
                     'success' => true,
+                    'cities' => City::whereCountryId($user->country_id)->get(),
                     'token' => $token,
                     'reason' => true,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
@@ -119,7 +120,7 @@ class AuthenticatedSessionController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'city_id' => $country->id
+            'country_id' => $country->id
         ]);
 
         // Générer un OTP aléatoire (par exemple, 6 chiffres)
@@ -141,7 +142,7 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Inscription réussie.',
+            'message' => 'Inscription réussie, veuillez confirmer votre adresse email à travers le code OTP envoyé.',
         ], 201);
     }
 
