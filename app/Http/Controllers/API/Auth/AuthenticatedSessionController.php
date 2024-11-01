@@ -57,7 +57,7 @@ class AuthenticatedSessionController extends Controller
 
             // return $user;
 
-            if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
+            if(!$user->npi || !$user->gender || !$user->city_id || !$user->date_of_birth) {
                 return response()->json([
                     'success' => true,
                     'cities' => City::whereCountryId($user->country_id)->get(),
@@ -188,7 +188,7 @@ class AuthenticatedSessionController extends Controller
 
         if($user) {
             $user->update([
-                'date_of_birth' => $request->birth_date,
+                'date_of_birth' => $request->birth_of_date,
                 'npi' => $request->npi,
                 'gender' => $request->gender,
                 'city_id' => $city->id,
