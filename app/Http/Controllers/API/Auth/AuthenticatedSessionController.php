@@ -50,10 +50,19 @@ class AuthenticatedSessionController extends Controller
                 ], 401); // Statut 401 pour indiquer que l'authentification est refusée
             }
 
+            if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
+                return response()->json([
+                    'success' => true,
+                    'reason' => true,
+                    'message' => "Veuillez finaliser votre compte afin de continuer.",
+                ], 200);
+            }
+
             if($user->hasrole('passenger|driver|manager|super-admin')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
                 return response()->json([
                     'success' => true,
+                    'reason' => false,
                     'message' => 'Authentification réussie.',
                     'token' => $token
                 ], 200);
@@ -79,28 +88,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function register(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'step' => 'required',
-        //     'npi' => 'required_if:step,2|string|size:9|unique:users',
-        //     'firstname' => 'required_if:step,1|string|max:255',
-        //     'lastname' => 'required_if:step,1|string|max:255',
-        //     'phone' => 'required_if:step,1|string|max:255|unique:users',
-        //     'birth_of_date' => 'required_if:step,2|date|max:10',
-        //     'city_id' => 'required_if:step,2|string|max:255',
-        //     'country_id' => 'required_if:step,1|string|max:255',
-        //     'role' => 'required_if:step,1|string|max:255',
-        //     'email' => [
-        //         'required',
-        //         'string',
-        //         'email',
-        //         'max:255',
-        //         Rule::unique('users')->when($request->input('step') == 1, function ($query) {
-        //             return $query;
-        //         })
-        //     ],
-        //     'password' => ['required_if:step,1', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-        // ]);
-
         if ($request->input('step') == 1) {
             $rules = [
                 'step' => 'required',
@@ -115,10 +102,11 @@ class AuthenticatedSessionController extends Controller
         } elseif ($request->input('step') == 2) {
             $rules = [
                 'step' => 'required',
+                'gender' => 'required|string|max:255',
                 'npi' => 'required|string|size:9|unique:users',
                 'birth_of_date' => 'required|date|max:10',
                 'city_id' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255', // sans unique pour step 2
+                'email' => 'required|string|email|max:255', 
             ];
         }
 
