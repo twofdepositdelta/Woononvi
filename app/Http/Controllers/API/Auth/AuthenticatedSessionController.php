@@ -55,7 +55,7 @@ class AuthenticatedSessionController extends Controller
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
                 return response()->json([
                     'success' => true,
-                    'cities' => City::whereCountryId($user->country_id)->get(),
+                    'cities' => City::whereCountryId($user->city_id)->get(),
                     'token' => $token,
                     'reason' => true,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
