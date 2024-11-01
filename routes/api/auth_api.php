@@ -8,9 +8,10 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\StepBasedMiddleware;
 
 Route::middleware('guest:api')->group(function () {
-    Route::post('register', [AuthenticatedSessionController::class, 'register'])->name('api.register');
+    Route::post('register', [AuthenticatedSessionController::class, 'register'])->middleware(StepBasedMiddleware::class)->name('api.register');
     Route::post('login', [AuthenticatedSessionController::class, 'login'])->name('api.login');
     Route::post('verify-otp', [AuthenticatedSessionController::class, 'verifyOtp'])->name('api.verifyOtp');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');

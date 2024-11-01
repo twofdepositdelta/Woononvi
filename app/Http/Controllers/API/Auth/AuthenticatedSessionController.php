@@ -50,9 +50,12 @@ class AuthenticatedSessionController extends Controller
                 ], 401); // Statut 401 pour indiquer que l'authentification est refusée
             }
 
+            $token = $user->createToken('mobile--token')->plainTextToken;
+
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
                 return response()->json([
                     'success' => true,
+                    'token' => $token,
                     'reason' => true,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
                 ], 200);
@@ -199,7 +202,6 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::whereEmail($request->email)->first();
 
-
         if($user) {
             $otp = DB::table('user_confirmations')
                 ->where('user_id', $user->id)
@@ -216,6 +218,7 @@ class AuthenticatedSessionController extends Controller
 
             $user->email_verified_at = Carbon::now();
             $user->is_verified = true;
+            $user->balance = 0;
             $user->save();
 
             // Supprimer l'OTP après vérification
