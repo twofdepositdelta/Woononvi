@@ -35,6 +35,7 @@ class AuthenticatedSessionController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
+                'reason' => false,
                 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()
             ], 422);
@@ -47,6 +48,7 @@ class AuthenticatedSessionController extends Controller
             if (!$user->is_verified) {
                 return response()->json([
                     'success' => false,
+                    'reason' => true,
                     'message' => "Votre compte n'est pas encore vérifié.",
                 ], 401); // Statut 401 pour indiquer que l'authentification est refusée
             }
