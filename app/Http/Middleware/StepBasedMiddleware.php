@@ -18,7 +18,7 @@ class StepBasedMiddleware
     {
         if ($request->input('step') == 2) {
             // Si step est 2, vérifiez que l'utilisateur est authentifié
-            if (!Auth::guard('api')->check()) {
+            if (!Auth::guard('auth:sanctum')->check()) {
                 return response()->json(['message' => 'Non autorisé'], 401);
             }
         }
