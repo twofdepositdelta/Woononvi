@@ -91,27 +91,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function register(Request $request)
     {
-        if ($request->input('step') == 1) {
-            $rules = [
-                'step' => 'required',
-                'firstname' => 'required|string|max:255',
-                'lastname' => 'required|string|max:255',
-                'phone' => 'required|string|max:255|unique:users',
-                'country_id' => 'required|string|max:255',
-                'role' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => ['required', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-            ];
-        } elseif ($request->input('step') == 2) {
-            $rules = [
-                'step' => 'required',
-                'gender' => 'required|string|max:255',
-                'npi' => 'required|string|size:9|unique:users',
-                'birth_of_date' => 'required|date|max:10',
-                'city_id' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255', 
-            ];
-        }
+        $rules = [
+            'step' => 'required',
+            'gender' => 'required|string|max:255',
+            'npi' => 'required|string|size:9|unique:users',
+            'birth_of_date' => 'required|date|max:10',
+            'city_id' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255', 
+        ];
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -123,74 +110,93 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        if($request->step == 1) {
-            $country = Country::whereIndicatif($request->country_id)->first();
+        $country = Country::whereIndicatif($request->country_id)->first();
 
-            $user = User::create([
-                'firstname' => $request->firstname,
-                'lastname' => $request->lastname,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'city_id' => $country->id
+        $user = User::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'city_id' => $country->id
+        ]);
+
+        // Générer un OTP aléatoire (par exemple, 6 chiffres)
+        $otp = rand(1000, 9999);
+
+        DB::table('user_confirmations')->insert([
+            'user_id' => $user->id,
+            'otp_code' => $otp,
+            'expired_at' => Carbon::now()->addMinutes(60),
+            'created_at' => now(),
+        ]);
+
+        // Envoyer la notification de confirmation
+        $user->sendAccountConfirmationNotification($otp);
+
+        $role = $request->role == "Passager" ? "passenger" : "driver";
+
+        $user->assignRole($role);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Inscription réussie.',
+        ], 201);
+    }
+
+    public function finalise(Request $request) {
+        $rules = [
+            'step' => 'required',
+            'gender' => 'required|string|max:255',
+            'npi' => 'required|string|size:9|unique:users',
+            'birth_of_date' => 'required|date|max:10',
+            'city_id' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255', 
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+        $birthDate = new \DateTime($request->birth_of_date);
+        $today = new \DateTime();
+        $age = $today->diff($birthDate)->y;
+
+        if ($age < 18) {
+            return response()->json([
+                'success' => false,
+                'message' => "Vous devez avoir au moins 18 ans pour continuer.",
+                'age' => $age
+            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+        }
+
+        $user = User::whereEmail($request->email)->first();
+
+        if($user) {
+            $user->update([
+                'birth_date' => $request->birth_date,
+                'npi' => $request->npi,
+                'gender' => $request->gender,
+                'city_id' => $request->city_id,
             ]);
-
-            // Générer un OTP aléatoire (par exemple, 6 chiffres)
-            $otp = rand(1000, 9999);
-
-            DB::table('user_confirmations')->insert([
-                'user_id' => $user->id,
-                'otp_code' => $otp,
-                'expired_at' => Carbon::now()->addMinutes(60),
-                'created_at' => now(),
-            ]);
-
-            // Envoyer la notification de confirmation
-            $user->sendAccountConfirmationNotification($otp);
-
-            $role = $request->role == "Passager" ? "passenger" : "driver";
-
-            $user->assignRole($role);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Inscription réussie.',
+                'message' => 'Votre inscription a été finalisée avec succès.',
+                'user' => $user,
             ], 201);
         } else {
-            // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-            $birthDate = new \DateTime($request->birth_of_date);
-            $today = new \DateTime();
-            $age = $today->diff($birthDate)->y;
-
-            if ($age < 18) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Vous devez avoir au moins 18 ans pour continuer.",
-                    'age' => $age
-                ], 401); // Statut 401 pour indiquer que l'inscription est refusée
-            }
-
-            $user = User::whereEmail($request->email)->first();
-
-            if($user) {
-                $user->update([
-                    'birth_date' => $request->birth_date,
-                    'npi' => $request->npi,
-                    'gender' => $request->gender,
-                    'city_id' => $request->city_id,
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Votre inscription a été finalisée avec succès.',
-                    'user' => $user,
-                ], 201);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Il y a un souci avec l\'utilisateur.',
-                ], 422);
-            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Il y a un souci avec l\'utilisateur.',
+            ], 422);
         }
     }
 
