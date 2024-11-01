@@ -55,7 +55,7 @@ class AuthenticatedSessionController extends Controller
 
             $token = $user->createToken('mobile--token')->plainTextToken;
 
-            return $user;
+            // return $user;
 
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->birth_date) {
                 return response()->json([
