@@ -25,7 +25,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => true,
                 'status' => 'active',
                 'driver_id' => 1, // Assurez-vous que cet ID existe dans votre table users
-                'created_at' => now(),
+                'created_at' => Carbon::now()->subYear(), // Date de création d'un an passé
                 'updated_at' => now(),
             ],
             [
@@ -37,7 +37,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => false,
                 'status' => 'pending',
                 'driver_id' => 2, // Assurez-vous que cet ID existe dans votre table users
-                'created_at' => now(),
+                'created_at' => Carbon::now()->subYear(), // Date de création d'un an passé
                 'updated_at' => now(),
             ],
             [
