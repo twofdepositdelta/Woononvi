@@ -59,6 +59,7 @@ class ProfileController extends Controller
             'lastname' => 'required|min:2|max:255|string',
             'firstname' => 'required|min:2|max:255|string',
             'gender' => 'required|max:255|string',
+            'email' => 'required|max:255|email',
             'username' => 'max:255',
             'city_id' => 'required|max:255|string',
             'country_id' => 'required|max:255|string',
@@ -79,28 +80,37 @@ class ProfileController extends Controller
             ], 422);
         }
 
+        $user = User::whereEmail($request->email)->first();
+
         $country = Country::whereIndicatif($request->country_id)->first();
         $city = City::whereName($request->city_id)->first();
 
-        $user->update([
-            'date_of_birth' => $request->birth_of_date,
-            'npi' => $request->npi,
-            'username' => $request->username,
-            'lastname' => $request->lastname,
-            'firstname' => $request->firstname,
-            'country_id' => $country->id,
-            'npi' => $request->npi,
-            'gender' => $request->gender,
-            'phone' => $request->phone,
-            'city_id' => $city->id,
-        ]);
+        if($user && $country && $city) {
+            $user->update([
+                'date_of_birth' => $request->birth_of_date,
+                'npi' => $request->npi,
+                'username' => $request->username,
+                'lastname' => $request->lastname,
+                'firstname' => $request->firstname,
+                'country_id' => $country->id,
+                'npi' => $request->npi,
+                'gender' => $request->gender,
+                'phone' => $request->phone,
+                'city_id' => $city->id,
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Profil modifié avec succès.',
-            'user' => $user,
-            'cities' => City::whereCountryId($request->country_id)->pluck('name')
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil modifié avec succès.',
+                'user' => $user,
+                'cities' => City::whereCountryId($request->country_id)->pluck('name')
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
+            ], 422);
+        }
     }
 
     /**
