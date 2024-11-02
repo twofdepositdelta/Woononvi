@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'npi' => [
                 'required',
-                'numeric',
+                'string',
                 'size:9',
                 Rule::unique('users')->ignore($request->user()->id)
             ],
