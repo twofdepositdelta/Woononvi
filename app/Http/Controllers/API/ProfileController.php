@@ -52,8 +52,8 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'npi' => [
                 'required',
-                'integer',
-                'max:255',
+                'numeric',
+                'size:9',
                 Rule::unique('users')->ignore($request->user()->id)
             ],
             'lastname' => 'required|min:2|max:255|string',
