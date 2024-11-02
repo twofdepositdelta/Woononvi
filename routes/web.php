@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ConversationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -77,10 +78,14 @@ Route::middleware('auth')->group(function () {
 
     // Support Chat
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/messages/{conversation}', [ChatController::class, 'getMessages'])->name('chat.messages');
-    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/messages/conversations', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/send/{conversationId}', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/conversations/{conversationId}/user-info', [ConversationController::class, 'getUserInfo']);
+    Route::get('/chat/messages/read/{conversationId}', [ChatController::class, 'markMessagesAsRead']);
 
+    Route::prefix('api')->group(base_path('routes/api.php'));
 });
+
 
 
 require __DIR__.'/auth.php';

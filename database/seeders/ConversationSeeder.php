@@ -20,7 +20,7 @@ class ConversationSeeder extends Seeder
                 Conversation::create([
                     'user_id' => $passenger->id,
                     'support_id' => $support->id,
-                    'status' => array_rand(['open', 'resolved', 'closed'])
+                    'status' => ['open', 'resolved', 'closed'][array_rand(['open', 'resolved', 'closed'])]
                 ]);
             }
         }
