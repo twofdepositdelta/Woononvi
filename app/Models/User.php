@@ -187,7 +187,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getCountryNameAttribute()
     {
-        $city = Country::find($this->country_id);
+        $country = Country::find($this->country_id);
         return $country ? $country->name : null;
     }
 
