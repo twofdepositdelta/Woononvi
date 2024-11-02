@@ -109,7 +109,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
-                'request' => $country
+                'request' => $city
             ], 422);
         }
     }
