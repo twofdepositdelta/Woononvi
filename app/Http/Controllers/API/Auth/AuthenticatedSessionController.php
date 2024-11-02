@@ -67,11 +67,22 @@ class AuthenticatedSessionController extends Controller
 
             if($user->hasrole('passenger|driver|manager|super-admin')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
+
+                $userArray = $user->toArray();
+
+                $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+                $country = Country::find($user->country_id);
+                $userArray['country_name'] = $country ? $country->name : null;
+                $phoneParts = explode(' ', $user->phone_number);
+                // $userArray['indicatif'] = isset($phoneParts[0]) ? $phoneParts[0] : null;
+                // $userArray['true_phone'] = isset($phoneParts[1]) ? $phoneParts[1] : $user->phone_number;
+
                 return response()->json([
                     'success' => true,
                     'reason' => false,
                     'message' => 'Authentification réussie.',
                     'token' => $token,
+                    'cities' => City::whereCountryId($user->country_id)->get(),
                     'user' => $user
                 ], 200);
             } else {
