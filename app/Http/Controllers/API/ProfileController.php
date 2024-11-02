@@ -53,7 +53,7 @@ class ProfileController extends Controller
             'npi' => [
                 'required',
                 'integer',
-                'size:9',
+                'max:255',
                 Rule::unique('users')->ignore($request->user()->id)
             ],
             'lastname' => 'required|min:2|max:255|string',
