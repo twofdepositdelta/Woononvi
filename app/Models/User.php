@@ -184,4 +184,28 @@ class User extends Authenticatable implements MustVerifyEmail
                 $query->where('driver_id', $this->id);
             });
     }
+
+    public function getCountryNameAttribute()
+    {
+        $city = Country::find($this->country_id);
+        return $country ? $country->name : null;
+    }
+
+    public function getCityNameAttribute()
+    {
+        $city = City::find($this->city_id);
+        return $city ? $city->name : null;
+    }
+
+    public function getCountryCodeAttribute()
+    {
+        $phoneParts = explode(' ', $this->phone_number);
+        return isset($phoneParts[0]) ? $phoneParts[0] : null;
+    }
+
+    public function getPhoneNumberAttribute()
+    {
+        $phoneParts = explode(' ', $this->phone_number);
+        return isset($phoneParts[1]) ? $phoneParts[1] : $this->phone_number;
+    }
 }
