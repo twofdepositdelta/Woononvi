@@ -8,6 +8,7 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -49,15 +50,24 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'npi' => 'required|integer|size:9',
-            'email' => 'required|email|max:255',
+            'npi' => [
+                'required',
+                'integer',
+                'size:9',
+                Rule::unique('users')->ignore($request->user()->id)
+            ],
             'lastname' => 'required|min:2|max:255|string',
             'firstname' => 'required|min:2|max:255|string',
             'gender' => 'required|max:255|string',
             'username' => 'required|min:3|max:255|string',
             'city_id' => 'required|max:255|string',
             'country_id' => 'required|max:255|string',
-            'phone' => 'required|max:12|string',
+            'phone' => [
+                'required',
+                'max:12',
+                'string',
+                Rule::unique('users')->ignore($request->user()->id)
+            ],
             'date_of_birth' => 'required|max:12|string',
         ]);
 
