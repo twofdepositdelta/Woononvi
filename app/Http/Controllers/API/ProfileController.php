@@ -99,18 +99,6 @@ class ProfileController extends Controller
         $city = City::whereName($request->city_id)->first();
 
         if($user && $country && $city) {
-            $userArray = $user->toArray();
-
-            unset($userArray['roles']);
-
-            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-            $country = Country::find($user->country_id);
-            $userArray['country_name'] = $user->country_name;
-            $userArray['city_name'] = $user->city_name;
-            $userArray['indicatif'] = $user->country_code;
-            $userArray['phone_number'] = $user->phone_number;
-
             $user->update([
                 'date_of_birth' => $request->date_of_birth,
                 'npi' => $request->npi,
@@ -124,10 +112,22 @@ class ProfileController extends Controller
                 'city_id' => $city->id,
             ]);
 
+            $userArray = $user->toArray();
+
+            unset($userArray['roles']);
+
+            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+            $country = Country::find($user->country_id);
+            $userArray['country_name'] = $user->country_name;
+            $userArray['city_name'] = $user->city_name;
+            $userArray['indicatif'] = $user->country_code;
+            $userArray['phone_number'] = $user->phone_number;
+
             return response()->json([
                 'success' => true,
                 'message' => 'Profil modifié avec succès.',
-                'user' => $user,
+                'user' => $userArray,
                 'cities' => City::whereCountryId($country->id)->pluck('name')
             ], 200);
         } else {
