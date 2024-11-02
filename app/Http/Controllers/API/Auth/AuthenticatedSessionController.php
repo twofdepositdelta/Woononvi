@@ -70,6 +70,8 @@ class AuthenticatedSessionController extends Controller
 
                 $userArray = $user->toArray();
 
+                unset($userArray['roles']);
+
                 $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
                 $country = Country::find($user->country_id);
                 $userArray['country_name'] = $country ? $country->name : null;
