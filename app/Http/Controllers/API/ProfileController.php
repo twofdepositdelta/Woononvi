@@ -81,7 +81,7 @@ class ProfileController extends Controller
         }
 
         // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-        $birthDate = new \DateTime($request->birth_of_date);
+        $birthDate = new \DateTime($request->date_of_birth);
         $today = new \DateTime();
         $age = $today->diff($birthDate)->y;
 
@@ -102,7 +102,7 @@ class ProfileController extends Controller
             $user->update([
                 'date_of_birth' => $request->date_of_birth,
                 'npi' => $request->npi,
-                'username' => $request->username,
+                'username' => $request->username ? $request->username : '',
                 'lastname' => $request->lastname,
                 'firstname' => $request->firstname,
                 'country_id' => $country->id,
