@@ -199,13 +199,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getCountryCodeAttribute()
     {
-        $phoneParts = explode(' ', $this->phone_number);
+        $phoneParts = explode(' ', $this->phone);
         return isset($phoneParts[0]) ? $phoneParts[0] : null;
     }
 
     public function getPhoneNumberAttribute()
     {
-        $phoneParts = explode(' ', $this->phone_number);
-        return isset($phoneParts[1]) ? $phoneParts[1] : $this->phone_number;
+        $phoneParts = explode(' ', $this->phone);
+        return isset($phoneParts[1]) ? $phoneParts[1] : $this->phone;
     }
 }
