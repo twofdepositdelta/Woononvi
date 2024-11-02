@@ -103,7 +103,7 @@ class ProfileController extends Controller
                 'success' => true,
                 'message' => 'Profil modifié avec succès.',
                 'user' => $user,
-                'cities' => City::whereCountryId($request->country_id)->pluck('name')
+                'cities' => City::whereCountryId($country->id)->pluck('name')
             ], 200);
         } else {
             return response()->json([
