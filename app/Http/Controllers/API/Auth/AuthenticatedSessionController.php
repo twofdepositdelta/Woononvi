@@ -85,7 +85,7 @@ class AuthenticatedSessionController extends Controller
                     'message' => 'Authentification réussie.',
                     'token' => $token,
                     'user' => $userArray,
-                    'cities' => City::whereCountryId($user->country_id)->get()
+                    'cities' => City::whereCountryId($user->country_id)->pluck('name')
                 ], 200);
             } else {
                 return response()->json([
