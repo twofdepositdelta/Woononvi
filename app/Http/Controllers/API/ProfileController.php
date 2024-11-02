@@ -59,7 +59,7 @@ class ProfileController extends Controller
             'lastname' => 'required|min:2|max:255|string',
             'firstname' => 'required|min:2|max:255|string',
             'gender' => 'required|max:255|string',
-            'username' => 'max:255|string',
+            'username' => 'max:255',
             'city_id' => 'required|max:255|string',
             'country_id' => 'required|max:255|string',
             'phone' => [
