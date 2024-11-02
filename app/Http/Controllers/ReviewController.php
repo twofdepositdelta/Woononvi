@@ -13,6 +13,9 @@ class ReviewController extends Controller
     public function index()
     {
         //
+        $reviews=Review::orderBy('created_at','desc')->paginate(20);
+        return view('back.pages.avis.index',compact('reviews'));
+
     }
 
     /**
@@ -37,6 +40,8 @@ class ReviewController extends Controller
     public function show(Review $review)
     {
         //
+        $review->load(['reviewer', 'booking.ride']);
+        return view('back.pages.avis.show',compact('review'));
     }
 
     /**

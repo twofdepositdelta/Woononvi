@@ -2,16 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\RideRequestController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -20,6 +23,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/contacter-nous', [ContactController::class, 'create'])->name('contact');
+Route::post('/contacter-nous/send', [ContactController::class, 'store'])->name('contact.send');
+
 Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,6 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     Route::put('/notification/settings', [ProfileController::class, 'updateNotificationSettings'])->name('notification.settings.update');
+
+    // contact
+
+    Route::get('/contacter/liste', [ContactController::class, 'index'])->name('contact.index');
+    Route::get('/contacter/detail/{contact:email}', [ContactController::class, 'show'])->name('contact.show');
+    Route::delete('/contacter/supprimer/{contact:email}', [ContactController::class, 'destroy'])->name('contact.destroy');
 
     // User
     Route::get('/check-username', [UserController::class, 'checkUsername'])->name('check.username');
@@ -68,6 +80,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('rides', RideController::class)->parameters([
         'rides' => 'ride',
+    ]);
+
+    Route::resource('reviews', ReviewController::class)->parameters([
+        'reviews' => 'review',
+    ]);
+
+    Route::resource('ridesearches', RideSearchController::class)->parameters([
+        'ridesearches' => 'ridesearche',
     ]);
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');

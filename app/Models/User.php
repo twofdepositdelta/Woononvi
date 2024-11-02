@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'firstname',
         'lastname',
+        'username',
         'phone',
         'date_of_birth',
         'city_id',
@@ -33,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_verified',
         'status',
         'balance',
+        'country_id',
         'is_certified',
         'email_verified_at',
     ];
@@ -182,5 +184,29 @@ class User extends Authenticatable implements MustVerifyEmail
             ->orWhereHas('ride', function($query) {
                 $query->where('driver_id', $this->id);
             });
+    }
+
+    public function getCountryNameAttribute()
+    {
+        $country = Country::find($this->country_id);
+        return $country ? $country->name : null;
+    }
+
+    public function getCityNameAttribute()
+    {
+        $city = City::find($this->city_id);
+        return $city ? $city->name : null;
+    }
+
+    public function getCountryCodeAttribute()
+    {
+        $phoneParts = explode(' ', $this->phone);
+        return isset($phoneParts[0]) ? $phoneParts[0] : null;
+    }
+
+    public function getPhoneNumberAttribute()
+    {
+        $phoneParts = explode(' ', $this->phone);
+        return isset($phoneParts[1]) ? $phoneParts[1] : $this->phone;
     }
 }

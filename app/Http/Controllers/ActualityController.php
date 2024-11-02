@@ -73,7 +73,7 @@ class ActualityController extends Controller
         }
 
         $users = User::role($role->name)->get();
-        dd($users);
+       
         if ($typeNew->name=='Notification') {
 
             $details = [

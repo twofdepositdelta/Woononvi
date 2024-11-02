@@ -12,32 +12,32 @@
         <div class="card-body p-24">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <h6>Ville de Départ :</h6>
+                    <strong>Ville de Départ :</strong>
                     <p class="mb-0">{{ $ride->departure }}</p>
                 </div>
                 <div class="col-md-6">
-                    <h6>Destination :</h6>
+                    <strong>Destination :</strong>
                     <p class="mb-0">{{ $ride->destination }}</p>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <h6>Heure de Départ :</h6>
+                    <strong>Heure de Départ :</strong>
                     <p class="mb-0">{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</p>
 
                 </div>
                 <div class="col-md-6">
-                    <h6>Places Disponibles :</h6>
+                    <strong>Places Disponibles :</strong>
                     <p class="mb-0">{{ $ride->available_seats }}</p>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <h6>Prix par Km :</h6>
+                    <strong>Prix par Km :</strong>
                     <p class="mb-0">{{ $ride->price_per_km }} FCFA</p>
                 </div>
                 <div class="col-md-6">
-                    <h6>Statut du Trajet :</h6>
+                    <strong>Statut du Trajet :</strong>
                     @if ($ride->status == 'active')
                         <span class="badge bg-success">Actif</span>
                     @elseif ($ride->status == 'completed')
@@ -53,11 +53,11 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <h6>Trajet Proche :</h6>
+                    <strong>Trajet Proche :</strong>
                     <p class="mb-0">{{ $ride->is_nearby_ride ? 'Oui' : 'Non' }}</p>
                 </div>
                 <div class="col-md-6">
-                    <h6>Conducteur :</h6>
+                    <strong>Conducteur :</strong>
                     <p class="mb-0">{{ $ride->driver->firstname.''.$ride->driver->lastname ?? 'Conducteur non attribué' }}</p>
                 </div>
             </div>

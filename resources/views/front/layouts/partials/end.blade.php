@@ -16,6 +16,8 @@
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/js/wow.min.js') }}"></script>
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/js/main.js') }}"></script>
+    <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/assets/js/contact-form.js')}}"></script>
+
 </body>
 
 </html>

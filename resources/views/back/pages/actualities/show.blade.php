@@ -18,17 +18,17 @@
 
                   <div class="col mt-5">
                     <div class="mb-3">
-                        <h6>Description :</h6>
+                        <strong>Description :</strong>
                         <p>{!! $actuality->description !!}</p>
                     </div>
 
                     <div class="mb-3">
-                        <h6>Type d'Actualité :</h6>
+                        <strong>Type d'Actualité :</strong>
                         <p>{{ $actuality->typeactualite->name }}</p> <!-- Assurez-vous que le modèle a une relation avec TypeNew -->
                     </div>
 
                     <div class="mb-3">
-                        <h6>Publié :</h6>
+                        <strong>Publié :</strong>
                         <span class="badge {{ $actuality->published ? 'bg-success' : 'bg-warning' }}">
                             {{ $actuality->published ? 'Oui' : 'Non' }}
                         </span>

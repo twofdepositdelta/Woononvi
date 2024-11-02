@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Country;
 use App\Models\City;
 return new class extends Migration
 {
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('npi')->nullable()->unique();
             $table->rememberToken();
+            $table->foreignIdFor(Country::class)->nullable();
             $table->foreignIdFor(City::class)->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('is_verified')->default(false);

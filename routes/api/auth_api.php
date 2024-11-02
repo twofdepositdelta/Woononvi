@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\StepBasedMiddleware;
 
 Route::middleware('guest:api')->group(function () {
     Route::post('register', [AuthenticatedSessionController::class, 'register'])->name('api.register');
@@ -18,6 +20,8 @@ Route::middleware('guest:api')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+    Route::put('finalise', [AuthenticatedSessionController::class, 'finalise'])->name('api.finalise');
+    Route::put('profile', [ProfileController::class, 'update'])->name('api.profile.update');
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('api.verification.send');
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])->name('api.password.confirm');
     Route::put('password', [PasswordController::class, 'update'])->name('api.password.update');
