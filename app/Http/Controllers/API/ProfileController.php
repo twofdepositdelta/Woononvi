@@ -80,6 +80,19 @@ class ProfileController extends Controller
             ], 422);
         }
 
+        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
+        $birthDate = new \DateTime($request->birth_of_date);
+        $today = new \DateTime();
+        $age = $today->diff($birthDate)->y;
+
+        if ($age < 18) {
+            return response()->json([
+                'success' => false,
+                'message' => "L'âge doit être supérieur ou égal à 18 ans.",
+                'age' => $age
+            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
+        }
+
         $user = User::whereEmail($request->email)->first();
 
         $country = Country::whereIndicatif($request->country_id)->first();
@@ -109,7 +122,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
-            ], 422);
+            ], 401);
         }
     }
 
