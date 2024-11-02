@@ -101,7 +101,6 @@ class ProfileController extends Controller
 
             return response()->json([
                 'success' => true,
-                'a' => $request->username,
                 'message' => 'Profil modifié avec succès.',
                 'user' => $user,
                 'cities' => City::whereCountryId($country->id)->pluck('name')
