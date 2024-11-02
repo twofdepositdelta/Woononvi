@@ -52,7 +52,7 @@
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav">
 
-                        <li class="nav-item"><a class="nav-link active" href="#">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/">Accueil</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">A Propos</a></li>
 
                         <li class="nav-item dropdown">
@@ -65,7 +65,7 @@
 
                         <li class="nav-item"><a class="nav-link" href="#">Actualités</a></li>
 
-                        <li class="nav-item"><a class="nav-link" href="#">Nous-contacter</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Nous-contacter</a></li>
                     </ul>
                     <div class="nav-right">
 
