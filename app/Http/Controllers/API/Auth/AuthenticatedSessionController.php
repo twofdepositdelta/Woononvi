@@ -74,8 +74,8 @@ class AuthenticatedSessionController extends Controller
                 $country = Country::find($user->country_id);
                 $userArray['country_name'] = $country ? $country->name : null;
                 $phoneParts = explode(' ', $user->phone_number);
-                // $userArray['indicatif'] = isset($phoneParts[0]) ? $phoneParts[0] : null;
-                // $userArray['true_phone'] = isset($phoneParts[1]) ? $phoneParts[1] : $user->phone_number;
+                $userArray['indicatif'] = isset($phoneParts[0]) ? $phoneParts[0] : null;
+                $userArray['true_phone'] = isset($phoneParts[1]) ? $phoneParts[1] : $user->phone_number;
 
                 return response()->json([
                     'success' => true,
