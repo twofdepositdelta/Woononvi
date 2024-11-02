@@ -87,7 +87,7 @@ class ProfileController extends Controller
 
         if($user && $country && $city) {
             $user->update([
-                'date_of_birth' => $request->birth_of_date,
+                'date_of_birth' => $request->date_of_birth,
                 'npi' => $request->npi,
                 'username' => $request->username,
                 'lastname' => $request->lastname,
@@ -109,7 +109,6 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
-                'request' => $request->city_id
             ], 422);
         }
     }
