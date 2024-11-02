@@ -156,6 +156,10 @@
                     <li>
                         <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
                     </li>
+
+                    <li>
+                        <a href="{{route('contact.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
+                    </li>
                 </ul>
             </li>
 

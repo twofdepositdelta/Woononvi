@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/style.css') }}">
 </head>
-<body class="home-3">
+<body class="{{Route::currentRouteName() == 'index' ? 'home-3':'' }}">
 
     <div class="preloader">
         <div class="loader-ripple">
