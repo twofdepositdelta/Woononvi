@@ -38,19 +38,8 @@ class ResetPasswordByOTP extends Notification
         return (new MailMessage)
             ->subject(__('Réinitialisation du mot de passe'))
             ->line('Vous avez fait une demande de réinitialisation de mot de passe. Veuillez utiliser le code OTP ci-dessous pour modifier votre mot de passe.')
-            ->action($this->token, '#')
+            ->action($this->otp, '#')
             ->line('Si vous n\'avez rien demandé, aucune autre action n\'est requise.');
-    }
-
-    /**
-     * Récupérer l'URL de réinitialisation.
-     */
-    protected function getResetUrl($notifiable)
-    {
-        return url(route('password.reset', [
-            'token' => $this->token,
-            'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
     }
 
     /**
