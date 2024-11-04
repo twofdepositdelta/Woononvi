@@ -18,7 +18,7 @@ class BookingSeeder extends Seeder
                 Booking::create([
                     'seats_reserved' => rand(1, 4), // Réservant entre 1 et 4 sièges
                     'total_price' => rand(20, 100), // Prix total entre 20 et 100
-                    'status' => 'confirmed', // Statut par défaut
+                    'status' => ['pending', 'confirmed', 'cancelled', 'refunded'][rand(0, 3)],
                     'ride_id' => $ride->id,
                     'passenger_id' => $user->id,
                 ]);

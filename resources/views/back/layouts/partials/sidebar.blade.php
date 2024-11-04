@@ -84,6 +84,28 @@
                 </ul>
             </li>
 
+
+
+            {{-- Reservation --}}
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:calendar-check" class="menu-icon"></iconify-icon>
+                    <span>RESERVATION</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{route('bookings.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                    </li>
+                    <li>
+                        <a href="{{route('bookings.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Faire une reservation</a>
+                    </li>
+
+                    <li>
+                        <a href="{{route('bookings.historique')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
+                    </li>
+                </ul>
+            </li>
+
             {{-- demandes --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -113,13 +135,13 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="typography.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                        <a href="{{route('transactions.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
                         <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Nouvelle transac</a>
                     </li>
                     <li>
-                        <a href="button.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
+                        <a href="{{route('transactions.historique')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>

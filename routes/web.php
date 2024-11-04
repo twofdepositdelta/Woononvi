@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\RideRequestController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ConversationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -89,8 +91,24 @@ Route::middleware('auth')->group(function () {
     Route::resource('ridesearches', RideSearchController::class)->parameters([
         'ridesearches' => 'ridesearche',
     ]);
+
+    Route::resource('transactions', TransactionController::class)->parameters([
+        'transactions' => 'transaction',
+    ]);
+
+    Route::resource('bookings', BookingController::class)->parameters([
+        'bookings' => 'booking',
+    ]);
+// trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
+//transaction
+
+    Route::get('/transac/historique', [TransactionController::class, 'historique'])->name('transactions.historique');
+    Route::get('/transac/{transaction}/{status}', [TransactionController::class, 'updatestatus'])->name('transactions.status');
+//transaction
+Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
+Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
 
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
@@ -104,6 +122,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/messages/read/{conversationId}', [ChatController::class, 'markMessagesAsRead']);
 
     Route::prefix('api')->group(base_path('routes/api.php'));
+
 });
 
 

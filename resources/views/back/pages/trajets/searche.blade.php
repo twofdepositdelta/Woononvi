@@ -8,7 +8,7 @@
     <!-- Content -->
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
-            <table class="table bordered-table sm-table mb-0">
+            {{-- <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -33,26 +33,26 @@
                                 <td>{{ $search->passenger->firstname ?? 'Inconnu' }}</td>
                                 <td>{{ $search->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    {{-- <a href="#" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                    <a href="#" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                    </a> --}}
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
                     @endif
                 </tbody>
-            </table>
+            </table> --}}
 
-            @if (!$ridesearches->isEmpty())
+            {{-- @if (!$ridesearches->isEmpty()) --}}
 
                 {{-- pagination --}}
 
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+                {{-- <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
                     <span>Affichage {{ $ridesearches->firstItem() }} de {{ $ridesearches->lastItem() }} a
                         {{ $ridesearches->total() }} entrées</span>
-                    <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
+                    <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center"> --}}
                         {{-- Previous Page Link --}}
-                        @if ($ridesearches->onFirstPage())
+                        {{-- @if ($ridesearches->onFirstPage())
                             <li class="page-item disabled">
                                 <span
                                     class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
@@ -66,16 +66,16 @@
                                     <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
 
                         {{-- Pagination Elements --}}
-                        @foreach ($ridesearches->links()->elements as $element)
-                            {{-- "Three Dots" Separator --}}
+                        {{-- @foreach ($ridesearches->links()->elements as $element)
+
                             @if (is_string($element))
                                 <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
                             @endif
 
-                            {{-- Array Of Links --}}
+
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
                                     @if ($page == $ridesearches->currentPage())
@@ -91,10 +91,10 @@
                                     @endif
                                 @endforeach
                             @endif
-                        @endforeach
+                        @endforeach --}}
 
                         {{-- Next Page Link --}}
-                        @if ($ridesearches->hasMorePages())
+                        {{-- @if ($ridesearches->hasMorePages())
                             <li class="page-item">
                                 <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
                                     href="{{ $ridesearches->nextPageUrl() }}">
@@ -110,13 +110,13 @@
                             </li>
                         @endif
                     </ul>
-                </div>
+                </div> --}}
 
             {{-- endpagination --}}
-            @endif
+            {{-- @endif
         </div>
-    </div>
+    </div> --}}
     <!-- / Content -->
-</div>
+{{-- </div> --}}
 
 @endsection

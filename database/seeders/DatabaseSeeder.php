@@ -24,13 +24,15 @@ class DatabaseSeeder extends Seeder
             EnvironmentSeeder::class,
             ApiSeeder::class,
             RideSeeder::class,
+            RideRequestSeeder::class,
             ConversationSeeder::class,
             MessageSeeder::class,
             TypeNewSeeder::class,
             ActualitySeeder::class,
             BookingSeeder::class,
             ReviewSeeder::class,
-            RideSearcheSeeder::class
+            RideSearcheSeeder::class,
+            TransactionSeeder::class
 
         ]);
     }

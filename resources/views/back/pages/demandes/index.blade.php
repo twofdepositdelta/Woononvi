@@ -14,7 +14,6 @@
                 <tr>
                     <th scope="col">
                         <div class="d-flex align-items-center gap-10">
-
                            #
                         </div>
                     </th>
@@ -22,8 +21,9 @@
                     <th scope="col">Départ</th>
                     <th scope="col">Destination</th>
                     <th scope="col">Places Disponibles</th>
+                    <th scope="col">Demandeur</th>
                     <th scope="col">Statut</th>
-                    <th scope="col" class="text-center">Action</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -40,7 +40,8 @@
                                 {{ $key + 1 }}
                             </div>
                         </td>
-                        <td>{{ $ride->created_at->format('d M Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($ride->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
+
                         <td>
                             <div class="d-flex align-items-center">
                                 <span class="text-md mb-0 fw-normal text-secondary-light">{{ $ride->departure }}</span>
@@ -48,7 +49,15 @@
                         </td>
                         <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $ride->destination }}</span></td>
 
+
                         <td>{{ $ride->preferred_amount }}</td>
+                        <td>
+                            <a href="{{route('users.show',$ride->passenger->email)}}">
+
+                            {{  $ride->passenger->firstname.' '.$ride->passenger->lastname ?? 'Non disponible' }}
+
+                            </a>
+                        </td>
                         <td>
                             <span class="badge
                                 {{ $ride->status == 'pending' ? 'bg-primary' : ($ride->status == 'responded' ? 'bg-success' : ($ride->status == 'completed' ? 'bg-info' : ($ride->status == 'refunded' ? 'bg-warning' : 'bg-danger'))) }}">
@@ -56,18 +65,7 @@
                             </span>
                         </td>
 
-                        <td class="text-center">
-                            <div class="d-flex align-items-center gap-10 justify-content-center">
-                                <!-- View -->
 
-                                <form action="{{ route('ride_requests.status',[$ride,'status'=> 'refunded']) }}" method="GET">
-                                    <button type="submit" class="btn btn-primary text-sm "
-                                        {{ $ride->status != 'cancelled' ? 'disabled' : '' }}>
-                                        Remboursé
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
                     </tr>
                     @endforeach
 

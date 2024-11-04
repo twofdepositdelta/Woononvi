@@ -37,8 +37,8 @@
                             <td>{{ $contact->created_at->format('d M Y') }}</td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('contact.show', $contact) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                    <a href="{{ route('contact.show', $contact) }}" class="btn btn-primary text-sm">
+                                        lire
                                     </a>
 
                                     <form action="{{ route('contact.destroy', $contact) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?');">

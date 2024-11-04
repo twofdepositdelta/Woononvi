@@ -27,7 +27,7 @@
 
                 </div>
                 <div class="col-md-6">
-                    <strong>Places Disponibles :</strong>
+                    <strong> Nombre de Places Disponibles :</strong>
                     <p class="mb-0">{{ $ride->available_seats }}</p>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-md-6">
                     <strong>Conducteur :</strong>
-                    <p class="mb-0">{{ $ride->driver->firstname.''.$ride->driver->lastname ?? 'Conducteur non attribué' }}</p>
+                    <p class="mb-0"><a href="{{route('users.show',$ride->driver->email)}}">{{$ride->driver->firstname.' '.$ride->driver->lastname }}</p>
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('seats_reserved');
             $table->integer('total_price');
-            $table->enum('status', ['confirmed', 'cancelled'])->default('confirmed'); // Statut du trajet (pending, completed, canceled)
+            $table->enum('status', ['pending','confirmed','cancelled','refunded']); // Statut du trajet (pending, completed, canceled)
             $table->foreignIdFor(Ride::class);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

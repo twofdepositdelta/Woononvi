@@ -10,8 +10,13 @@
 
     <div class="card-body p-24">
         <div class="mb-4">
-            <strong>Nom de l'utilisateur :</strong>
-            <p>{{ $review->reviewer->firstname.' '.$review->reviewer->lastname}}</p>
+            <strong>Commentaire :</strong>
+            <p>{{ $review->comment }}</p>
+        </div>
+        <hr>
+        <div class="mb-4 mt-4">
+            <strong>Commentateur:</strong>
+            <p> <a href="{{route('users.show',$review->reviewer->email)}}"> {{ $review->reviewer->firstname.' '.$review->reviewer->lastname}}</a></p>
         </div>
 
          <div class="mb-4">
@@ -24,10 +29,6 @@
             <p>{{ $review->rating }}</p>
         </div>
 
-        <div class="mb-4">
-            <strong>Commentaire :</strong>
-            <p>{{ $review->comment }}</p>
-        </div>
 
         <div class="mb-4">
             <strong>Date de création :</strong>
