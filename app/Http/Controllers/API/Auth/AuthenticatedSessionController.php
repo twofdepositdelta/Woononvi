@@ -227,7 +227,7 @@ class AuthenticatedSessionController extends Controller
     public function verifyOtp(Request $request) {
         $validator = Validator::make($request->all(), [
             'otp' => 'required|integer|size:4',
-            'email' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
         ]);
 
         $user = User::whereEmail($request->email)->first();
@@ -270,8 +270,4 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
     }
-
-    // public function forgotPassword(Request $request) {
-
-    // }
 }

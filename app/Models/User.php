@@ -10,6 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\CustomResetPassword;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\AccountConfirmation;
+use App\Notifications\ResetPasswordByOTP;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -139,6 +140,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendAccountConfirmationNotification($token)
     {
         $this->notify(new AccountConfirmation($this, $token));
+    }
+
+    public function sendOTPNotification($otp)
+    {
+        $this->notify(new ResetPasswordByOTP($this, $otp));
     }
 
     public function totalTrips()
