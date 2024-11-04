@@ -16,7 +16,6 @@ class ResetPasswordByOTP extends Notification
 
     public function __construct($otp)
     {
-        // Stocke le token pour l'utiliser dans l'e-mail
         $this->otp = $otp;
     }
 

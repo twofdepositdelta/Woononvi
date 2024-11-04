@@ -41,7 +41,11 @@ class PasswordResetLinkController extends Controller
         $email = $request->email;
 
         // Génération de l'OTP
-        $otp = Str::random(4);
+        $otp = rand(1000, 9999);
+
+        $user = User::whereEmail($email)->first();
+    
+        $user->sendOTPNotification($otp);
 
         // Stockage de l'OTP dans la table `password_resets`
         DB::table('password_resets')->updateOrInsert(
@@ -52,11 +56,6 @@ class PasswordResetLinkController extends Controller
                 'created_at' => Carbon::now(),
             ]
         );
-
-        $user = User::whereEmail($email)->first();
-    
-        // Envoyer la notification de confirmation
-        $user->sendOTPNotification($otp);
 
         return response()->json([
             'success' => true,
