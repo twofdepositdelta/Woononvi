@@ -227,7 +227,7 @@ class AuthenticatedSessionController extends Controller
     public function verifyOtp(Request $request) {
         $validator = Validator::make($request->all(), [
             'otp' => 'required|integer|size:4',
-            'email' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
         ]);
 
         $user = User::whereEmail($request->email)->first();
@@ -269,34 +269,5 @@ class AuthenticatedSessionController extends Controller
                 'message' => 'Nom d\'utilisateur invalide !',
             ], 422);
         }
-    }
-
-    public function sendOTP(Request $request) {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
-
-        $email = $request->email;
-
-        // Génération de l'OTP
-        $otp = Str::random(4);
-
-        // Stockage de l'OTP dans la table `password_resets`
-        DB::table('password_resets')->updateOrInsert(
-            ['email' => $email],
-            [
-                'token' => $otp,
-                'expired_at' => Carbon::now()->addMinutes(30),
-                'created_at' => Carbon::now(),
-            ]
-        );
-
-        // Envoyer la notification de confirmation
-        $user->sendOTPNotification($otp);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Un code OTP a été envoyé à votre adresse e-mail.',
-        ]);
     }
 }
