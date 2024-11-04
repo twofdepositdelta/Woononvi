@@ -12,10 +12,12 @@ class ResetPasswordByOTP extends Notification
 {
     use Queueable;
 
+    public $user;
     public $otp;
 
-    public function __construct($otp)
+    public function __construct($user, $otp)
     {
+        $this->user = $user;
         $this->otp = $otp;
     }
 
