@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 USE Carbon\Carbon;
+use App\Models\User;
 
 class PasswordResetLinkController extends Controller
 {
@@ -51,6 +52,8 @@ class PasswordResetLinkController extends Controller
                 'created_at' => Carbon::now(),
             ]
         );
+
+        $user = User::whereEmail($email)->first();
     
         // Envoyer la notification de confirmation
         $user->sendOTPNotification($otp);
