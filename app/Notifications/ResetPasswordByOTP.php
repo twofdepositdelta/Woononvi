@@ -5,18 +5,19 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+
 use Illuminate\Notifications\Notification;
 
-class CustomResetPassword extends Notification
+class ResetPasswordByOTP extends Notification
 {
     use Queueable;
 
-    public $token;
+    public $otp;
 
-    public function __construct($token)
+    public function __construct($otp)
     {
         // Stocke le token pour l'utiliser dans l'e-mail
-        $this->token = $token;
+        $this->otp = $otp;
     }
 
     /**
@@ -34,17 +35,11 @@ class CustomResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        // Générer l'URL de réinitialisation
-        $url = url(route('password.reset', [
-            'token' => $this->token,
-            'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
-
         return (new MailMessage)
             ->subject(__('Réinitialisation du mot de passe'))
-            ->view('emails.reset-password', [
-                'url' => $url,
-            ]);
+            ->line('Vous avez fait une demande de réinitialisation de mot de passe. Veuillez utiliser le code OTP ci-dessous pour modifier votre mot de passe.')
+            ->action($this->token, '#')
+            ->line('Si vous n\'avez rien demandé, aucune autre action n\'est requise.');
     }
 
     /**
@@ -56,18 +51,6 @@ class CustomResetPassword extends Notification
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));
-    }
-
-    /**
-     * Build the mail representation of the notification.
-     */
-    public function build()
-    {
-        return $this->markdown('emails.reset-password')
-                    ->subject(__('Réinitialisation du mot de passe'))
-                    ->with([
-                        'url' => $this->getResetUrl($notifiable),
-                    ]);
     }
 
     /**
