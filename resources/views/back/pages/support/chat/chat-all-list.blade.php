@@ -1,12 +1,12 @@
 {{-- back/pages/support/chat/chat-all-list.blade.php --}}
 <div class="chat-all-list">
     @foreach($conversations as $conversation)
-        <div class="chat-item" data-conversation-id="{{ $conversation->id }}">
+        <div class="chat-sidebar-single" data-conversation-id="{{ $conversation->id }}">
             <div class="chat-user">
                 <img src="{{ asset('assets/images/users/' . $conversation->support->profile->avatar) }}" alt="{{ $conversation->support->firstname }}" class="avatar-lg">
                 <div class="chat-user-info">
-                    <h6>{{ $conversation->support->firstname . ' ' . $conversation->support->lastname }}</h6>
-                    <p>{{ Str::limit($conversation->messages->last()->content ?? '', 30) }}</p>
+                    <h6 class="chat-user-name">{{ $conversation->support->firstname . ' ' . $conversation->support->lastname }}</h6>
+                    <p class="chat-message-preview">{{ Str::limit($conversation->messages->last()->content ?? '', 30) }}</p>
                 </div>
             </div>
             <div class="chat-time">{{ $conversation->updated_at->diffForHumans() }}</div>
@@ -43,3 +43,4 @@
             });
     }
 </script>
+

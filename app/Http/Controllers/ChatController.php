@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\BackHelper;
 
 class ChatController extends Controller
 {
@@ -14,53 +16,118 @@ class ChatController extends Controller
      */
     public function index()
     {
-        // Vérifier si l'utilisateur a le rôle d'administrateur
-        $isAdmin = auth()->user()->hasRole('super admin');
+        return view('back.pages.support.chat.message');
+    }
+
+    public function markMessagesAsRead($conversationId)
+    {
+        // Obtenir l'utilisateur actuellement authentifié
+        $userId = auth()->id();
+
+        // Vérifier si la conversation existe
+        $conversationExists = Conversation::where('id', $conversationId)->exists();
+        if (!$conversationExists) {
+            return response()->json(['status' => 'error', 'message' => 'Conversation non trouvée.'], 404);
+        }
+
+        // Mettre à jour les messages de la conversation pour les marquer comme lus
+        $updatedCount = Message::where('conversation_id', $conversationId)
+            ->where('sender_id', '!=', $userId) // S'assurer que nous marquons uniquement les messages de l'autre participant
+            ->where('is_read', false) // Ne marquer que les messages non lus
+            ->update(['is_read' => true]);
+
+        // Retourner une réponse pour confirmer l'opération avec le nombre de messages mis à jour
+        return response()->json(['status' => 'success', 'updated_count' => $updatedCount]);
+    }
+
+
+
+    public function getMessages()
+    {
+        // Vérifier si l'utilisateur a le rôle d'administrateur ou de manager
+        $isAdmin = auth()->user()->hasRole('super admin') || auth()->user()->hasRole('manager');
 
         if ($isAdmin) {
-            // Récupérer toutes les conversations pour l'administrateur
-            $conversations = Conversation::with(['user', 'support'])
+            // Récupérer toutes les conversations pour l'administrateur ou le manager avec le dernier message et le comptage des messages non lus
+            $conversations = Conversation::with(['user', 'support', 'lastMessage'])
+                ->withCount(['messages as unread_count' => function ($query) {
+                    $query->where('is_read', false)
+                        ->where('sender_id', '!=', auth()->id()); // Exclure les messages envoyés par l'utilisateur connecté
+                }])
                 ->orderBy('created_at', 'desc')
                 ->get();
         } else {
-            // Récupérer les conversations traitées par le support de l'utilisateur actuel et celles non lues par d'autres supports
-            $conversations = Conversation::with(['user', 'support'])
+            // Récupérer les conversations non prises en charge (is_taken = false) ou non résolues
+            $conversations = Conversation::with(['user', 'support', 'lastMessage'])
+                ->withCount(['messages as unread_count' => function ($query) {
+                    $query->where('is_read', false)
+                        ->where('sender_id', '!=', auth()->id()); // Exclure les messages envoyés par l'utilisateur connecté
+                }])
                 ->where(function ($query) {
-                    $query->where('support_id', auth()->id())
-                          ->orWhere('status', '!=', 'resolved') // Conversations non résolues
-                          ->where('user_id', auth()->id()); // Conversations de l'utilisateur
+                    $query->where('support_id', auth()->id()) // Conversations assignées à l'utilisateur connecté
+                        ->orWhere(function ($query) {
+                            $query->where('status', '!=', 'resolved') // Conversations non résolues
+                                ->where('user_id', auth()->id()) // Conversations de l'utilisateur connecté
+                                ->where('is_taken', false); // Conversations non prises en charge
+                        });
                 })
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
 
-        // dd($conversations);
-
-        return view('back.pages.support.chat.message', compact('conversations'));
+        // Retourner les conversations au format JSON avec le compte des messages non lus
+        return response()->json($conversations->map(function ($conversation) {
+            return [
+                'id' => $conversation->id,
+                'firstname' => $conversation->user->firstname,
+                'lastname' => $conversation->user->lastname,
+                'lastMessage' => $conversation->lastMessage->content ? Str::limit($conversation->lastMessage->content, 20, '...') : null,
+                'time' => $conversation->lastMessage->created_at->format('H:i'),
+                'createdAt' => $conversation->lastMessage->created_at,
+                'unreadCount' => $conversation->unread_count, // Utiliser le compte des messages non lus calculé
+                'image' => $conversation->user->profile->avatar ?? 'default-image.png', // Image par défaut
+                'active' => false, // Déterminez la logique pour savoir si la conversation est active
+            ];
+        }));
     }
 
 
-    public function getMessages($conversationId)
+    public function sendMessage(Request $request, $conversationId)
     {
-        // Récupérer les messages d'une conversation active
-        $messages = Message::with('sender')
-            ->where('conversation_id', $conversationId)
-            ->orderBy('created_at', 'asc')
-            ->get();
+        if ($request->hasFile('file') || $request->input('content')) {
+            # code...
+            // Validation de la requête
+            $request->validate([
+                'content' => 'nullable|string|max:255',
+                'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
 
-        return response()->json($messages);
-    }
+            // Initialisation des données du message
+            $data = [
+                'content' => $request->input('content'),
+                'sender_id' => Auth::id(),
+                'conversation_id' => $conversationId,
+            ];
 
-    public function sendMessage(Request $request)
-    {
-        $request->validate([
-            'content' => 'required|string|max:255',
-            'conversation_id' => 'required|exists:conversations,id',
-            'sender_id' => 'required|exists:users,id',
-        ]);
+            // Gérer le téléchargement du fichier si présent
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileExtension = $file->getClientOriginalExtension(); // Récupère l'extension du fichier
+                $fileName = time() . '.' . $fileExtension; // Crée le nom du fichier avec le timestamp et l'extension
+                $storagePath = 'back/assets/images/chat/';
 
-        $message = Message::create($request->only('conversation_id', 'sender_id', 'content'));
-        return response()->json(['success' => true, 'message' => $message]);
+                // Sauvegarde du fichier dans le répertoire spécifique
+                $filePath = $file->storeAs($storagePath, $fileName, 'public');
+                $data['file_path'] = $filePath;
+            }
+
+            // Création du message
+            $message = Message::create($data);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 
     /**
@@ -113,9 +180,9 @@ class ChatController extends Controller
 
     public function fetchMessages($conversationId)
     {
-        $conversation = Conversation::with(['messages' => function($query) {
-                $query->orderBy('created_at', 'asc'); // Trier les messages par date
-            }])
+        $conversation = Conversation::with(['messages' => function ($query) {
+            $query->orderBy('created_at', 'asc'); // Trier les messages par date
+        }])
             ->findOrFail($conversationId);
 
         return response()->json($conversation->messages);
