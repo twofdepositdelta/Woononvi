@@ -14,11 +14,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Ville de départ</th>
-                            <th>Ville de destination</th>
                             <th>Heure de départ</th>
-                            <th>Places disponibles</th>
-
+                            <th> Départ</th>
+                            <th>Destination</th>
+                            {{-- <th>Prix par km</th> --}}
+                            <th>NPD</th>
+                            <th>Conducteur</th>
                             <th>Statut</th>
                             <th>Actions</th>
                         </tr>
@@ -32,10 +33,12 @@
                             @foreach ($rides as $index => $ride)
                                 <tr>
                                     <td>{{ $index+1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
                                     <td>{{ $ride->departure }}</td>
                                     <td>{{ $ride->destination }}</td>
-                                    <td>{{ $ride->departure_time }}</td>
+                                    {{-- <td>{{ $ride->price_per_km }} FCFA</td> --}}
                                     <td>{{ $ride->available_seats }}</td>
+                                    <td> <a href="{{route('users.show',$ride->driver->email)}}">{{$ride->driver->firstname.' '.$ride->driver->lastname }}</a></td>
                                     <td>
                                         @if ($ride->status == 'active')
                                             <span class="badge bg-success">Actif</span>

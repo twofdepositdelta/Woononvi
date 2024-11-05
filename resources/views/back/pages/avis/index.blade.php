@@ -17,7 +17,7 @@
                                #
                            </div>
                        </th>
-                       <th scope="col">Nom de l'utilisateur</th>
+                       <th scope="col">Commentateur</th>
                        <th scope="col">Trajet</th>
                        <th scope="col">Note</th>
                        {{-- <th scope="col">Commentaire</th> --}}
@@ -38,17 +38,16 @@
                                    {{ $key + 1 }}
                                </div>
                            </td>
-                           <td>{{ $review->reviewer->firstname.''.$review->reviewer->lastname }}</td> <!-- Affiche le nom de l'utilisateur -->
+                           <td><a href="{{route('users.show',$review->reviewer->email)}}"> {{ $review->reviewer->firstname.' '.$review->reviewer->lastname}}</a></td> <!-- Affiche le nom de l'utilisateur -->
                            <td> <a href="{{ route('rides.show',$review->booking->ride->id) }}">{{ $review->booking->ride->departure }} - {{ $review->booking->ride->destination }}</a></td> <!-- Affiche le trajet -->
                            <td>{{ $review->rating }}</td> <!-- Affiche la note -->
-                           {{-- <td>{{ $review->comment }}</td> <!-- Affiche le commentaire --> --}}
-                           <td>{{ $review->created_at->format('d M Y') }}</td> <!-- Date de création -->
+                           <td>{{ \Carbon\Carbon::parse($review->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
                            <td class="text-center">
-                               <div class="d-flex align-items-center gap-10 justify-content-center">
-                                <a href="{{route('reviews.show',$review)}}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                    <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                </a>
-                               </div>
+                            <a href="{{ $review->comment != null ? route('reviews.show', $review) : '#' }}"
+                                class="btn btn-primary text-sm"
+                                {{ $review->comment == null ? 'onclick="event.preventDefault();"' : '' }}>
+                                 Lire le commentaire
+                             </a>
                            </td>
                        </tr>
                        @endforeach

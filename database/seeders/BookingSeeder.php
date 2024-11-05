@@ -17,8 +17,8 @@ class BookingSeeder extends Seeder
             foreach ($users->random(5) as $user) { // Random 5 passagers pour chaque trajet
                 Booking::create([
                     'seats_reserved' => rand(1, 4), // Réservant entre 1 et 4 sièges
-                    'total_price' => rand(20, 100), // Prix total entre 20 et 100
-                    'status' => 'confirmed', // Statut par défaut
+                    'total_price' => rand(1000, 20000), // Prix total entre 20 et 100
+                    'status' => ['pending', 'confirmed', 'cancelled', 'refunded'][rand(0, 3)],
                     'ride_id' => $ride->id,
                     'passenger_id' => $user->id,
                 ]);
