@@ -84,8 +84,9 @@ class PasswordResetLinkController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'current_password' => 'required',
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|string',
             'new_password' => 'required|min:8|confirmed',
         ]);
 
@@ -96,24 +97,30 @@ class PasswordResetLinkController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-    
-        $user = $request->user();
-    
-        // Vérification du mot de passe actuel
-        if (!Hash::check($request->current_password, $user->password)) {
+
+        $record = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->where('token', $request->otp)
+            ->where('expired_at', '>=', Carbon::now())
+            ->first();
+
+        if (!$record) {
             return response()->json([
                 'success' => false,
-                'message' => 'Le mot de passe actuel est incorrect.',
-            ], 401);
+                'message' => 'Le code OTP est invalide ou a expiré.',
+            ], 422);
         }
 
+        $user = User::whereEmail($request->email)->first();
         $user->password = Hash::make($request->new_password);
         $user->save();
 
+        DB::table('password_resets')->where('email', $request->email)->delete();
+
         return response()->json([
             'success' => true,
-            'message' => 'Votre mot de passe a été modifié avec succès.',
-        ], 200);
+            'message' => 'Mot de passe réinitialisé avec succès.',
+        ]);
     }
 
     /**
