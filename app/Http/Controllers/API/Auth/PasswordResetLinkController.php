@@ -84,7 +84,7 @@ class PasswordResetLinkController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
             'otp' => 'required|string',
             'new_password' => 'required|min:8|confirmed',
