@@ -70,4 +70,20 @@ class MessageController extends Controller
     {
         //
     }
+
+    public function deleteMessage($id)
+    {
+        $message = Message::findOrFail($id);
+        $message->delete();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    // public function updateMessage(Request $request, $id)
+    // {
+    //     $message = Message::findOrFail($id);
+    //     $message->update(['content' => $request->text]);
+
+    //     return response()->json(['status' => 'success']);
+    // }
 }

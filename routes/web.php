@@ -102,6 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/send/{conversationId}', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::get('/conversations/{conversationId}/user-info', [ConversationController::class, 'getUserInfo']);
     Route::get('/chat/messages/read/{conversationId}', [ChatController::class, 'markMessagesAsRead']);
+    Route::get('/chat/messages/{id}/delete', [MessageController::class, 'deleteMessage']);
+    // Route::put('/chat/messages/{id}/update', [MessageController::class, 'updateMessage']);
 
     Route::prefix('api')->group(base_path('routes/api.php'));
 });
