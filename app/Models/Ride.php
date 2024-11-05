@@ -17,7 +17,7 @@ class Ride extends Model
         'is_nearby_ride',
         'status',
         'driver_id', // Clé étrangère pour le conducteur
-        'is_search'
+        'commission_rate'
     ];
 
     // Relation avec le conducteur (utilisateur)

@@ -12,7 +12,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Passager :</strong>
-                <p class="mb-0">{{ $transaction->passenger->firstname.' '.$transaction->passenger->lastname ?? 'N/A' }}</p>
+                <p class="mb-0">{{ $transaction->booking->passenger->firstname.' '.$transaction->booking->passenger->lastname ?? 'N/A' }}</p>
             </div>
             <div class="col-md-6">
                 <strong>Conducteur :</strong>
@@ -22,23 +22,19 @@
     <div class="row mb-3">
         <div class="col-md-6">
             <strong>Trajet :</strong>
-            <p>{{ $transaction->ride->departure }} - {{ $transaction->ride->destination }}</p>
+            <p>{{ $transaction->booking->ride->departure }} - {{ $transaction->booking->ride->destination }}</p>
         </div>
 
         <div class="col-md-6">
             <strong>Frais de Plateforme :</strong>
-            <p>{{ number_format($transaction->platform_fee)  }} Fcfa</p>
+            <p>{{ number_format(($transaction->booking->total_price * $transaction->booking->ride->commission_rate)/100,0,',',' ')  }} Fcfa</p>
         </div>
     </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Montant de la Transaction :</strong>
-                <p class="mb-0">{{ number_format($transaction->amount,0, ',', ' ') }} FCFA</p>
-            </div>
-            <div class="col-md-6">
-                <strong>Commission :</strong>
-                <p class="mb-0">{{ number_format($transaction->commission,0, ',', ' ') }} FCFA</p>
+                <p class="mb-0">{{ number_format($transaction->booking->total_price,0, ',', ' ') }} FCFA</p>
             </div>
         </div>
         <div class="row mb-3">

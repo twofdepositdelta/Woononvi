@@ -15,18 +15,13 @@ class Transaction extends Model
         'driver_id',
         'ride_id',
         'amount',
-        'platform_fee',
         'commission',
         'status',
         'payment_method',
         'transaction_reference',
     ];
 
-     // Relation avec le passager
-     public function passenger()
-     {
-         return $this->belongsTo(User::class, 'passenger_id');
-     }
+
 
      // Relation avec le conducteur
      public function driver()
@@ -35,9 +30,10 @@ class Transaction extends Model
      }
 
      // Relation avec le trajet
-     public function ride()
-     {
-         return $this->belongsTo(Ride::class);
-     }
+     public function booking()
+    {
+    return $this->belongsTo(Booking::class);
+    }
+
 
 }

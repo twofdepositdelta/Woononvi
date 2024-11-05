@@ -25,6 +25,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => true,
                 'status' => 'active',
                 'driver_id' => 1, // Assurez-vous que cet ID existe dans votre table users
+               'commission_rate'=>10,
                 'created_at' => Carbon::now()->subYear(), // Date de création d'un an passé
                 'updated_at' => now(),
             ],
@@ -37,6 +38,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => false,
                 'status' => 'pending',
                 'driver_id' => 2, // Assurez-vous que cet ID existe dans votre table users
+               'commission_rate'=>10,
                 'created_at' => Carbon::now()->subYear(), // Date de création d'un an passé
                 'updated_at' => now(),
             ],
@@ -49,6 +51,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => true,
                 'status' => 'completed',
                 'driver_id' => 3, // Assurez-vous que cet ID existe dans votre table users
+               'commission_rate'=>15,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -61,6 +64,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => false,
                 'status' => 'cancelled',
                 'driver_id' => 1, // Assurez-vous que cet ID existe dans votre table users
+                'commission_rate'=>5,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -73,6 +77,7 @@ class RideSeeder extends Seeder
                 'is_nearby_ride' => true,
                 'status' => 'suspend',
                 'driver_id' => 2, // Assurez-vous que cet ID existe dans votre table users
+                'commission_rate'=>10,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

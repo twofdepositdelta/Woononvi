@@ -1,10 +1,10 @@
 @extends('back.layouts.master')
-@section('title', 'Liste des transactions ')
+@section('title', 'Liste des Transactions ')
 @section('content')
 
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-        <h5 class="card-title mb-0">Liste des Transactions</h5>
+        <h5 class=" card-title mb-0">Liste des Transactions</h5>
     </div>
     <!-- Content -->
     <div class="card-body p-24">
@@ -30,17 +30,17 @@
                         @foreach ($transactions as $index => $transaction)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $transaction->passenger->firstname.' '.$transaction->passenger->lastname ?? 'N/A' }}</td>
+                                <td>{{ $transaction->booking->passenger->firstname.' '.$transaction->booking->passenger->lastname ?? 'N/A' }}</td>
                                 <td>{{ $transaction->driver->firstname.' '.$transaction->driver->lastname ?? 'N/A' }}</td>
-                                <td>{{ number_format($transaction->amount, 2) }} Fcfa</td>
-                                <td>{{ ($transaction->ride->departure.' '.$transaction->ride->destination) }}</td>
+                                <td>{{ number_format($transaction->booking->total_price,0, ',', ' ') }} Fcfa</td>
+                                <td>{{ ($transaction->booking->ride->departure.'-'.$transaction->booking->ride->destination) }}</td>
 
                                 <td>
                                     @if ($transaction->status == 'completed')
-                                        <span class="badge bg-success">Complété</span>
+                                        <span class="badge bg-success">Réussi </span>
                                     @elseif ($transaction->status == 'pending')
                                         <span class="badge bg-warning">En attente</span>
-                                    @elseif ($transaction->status == 'failed')
+                                    @elseif ($transaction->status == 'cancelled')
                                         <span class="badge bg-danger">Annulé</span>
                                     @elseif ($transaction->status == 'refunded')
                                         <span class="badge bg-secondary">Remboursé</span>
@@ -53,6 +53,14 @@
                                            class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                             <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                                         </a>
+
+                                            {{-- <form action="{{ route('transactions.status',[$transaction,'status'=> 'refunded']) }}" method="get">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary text-sm" {{ $transaction->status != 'cancelled' ? 'disabled' : '' }}>
+                                                    Remboursé
+                                                </button>
+                                            </form> --}}
+
                                     </div>
                                 </td>
                             </tr>

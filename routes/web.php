@@ -6,6 +6,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
@@ -98,6 +99,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('bookings', BookingController::class)->parameters([
         'bookings' => 'booking',
+    ]);
+
+    Route::resource('reports', ReportController::class)->parameters([
+        'reports' => 'report',
     ]);
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
