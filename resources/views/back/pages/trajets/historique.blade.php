@@ -1,5 +1,5 @@
 @extends('back.layouts.master')
-@section('title', 'historique des trajets ')
+@section('title', 'Liste des trajets ')
 @section('content')
 
     <div class="card h-100 p-0 radius-12">
@@ -14,57 +14,67 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Ville de départ</th>
-                            <th>Ville de destination</th>
                             <th>Heure de départ</th>
-                            <th>Places disponibles</th>
+                            <th> Départ</th>
+                            <th>Destination</th>
                             <th>Prix par km</th>
+                              <th>NPD</th>
+                            <th>Conducteur</th>
                             <th>Statut</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if ($rides->isEmpty())
-                         <tr>
+                        <tr>
                             <td colspan="7"  class="text-danger text-center">Aucun trajet enregistré</td>
                          </tr>
                         @else
+                            @foreach ($rides as $index => $ride)
+                                <tr>
+                                    <td>{{ $index+1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
+                                    <td>{{ $ride->departure }}</td>
+                                    <td>{{ $ride->destination }}</td>
+                                    <td>{{ $ride->price_per_km }} FCFA</td>
+                                    <td>{{ $ride->available_seats }}</td>
+                                    <td> <a href="{{route('users.show',$ride->driver->email)}}">{{$ride->driver->firstname.' '.$ride->driver->lastname }}</a></td>
+                                    <td>
+                                        @if ($ride->status == 'active')
+                                            <span class="badge bg-success">Actif</span>
+                                        @elseif ($ride->status == 'completed')
+                                            <span class="badge bg-info">Complété</span>
+                                        @elseif ($ride->status == 'cancelled')
+                                            <span class="badge bg-danger">Annulé</span>
+                                        @elseif ($ride->status == 'pending')
+                                            <span class="badge bg-warning">En attente</span>
+                                        @elseif ($ride->status == 'suspend')
+                                            <span class="badge bg-secondary">Suspendu</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center gap-10 justify-content-center">
+                                            <!-- View -->
 
-                        @foreach ($rides as $index => $ride)
-                            <tr>
-                                <td>{{ $index+1 }}</td>
-                                <td>{{ $ride->departure }}</td>
-                                <td>{{ $ride->destination }}</td>
-                                <td>{{ $ride->departure_time }}</td>
-                                <td>{{ $ride->available_seats }}</td>
-                                <td>{{ $ride->price_per_km }} FCFA</td>
-                                <td>
-                                    @if ($ride->status == 'active')
-                                        <span class="badge bg-success">Actif</span>
-                                    @elseif ($ride->status == 'completed')
-                                        <span class="badge bg-info">Complété</span>
-                                    @elseif ($ride->status == 'cancelled')
-                                        <span class="badge bg-danger">Annulé</span>
-                                    @elseif ($ride->status == 'pending')
-                                        <span class="badge bg-warning">En attente</span>
-                                    @elseif ($ride->status == 'suspend')
-                                        <span class="badge bg-secondary">Suspendu</span>
-                                    @endif
-                                </td>
+                                            <a href="{{ route('rides.show',$ride) }}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                            </a>
 
-                                 <td class="text-end">
-                                   <a href="{{ route('rides.show',$ride) }}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                        </a>
-                                </td>
-                            </tr>
-                        @endforeach
+
+
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+
                         @endif
                     </tbody>
                 </table>
                 @if (!$rides->isEmpty())
 
                 {{-- pagination --}}
+
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
                         <span>Affichage {{ $rides->firstItem() }} de {{ $rides->lastItem() }} a
                             {{ $rides->total() }} entrées</span>
@@ -129,6 +139,7 @@
                             @endif
                         </ul>
                     </div>
+
                 {{-- endpagination --}}
 
                 @endif
