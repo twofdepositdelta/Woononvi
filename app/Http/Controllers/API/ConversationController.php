@@ -58,7 +58,7 @@ class ConversationController extends Controller
             ]);
         } else {
             // Assigner un support
-            $support = $this->assignSupportToConversation($conversation);
+            $support = $this->assignSupportToConversation();
     
             if (!$support) {
                 // Si aucun support disponible, annuler la création de la conversation
@@ -90,7 +90,7 @@ class ConversationController extends Controller
         }
     }
 
-    private function assignSupportToConversation(Conversation $conversation) {
+    private function assignSupportToConversation() {
         // Récupérer les supports actifs avec leur nombre de conversations non clôturées
         $activeSupports = User::where('role', 'support')
                               ->where('status', 'active')
@@ -115,10 +115,10 @@ class ConversationController extends Controller
         $selectedSupport = $availableSupports->random();
     
         // Attribuer le support à la conversation
-        $conversation->update([
-            'support_id' => $selectedSupport->id,
-            'is_taken' => true,
-        ]);
+        // $conversation->update([
+        //     'support_id' => $selectedSupport->id,
+        //     'is_taken' => true,
+        // ]);
     
         return $selectedSupport;
     }
