@@ -92,29 +92,18 @@ class ConversationController extends Controller
 
     private function assignSupportToConversation() {
         // Récupérer les supports actifs avec leur nombre de conversations non clôturées
-        // $users = User::role('support')->get();
-        return User::whereHas('roles', function ($query) {
+        return $activeSupports = User::where('status', 'active')->whereHas('roles', function ($query) {
             $query->where('name', 'support');
-        })->with('roles')->get()
-        // ->filter(function ($user) {
-        //     return $user->hasRole('support'); // Vérifie le rôle de support
-        // })
-        // ->loadCount(['conversations as open_conversations_count' => function ($query) {
-        //     $query->where('status', '!=', 'closed');
-        // }])
-        // ->sortBy('open_conversations_count')
-        // ->values();
-        // return $users;
-        ;
-        $activeSupports = User::where('status', 'active')
-                            ->whereHas('roles', function ($query) {
-                                $query->where('name', 'support');
-                            })
-                            ->withCount(['conversations as open_conversations_count' => function ($query) {
-                                $query->where('status', '!=', 'closed');
-                            }])
-                            ->orderBy('open_conversations_count')
-                            ->get();
+        })->with('roles')->get();
+        // User::where('status', 'active')
+        //                     ->whereHas('roles', function ($query) {
+        //                         $query->where('name', 'support');
+        //                     })
+        //                     ->withCount(['conversations as open_conversations_count' => function ($query) {
+        //                         $query->where('status', '!=', 'closed');
+        //                     }])
+        //                     ->orderBy('open_conversations_count')
+        //                     ->get();
     
         // Si aucun support actif disponible
         if ($activeSupports->isEmpty()) {
