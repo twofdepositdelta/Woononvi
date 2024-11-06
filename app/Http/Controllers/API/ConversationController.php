@@ -92,7 +92,7 @@ class ConversationController extends Controller
 
     private function assignSupportToConversation() {
         // Récupérer les supports actifs avec leur nombre de conversations non clôturées
-        return $activeSupports = User::whereHas('roles', function ($query) {
+        return $activeSupports = User::where('status', true)->whereHas('roles', function ($query) {
             $query->where('name', 'support');
         })->with('roles')->get();
         // User::where('status', 'active')
