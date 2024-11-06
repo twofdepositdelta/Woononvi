@@ -58,7 +58,7 @@ class ConversationController extends Controller
             ]);
         } else {
             // Assigner un support
-            return $support = $this->assignSupportToConversation();
+            $support = $this->assignSupportToConversation();
     
             if (!$support) {
                 // Si aucun support disponible, annuler la création de la conversation
@@ -114,12 +114,6 @@ class ConversationController extends Controller
     
         // Choisir un support aléatoirement parmi ceux ayant le nombre minimum de conversations
         $selectedSupport = $availableSupports->random();
-    
-        // Attribuer le support à la conversation
-        // $conversation->update([
-        //     'support_id' => $selectedSupport->id,
-        //     'is_taken' => true,
-        // ]);
     
         return $selectedSupport;
     }
