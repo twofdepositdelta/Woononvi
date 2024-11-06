@@ -39,10 +39,21 @@ class ConversationController extends Controller
         $messages = $conversation->messages()->where('sender_id', $user->id)->get();
 
         $mappedMessages = $messages->map(function ($message) {
+            $createdAt = Carbon::parse($message->created_at);
+
+            // Calcul de la durée et formatage
+            if ($createdAt->diffInMinutes() < 60) {
+                $timeAgo = $createdAt->diffInMinutes() . ' minute' . ($createdAt->diffInMinutes() > 1 ? 's' : '');
+            } elseif ($createdAt->diffInHours() < 24) {
+                $timeAgo = $createdAt->diffInHours() . ' heure' . ($createdAt->diffInHours() > 1 ? 's' : '');
+            } else {
+                $timeAgo = $createdAt->diffInDays() . ' jour' . ($createdAt->diffInDays() > 1 ? 's' : '');
+            }
+
             return [
                 'id' => $message->id,
                 'text' => $message->content ? $message->content : null, 
-                'createdAt' => $message->created_at,
+                'createdAt' => $timeAgo,
                 'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
                 'isSender' => Auth::id() == $message->sender_id ? true : false,
                 'image' => $message->sender->profile->avatar ? url($message->sender->profile->avatar) : null,
