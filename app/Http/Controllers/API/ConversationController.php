@@ -37,7 +37,19 @@ class ConversationController extends Controller
         // Récupère les messages de la conversation où le sender_id correspond à user_id
         $messages = $conversation->messages()->where('sender_id', $user->id)->get();
 
-        return response()->json(['messages' => $messages], 200);
+        $mappedMessages = $messages->map(function ($message) {
+            return [
+                'id' => $message->id,
+                'text' => $message->content ? $message->content : null, // Utilise 'content' pour le message
+                'createdAt' => $message->created_at,
+                'messageImage' => $message->file_path ? asset('storage/' . $message->file_path) : null,
+                'isSender' => Auth::id() == $message->sender_id ? 'right' : 'left',
+                'image' => $message->sender->profile->avatar, // Assurez-vous que 'sender' est bien défini dans votre relation
+                'senderId' => $message->sender_id, // Utilisation du sender_id
+            ];
+        });
+    
+        return response()->json(['messages' => $mappedMessages], 200);
 
         // if($messages) {
         //     return response()->json([
