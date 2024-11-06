@@ -20,21 +20,22 @@ class ConversationController extends Controller
         $user = $request->user();
 
         // Récupère l'utilisateur avec ses conversations
-        $user = User::with('conversations')->find($user->id);
 
         if (!$user) {
             return response()->json(['error' => 'Utilisateur non trouvé !'], 404);
         }
 
         // Recherche de la conversation non clôturée
-        $conversation = $user->conversations()->where('status', '!=', 'closed')->first();
+        $conversation = Conversation::whereUserId($user->id)
+                        ->where('status', '!=', 'closed')
+                        ->first();
 
         if (!$conversation) {
-            return response()->json(['message' => 'No open conversation found'], 404);
+            return response()->json(['message' => "Il n'y a pas de conversation ouverte !"], 404);
         }
 
         // Récupère les messages de la conversation où le sender_id correspond à user_id
-        $messages = $conversation->messages()->where('sender_id', $userId)->get();
+        $messages = $conversation->messages()->where('sender_id', $user->id)->get();
 
         return response()->json(['messages' => $messages], 200);
 
