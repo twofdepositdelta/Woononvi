@@ -6,6 +6,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
@@ -99,6 +100,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('bookings', BookingController::class)->parameters([
         'bookings' => 'booking',
     ]);
+
+    Route::resource('reports', ReportController::class)->parameters([
+        'reports' => 'report',
+    ]);
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
@@ -120,6 +125,8 @@ Route::get('/reservation/{booking}/{status}', [BookingController::class, 'update
     Route::post('/chat/send/{conversationId}', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::get('/conversations/{conversationId}/user-info', [ConversationController::class, 'getUserInfo']);
     Route::get('/chat/messages/read/{conversationId}', [ChatController::class, 'markMessagesAsRead']);
+    Route::get('/chat/messages/{id}/delete', [MessageController::class, 'deleteMessage']);
+    // Route::put('/chat/messages/{id}/update', [MessageController::class, 'updateMessage']);
 
     Route::prefix('api')->group(base_path('routes/api.php'));
 

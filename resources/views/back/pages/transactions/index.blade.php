@@ -30,10 +30,10 @@
                         @foreach ($transactions as $index => $transaction)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $transaction->passenger->firstname.' '.$transaction->passenger->lastname ?? 'N/A' }}</td>
+                                <td>{{ $transaction->booking->passenger->firstname.' '.$transaction->booking->passenger->lastname ?? 'N/A' }}</td>
                                 <td>{{ $transaction->driver->firstname.' '.$transaction->driver->lastname ?? 'N/A' }}</td>
-                                <td>{{ number_format($transaction->amount,0, ',', ' ') }} Fcfa</td>
-                                <td>{{ ($transaction->ride->departure.'-'.$transaction->ride->destination) }}</td>
+                                <td>{{ number_format($transaction->booking->total_price,0, ',', ' ') }} Fcfa</td>
+                                <td>{{ ($transaction->booking->ride->departure.'-'.$transaction->booking->ride->destination) }}</td>
 
                                 <td>
                                     @if ($transaction->status == 'completed')

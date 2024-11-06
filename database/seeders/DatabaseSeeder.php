@@ -32,7 +32,9 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             ReviewSeeder::class,
             RideSearcheSeeder::class,
-            TransactionSeeder::class
+            TransactionSeeder::class,
+            ReportTypeSeeder::class,
+            ReportSeeder::class
 
         ]);
     }

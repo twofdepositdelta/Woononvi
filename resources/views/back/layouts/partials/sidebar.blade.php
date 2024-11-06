@@ -154,7 +154,7 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Signaler</a>
+                        <a href="{{route('reports.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Signaler</a>
                     </li>
                     <li>
                         <a href="{{route('reviews.index')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Commentaire</a>

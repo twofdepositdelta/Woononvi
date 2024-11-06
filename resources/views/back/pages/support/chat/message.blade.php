@@ -195,13 +195,57 @@
             });
         });
 
+        $('.chat-message-list').on('click', '.delete-message-btn', function() {
+            const messageId = $(this).data('message-id');
+
+            $.ajax({
+                url: `/chat/messages/${messageId}/delete`,
+                method: 'GET',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function(response) {
+                    loadMessages(conversationId); // Recharger les messages après suppression
+                },
+                error: function(xhr) {
+                    alert('Erreur lors de la suppression du message.');
+                }
+            });
+        });
+
+        $('.edit-message-btn').on('click', function() {
+            const messageId = $(this).data('message-id');
+            const messageText = $(this).closest('.chat-single-message').find('p.mb-3').text();
+
+            // Exemple d'un champ de texte pour modifier le message
+            $('#editMessageModal').find('#messageText').val(messageText); // Remplit un champ de texte avec le contenu actuel
+
+            $('#editMessageModal').modal('show'); // Montre le modal pour modifier le message
+
+            $('#saveChangesButton').off('click').on('click', function() {
+                const newText = $('#editMessageModal').find('#messageText').val();
+
+                $.ajax({
+                    url: `/chat/messages/${messageId}update/`,
+                    method: 'PUT', // Assure-toi que la méthode correspond à ce que tu as configuré côté serveur
+                    data: {
+                        text: newText, // Envoie le nouveau texte
+                    },
+                    success: function(response) {
+                        fetchMessages();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur lors de la mise à jour du message:', error);
+                    }
+                });
+            });
+        });
+
+
         // Appeler la fonction pour charger les messages lors du chargement de la page
         fetchMessages();
 
         // Mettre à jour les messages toutes les 3 secondes
         setInterval(fetchMessages, 3000);
     });
-
 
 
     function loadMessages(conversationId) {
@@ -223,19 +267,36 @@
 
                     $('.chat-message-list').append(`
                         <div class="chat-single-message ${message.isSender}">
-                            ${message.isSender == 'left' ? `<img src="${message.image}" alt="image" class="avatar-lg object-fit-cover rounded-circle">` : ''}
+                            ${message.isSender === 'left' ? `<img src="${message.image}" alt="image" class="avatar-lg object-fit-cover rounded-circle">` : ''}
                             <div class="chat-message-content">
                                 ${
-                                    message.text
-                                    ? `<p class="mb-3">${message.text}</p>` // Affiche le texte si présent
-                                    : `<img src="${message.messageImage}" alt="image du message" class="message-image mb-3">` // Sinon, affiche l'image du message
+                                    message.isSender === 'right'
+                                    ? `
+                                        <div class="dropdown">
+                                            <button class="btn px-18 py-11 text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <iconify-icon icon="ph:dots-three-outline-fill" class="menu-icon"></iconify-icon>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item delete-message-btn" data-message-id="${message.id}" href="javascript:void(0)">Supprimer</a></li>
+                                            </ul>
+                                        </div>
+                                    `
+                                    : ''
                                 }
+                                <div class="message-text" id="message-${message.id}">
+                                    ${
+                                        message.text
+                                        ? `<p class="mb-3" data-text="${message.text}">${message.text}</p>`
+                                        : `<img src="${message.messageImage}" alt="image du message" class="message-image mb-3">`
+                                    }
+                                </div>
                                 <p class="chat-time mb-0">
                                     <span>${formattedTime}</span>
                                 </p>
                             </div>
                         </div><!-- chat-single-message fin -->
                     `);
+
                 });
             },
             error: function(xhr) {
@@ -244,7 +305,6 @@
             }
         });
     }
-
 
     function loadUserInfo(conversationId) {
         $.ajax({
