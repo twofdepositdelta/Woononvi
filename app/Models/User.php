@@ -75,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function conversations()
     {
-        return $this->hasMany(Conversation::class, 'support_id');
+        return $this->hasMany(Conversation::class, 'support_id', 'user_id');
     }
 
     public function bookings()
@@ -230,7 +230,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Si une conversation en cours est trouvée, renvoie ses messages
         if ($conversation) {
-            return $conversation;
+            return $conversation->messages()->get();
         }
 
         // Si aucune conversation en cours, renvoie une collection vide
