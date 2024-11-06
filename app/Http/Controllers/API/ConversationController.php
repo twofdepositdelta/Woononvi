@@ -65,7 +65,7 @@ class ConversationController extends Controller
                 // $conversation->delete();
                 return response()->json([
                     'success' => false,
-                    'error' => 'Aucun support disponible actuellement.'
+                    'message' => 'Aucun support disponible actuellement.'
                 ], 400);
             }
 
