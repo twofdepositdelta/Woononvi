@@ -220,4 +220,20 @@ class User extends Authenticatable implements MustVerifyEmail
         $phoneParts = explode(' ', $this->phone);
         return isset($phoneParts[1]) ? $phoneParts[1] : $this->phone;
     }
+
+    public function getCurrentConversationMessages()
+    {
+        // Récupère la conversation non clôturée de l'utilisateur
+        $conversation = $this->conversations()
+                            ->where('status', '!=', 'closed')
+                            ->first();
+
+        // Si une conversation en cours est trouvée, renvoie ses messages
+        if ($conversation) {
+            return $conversation->messages()->get();
+        }
+
+        // Si aucune conversation en cours, renvoie une collection vide
+        return collect();
+    }
 }
