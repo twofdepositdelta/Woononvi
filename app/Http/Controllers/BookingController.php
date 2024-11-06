@@ -115,4 +115,33 @@ class BookingController extends Controller
     return redirect()->back()->with('success', 'La reservation a été mis à jour.');
 }
 
+
+public function filterRides(Request $request)
+{
+    // Construire la requête avec des conditions "ou" pour les villes de départ et d'arrivée
+    $query = Ride::query();
+
+    // Ajouter une condition pour que l'une des villes corresponde
+    $query->where(function ($query) use ($request) {
+        $query->where('departure', $request->departure_city)
+              ->orWhere('destination', $request->destination_city);
+    });
+
+    // Appliquer le filtre sur l'heure de départ si renseignée
+    if ($request->filled('time_departure')) {
+        $query->whereTime('departure_time', '>=', $request->departure_time);
+    }
+
+    // Appliquer le filtre sur l'heure d'arrivée si renseignée
+    if ($request->filled('arrival_time')) {
+        $query->whereTime('arrival_time', '<=', $request->arrival_time);
+    }
+
+    // Récupérer les trajets filtrés
+    $rides = $query->get();
+
+    return response()->json(['rides' => $rides]);
+}
+
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\TypeVehicle;
 use Illuminate\Http\Request;
 
 class VehicleController extends Controller
@@ -13,6 +14,10 @@ class VehicleController extends Controller
     public function index()
     {
         //
+        $vehicles=Vehicle::orderBy('created_at','desc')->paginate(10);
+        $typevehicles=TypeVehicle::orderBy('created_at','desc')->paginate(10);
+
+        return view('back.pages.vehicules.index',compact('vehicles','typevehicles'));
     }
 
     /**
@@ -34,9 +39,12 @@ class VehicleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vehicle $vehicle)
+    public function show($slug)
     {
         //
+        $vehicle=Vehicle::where('slug',$slug)->first();
+        return view('back.pages.vehicules.show',compact('vehicle'));
+
     }
 
     /**
@@ -58,8 +66,29 @@ class VehicleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Vehicle $vehicle)
+    public function destroy( $slug)
     {
         //
+        $vehicle=Vehicle::where('slug',$slug)->first();
+        $vehicle->delete();
+        return redirect()->route('vehicles.index')->with('success', 'vehicule a été supprimé avec succès !');
     }
+
+    public function filterByType(Request $request)
+{
+    // Récupérer le type de véhicule filtré
+    $typeId = $request->input('type_id');
+
+    // Si un type de véhicule est sélectionné, filtrer les véhicules
+    if ($typeId) {
+        $vehicles = Vehicle::where('type_vehicle_id', $typeId)->orderBy('created_at', 'desc')->get();
+    } else {
+        // Si aucun type n'est sélectionné, récupérer tous les véhicules
+        $vehicles = Vehicle::orderBy('created_at', 'desc')->get();
+    }
+
+    // Retourner la vue partielle de la table avec les véhicules filtrés
+    return view('back.pages.vehicules.table', compact('vehicles'));
+}
+
 }

@@ -34,7 +34,11 @@ class DatabaseSeeder extends Seeder
             RideSearcheSeeder::class,
             TransactionSeeder::class,
             ReportTypeSeeder::class,
-            ReportSeeder::class
+            ReportSeeder::class,
+            FaqTypeSeeder::class,
+            faqSeeder::class,
+            TypeVehicleSeeder::class,
+            VehicleSeeder::class
 
         ]);
     }

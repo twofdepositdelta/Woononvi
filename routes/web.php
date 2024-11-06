@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RideController;
@@ -13,11 +14,13 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TypeNewController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TypeVehicleController;
 use App\Http\Controllers\ConversationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -104,6 +107,22 @@ Route::middleware('auth')->group(function () {
     Route::resource('reports', ReportController::class)->parameters([
         'reports' => 'report',
     ]);
+
+
+    Route::resource('faqs', FaqController::class)->parameters([
+        'faqs' => 'faq:slug',
+    ]);
+
+    Route::resource('vehicles', VehicleController::class)->parameters([
+        'vehicles' => 'vehicle:slug',
+    ]);
+
+    Route::resource('typevehicles', TypeVehicleController::class)->parameters([
+        'typevehicles' => 'typevehicle:slug',
+    ]);
+
+    Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
+
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
@@ -111,9 +130,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/transac/historique', [TransactionController::class, 'historique'])->name('transactions.historique');
     Route::get('/transac/{transaction}/{status}', [TransactionController::class, 'updatestatus'])->name('transactions.status');
-//transaction
-Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
-Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
+//reservation
+    Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
+    Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
+    Route::post('/rides/filter', [BookingController::class, 'filterRides'])->name('rides.filter');
 
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');

@@ -97,7 +97,7 @@
                         <a href="{{route('bookings.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="{{route('bookings.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Faire une reservation</a>
+                        {{-- <a href="{{route('bookings.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Faire une reservation</a> --}}
                     </li>
 
                     <li>
@@ -173,7 +173,7 @@
                         <a href="{{ route('chat.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
                     </li>
                     <li>
-                        <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
+                        <a href="{{route('faqs.index')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
                     </li>
                     <li>
                         <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
@@ -238,6 +238,25 @@
                     <li>
                         <a href="{{route('typenews.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
                     </li>
+                </ul>
+            </li>
+
+              {{-- actualité --}}
+              <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="ic:baseline-directions-car" class="menu-icon"></iconify-icon>
+                    <span>VEHICULE</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{route('vehicles.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                    </li>
+                    {{-- <li>
+                        <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                    </li> --}}
+                    {{-- <li>
+                        <a href="{{route('typevehicles.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
+                    </li> --}}
                 </ul>
             </li>
 

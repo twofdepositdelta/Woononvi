@@ -18,6 +18,7 @@ class Vehicle extends Model
         'color',
         'main_image',
         'driver_id', // Clé étrangère pour le conducteur
+        'slug',
         'type_vehicle_id', // Clé étrangère pour le type de véhicule
     ];
 
