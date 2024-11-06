@@ -44,11 +44,11 @@ class ConversationController extends Controller
 
             // Calcul de la durée et formatage
             if ($createdAt->diffInMinutes() < 60) {
-                $timeAgo = $createdAt->diffInMinutes() . ' minute' . ($createdAt->diffInMinutes() > 1 ? 's' : '');
+                $timeAgo = intval($createdAt->diffInMinutes()) . ' minute' . (intval($createdAt->diffInMinutes()) > 1 ? 's' : '');
             } elseif ($createdAt->diffInHours() < 24) {
-                $timeAgo = $createdAt->diffInHours() . ' heure' . ($createdAt->diffInHours() > 1 ? 's' : '');
+                $timeAgo = intval($createdAt->diffInHours()) . ' heure' . (intval($createdAt->diffInHours()) > 1 ? 's' : '');
             } else {
-                $timeAgo = $createdAt->diffInDays() . ' jour' . ($createdAt->diffInDays() > 1 ? 's' : '');
+                $timeAgo = intval($createdAt->diffInDays()) . ' jour' . (intval($createdAt->diffInDays()) > 1 ? 's' : '');
             }
 
             return [
