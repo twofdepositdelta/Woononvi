@@ -26,7 +26,7 @@ class ConversationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message' => 'required|text',
+            'message' => 'required',
         ]);
 
         if ($validator->fails()) {
