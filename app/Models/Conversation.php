@@ -14,7 +14,7 @@ class Conversation extends Model
     // Relation avec les messages
     public function messages()
     {
-        return $this->hasMany(Message::class, 'sender_id');
+        return $this->hasMany(Message::class);
     }
 
     // Relation avec l'utilisateur

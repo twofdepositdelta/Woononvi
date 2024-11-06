@@ -230,7 +230,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Si une conversation en cours est trouvée, renvoie ses messages
         if ($conversation) {
-            return $conversation->messages()->get();
+            return $conversation;
         }
 
         // Si aucune conversation en cours, renvoie une collection vide
