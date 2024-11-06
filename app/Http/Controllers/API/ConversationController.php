@@ -163,6 +163,43 @@ class ConversationController extends Controller
         return $selectedSupport;
     }
 
+    public function storeForSupport(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'message' => 'required',
+            'conversation_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $conversation = Conversation::whereId($request->conversation_id)->first();
+
+        if(!$conversation) {
+            return response()->json([
+                'success' => false,
+                'message' => "Il n'existe pas de conversation avec cet ID !",
+            ]);
+        }
+
+        $message = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => 5,
+            'content' => $request->message,
+            'status' => 'sent',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message ajouté à la conversation en cours.',
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */
