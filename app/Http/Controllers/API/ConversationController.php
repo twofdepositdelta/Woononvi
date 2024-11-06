@@ -95,7 +95,7 @@ class ConversationController extends Controller
         // $users = User::role('support')->get();
         return User::with('roles')->get()->filter(
             fn ($user) => $user->roles->where('name', 'support')->toArray()
-        )->count();
+        )->get();
         // return $users;
         $activeSupports = User::where('status', 'active')
                             ->whereHas('roles', function ($query) {
