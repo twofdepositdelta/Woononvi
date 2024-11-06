@@ -20,7 +20,7 @@
                     <th scope="col">Date</th>
                     <th scope="col">Départ</th>
                     <th scope="col">Destination</th>
-                    <th scope="col">Places Disponibles</th>
+                    <th scope="col">NPD</th>
                      <th scope="col">Demandeur</th>
                     <th scope="col">Statut</th>
 

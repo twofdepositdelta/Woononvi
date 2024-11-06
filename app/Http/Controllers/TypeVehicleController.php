@@ -13,6 +13,8 @@ class TypeVehicleController extends Controller
     public function index()
     {
         //
+        $typevehicles=TypeVehicle::orderBy('created_at','desc')->paginate(10);
+        return view('back.pages.TypeVehicules.index',compact('typevehicles'));
     }
 
     /**
@@ -21,6 +23,9 @@ class TypeVehicleController extends Controller
     public function create()
     {
         //
+        return view('back.pages.TypeVehicules.create');
+
+
     }
 
     /**
@@ -29,6 +34,21 @@ class TypeVehicleController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'label' => 'required|string|max:255',
+            'taux_per_km' => 'required|numeric',
+        ]);
+
+        // Create a new ride entry in the database
+            TypeVehicle::create([
+            'label' => $request->label,
+            'taux_per_km' => $request->question,
+            'slug'=>Str::slug($request->label),
+        ]);
+
+
+        // Redirect back to a suitable route with a success message
+        return redirect()->route('typevehicles.index')->with('success', 'créé avec succès !');
     }
 
     /**
@@ -42,9 +62,12 @@ class TypeVehicleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TypeVehicle $typeVehicle)
+    public function edit( $slug)
     {
         //
+
+        $typevehicle=TypeVehicle::where('slug',$slug)->first();
+       return view('back.pages.TypeVehicules.edit', compact('typevehicle'));
     }
 
     /**
@@ -58,8 +81,13 @@ class TypeVehicleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TypeVehicle $typeVehicle)
+    public function destroy($slug)
     {
         //
+        $typevehicle=TypeVehicle::where('slug',$slug)->first();
+        $typevehicle->delete();
+
+        return redirect()->route('typevehicles.index')->with('success', 'Faq a été supprimé avec succès !');
+
     }
 }

@@ -39,7 +39,9 @@
                             <!-- Heure de départ -->
                             <div class="col-md-6">
                                 <label class="form-label" for="departure_time">Heure de départ prévue</label>
-                                <input type="datetime-local" class="form-control @error('departure_time') is-invalid @enderror" id="departure_time" name="departure_time" value="{{ old('departure_time') }}" required>
+                                <input type="datetime-local" class="form-control @error('departure_time') is-invalid @enderror" id="departure_time" name="departure_time" required
+                                       min="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
+                                       value="{{ \Carbon\Carbon::now()->addHour()->format('Y-m-d\TH:i') }}">
                                 @error('departure_time')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -99,28 +101,34 @@
 </div>
 
 <!-- / Content -->
-
-
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const now = new Date();
-        now.setHours(now.getHours() + 1);
+        now.setMinutes(now.getMinutes() + 60); // Définit l'heure minimale à 1 heure dans le futur
         const minDateTime = now.toISOString().slice(0, 16);
 
         const departureTimeInput = document.getElementById('departure_time');
-        departureTimeInput.min = minDateTime;
-        departureTimeInput.value = minDateTime;
+        departureTimeInput.min = minDateTime; // Définit la date minimale
+        departureTimeInput.value = ''; // Assurez-vous qu'il n'y a pas de valeur par défaut
 
-        // Validation supplémentaire pour empêcher la sélection des jours précédents
+        // Validation pour empêcher la sélection des heures passées
         departureTimeInput.addEventListener('input', function() {
             const selectedDate = new Date(departureTimeInput.value);
-            if (selectedDate < new Date(minDateTime)) {
+            const minimumDate = new Date(minDateTime);
+
+            if (selectedDate < minimumDate) {
                 alert('Veuillez sélectionner une date et une heure valides.');
-                departureTimeInput.value = minDateTime; // Réinitialise à la valeur minimale
+                departureTimeInput.value = ''; // Réinitialise à vide si l'heure sélectionnée est invalide
             }
         });
+
+        // Debugging: affiche les valeurs minimales et sélectionnées
+        console.log("Min DateTime:", minDateTime);
+        departureTimeInput.addEventListener('change', function() {
+            console.log("Selected Date:", departureTimeInput.value);
+        });
     });
- </script>
+</script> --}}
 
 
 

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('logbook');
             $table->string('color');
             $table->string('main_image');
+            $table->string('slug')->unique();
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->foreignIdFor(TypeVehicle::class);
             $table->timestamps();

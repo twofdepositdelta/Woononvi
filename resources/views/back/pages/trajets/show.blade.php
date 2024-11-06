@@ -16,7 +16,7 @@
                     <p class="mb-0">{{ $ride->departure }}</p>
                 </div>
                 <div class="col-md-6">
-                    <strong>Destination :</strong>
+                    <strong>Ville de Destination :</strong>
                     <p class="mb-0">{{ $ride->destination }}</p>
                 </div>
             </div>

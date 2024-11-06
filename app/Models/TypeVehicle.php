@@ -11,6 +11,7 @@ class TypeVehicle extends Model
     protected $fillable = [
         'label',
         'taux_per_km',
+        'slug'
 
     ];
 }

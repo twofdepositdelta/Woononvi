@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_vehicles', function (Blueprint $table) {
+        Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->string('label');
+            $table->string('question');
             $table->string('slug');
-            $table->integer('taux_per_km');
+            $table->text('answer');
+            $table->unsignedBigInteger('faq_type_id'); // Ajout de la colonne pour la relation
+            $table->foreign('faq_type_id')->references('id')->on('faq_types')->onDelete('cascade'); // Relation avec faq_types
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('type_vehicles');
+        Schema::dropIfExists('faqs');
     }
 };
