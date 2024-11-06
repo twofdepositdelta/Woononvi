@@ -94,16 +94,20 @@ class ConversationController extends Controller
         // Récupérer les supports actifs avec leur nombre de conversations non clôturées
         return $activeSupports = User::where('status', true)->whereHas('roles', function ($query) {
             $query->where('name', 'support');
-        })->with('roles')->get();
+        })->with('roles')->withCount(['conversations as open_conversations_count' => function ($query) {
+            $query->where('status', '!=', 'closed');
+        }])
+        ->orderBy('open_conversations_count')
+        ->get();
         // User::where('status', 'active')
-        //                     ->whereHas('roles', function ($query) {
-        //                         $query->where('name', 'support');
-        //                     })
-        //                     ->withCount(['conversations as open_conversations_count' => function ($query) {
-        //                         $query->where('status', '!=', 'closed');
-        //                     }])
-        //                     ->orderBy('open_conversations_count')
-        //                     ->get();
+                            // ->whereHas('roles', function ($query) {
+                            //     $query->where('name', 'support');
+                            // })
+                            // ->withCount(['conversations as open_conversations_count' => function ($query) {
+                            //     $query->where('status', '!=', 'closed');
+                            // }])
+                            // ->orderBy('open_conversations_count')
+                            // ->get();
     
         // Si aucun support actif disponible
         if ($activeSupports->isEmpty()) {
