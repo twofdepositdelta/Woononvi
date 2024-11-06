@@ -23,7 +23,7 @@ class ConversationController extends Controller
         // Récupère l'utilisateur avec ses conversations
 
         if (!$user) {
-            return response()->json(['error' => 'Utilisateur non trouvé !'], 404);
+            return response()->json(['success' => false , 'message' => 'Utilisateur non trouvé !'], 404);
         }
 
         // Recherche de la conversation non clôturée
@@ -32,7 +32,7 @@ class ConversationController extends Controller
                         ->first();
 
         if (!$conversation) {
-            return response()->json(['message' => "Il n'y a pas de conversation ouverte !"], 404);
+            return response()->json(['success' => false , 'message' => "Il n'y a pas de conversation ouverte !"], 404);
         }
 
         // Récupère les messages de la conversation où le sender_id correspond à user_id
@@ -50,19 +50,7 @@ class ConversationController extends Controller
             ];
         });
     
-        return response()->json(['messages' => $mappedMessages], 200);
-
-        // if($messages) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Aucun message trouvé !',
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'success' => true,
-        //         'messages' => $messages,
-        //     ], 200);
-        // }
+        return response()->json(['success' => true ,'messages' => $mappedMessages], 200);
     }
 
     /**
