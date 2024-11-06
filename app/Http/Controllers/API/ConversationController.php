@@ -37,7 +37,7 @@ class ConversationController extends Controller
         }
 
         // Récupère les messages de la conversation où le sender_id correspond à user_id
-        $messages = $conversation->messages()->where('sender_id', $user->id)->get();
+        $messages = $conversation->messages()->get();
 
         $mappedMessages = $messages->map(function ($message) {
             $createdAt = Carbon::parse($message->created_at);
