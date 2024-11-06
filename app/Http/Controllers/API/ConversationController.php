@@ -58,7 +58,7 @@ class ConversationController extends Controller
             ]);
         } else {
             // Assigner un support
-            $support = $this->assignSupportToConversation();
+            return $support = $this->assignSupportToConversation();
     
             if (!$support) {
                 // Si aucun support disponible, annuler la création de la conversation
