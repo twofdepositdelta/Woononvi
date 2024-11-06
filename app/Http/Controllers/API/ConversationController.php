@@ -41,12 +41,12 @@ class ConversationController extends Controller
         $mappedMessages = $messages->map(function ($message) {
             return [
                 'id' => $message->id,
-                'text' => $message->content ? $message->content : null, // Utilise 'content' pour le message
+                'text' => $message->content ? $message->content : null, 
                 'createdAt' => $message->created_at,
                 'messageImage' => $message->file_path ? asset('storage/' . $message->file_path) : null,
-                'isSender' => Auth::id() == $message->sender_id ? 'right' : 'left',
-                'image' => $message->sender->profile->avatar, // Assurez-vous que 'sender' est bien défini dans votre relation
-                'senderId' => $message->sender_id, // Utilisation du sender_id
+                'isSender' => Auth::id() == $message->sender_id ? true : false,
+                'image' => $message->sender->profile->avatar,
+                'senderId' => $message->sender_id,
             ];
         });
     
