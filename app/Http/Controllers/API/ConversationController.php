@@ -168,6 +168,7 @@ class ConversationController extends Controller
         $validator = Validator::make($request->all(), [
             'message' => 'required',
             'conversation_id' => 'required|integer',
+            'sender_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -189,7 +190,7 @@ class ConversationController extends Controller
 
         $message = Message::create([
             'conversation_id' => $conversation->id,
-            'sender_id' => 5,
+            'sender_id' => $request->sender_id,
             'content' => $request->message,
             'status' => 'sent',
         ]);
