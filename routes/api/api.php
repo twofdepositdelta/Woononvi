@@ -12,5 +12,6 @@ Route::middleware('guest:api')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('conversations/messages', [ConversationController::class, 'index'])->name('api.conversation.get');
     Route::post('conversations/message', [ConversationController::class, 'store'])->name('api.conversation.store');
 });
