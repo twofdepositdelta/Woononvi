@@ -1,0 +1,156 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\User;
+use App\Models\Message;
+use App\Models\Conversation;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+class ConversationController extends Controller
+{
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'message' => 'required|text',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = $request->user();
+
+        $existingConversation = Conversation::whereUserId($user->id)
+            ->where('status', '!=', 'closed')
+            ->first();
+
+        if ($existingConversation) {
+            // Ajouter le message à la conversation en cours
+            $message = Message::create([
+                'conversation_id' => $existingConversation->id,
+                'sender_id' => $user->id,
+                'content' => $request->message,
+                'status' => 'sent',
+            ]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Message ajouté à la conversation en cours.',
+            ]);
+        } else {
+            $conversation = Conversation::create([
+                'user_id' => $user->id,
+                'status' => 'open',
+            ]);
+    
+            // Assigner un support
+            $support = $this->assignSupportToConversation($conversation);
+    
+            if (!$support) {
+                // Si aucun support disponible, annuler la création de la conversation
+                $conversation->delete();
+                return response()->json([
+                    'success' => true,
+                    'error' => 'Aucun support disponible actuellement.'
+                ], 400);
+            }
+
+            // Ajouter le message initial
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => $user->id,
+                'content' => $request->message,
+                'status' => 'sent',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Conversation commencée avec le support assigné.',
+            ]);
+        }
+    }
+
+    private function assignSupportToConversation(Conversation $conversation) {
+        // Récupérer les supports actifs avec leur nombre de conversations non clôturées
+        $activeSupports = User::where('role', 'support')
+                              ->where('status', 'active')
+                              ->withCount(['conversations as open_conversations_count' => function ($query) {
+                                  $query->where('status', '!=', 'closed');
+                              }])
+                              ->orderBy('open_conversations_count')
+                              ->get();
+    
+        // Si aucun support actif disponible
+        if ($activeSupports->isEmpty()) {
+            return null;
+        }
+    
+        // Filtrer pour prendre uniquement ceux avec le nombre minimal de conversations non clôturées
+        $minConversationsCount = $activeSupports->first()->open_conversations_count;
+        $availableSupports = $activeSupports->filter(function ($support) use ($minConversationsCount) {
+            return $support->open_conversations_count == $minConversationsCount;
+        });
+    
+        // Choisir un support aléatoirement parmi ceux ayant le nombre minimum de conversations
+        $selectedSupport = $availableSupports->random();
+    
+        // Attribuer le support à la conversation
+        $conversation->update([
+            'support_id' => $selectedSupport->id,
+            'is_taken' => true,
+        ]);
+    
+        return $selectedSupport;
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request)
+    {
+       
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Country $country)
+    {
+        //
+    }
+}
