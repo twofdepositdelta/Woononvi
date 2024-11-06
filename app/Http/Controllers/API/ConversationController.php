@@ -57,22 +57,23 @@ class ConversationController extends Controller
                 'message' => 'Message ajouté à la conversation en cours.',
             ]);
         } else {
-            $conversation = Conversation::create([
-                'user_id' => $user->id,
-                'status' => 'open',
-            ]);
-    
             // Assigner un support
             $support = $this->assignSupportToConversation($conversation);
     
             if (!$support) {
                 // Si aucun support disponible, annuler la création de la conversation
-                $conversation->delete();
+                // $conversation->delete();
                 return response()->json([
-                    'success' => true,
+                    'success' => false,
                     'error' => 'Aucun support disponible actuellement.'
                 ], 400);
             }
+
+            $conversation = Conversation::create([
+                'user_id' => $user->id,
+                'support_id' => $support->id,
+                'status' => 'open',
+            ]);
 
             // Ajouter le message initial
             $message = Message::create([
