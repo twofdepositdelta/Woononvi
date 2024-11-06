@@ -15,9 +15,22 @@ class ConversationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $user = $request->user();
+        $messages = $user->getCurrentConversationMessages();
+
+        if($messages) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun message trouvé !',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'messages' => $messages,
+            ], 200);
+        }
     }
 
     /**
