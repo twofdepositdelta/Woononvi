@@ -43,9 +43,9 @@ class ConversationController extends Controller
                 'id' => $message->id,
                 'text' => $message->content ? $message->content : null, 
                 'createdAt' => $message->created_at,
-                'messageImage' => $message->file_path ? asset('storage/' . $message->file_path) : null,
+                'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
                 'isSender' => Auth::id() == $message->sender_id ? true : false,
-                'image' => $message->sender->profile->avatar,
+                'image' => $message->sender->profile->avatar ? url($message->sender->profile->avatar) : null,
                 'senderId' => $message->sender_id,
             ];
         });
