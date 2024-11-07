@@ -55,6 +55,7 @@ class ConversationController extends Controller
                 'id' => $message->id,
                 'text' => $message->content ? $message->content : null, 
                 'createdAt' => 'Il y a ' . $timeAgo,
+                'createdAtTrue' => $message->created_at,
                 'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
                 'isSender' => Auth::id() == $message->sender_id ? true : false,
                 'image' => $message->sender->profile->avatar ? url($message->sender->profile->avatar) : null,
@@ -96,9 +97,12 @@ class ConversationController extends Controller
                 'content' => $request->message,
                 'status' => 'sent',
             ]);
+
+            $messages = $this->getMessages($conversation);
     
             return response()->json([
                 'success' => true,
+                'messages' => $messages,
                 'message' => 'Message ajouté à la conversation en cours.',
             ]);
         } else {
@@ -128,11 +132,44 @@ class ConversationController extends Controller
                 'status' => 'sent',
             ]);
 
+            $messages = $this->getMessages($conversation);
+
             return response()->json([
                 'success' => true,
+                'messages' => $messages,
                 'message' => 'Conversation commencée avec le support assigné.',
             ]);
         }
+    }
+
+    private function getMessages(Conversation $conversation) {
+        $messages = $conversation->messages()->get();
+
+        $mappedMessages = $messages->map(function ($message) {
+            $createdAt = Carbon::parse($message->created_at);
+
+            // Calcul de la durée et formatage
+            if ($createdAt->diffInMinutes() < 60) {
+                $timeAgo = intval($createdAt->diffInMinutes()) . ' minute' . (intval($createdAt->diffInMinutes()) > 1 ? 's' : '');
+            } elseif ($createdAt->diffInHours() < 24) {
+                $timeAgo = intval($createdAt->diffInHours()) . ' heure' . (intval($createdAt->diffInHours()) > 1 ? 's' : '');
+            } else {
+                $timeAgo = intval($createdAt->diffInDays()) . ' jour' . (intval($createdAt->diffInDays()) > 1 ? 's' : '');
+            }
+
+            return [
+                'id' => $message->id,
+                'text' => $message->content ? $message->content : null, 
+                'createdAt' => 'Il y a ' . $timeAgo,
+                'createdAtTrue' => $message->created_at,
+                'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
+                'isSender' => Auth::id() == $message->sender_id ? true : false,
+                'image' => $message->sender->profile->avatar ? url($message->sender->profile->avatar) : null,
+                'senderId' => $message->sender_id,
+            ];
+        });
+
+        return $mappedMessages;
     }
 
     private function assignSupportToConversation() {
