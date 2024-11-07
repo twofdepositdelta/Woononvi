@@ -98,7 +98,7 @@ class ConversationController extends Controller
                 'status' => 'sent',
             ]);
 
-            $messages = $this->getMessages($conversation);
+            $messages = $this->getMessages($existingConversation);
     
             return response()->json([
                 'success' => true,
