@@ -14,6 +14,10 @@ class Document extends Model
         'expiry_date',
         'user_id', // Clé étrangère pour l'utilisateur
         'type_document_id', // Clé étrangère pour le type de document
+        'is_validated',
+        'slug',
+        'reason',
+        'is_rejected'
     ];
 
     public function user()

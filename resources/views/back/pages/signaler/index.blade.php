@@ -5,62 +5,22 @@
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
         <h5 class="card-title mb-0">Liste des signalements</h5>
+        <div class="col-4">
+            <select name="type_id" id="type_signaler_filter" class="form-select form-select-sm">
+                <option value="">Tous les types de signalement</option>
+                @foreach($reportypes as $reportype)
+                    <option value="{{ $reportype->id }}" {{ request('type_id') == $reportype->id ? 'selected' : '' }}>
+                        {{ $reportype->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
     </div>
     <!-- Content -->
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
-            <table class="table bordered-table sm-table mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <div class="d-flex align-items-center gap-10">
-                                #
-                            </div>
-                        </th>
-                        <th scope="col">Auteur</th>
-                        <th scope="col">Type de signalement</th>
-                        <th scope="col">Réservation</th>
-                        <th scope="col">Date</th>
-                        <th scope="col" class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if ($reports->isEmpty())
-                        <tr>
-                            <td colspan="7" class="text-danger text-center">Aucun signalement enregistré</td>
-                        </tr>
-                    @else
-                        @foreach($reports as $key => $report)
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    {{ $key + 1 }}
-                                </div>
-                            </td>
-                            <td>
-                                <a href="{{ route('users.show', $report->user->email) }}">
-                                    {{ $report->user->firstname . ' ' . $report->user->lastname }}
-                                </a>
-                            </td>
-                            <td>{{ $report->reportType->name }}</td> <!-- Type de signalement -->
-                            <td>
-                                <a href="{{ route('bookings.show', $report->booking->id) }}">
-                                    {{ $report->booking->id }} <!-- ID de la réservation -->
-                                </a>
-                            </td>
 
-                            <td>{{ \Carbon\Carbon::parse($report->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i') }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('reports.show', $report) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                    <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                </a>
-
-                            </td>
-                        </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+            @include('back.pages.signaler.table',['reports'=>$reports])
             @if (!$reports->isEmpty())
                 {{-- pagination --}}
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
@@ -126,5 +86,32 @@
     </div>
     <!-- / Content -->
 </div>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const typeSignalerFilter = document.getElementById('type_signaler_filter');
+
+    typeSignalerFilter.addEventListener('change', function () {
+        const typeId = this.value;
+
+        fetch(`{{ route("reports.filterByType") }}?type_id=${typeId}`, {
+            method: 'GET',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de requête');
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.querySelector('table').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    });
+});
+
+</script>
 
 @endsection

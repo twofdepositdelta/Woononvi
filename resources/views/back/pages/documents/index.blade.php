@@ -1,10 +1,10 @@
 @extends('back.layouts.master')
-@section('title', 'Liste des réservations ')
+@section('title', 'Liste des Documents ')
 @section('content')
 
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-        <h5 class="card-title mb-0">Liste des Réservations</h5>
+        <h5 class="card-title mb-0">Liste des Documents</h5>
     </div>
     <!-- Content -->
     <div class="card-body p-24">
@@ -13,102 +13,130 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Date de réservation</th>
-                        <th>Trajet</th>
-                        <th>Passager</th>
-                        <th>Prix total</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
+                        <th>Document</th>
+                        <th>Numéro</th>
+                        <th>Date d'expiration</th>
+                        <th>Conducteur</th>
+                        <th>Validation</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($bookings->isEmpty())
+                    @if ($documents->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-danger text-center">Aucune réservation enregistrée</td>
+                            <td colspan="7" class="text-danger text-center">Aucun document enregistré</td>
                         </tr>
                     @else
-                        @foreach ($bookings as $index => $booking)
+                        @foreach ($documents as $index => $document)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($booking->created_at)->locale('fr')->translatedFormat('D, d M Y') }}</td>
-                                <td><a href="{{route('rides.show',$booking->ride->id)}}">{{ $booking->ride->departure }} - {{ $booking->ride->destination }}</a></td>
+                                <td>{{ $document->typeDocument->label ?? 'Non défini' }}</td>
+                                <td>{{ $document->number ?? 'Non disponible' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($document->expiry_date)->locale('fr')->translatedFormat('D, d M Y') }}</td>
                                 <td>
-                                    <a href="{{route('users.show',$booking->passenger->email)}}">
-
-                                    {{  $booking->passenger->firstname.' '.$booking->passenger->lastname ?? 'Non disponible' }}
-
+                                    <a href="{{ route('users.show', $document->user->email) }}">
+                                        {{ $document->user->firstname . ' ' . $document->user->lastname ?? 'Non disponible' }}
                                     </a>
                                 </td>
-                                <td>{{ number_format($booking->total_price,0,',',' ') }} FCFA</td>
                                 <td>
-                                    @if ($booking->status == 'confirmed')
-                                        <span class="badge bg-success">Confirmée</span>
-                                    @elseif ($booking->status == 'pending')
-                                        <span class="badge bg-warning">En attente</span>
-                                    @elseif ($booking->status == 'cancelled')
-                                        <span class="badge bg-danger">Annulée</span>
-                                    @elseif ($booking->status == 'refunded')
-                                        <span class="badge bg-info">Remboursée</span>
+
+                                    @if($document->is_rejected)
+                                      <span class="badge bg-danger">Rejeté</span>
+                                    @elseif($document->is_validated)
+                                      <span class="badge bg-success">Validé</span>
+                                    @else
+                                      <span class="badge bg-warning">En attente</span>
                                     @endif
+
+
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center gap-10 justify-content-center">
-                                        <!-- View -->
-                                        <a href="{{ route('bookings.show', $booking) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                        </a>
-
-                                           <form action="{{ route('bookings.status',[$booking,'status'=> 'refunded']) }}" method="get">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary text-sm" {{ $booking->status != 'cancelled' ? 'disabled' : '' }}>
-                                                    Remboursé
-                                                </button>
-                                          </form>
+                                        <!-- Valider le document -->
+                                        <form action="{{ route('documents.validated', $document) }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary text-sm">
+                                                {{ $document->is_validated ? 'Annuler ' : 'Valider' }}
+                                            </button>
+                                        </form>
+                                        @if ($document->is_validated ==false)
+                                        <button  class="btn btn-danger text-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-document-id="{{ $document->id}}" {{$document->is_rejected==true ?'disabled':''}}>
+                                             Rejeter
+                                        </button>
+                                        @endif
 
 
                                     </div>
                                 </td>
                             </tr>
+
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Devis</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                         <form action="{{route('documents.reason',['id' => ''])}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="document_id" id="inputDocumentId">
+                                            <div class="input-block mb-3">
+                                                <label class="col-form-label">Raison:</label>
+                                                <textarea rows="5" cols="5" name="reason" required class="form-control"
+                                                    placeholder="Description de la raison">{{ old('reason') }}</textarea>
+                                                @error('reason')
+                                                    <span class="text-danger">
+                                                        {{$message}}
+                                                    </span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            </div>
+                                    </form>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     @endif
                 </tbody>
             </table>
-             {{-- pagination --}}
-             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                <span>Affichage {{ $bookings->firstItem() }} de {{ $bookings->lastItem() }} a
-                    {{ $bookings->total() }} entrées</span>
+            {{-- pagination --}}
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+                <span>Affichage {{ $documents->firstItem() }} de {{ $documents->lastItem() }} à {{ $documents->total() }} entrées</span>
                 <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
-                    {{-- Previous Page Link --}}
-                    @if ($bookings->onFirstPage())
+                    {{-- Lien de page précédente --}}
+                    @if ($documents->onFirstPage())
                         <li class="page-item disabled">
-                            <span
-                                class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
-                                <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
+                            <span class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
+                                <iconify-icon icon="ep:d-arrow-left"></iconify-icon>
                             </span>
                         </li>
                     @else
                         <li class="page-item">
                             <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                href="{{ $bookings->previousPageUrl() }}">
-                                <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
+                                href="{{ $documents->previousPageUrl() }}">
+                                <iconify-icon icon="ep:d-arrow-left"></iconify-icon>
                             </a>
                         </li>
                     @endif
 
-                    {{-- Pagination Elements --}}
-                    @foreach ($bookings->links()->elements as $element)
-                        {{-- "Three Dots" Separator --}}
+                    {{-- Pagination --}}
+                    @foreach ($documents->links()->elements as $element)
                         @if (is_string($element))
                             <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
                         @endif
 
-                        {{-- Array Of Links --}}
                         @if (is_array($element))
                             @foreach ($element as $page => $url)
-                                @if ($page == $bookings->currentPage())
+                                @if ($page == $documents->currentPage())
                                     <li class="page-item active">
-                                        <span
-                                            class="page-link bg-primary-600 text-white fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md">{{ $page }}</span>
+                                        <span class="page-link bg-primary-600 text-white fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md">{{ $page }}</span>
                                     </li>
                                 @else
                                     <li class="page-item">
@@ -120,28 +148,41 @@
                         @endif
                     @endforeach
 
-                    {{-- Next Page Link --}}
-                    @if ($bookings->hasMorePages())
+                    {{-- Lien de page suivante --}}
+                    @if ($documents->hasMorePages())
                         <li class="page-item">
                             <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                href="{{ $bookings->nextPageUrl() }}">
-                                <iconify-icon icon="ep:d-arrow-right" class=""></iconify-icon>
+                                href="{{ $documents->nextPageUrl() }}">
+                                <iconify-icon icon="ep:d-arrow-right"></iconify-icon>
                             </a>
                         </li>
                     @else
                         <li class="page-item disabled">
-                            <span
-                                class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
-                                <iconify-icon icon="ep:d-arrow-right" class=""></iconify-icon>
+                            <span class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
+                                <iconify-icon icon="ep:d-arrow-right"></iconify-icon>
                             </span>
                         </li>
                     @endif
                 </ul>
             </div>
-        {{-- endpagination --}}
+            {{-- fin de pagination --}}
         </div>
     </div>
     <!-- / Content -->
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var exampleModal = document.getElementById('exampleModal');
+        exampleModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;  // Bouton qui a déclenché le modal
+            var docId = button.getAttribute('data-document-id');  // Récupérer l'ID du devis
+
+
+            // Assigner les valeurs aux champs cachés
+            var inputDocumentId = document.getElementById('inputDocumentId');
+            inputDocumentId.value = docId;
+        });
+    });
+</script>
 @endsection

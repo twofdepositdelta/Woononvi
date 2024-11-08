@@ -206,6 +206,7 @@ class UserController extends Controller
 
     public function updateStatus(User $user)
     {
+
         // Changer le statut de l'utilisateur
         $user->status = !$user->status;
         $user->save();
@@ -240,4 +241,30 @@ class UserController extends Controller
         return response()->json(['isUnique' => $isUnique]);
 
    }
+
+   public function Indexrole(){
+
+    $roles = Role::whereNotIn('role', ['conducteur', 'passager','Développeur'])->get();  // Exclure 'conducteur' et 'passager'
+
+    // Récupérer les utilisateurs qui ont l'un des rôles dans la variable $roles
+    $users = User::whereHas('roles', function($query) use ($roles) {
+        $query->whereIn('role_id', $roles->pluck('id'));
+    })->paginate(10);
+
+    return view('back.pages.users.role', compact('users', 'roles'));
+   }
+
+   public function assignRole(Request $request, User $user)
+{
+    // Validation du rôle choisi
+    $request->validate([
+        'role_id' => 'required|exists:roles,id',
+    ]);
+
+    // Ajout du rôle à l'utilisateur
+    $role = Role::find($request->role_id);
+    $user->roles()->syncWithoutDetaching([$role->id]);
+
+    return redirect()->back()->with('success', 'Rôle assigné avec succès.');
+}
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\ReportType;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -14,7 +15,8 @@ class ReportController extends Controller
     {
         //
         $reports=Report::orderBy('created_at','desc')->paginate(10);
-        return view('back.pages.signaler.index',compact('reports'));
+        $reportypes=ReportType::orderBy('created_at','desc')->get();
+        return view('back.pages.signaler.index',compact('reports','reportypes'));
     }
 
     /**
@@ -65,5 +67,22 @@ class ReportController extends Controller
     public function destroy(Report $report)
     {
         //
+    }
+
+    public function filterByType(Request $request)
+    {
+        // Récupérer le type de véhicule filtré
+        $typeId = $request->input('type_id');
+
+        // Si un type de véhicule est sélectionné, filtrer les véhicules
+        if ($typeId) {
+            $reports = Report::where('report_type_id', $typeId)->orderBy('created_at', 'desc')->get();
+        } else {
+            // Si aucun type n'est sélectionné, récupérer tous les véhicules
+            $reports = Report::orderBy('created_at', 'desc')->get();
+        }
+
+        // Retourner la vue partielle de la table avec les véhicules filtrés
+        return view('back.pages.signaler.table', compact('reports'));
     }
 }

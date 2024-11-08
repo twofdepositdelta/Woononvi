@@ -38,7 +38,10 @@ class DatabaseSeeder extends Seeder
             FaqTypeSeeder::class,
             faqSeeder::class,
             TypeVehicleSeeder::class,
-            VehicleSeeder::class
+            VehicleSeeder::class,
+            TypeDocumentSeeder::class,
+            DocumentSeeder::class
+
 
         ]);
     }

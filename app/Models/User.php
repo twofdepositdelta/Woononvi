@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordByOTP;
+use App\Notifications\AccountConfirmation;
+use App\Notifications\CustomResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
-use App\Notifications\CustomResetPassword;
-use Laravel\Sanctum\HasApiTokens;
-use App\Notifications\AccountConfirmation;
-use App\Notifications\ResetPasswordByOTP;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -236,4 +237,14 @@ class User extends Authenticatable implements MustVerifyEmail
         // Si aucune conversation en cours, renvoie une collection vide
         return collect();
     }
+
+
+        public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+//     public function roles()
+// {
+//     return $this->belongsToMany(Role::class);
+// }
 }

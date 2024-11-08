@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->string('booking_number')->unique();
             $table->integer('seats_reserved');
             $table->integer('total_price');
             $table->enum('status', ['pending','confirmed','cancelled','refunded']); // Statut du trajet (pending, completed, canceled)

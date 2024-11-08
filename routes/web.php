@@ -15,6 +15,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RideSearchController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeVehicleController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -107,22 +109,32 @@ Route::middleware('auth')->group(function () {
     Route::resource('reports', ReportController::class)->parameters([
         'reports' => 'report',
     ]);
+    Route::get('/signaler/filter', [ReportController::class, 'filterByType'])->name('reports.filterByType');
+
 
 
     Route::resource('faqs', FaqController::class)->parameters([
         'faqs' => 'faq:slug',
     ]);
 
+// vehicles
     Route::resource('vehicles', VehicleController::class)->parameters([
         'vehicles' => 'vehicle:slug',
     ]);
-
-    Route::resource('typevehicles', TypeVehicleController::class)->parameters([
-        'typevehicles' => 'typevehicle:slug',
-    ]);
-
     Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
 
+
+    // Route::resource('typevehicles', TypeVehicleController::class)->parameters([
+    //     'typevehicles' => 'typevehicle:slug',
+    // ]);
+
+
+// document
+    Route::resource('documents', DocumentController::class)->parameters([
+        'documents' => 'document:slug',
+    ]);
+    Route::post('/paper/{document:slug}/status', [DocumentController::class, 'validated'])->name('documents.validated');
+    Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
@@ -138,6 +150,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');
     Route::get('/users/certified/{user}', [UserController::class, 'updateIsCertified'])->name('users.updateIsCertified');
+    Route::get('/assign-role', [UserController::class, 'Indexrole'])->name('users.Role');
+    Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
+
 
     // Support Chat
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');

@@ -21,7 +21,7 @@
 
         <!-- Content -->
         <div class="card-body p-24">
-            <div class="table-responsive scroll-sm" id="vehicle-table">
+            <div class="table-responsive scroll-sm">
                 @include('back.pages.vehicules.table',['vehicles'=>$vehicles])
 
                 @if (!$vehicles->isEmpty())
