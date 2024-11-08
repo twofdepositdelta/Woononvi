@@ -29,7 +29,7 @@
                     @else
                         @foreach ($bookings as $index => $booking)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td>#{{ $booking->booking_number }}</td>
                                 <td>{{ \Carbon\Carbon::parse($booking->created_at)->locale('fr')->translatedFormat('D, d M Y') }}</td>
                                 <td><a href="{{route('rides.show',$booking->ride->id)}}">{{ $booking->ride->departure }} - {{ $booking->ride->destination }}</a></td>
                                 <td>

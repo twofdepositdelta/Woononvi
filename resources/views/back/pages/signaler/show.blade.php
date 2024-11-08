@@ -7,6 +7,13 @@
     </div>
     <div class="card-body p-24">
         <div class="row">
+            <div class="col-md-12">
+                <strong>Description</strong>
+                <p class="text-warning">{{ $report->description }}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="row mt-4">
             <div class="col-md-6">
                 <strong>Auteur</strong>
                 <p>
@@ -25,7 +32,7 @@
                 <strong>Réservation</strong>
                 <p>
                     <a href="{{ route('bookings.show', $report->booking->id) }}">
-                        {{ $report->booking->id }} <!-- ID de la réservation -->
+                        #{{ $report->booking->booking_number }} <!-- ID de la réservation -->
                     </a>
                 </p>
             </div>
@@ -34,12 +41,7 @@
                 <p>{{ \Carbon\Carbon::parse($report->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i') }}</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Description</strong>
-                <p>{{ $report->description }}</p>
-            </div>
-        </div>
+
 
 
         <div class="text-end">

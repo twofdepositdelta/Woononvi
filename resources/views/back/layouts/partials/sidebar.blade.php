@@ -241,7 +241,7 @@
                 </ul>
             </li>
 
-              {{-- actualité --}}
+              {{-- vehicule --}}
               <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="ic:baseline-directions-car" class="menu-icon"></iconify-icon>
@@ -258,9 +258,29 @@
                         <a href="{{route('typevehicles.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
                     </li> --}}
                 </ul>
-            </li>
+              </li>
 
-            {{-- utilisateur --}}
+            {{-- document --}}
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="ic:baseline-insert-drive-file" class="menu-icon"></iconify-icon>
+                    <span>DOCUMENTS</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{route('documents.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                    </li>
+                    {{-- <li>
+                        <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                    </li> --}}
+                    {{-- <li>
+                        <a href="{{route('typevehicles.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
+                    </li> --}}
+                </ul>
+              </li>
+
+
+              {{-- utilisateur --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
@@ -274,7 +294,7 @@
                         <a href="{{ route('users.create') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
                     </li>
                     <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
+                        <a href="{{route('users.Role')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
                     </li>
 
                 </ul>
@@ -291,9 +311,11 @@
                     <li>
                         <a href="{{route('settings')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
                     </li>
+                    @hasrole('developer')
                     <li>
                         <a href="{{route('setting.city')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
                     </li>
+                    @endhasrole
                     <li>
                         <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
                     </li>

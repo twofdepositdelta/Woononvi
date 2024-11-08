@@ -16,8 +16,11 @@
             <div class="col-md-6">
                 <strong>Trajet :</strong>
                 <p class="mb-0"><a href="{{route('rides.show',$booking->ride->id)}}">{{ $booking->ride->departure }} - {{ $booking->ride->destination }}</a></p>
+
             </div>
         </div>
+
+
         <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Places Réservées :</strong>
@@ -45,6 +48,14 @@
                     <span class="badge bg-info">Remboursée</span>
                 @endif
             </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Numero de reservation :</strong>
+                <p class="mb-0">#{{$booking->booking_number}} </p>
+            </div>
+
         </div>
 
     </div>

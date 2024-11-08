@@ -86,10 +86,13 @@
                                     <select class="form-control radius-8 form-select" id="role" name="role" required>
                                         <option value="" disabled selected>Sélectionner le rôle</option>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->name }}" {{ old('role') == $role->id ? 'selected' : '' }}>
-                                                {{ \Spatie\Permission\Models\Role::where('name', $role->name)->first()->role
-                                            }}
-                                            </option>
+                                        @if ($role->name!='developer'&& $role->name!='super admin' )
+                                        <option value="{{ $role->name }}" {{ old('role') == $role->id ? 'selected' : '' }}>
+                                            {{ \Spatie\Permission\Models\Role::where('name', $role->name)->first()->role
+                                        }}
+                                        </option>
+
+                                        @endif
                                         @endforeach
                                     </select>
                                     @error('role')

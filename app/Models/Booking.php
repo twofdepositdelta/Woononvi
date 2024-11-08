@@ -14,6 +14,7 @@ class Booking extends Model
         'status',
         'ride_id', // Clé étrangère pour le trajet
         'passenger_id', // Clé étrangère pour le passager
+        'booking_number'
     ];
 
     // Relation avec le trajet

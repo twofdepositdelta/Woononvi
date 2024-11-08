@@ -16,12 +16,17 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('paper')->nullable();
-            $table->integer('number')->nullable();
+            $table->integer('number')->nullable()->unique();
+            $table->string('slug')->unique();
+            $table->string('reason')->nullable();
             $table->date('expiry_date');
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(TypeDocument::class);
+            $table->boolean('is_validated')->default(false); // Attribut pour la validation par l'admin
+            $table->boolean('is_rejected')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**
