@@ -76,7 +76,7 @@ class ConversationController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails() || (!$request->message || !$request->hasFile('image'))) {
             return response()->json([
                 'success' => false,
                 'message' => 'Veuillez fournir un message ou une image.',
