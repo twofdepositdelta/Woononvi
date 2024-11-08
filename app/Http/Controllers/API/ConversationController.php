@@ -90,7 +90,10 @@ class ConversationController extends Controller
             ->where('status', '!=', 'closed')
             ->first();
 
-        $filePath = null; 
+        $filePath = null;
+        if ($request->hasFile('image')) {
+            $filePath = $request->file('image')->store('messages', 'public'); // Save to 'storage/app/public/messages'
+        }
 
         if ($existingConversation) {
             // Ajouter le message à la conversation en cours
