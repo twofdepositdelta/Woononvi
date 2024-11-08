@@ -90,6 +90,8 @@ class ConversationController extends Controller
             ->where('status', '!=', 'closed')
             ->first();
 
+        $filePath = null; 
+
         if ($existingConversation) {
             // Ajouter le message à la conversation en cours
             $message = Message::create([
