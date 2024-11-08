@@ -73,13 +73,16 @@ class ConversationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'message' => 'nullable|string',
-            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:1024'
         ]);
+
+        $validator->sometimes('image', 'mimes:jpeg,png,jpg,gif|max:1024', function ($input) {
+            return $input->hasFile('image');
+        });
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Veuillez fournir un message ou une imag.',
+                'message' => 'Veuillez fournir un message ou une image.',
                 'errors' => $validator->errors()
             ], 422);
         }
