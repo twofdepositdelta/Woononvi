@@ -73,7 +73,7 @@ class ConversationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'message' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($validator->fails()) {
