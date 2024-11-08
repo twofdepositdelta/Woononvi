@@ -71,13 +71,15 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'message' => 'nullable|string',
-        ]);
-
-        $validator->sometimes('image', 'mimes:jpeg,png,jpg,gif|max:1024', function ($input) {
-            return $input->hasFile('image');
-        });
+        ];
+        
+        if ($request->hasFile('image')) {
+            $rules['image'] = 'mimes:jpeg,png,jpg,gif|max:1024';
+        }
+        
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
