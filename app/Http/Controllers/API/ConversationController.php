@@ -37,7 +37,7 @@ class ConversationController extends Controller
         }
 
         // Récupère les messages de la conversation où le sender_id correspond à user_id
-        $messages = $conversation->messages()->get();
+        $messages = $conversation->messages()->orderBy('id', 'desc')->get();
 
         $mappedMessages = $messages->map(function ($message) {
             $createdAt = Carbon::parse($message->created_at);
@@ -63,7 +63,7 @@ class ConversationController extends Controller
             ];
         });
     
-        return response()->json(['success' => true ,'messages' => $mappedMessages->reverse()], 200);
+        return response()->json(['success' => true ,'messages' => $mappedMessages], 200);
     }
 
     /**
@@ -72,13 +72,14 @@ class ConversationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message' => 'required',
+            'message' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails() || (!$request->message && !$request->hasFile('image'))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                'message' => 'Veuillez fournir un message ou une image.',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -89,12 +90,15 @@ class ConversationController extends Controller
             ->where('status', '!=', 'closed')
             ->first();
 
+        $filePath = null; 
+
         if ($existingConversation) {
             // Ajouter le message à la conversation en cours
             $message = Message::create([
                 'conversation_id' => $existingConversation->id,
                 'sender_id' => $user->id,
-                'content' => $request->message,
+                'content' => $request->message, // Can be null if only an image is sent
+                'file_path' => $filePath,       // Path to the image file, if provided
                 'status' => 'sent',
             ]);
 
@@ -111,7 +115,6 @@ class ConversationController extends Controller
     
             if (!$support) {
                 // Si aucun support disponible, annuler la création de la conversation
-                // $conversation->delete();
                 return response()->json([
                     'success' => false,
                     'message' => 'Aucun support disponible actuellement.'
@@ -128,7 +131,8 @@ class ConversationController extends Controller
             $message = Message::create([
                 'conversation_id' => $conversation->id,
                 'sender_id' => $user->id,
-                'content' => $request->message,
+                'content' => $request->message, // Can be null if only an image is sent
+                'file_path' => $filePath,       // Path to the image file, if provided
                 'status' => 'sent',
             ]);
 
@@ -143,7 +147,7 @@ class ConversationController extends Controller
     }
 
     private function getMessages(Conversation $conversation) {
-        $messages = $conversation->messages()->get();
+        $messages = $conversation->messages()->orderBy('id', 'desc')->get();
 
         $mappedMessages = $messages->map(function ($message) {
             $createdAt = Carbon::parse($message->created_at);
@@ -169,7 +173,7 @@ class ConversationController extends Controller
             ];
         });
 
-        return $mappedMessages->reverse();
+        return $mappedMessages;
     }
 
     private function assignSupportToConversation() {
