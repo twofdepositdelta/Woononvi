@@ -63,7 +63,7 @@ class ConversationController extends Controller
             ];
         });
     
-        return response()->json(['success' => true ,'messages' => $mappedMessages->reverse()], 200);
+        return response()->json(['success' => true ,'messages' => $mappedMessages], 200);
     }
 
     /**
@@ -169,7 +169,7 @@ class ConversationController extends Controller
             ];
         });
 
-        return $mappedMessages->reverse();
+        return $mappedMessages;
     }
 
     private function assignSupportToConversation() {
