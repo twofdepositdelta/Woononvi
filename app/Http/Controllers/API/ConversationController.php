@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Events\MessageSent;
 
 class ConversationController extends Controller
 {
@@ -243,6 +244,8 @@ class ConversationController extends Controller
             'content' => $request->message,
             'status' => 'sent',
         ]);
+
+        event(new MessageSent($message));
 
         return response()->json([
             'success' => true,
