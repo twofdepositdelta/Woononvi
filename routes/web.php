@@ -78,6 +78,8 @@ Route::middleware('auth')->group(function () {
         'users' => 'user:email',
     ]);
 
+    Route::get('/doc/liste', [UserController::class, 'doc'])->name('users.doc');
+
     Route::resource('typenews', TypeNewController::class)->parameters([
         'typenews' => 'typenew:slug',
     ]);
@@ -129,11 +131,13 @@ Route::middleware('auth')->group(function () {
     // ]);
 
 
+
 // document
-    Route::resource('documents', DocumentController::class)->parameters([
-        'documents' => 'document:slug',
-    ]);
-    Route::post('/paper/{document:slug}/status', [DocumentController::class, 'validated'])->name('documents.validated');
+
+    Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
+
+
+    Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');

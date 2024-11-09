@@ -26,7 +26,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignIdFor(Country::class)->nullable();
             $table->foreignIdFor(City::class)->nullable();
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(false);
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_certified')->default(false);
             $table->timestamp('email_verified_at')->nullable();

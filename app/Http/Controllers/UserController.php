@@ -267,4 +267,20 @@ class UserController extends Controller
 
     return redirect()->back()->with('success', 'Rôle assigné avec succès.');
 }
+
+    public function doc(){
+        //    $documents = Document::orderBy('created_at', 'desc')->paginate(10);
+        $users = User::whereHas('roles', function($query) {
+            $query->where('name', 'driver');
+        })->paginate(10);
+
+     return view('back.pages.documents.index',compact('users'));
+
+    }
+
+    public function Showdoc(User $user){
+
+        return view('back.pages.documents.show', compact('user'));
+
+    }
 }
