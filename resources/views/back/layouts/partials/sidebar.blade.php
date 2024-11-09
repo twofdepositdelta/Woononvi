@@ -268,7 +268,7 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('documents.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        <a href="{{route('users.doc')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>

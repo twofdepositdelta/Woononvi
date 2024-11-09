@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Mail\DocumentRejetStatus;
@@ -16,8 +17,7 @@ class DocumentController extends Controller
     public function index()
     {
         //
-        $documents=Document::orderBy('created_at','desc')->paginate(10);
-        return view('back.pages.documents.index',compact('documents'));
+
     }
 
     /**
@@ -39,12 +39,11 @@ class DocumentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show( $slug)
-    {
-        //
-        $document=Document::where('slug',$slug)->first();
-        return view('back.pages.documents.show',compact('document'));
-    }
+    public function show(User $user)
+{
+    // La variable $user contient déjà l'utilisateur recherché via l'email
+
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -70,10 +69,10 @@ class DocumentController extends Controller
         //
     }
 
-    public function validated( $slug)
+    public function validated( Document $document)
     {
         //
-        $document=Document::where('slug',$slug)->first();
+
         // Si le document est validé, retirer le rejet
 
         $document->is_validated = !$document->is_validated;
@@ -83,29 +82,47 @@ class DocumentController extends Controller
         $document->save();
 
         $user = $document->user;
+
+
         $messageContent = '';
 
-        // Si le document est validé
         if ($document->is_validated) {
-            // Vérifier si tous les documents de l'utilisateur sont validés
-            $allDocumentsValidated = $user->documents->every(function($doc) {
-                return $doc->is_validated;
-            });
+            $document->is_validated = true;
 
-            // Si tous les documents sont validés, on valide le compte utilisateur
-            if ($allDocumentsValidated) {
-                $user->status = true; // Compte validé
-                // Message de confirmation de validation
-                $messageContent = 'Tous vos documents ont été validés. Votre compte est maintenant validé.';
-                // Envoyer l'email avec le message approprié
-            Mail::to($user->email)->send(new DocumentValidationStatus($messageContent));
-            }else {
-                $user->status = false; // Désactiver le compte utilisateur
+            // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
+            if ($document->paper == "Permis de conduire numérique") {
+                $user->status = true; // Le compte devient désactivé
+                $user->save();
             }
-            $user->save();
+
+            $document->save();
+        } else {
+            // Si le document n'est pas validé, on valide le document
+            $document->is_validated = false;
+
+            // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
+            if ($document->paper == "Permis de conduire numérique") {
+                $user->status = false; // Le compte devient activé
+                $user->save();
+            }
+
+            $document->save();
         }
 
-        return redirect()->route('documents.index')->with('success', 'Le statut de validation du document a été mis à jour.');
+        // Vérifier si tous les documents de l'utilisateur sont validés
+        $allDocumentsValidated = $user->documents->every(function($doc) {
+            return $doc->is_validated;
+        });
+
+        // Si tous les documents sont validés, on valide le compte utilisateur
+        if ($allDocumentsValidated) {
+            // Message de confirmation de validation
+            $messageContent = 'Tous vos documents ont été validés. Votre compte est maintenant validé.';
+            // Envoyer l'email avec le message approprié
+            Mail::to($user->email)->send(new DocumentValidationStatus($messageContent));
+        }
+
+      return redirect()->back()->with('success', 'Le statut de validation du document a été mis à jour.');
     }
 
 
@@ -123,14 +140,19 @@ class DocumentController extends Controller
             'is_rejected'=>true,
             'reason'=>$request->reason
         ]);
+
         $user=$document->user;
-        $user->status=false;
-        $user->save();
+        if ($document->paper == "Permis de conduire numérique") {
+            $user->status=false;
+                $user->save();
+            }
+
+
 
         Mail::to($document->user->email)->send(new DocumentRejetStatus($document));
         // Rediriger avec un message de succès
 
-        return redirect()->route('documents.index')->with('success', 'Le statut de validation du document a été rejeté.');
+        return redirect()->back()->with('success', 'Le statut de validation du document a été rejeté.');
 
     }
 

@@ -18,7 +18,8 @@ class TypeDocumentSeeder extends Seeder
             ['label' => 'Permis de conduire'],
             ['label' => 'Carte grise'],
             ['label' => 'Assurance'],
-            ['label' => 'Contrôle technique']
+            ['label' => 'Contrôle technique'],
+            ['label' => 'Cip'],
         ];
 
         foreach ($types as $type) {
