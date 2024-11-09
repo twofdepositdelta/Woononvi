@@ -245,7 +245,7 @@ class ConversationController extends Controller
             'status' => 'sent',
         ]);
 
-        event(new MessageSent($message));
+        // event(new MessageSent($message));
 
         return response()->json([
             'success' => true,
