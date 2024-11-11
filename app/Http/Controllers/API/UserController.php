@@ -26,7 +26,7 @@ class UserController extends Controller
         $role = ($request->role == 'passenger' ? 'driver' : 'passenger');
 
         $user = $request()->user();
-        
+
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
 
@@ -36,15 +36,13 @@ class UserController extends Controller
         if($role == 'driver')
             $message = "Vous êtes passés en mode conducteur avec succès !";
         else
-        $message = "Vous êtes passés en mode passager avec succès !";
+            $message = "Vous êtes passés en mode passager avec succès !";
 
         return response()->json([
             'success' => true,
             'message' => $message,
             'user' => $user,
         ]);
-
-        return $user;
     }
 
     /**
