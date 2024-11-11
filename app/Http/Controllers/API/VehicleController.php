@@ -34,7 +34,7 @@ class VehicleController extends Controller
             'year' => 'required|max:255|date',
             'logbook' => 'required|mimes:pdf|max:2048',
             'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
-            'vehicleType' => 'required|max:255|string',
+            'vehicle_type' => 'required|max:255|string',
         ];
         
         $validator = Validator::make($request->all(), $rules);
@@ -48,7 +48,7 @@ class VehicleController extends Controller
 
         $user = $request->user();
 
-        $vehiculeType = TypeVehicle::whereLabel($request->vehicleType)->first();
+        $vehiculeType = TypeVehicle::whereLabel($request->vehicle_type)->first();
 
         if($vehiculeType) {
             $imagePath = null;
