@@ -11,6 +11,7 @@ class Commission extends Model
     protected $fillable = [
         'amount',
         'ride_id', // Clé étrangère pour le trajet associé
+        'commission_rate'
     ];
 
     // Relation avec le trajet

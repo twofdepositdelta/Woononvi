@@ -65,7 +65,7 @@
                         </div>
 
                          <!-- Sélection des Rôles -->
-                         <div class="col-12">
+                         <div class="col-12" id="role">
                             <label class="form-label">Sélectionnez un Rôle</label>
                             <select class="form-select @error('roles') is-invalid @enderror"   name="roles[]" id="roles" multiple required style="width: 100%; height: 150px;">
                                 @foreach ($roles as $role)

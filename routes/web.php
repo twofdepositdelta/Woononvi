@@ -18,6 +18,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
@@ -88,6 +89,9 @@ Route::middleware('auth')->group(function () {
         'actualities' => 'actuality:slug',
     ]);
 
+    Route::get('/actualite/filter', [ActualityController::class, 'filterByType'])->name('actualities.filterByType');
+
+
     Route::resource('rides', RideController::class)->parameters([
         'rides' => 'ride',
     ]);
@@ -133,9 +137,10 @@ Route::middleware('auth')->group(function () {
 
 
 // document
-
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
 
+//commission
+Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
 
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');

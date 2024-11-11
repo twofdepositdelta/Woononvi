@@ -60,6 +60,11 @@
                     <strong>Conducteur :</strong>
                     <p class="mb-0"><a href="{{route('users.show',$ride->driver->email)}}">{{$ride->driver->firstname.' '.$ride->driver->lastname }}</p>
                 </div>
+
+                <div class="col-md-6">
+                    <strong>Numero du trajet :</strong>
+                    <p class="mb-0">#{{$ride->numero_ride }}</p>
+                </div>
             </div>
         </div>
         <!-- / Content -->

@@ -35,4 +35,10 @@ class BackHelper
         // Supprime les recherches plus anciennes d'un an
         RideSearch::where('created_at', '<', $oneYearAgo)->delete();
     }
+
+    public static function getSetting()
+    {
+        $setting = Setting::where('key' ,'company_name')->first();
+        return $setting;
+    }
 }

@@ -13,6 +13,7 @@ class CommissionController extends Controller
     public function index()
     {
         //
+        return view('back.pages.commission.index');
     }
 
     /**

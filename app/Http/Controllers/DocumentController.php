@@ -90,7 +90,7 @@ class DocumentController extends Controller
             $document->is_validated = true;
 
             // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
-            if ($document->paper == "Permis de conduire numérique") {
+            if ($document->typeDocument->label == "Permis de conduire") {
                 $user->status = true; // Le compte devient désactivé
                 $user->save();
             }
@@ -101,7 +101,7 @@ class DocumentController extends Controller
             $document->is_validated = false;
 
             // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
-            if ($document->paper == "Permis de conduire numérique") {
+            if ($document->typeDocument->label == "Permis de conduire") {
                 $user->status = false; // Le compte devient activé
                 $user->save();
             }
@@ -122,7 +122,7 @@ class DocumentController extends Controller
             Mail::to($user->email)->send(new DocumentValidationStatus($messageContent));
         }
 
-      return redirect()->back()->with('success', 'Le statut de validation du document a été mis à jour.');
+      return redirect()->back()->with('success', 'Le statut de validation du  a été mis à jour.');
     }
 
 
@@ -142,13 +142,11 @@ class DocumentController extends Controller
         ]);
 
         $user=$document->user;
-        if ($document->paper == "Permis de conduire numérique") {
+        if ($document->typeDocument->label == "Permis de conduire") {
             $user->status=false;
                 $user->save();
             }
-
-
-
+-
         Mail::to($document->user->email)->send(new DocumentRejetStatus($document));
         // Rediriger avec un message de succès
 
@@ -157,5 +155,6 @@ class DocumentController extends Controller
     }
 
 }
+
 
 

@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder
             TypeVehicleSeeder::class,
             VehicleSeeder::class,
             TypeDocumentSeeder::class,
-            DocumentSeeder::class
+            DocumentSeeder::class,
+            ComissionSeeder::class
 
 
         ]);

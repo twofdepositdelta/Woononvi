@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Models\Document;
+use App\Helpers\BackHelper;
 use Illuminate\Support\Str;
 use App\Models\TypeDocument;
 use Illuminate\Database\Seeder;
@@ -52,12 +54,13 @@ class DocumentSeeder extends Seeder
             $query->where('name', 'driver');
         })->distinct()->get();
         $typeDocuments = TypeDocument::all();
+        $vehicles=Vehicle::all();
 
         foreach ($users as $user) {
         if ($typeDocuments->isNotEmpty()) {
             $documents = [
                 [
-                    'paper' => 'Permis de conduire numérique',
+                    'paper' => BackHelper::getEnvFolder() . 'storage/back/assets/images/doc/1.pdf',
                     'number' => random_int(100000, 999999),
                     'expiry_date' => Carbon::now()->addYear(),
                     'user_id' => $user->id,
@@ -66,10 +69,11 @@ class DocumentSeeder extends Seeder
                     'is_rejected' => false,
                     'slug' => Str::slug($user->email). '-' . Str::random(5),// Assure un slu unique
                     // Ajoute une chaîne aléatoire pour assurer l'unicité
-                    'reason' => null
+                    'reason' => null,
+                    'vehicle_id' => $vehicles->random()->id,
                 ],
                 [
-                    'paper' => 'Carte grise',
+                    'paper' => BackHelper::getEnvFolder() . 'storage/back/assets/images/doc/2.pdf',
                     'number' => random_int(100000, 999999),
                     'expiry_date' => Carbon::now()->addYears(3),
                     'user_id' => $user->id,
@@ -77,7 +81,8 @@ class DocumentSeeder extends Seeder
                     'is_validated' => false,
                     'is_rejected' => false,
                     'slug' => Str::slug($user->email). '-' . Str::random(5),// Assure un slu unique
-                    'reason' => null
+                    'reason' => null,
+                    'vehicle_id' => $vehicles->random()->id,
                 ]
             ];
             foreach ($documents as $document) {
