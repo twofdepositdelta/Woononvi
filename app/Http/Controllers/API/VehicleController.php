@@ -15,9 +15,13 @@ class VehicleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function getVehicleType()
     {
-        //
+        $data = VehicleType::orderBy('name')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
     }
 
     /**
