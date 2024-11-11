@@ -22,5 +22,8 @@ class RolePermissionSeeder extends Seeder
         Role::create(['role' => 'Support', 'name' => 'support', 'guard_name' => 'web']);
         Role::create(['role' => 'Conducteur', 'name' => 'driver', 'guard_name' => 'web']);
         Role::create(['role' => 'Passager', 'name' => 'passenger', 'guard_name' => 'web']);
+
+        Role::create(['role' => 'Conducteur', 'name' => 'driver', 'guard_name' => 'api']);
+        Role::create(['role' => 'Passager', 'name' => 'passenger', 'guard_name' => 'api']);
     }
 }
