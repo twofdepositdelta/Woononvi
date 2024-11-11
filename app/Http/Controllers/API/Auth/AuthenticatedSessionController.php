@@ -156,7 +156,7 @@ class AuthenticatedSessionController extends Controller
 
         $role = $request->role == "Passager" ? "passenger" : "driver";
 
-        $user->assignRole($role, 'api');
+        $user->assignRole($role, 'admin');
 
         return response()->json([
             'success' => true,
