@@ -72,12 +72,16 @@ class VehicleController extends Controller
                 'vehicle_model' => $request->model,
                 'vehicle_year' => $request->year,
                 'color' => $request->color,
-                'main_image' => $request->licence_plate,
-                'logbook' => $request->licence_plate,
+                'main_image' => $imagePath,
+                'logbook' => $logbookPath,
                 'slug' => Str::slug($request->licence_plate),
                 'type_vehicle_id' => $vehiculeType->id,
                 'driver_id' => $user->id,
             ]);
+
+            // $document = Document::create([
+
+            // ]);
 
             return response()->json([
                 'success' => true,
