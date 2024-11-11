@@ -156,7 +156,7 @@ class AuthenticatedSessionController extends Controller
 
         $role = $request->role == "Passager" ? "passenger" : "driver";
 
-        $user->assignRole($role);
+        $user->assignRole($role, 'api');
 
         return response()->json([
             'success' => true,
@@ -211,10 +211,22 @@ class AuthenticatedSessionController extends Controller
                 'user_id' => $user->id,
             ]);
 
+            $userArray = $user->toArray();
+
+            unset($userArray['roles']);
+
+            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+            $country = Country::find($user->country_id);
+            $userArray['country_name'] = $user->country_name;
+            $userArray['city_name'] = $user->city_name;
+            $userArray['indicatif'] = $user->country_code;
+            $userArray['phone_number'] = $user->phone_number;
+
             return response()->json([
                 'success' => true,
                 'message' => 'Votre inscription a été finalisée avec succès.',
-                'user' => $user,
+                'user' => $userArray,
             ], 201);
         } else {
             return response()->json([
