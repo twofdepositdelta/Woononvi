@@ -20,6 +20,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('users/change-role', [UserController::class, 'changeUserRole'])->name('api.user.changeUserRole');
 
-    Route::get('drivers/vehicles/get-types', [VehicleController::class, 'getTypes'])->name('api.vehicle.getTypes');
+    Route::get('drivers/vehicles/get-types', [VehicleController::class, 'getVehicleTypes'])->name('api.vehicle.getTypes');
     Route::post('drivers/vehicles/store', [VehicleController::class, 'store'])->name('api.vehicle.store');
 });
