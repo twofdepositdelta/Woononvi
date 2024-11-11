@@ -35,8 +35,8 @@ class UserController extends Controller
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
 
-        $role = Role::findByName($role, 'api');
-        $user->assignRole($role);
+        $roleGet = Role::findByName($role, 'api');
+        $user->assignRole($roleGet);
 
         $userArray = $user->toArray();
 
