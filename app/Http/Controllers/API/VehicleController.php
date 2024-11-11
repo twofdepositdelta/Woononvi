@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Vehicle;
-use App\Models\VehicleType;
+use App\Models\TypeVehicle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +17,7 @@ class VehicleController extends Controller
      */
     public function getVehicleTypes()
     {
-        $data = VehicleType::orderBy('name')->get();
+        $data = TypeVehicle::orderBy('name')->get();
         return response()->json([
             'success' => true,
             'data' => $data,
