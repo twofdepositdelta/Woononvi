@@ -17,7 +17,7 @@ class VehicleController extends Controller
      */
     public function getVehicleTypes()
     {
-        $data = TypeVehicle::orderBy('name')->get();
+        $data = TypeVehicle::orderBy('label')->get();
         return response()->json([
             'success' => true,
             'data' => $data,
