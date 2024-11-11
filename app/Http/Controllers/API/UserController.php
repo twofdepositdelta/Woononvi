@@ -28,7 +28,7 @@ class UserController extends Controller
 
         $role = ($request->role == 'passenger' ? 'driver' : 'passenger');
 
-        $user = $request()->user();
+        $user = $request->user();
 
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
