@@ -12,7 +12,7 @@
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Numero</th>
                         <th>Date de réservation</th>
                         <th>Trajet</th>
                         <th>Passager</th>

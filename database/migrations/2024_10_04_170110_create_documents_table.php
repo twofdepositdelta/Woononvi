@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Models\TypeDocument;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(TypeDocument::class);
             $table->boolean('is_validated')->default(false); // Attribut pour la validation par l'admin
             $table->boolean('is_rejected')->default(false);
+            $table->foreignIdFor(Vehicle::class);
             $table->timestamps();
         });
 

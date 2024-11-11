@@ -39,4 +39,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(Image::class); // Assurez-vous d'importer le modèle TypeVehicle
     }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }

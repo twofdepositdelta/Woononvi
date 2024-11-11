@@ -36,11 +36,12 @@ class DatabaseSeeder extends Seeder
             ReportTypeSeeder::class,
             ReportSeeder::class,
             FaqTypeSeeder::class,
-            faqSeeder::class,
+            FaqSeeder::class,
             TypeVehicleSeeder::class,
             VehicleSeeder::class,
             TypeDocumentSeeder::class,
-            DocumentSeeder::class
+            DocumentSeeder::class,
+            ComissionSeeder::class
 
 
         ]);

@@ -5,76 +5,24 @@
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
         <h5 class="card-title mb-0">Liste des Actualités</h5>
+        <div class="col-4">
+            <select name="type_id" id="type_actuality_filter" class="form-select form-select-sm">
+                <option value="">Tous les types d'actualité</option>
+                @foreach($typenews as $typenew)
+                    <option value="{{ $typenew->id }}" {{ request('type_id') == $typenew->id ? 'selected' : '' }}>
+                        {{ $typenew->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
         <a href="{{ route('actualities.create') }}" class="btn btn-primary">Ajouter une Actualité</a>
+
     </div>
     <!-- Content -->
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
-            <table class="table bordered-table sm-table mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <div class="d-flex align-items-center gap-10">#</div>
-                        </th>
-                        <th scope="col">Titre</th>
-                        <th scope="col">Publié</th>
-                        <th scope="col" class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if ($actualities->isEmpty())
-                        <tr>
-                            <td colspan="6" class="text-danger text-center">Aucune actualité enregistrée</td>
-                        </tr>
-                    @else
-                        @foreach ($actualities as $key => $actuality)
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-10">
-                                        {{ $key + 1 }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset($actuality->image_url) }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                        <div class="flex-grow-1">
-                                          <span class="text-md mb-0 fw-normal text-secondary-light">{{ $actuality->titre }}</span>
-                                        </div>
-                                      </div>
-                                </td>
 
-                                <td>
-                                    <span class="badge {{ $actuality->published ? 'bg-success' : 'bg-warning' }}">
-                                        {{ $actuality->published ? 'Oui' : 'Non' }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center gap-10 justify-content-center">
-                                        <!-- Edit -->
-                                        <a href="{{ route('actualities.edit', $actuality)}}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-                                        </a>
-
-                                        <a href="{{ route('actualities.show', $actuality)}}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                        </a>
-
-                                        <!-- Delete -->
-                                        <form action="{{ route('actualities.destroy', $actuality) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"  class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                                <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-
+             @include('back.pages.actualities.table',['actualities'=>$actualities])
 
             @if (!$actualities->isEmpty())
 
@@ -153,9 +101,32 @@
 </div>
 
 
-<!-- / Content -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+     const typeActualityFilter = document.getElementById('type_actuality_filter');
 
+     typeActualityFilter.addEventListener('change', function () {
+         const typeId = this.value;
 
+         fetch(`{{ route("actualities.filterByType") }}?type_id=${typeId}`, {
+             method: 'GET',
+         })
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error('Erreur de requête');
+             }
+             return response.text();
+         })
+         .then(html => {
+             document.querySelector('table').innerHTML = html;
+         })
+         .catch(error => {
+             console.error('Erreur:', error);
+         });
+     });
+ });
+
+ </script>
 
         </div>
     </div>

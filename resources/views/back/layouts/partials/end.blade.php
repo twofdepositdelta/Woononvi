@@ -29,6 +29,7 @@
 
     <!-- main js -->
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
+    <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/homeFourChart.js')}}"></script>
 
     <script>
         $('.remove-button').on('click', function() {

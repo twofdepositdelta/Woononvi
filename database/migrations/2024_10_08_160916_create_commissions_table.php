@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
             $table->integer('amount');
+            $table->integer('commission_rate');
             $table->foreignIdFor(Ride::class);
             $table->timestamps();
         });
