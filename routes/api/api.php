@@ -7,7 +7,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VehicleController;
 use App\Http\Controllers\API\ConversationController;
 
-require __DIR__.'/auth_api.php';
+require __DIR__ . '/auth_api.php';
 
 Route::middleware('guest:api')->group(function () {
     Route::get('countries', [CountryController::class, 'index'])->name('api.countries.index');
