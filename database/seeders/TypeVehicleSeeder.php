@@ -16,10 +16,10 @@ class TypeVehicleSeeder extends Seeder
     {
         //
         $types = [
-            ['label' => 'SUV', 'taux_per_km' => 150,'slug'=>Str::slug('SUV')],
-            ['label' => 'Berline', 'taux_per_km' => 100,'slug'=>Str::slug('Berline')],
-            ['label' => 'Minivan', 'taux_per_km' => 120,'slug'=>Str::slug('Minivan')],
-            ['label' => 'Pick-up', 'taux_per_km' => 130,'slug'=>Str::slug('Pick-up')],
+            ['label' => 'SUV', 'taux_per_km' => 150,'slug' => Str::slug('SUV')],
+            ['label' => 'Berline', 'taux_per_km' => 100,'slug' => Str::slug('Berline')],
+            ['label' => 'Minivan', 'taux_per_km' => 120,'slug' => Str::slug('Minivan')],
+            ['label' => 'Pick-up', 'taux_per_km' => 130,'slug' => Str::slug('Pick-up')],
         ];
 
         foreach ($types as $type) {

@@ -28,7 +28,7 @@ class VehicleSeeder extends Seeder
                 'logbook' => 'logbook_1.pdf',
                 'color' => 'Rouge',
                 'main_image' => BackHelper::getEnvFolder() . 'storage/front/assets/img/taxi/01.png',
-                'slug'=>Str::slug('AB123CD'),
+                'slug' => Str::slug('AB123CD'),
                 'driver_id' => User::inRandomOrder()->first()->id,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Berline')->first()->id,
             ],
