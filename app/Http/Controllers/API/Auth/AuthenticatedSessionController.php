@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -156,7 +157,8 @@ class AuthenticatedSessionController extends Controller
 
         $role = $request->role == "Passager" ? "passenger" : "driver";
 
-        $user->assignRole($role, 'admin');
+        $role = Role::findByName($role, 'api');
+        $user->assignRole($role);
 
         return response()->json([
             'success' => true,
