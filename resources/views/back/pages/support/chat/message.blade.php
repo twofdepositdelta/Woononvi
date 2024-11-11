@@ -312,7 +312,7 @@
             method: 'GET',
             success: function(data) {
                 // Créez le HTML avec les données de l’utilisateur
-                const userInfoHtml = `
+                let userInfoHtml = `
                     <div class="img">
                         <img src="${data.image}" alt="image">
                     </div>
@@ -321,25 +321,36 @@
                         <p class="mb-0">${data.role}</p>
                     </div>
                     <div class="action d-inline-flex align-items-center gap-3">
-                        <button type="button" class="text-xl text-primary-light">
-                            <iconify-icon icon="mi:call"></iconify-icon>
-                        </button>
-                        @if (Auth::user()->hasRole('super admin'))
+                `;
+
+                // Ajouter le bouton de clôture si le statut de la conversation n'est pas 'resolved'
+                if (data.statusConversation != 'resolved') {
+                    userInfoHtml += `
+                        <a href="/conversation/closed/${conversationId}" class="text-xl text-success" onclick="return closeConversation()">
+                            <iconify-icon icon="mdi:shield-check-outline"></iconify-icon><!-- Icône pour clôturer -->
+                        </a>
+                    `;
+                }
+
+                // Cette condition sera gérée par votre code Laravel pour vérifier le rôle
+                @if (Auth::user()->hasRole('super admin'))
+                    userInfoHtml += `
                         <div class="btn-group">
                             <button type="button" class="text-primary-light text-xl" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                 <iconify-icon icon="tabler:dots-vertical"></iconify-icon>
                             </button>
-
                             <ul class="dropdown-menu dropdown-menu-lg-end border">
                                 <li>
                                     <a class="dropdown-item" href="#">Bloquer</a>
                                 </li>
                             </ul>
                         </div>
-                        @endif
-                    </div>
-                `;
+                    `;
+                @endif
 
+                userInfoHtml += `</div>`; // Fin de la div .action
+
+                // Insérer l'HTML dans l'élément #chatHeader
                 $('#chatHeader').html(userInfoHtml);
             },
             error: function(xhr) {
@@ -347,6 +358,7 @@
             }
         });
     }
+
 
     // Soumettre le formulaire de message
     $('#chatMessageForm').on('submit', function(e) {

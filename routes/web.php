@@ -169,6 +169,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('api')->group(base_path('routes/api.php'));
 
+    Route::get('/conversation/closed/{conversation}', [ConversationController::class, 'close'])->name('conversation.down');
+
 });
 
 

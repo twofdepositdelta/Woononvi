@@ -63,16 +63,17 @@ class ChatController extends Controller
                     $query->where('is_read', false)
                         ->where('sender_id', '!=', auth()->id()); // Exclure les messages envoyés par l'utilisateur connecté
                 }])
+                ->where('status', '!=', 'resolved') // Exclure les conversations résolues
                 ->where(function ($query) {
                     $query->where('support_id', auth()->id()) // Conversations assignées à l'utilisateur connecté
                         ->orWhere(function ($query) {
-                            $query->where('status', '!=', 'resolved') // Conversations non résolues
-                                ->where('user_id', auth()->id()) // Conversations de l'utilisateur connecté
+                            $query->where('user_id', auth()->id()) // Conversations de l'utilisateur connecté
                                 ->where('is_taken', false); // Conversations non prises en charge
                         });
                 })
                 ->orderBy('created_at', 'desc')
                 ->get();
+
         }
 
         // Retourner les conversations au format JSON avec le compte des messages non lus
@@ -180,10 +181,17 @@ class ChatController extends Controller
 
     public function fetchMessages($conversationId)
     {
+        // Récupérer la conversation avec les messages triés par date
         $conversation = Conversation::with(['messages' => function ($query) {
             $query->orderBy('created_at', 'asc'); // Trier les messages par date
         }])
-            ->findOrFail($conversationId);
+            ->where('status', '!=', 'resolved') // Vérifier que la conversation n'est pas résolue
+            ->find($conversationId);
+
+        // Si la conversation est introuvable ou est résolue
+        if (!$conversation) {
+            return response()->json(['error' => 'Conversation non disponible ou déjà résolue'], 403);
+        }
 
         return response()->json($conversation->messages);
     }
