@@ -15,12 +15,12 @@ class RolePermissionSeeder extends Seeder
     public function run()
     {
         // Création des rôles avec les attributs 'role' pour le français et 'name' pour l'anglais
-        Role::create(['role' => 'Super Administrateur', 'name' => 'super admin', 'guard_name' => 'api']);
-        Role::create(['role' => 'Développeur', 'name' => 'developer', 'guard_name' => 'api']);
-        Role::create(['role' => 'Gestionnaire', 'name' => 'manager', 'guard_name' => 'api']);
-        Role::create(['role' => 'Commercial', 'name' => 'sales', 'guard_name' => 'api']);
-        Role::create(['role' => 'Support', 'name' => 'support', 'guard_name' => 'api']);
-        Role::create(['role' => 'Conducteur', 'name' => 'driver', 'guard_name' => 'api']);
-        Role::create(['role' => 'Passager', 'name' => 'passenger', 'guard_name' => 'api']);
+        Role::create(['role' => 'Super Administrateur', 'name' => 'super admin', 'guard_name' => 'web']);
+        Role::create(['role' => 'Développeur', 'name' => 'developer', 'guard_name' => 'web']);
+        Role::create(['role' => 'Gestionnaire', 'name' => 'manager', 'guard_name' => 'web']);
+        Role::create(['role' => 'Commercial', 'name' => 'sales', 'guard_name' => 'web']);
+        Role::create(['role' => 'Support', 'name' => 'support', 'guard_name' => 'web']);
+        Role::create(['role' => 'Conducteur', 'name' => 'driver', 'guard_name' => 'web']);
+        Role::create(['role' => 'Passager', 'name' => 'passenger', 'guard_name' => 'web']);
     }
 }
