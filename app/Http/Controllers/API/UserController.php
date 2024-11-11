@@ -33,7 +33,7 @@ class UserController extends Controller
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
 
-        // Attribue le nouveau rôle
+        $role = Role::findByName($role, 'api');
         $user->assignRole($role);
 
         if($role == 'driver')
