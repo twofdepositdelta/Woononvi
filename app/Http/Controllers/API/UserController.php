@@ -37,6 +37,18 @@ class UserController extends Controller
         $role = Role::findByName($role, 'api');
         $user->assignRole($role);
 
+        $userArray = $user->toArray();
+
+        unset($userArray['roles']);
+
+        $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+        $country = Country::find($user->country_id);
+        $userArray['country_name'] = $user->country_name;
+        $userArray['city_name'] = $user->city_name;
+        $userArray['indicatif'] = $user->country_code;
+        $userArray['phone_number'] = $user->phone_number;
+
         if($role == 'driver')
             $message = "Vous êtes passés en mode conducteur avec succès !";
         else
@@ -45,7 +57,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'user' => $user,
+            'user' => $userArray,
         ]);
     }
 
