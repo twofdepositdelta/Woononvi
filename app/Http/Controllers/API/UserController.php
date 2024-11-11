@@ -34,7 +34,7 @@ class UserController extends Controller
         $user->syncRoles([]);
 
         // Attribue le nouveau rôle
-        $user->assignRole($role, 'api');
+        $user->assignRole($role);
 
         if($role == 'driver')
             $message = "Vous êtes passés en mode conducteur avec succès !";
