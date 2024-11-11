@@ -35,7 +35,7 @@ class VehicleController extends Controller
             'seats' => 'required|max:255|string',
             'color' => 'required|max:255|string',
             'model' => 'required|max:255|string',
-            'year' => 'required|max:255|date',
+            'year' => 'required|max:255',
             'logbook' => 'required|mimes:pdf|max:2048',
             'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
