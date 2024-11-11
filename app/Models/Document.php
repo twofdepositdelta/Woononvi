@@ -17,7 +17,8 @@ class Document extends Model
         'is_validated',
         'slug',
         'reason',
-        'is_rejected'
+        'is_rejected',
+        'vehicle_id'
     ];
 
     public function user()
@@ -29,5 +30,10 @@ class Document extends Model
     public function typeDocument()
     {
         return $this->belongsTo(TypeDocument::class); // Assurez-vous d'importer le modèle TypeDocument
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class); // Assurez-vous d'importer le modèle Booking
     }
 }

@@ -9,6 +9,7 @@ class Ride extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'numero_ride',
         'departure',
         'destination',
         'departure_time',

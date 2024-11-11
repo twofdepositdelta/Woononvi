@@ -23,7 +23,8 @@ class ActualityController extends Controller
     public function index()
     {
         $actualities = Actuality::orderBy('created_at','desc')->paginate(20); // Récupère toutes les actualités avec le type d'actualité
-        return view('back.pages.actualities.index', compact('actualities'));
+        $typenews = TypeNew::orderBy('created_at','desc')->paginate(20);
+        return view('back.pages.actualities.index', compact('actualities','typenews'));
     }
 
     // Afficher le formulaire de création d'une nouvelle actualité
@@ -39,64 +40,61 @@ class ActualityController extends Controller
 
     // Sauvegarder une nouvelle actualité
     public function store(Request $request)
-    {
-            $request->validate([
-                'titre' => 'required|string|max:255',
-                'description' => 'required|string',
-                'image_url' => 'required|image',
-                'published' => 'boolean',
-                'type_new_id' => 'required|exists:type_news,id',
-                'roles' => 'required|array', // Changer en 'array' pour accepter plusieurs rôles
-                'roles.*' => 'exists:roles,id', // Vérifie chaque rôle
-            ]);
+{
+    $request->validate([
+        'titre' => 'required|string|max:255',
+        'description' => 'required|string',
+        'image_url' => 'required|image',
+        'published' => 'boolean',
+        'type_new_id' => 'required|exists:type_news,id',
+        'roles' => 'required|array',
+        'roles.*' => 'exists:roles,id',
+    ]);
 
-            $imageHelper = new ImageHelper();
-            $imagePath = $imageHelper->enregistrerImage($request->image_url,'images/Actualité');
-            $actualitie = Actuality::create([
-                'titre' => $request->titre,
-                'slug' => Str::slug($request->titre), // Générer un slug basé sur le titre
-                'description' => strip_tags($request->description),
-                'description' => ($request->description),
-                'image_url' =>FrontHelper::getEnvFolder().$imagePath,
-                'published' => $request->has('published'),
-                'type_new_id' => $request->type_new_id,
-            ]);
-            foreach ($request->roles as $roleId) {
-                DB::table('actuality_role')->insert([
-                    'actuality_id'=>$actualitie->id,
-                    'role_id'=>$roleId,
-                ]);
-            }
-        $typeNew = TypeNew::find($request->type_new_id);
-        foreach ($request->roles as $roleId ) {
-            $role = Role::findById($roleId);
-        }
+    $imageHelper = new ImageHelper();
+    $imagePath = $imageHelper->enregistrerImage($request->image_url, 'images/Actualité');
 
+    $actualitie = Actuality::create([
+        'titre' => $request->titre,
+        'slug' => Str::slug($request->titre),
+        'description' => strip_tags($request->description),
+        'image_url' => FrontHelper::getEnvFolder() . $imagePath,
+        'published' => $request->has('published'),
+        'type_new_id' => $request->type_new_id,
+    ]);
+
+    foreach ($request->roles as $roleId) {
+        DB::table('actuality_role')->insert([
+            'actuality_id' => $actualitie->id,
+            'role_id' => $roleId,
+        ]);
+    }
+
+    $typeNew = TypeNew::find($request->type_new_id);
+
+    // Notification
+    foreach ($request->roles as $roleId) {
+        $role = Role::findById($roleId);
         $users = User::role($role->name)->get();
-       
-        if ($typeNew->name=='Notification') {
 
+        if ($typeNew->name == 'Notification') {
             $details = [
-                    'message' => strip_tags($actualitie->description),
-                ];
-
-          dd($details);
-                foreach ($users as $user) {
-
-                    $user->notify(new NotificationLocale( $details));
-
-
-                }
-
-        } elseif ($typeNew->name=='Message email') {
+                'message' => strip_tags($actualitie->description),
+            ];
 
             foreach ($users as $user) {
-                $user->notify(new ActualiteNotification($user->email,$actualitie->description,$actualitie->titre));
+                $user->notify(new NotificationLocale($details));
             }
-
+        } elseif ($typeNew->name == 'Message email') {
+            foreach ($users as $user) {
+                $user->notify(new ActualiteNotification($user->email, $actualitie->description, $actualitie->titre));
+            }
         }
-        return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
     }
+
+    return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
+}
+
 
     // Afficher les détails d'une actualité spécifique
     public function show( $slug)
@@ -108,7 +106,7 @@ class ActualityController extends Controller
     // Afficher le formulaire d'édition d'une actualité
     public function edit( $slug)
     {
-        $typenews = TypeNew::orderBy('created_at','desc')->paginate(20);
+        $typenews = TypeNew::where('name','Blog')->get();
 
         $actuality=Actuality::where('slug',$slug)->first();
 
@@ -128,7 +126,7 @@ class ActualityController extends Controller
             'image_url' => 'nullable|image',
             'published' => 'boolean',
             'type_new_id' => 'required|exists:type_news,id',
-            'roles' => 'required|array', // Changer en 'array' pour accepter plusieurs rôles
+            'roles' => 'array', // Changer en 'array' pour accepter plusieurs rôles
             'roles.*' => 'exists:roles,id',
         ]);
         $actuality=Actuality::where('slug',$slug)->first();
@@ -150,37 +148,34 @@ class ActualityController extends Controller
             'type_new_id' => $request->type_new_id,
         ]);
 
-        foreach ($request->roles as $roleId) {
-            DB::table('actuality_role')
-            ->where('actuality_id', $actuality->id) // Ajoute une condition pour cibler la bonne ligne
-            ->update([
-                    'role_id' => $roleId,
-                ]);
-        }
+        // foreach ($request->roles as $roleId) {
+        //     DB::table('actuality_role')
+        //     ->where('actuality_id', $actuality->id) // Ajoute une condition pour cibler la bonne ligne
+        //     ->update([
+        //             'role_id' => $roleId,
+        //         ]);
+        // }
 
 
-        $typeNew = TypeNew::find($request->type_new_id);
-        foreach ($request->roles as $roleId ) {
-         $role = Role::findById($roleId);
-        }
-         $users = User::role($role->name)->get();
-       if ($typeNew->name=='Notification') {
+        // $typeNew = TypeNew::find($request->type_new_id);
+        // foreach ($request->roles as $roleId) {
+        //     $role = Role::findById($roleId);
+        //     $users = User::role($role->name)->get();
 
-       $details = [
-            'message' => $request->description,
-        ];
+        //     if ($typeNew->name == 'Notification') {
+        //         $details = [
+        //             'message' => strip_tags($actualitie->description),
+        //         ];
 
-        foreach ($users as $user) {
-            $user->notify(new NotificationLocale($details));
-        }
-
-       } elseif ($typeNew->name=='Message email') {
-
-        foreach ($users as $user) {
-            $user->notify(new ActualiteNotification($user->email,$actuality->description,$actuality->titre));
-        }
-
-       }
+        //         foreach ($users as $user) {
+        //             $user->notify(new NotificationLocale($details));
+        //         }
+        //     } elseif ($typeNew->name == 'Message email') {
+        //         foreach ($users as $user) {
+        //             $user->notify(new ActualiteNotification($user->email, $actualitie->description, $actualitie->titre));
+        //         }
+        //     }
+        // }
 
 
         return redirect()->route('actualities.index')->with('success', 'Actualité mise à jour avec succès.');
@@ -193,5 +188,23 @@ class ActualityController extends Controller
 
         $actuality->delete();
         return redirect()->route('actualities.index')->with('success', 'Actualité supprimée avec succès.');
+    }
+
+
+    public function filterByType(Request $request)
+    {
+        // Récupérer le type de véhicule filtré
+        $typeId = $request->input('type_id');
+
+        // Si un type de véhicule est sélectionné, filtrer les véhicules
+        if ($typeId) {
+            $actualities = Actuality::where('type_new_id', $typeId)->orderBy('created_at', 'desc')->get();
+        } else {
+            // Si aucun type n'est sélectionné, récupérer tous les véhicules
+            $actualities = Actuality::orderBy('created_at', 'desc')->get();
+        }
+
+        // Retourner la vue partielle de la table avec les véhicules filtrés
+        return view('back.pages.actualities.table', compact('actualities'));
     }
 }

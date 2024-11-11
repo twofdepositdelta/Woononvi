@@ -61,21 +61,8 @@
                             @enderror
                         </div>
 
+
                         <div class="col-12">
-                            <label class="form-label">Sélectionnez un Rôle</label>
-                            <select class="form-select @error('roles') is-invalid @enderror" name="roles[]" id="roles" multiple required style="width: 100%; height: 150px;">
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}" {{ $actuality->roles->pluck('id')->contains($role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('roles')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-
-
-                        <div class="col-12 d-none" id="status">
                             <label class="form-label">Statut de Publication</label>
                             <div class="d-flex align-items-center flex-wrap gap-28">
                                 <div class="form-check d-flex align-items-center gap-2">
@@ -111,22 +98,7 @@
 
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let typenew = document.getElementById('type_new');
-        let status = document.getElementById('status');
 
-        // Écoutez les changements sur le select
-        typenew.addEventListener('change', function() {
-            // Vérifiez si le type sélectionné est celui qui nécessite d'afficher le statut
-            if (typenew.value === '3') { // Remplacez '1' par l'ID du type qui doit afficher le statut
-                status.classList.remove('d-none'); // Affiche le statut
-            } else {
-                status.classList.add('d-none'); // Cache le statut
-            }
-        });
-    });
-</script>
 
 
 <script>

@@ -6,28 +6,8 @@
     <div
         class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
         <div class="d-flex align-items-center flex-wrap gap-3">
-            <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
-            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
-                <option>9</option>
-                <option>10</option>
-            </select>
-            <form class="navbar-search">
-                <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
-                <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
-            </form>
-            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                <option>Status</option>
-                <option>Active</option>
-                <option>Inactive</option>
-            </select>
+
+
         </div>
     </div>
 
@@ -36,15 +16,7 @@
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
-                        <th scope="col">
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="form-check style-check d-flex align-items-center">
-                                    <input class="form-check-input radius-4 border input-form-dark"
-                                        type="checkbox" name="checkbox" id="selectAll">
-                                </div>
-                                S.L
-                            </div>
-                        </th>
+                       
                         <th scope="col">Nom et prénom(s)</th>
                         <th scope="col" class="text-center">Role</th>
                         <th scope="col" class="text-center">Action</th>
@@ -54,12 +26,7 @@
 
                     @foreach ($users as $index => $user)
                         <tr>
-                                <td>
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input" type="checkbox">
-                                        <label class="form-check-label">{{ $index + 1 }}</label>
-                                    </div>
-                                </td>
+
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset($user->profile->avatar ?? 'path/to/default/avatar.jpg') }}"
@@ -68,7 +35,11 @@
                                         <h6 class="text-md mb-0 fw-medium flex-grow-1">{{ $user->firstname }} {{ $user->lastname }}</h6>
                                     </div>
                                 </td>
-                            <td class="text-center">{{$user->roles->first()->role}}</td>
+                            <td class="text-center">
+                                @foreach($user->roles as $role)
+                                <span class="badge bg-primary"> {{ $role->role }}</span>{{ !$loop->last ? ', ' : '' }}
+                                @endforeach
+                            </td>
                             <td class="text-center">
                                 <div class="dropdown">
                                     <button
@@ -77,7 +48,7 @@
                                         </button>
                                     <ul class="dropdown-menu" style="">
                                         @foreach ($roles as $role)
-                                        @if ($user->roles->first()->id !== $role->id) <!-- Ne pas afficher le rôle déjà assigné -->
+                                        @if (!$user->roles->contains('id', $role->id))
                                             <form action="{{ route('users.assignRole', $user->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 <input type="hidden" name="role_id" value="{{ $role->id }}">

@@ -13,7 +13,7 @@
                 <table class="table bordered-table sm-table mb-0">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Numero</th>
                             <th>Heure de départ</th>
                             <th> Départ</th>
                             <th>Destination</th>
@@ -32,7 +32,7 @@
                         @else
                             @foreach ($rides as $index => $ride)
                                 <tr>
-                                    <td>{{ $index+1 }}</td>
+                                    <td>#{{ $ride->numero_ride }}</td>
                                     <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
                                     <td>{{ $ride->departure }}</td>
                                     <td>{{ $ride->destination }}</td>
@@ -61,7 +61,7 @@
                                             </a>
 
 
-                                                <form action="{{ route('rides.status',[$ride,'status'=> 'suspend']) }}" method="GET">
+                                                <form action="{{ route('rides.status',[$ride,'status'=> 'suspend']) }}" method="GET" onsubmit="return confirm('Êtes-vous sûr de vouloir suspendre ce trajet ?');">
                                                     <button type="submit" class="btn btn-primary text-sm "
                                                         {{ $ride->status != 'pending' ? 'disabled' : '' }}>
                                                         Suspendre

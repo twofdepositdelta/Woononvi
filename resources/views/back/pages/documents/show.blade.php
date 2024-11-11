@@ -11,7 +11,7 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
         <div class="col-lg-12">
             <div class="user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100">
                 <img src="{{ asset('storage/back/assets/images/user-grid/user-grid-bg' . ($user->profile->genre == 'male' ? '10' : '7') . '.png') }}"
-                    alt="" class="w-100 object-fit-cover">
+                    alt="" class="w-100 object-fit-cover" style="height: 30%">
 
                 <div class="pb-24 ms-16 mb-24 me-16 mt--100">
                     <div class="text-center border border-top-0 border-start-0 border-end-0">
@@ -134,7 +134,7 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                             <th>Date d'expiration</th>
                                             <th>Raison</th>
                                             <th>Validation</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -144,13 +144,23 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                             </tr>
                                         @else
                                             @foreach ($user->documents as $index => $document)
+                                            @if ($document->typeDocument->label=="Permis de conduire")
+
+
                                                 <tr>
                                                     <td>#{{ $document->number ?? 'Non disponible' }}</td>
-                                                    <td>{{ $document->typeDocument->label ?? 'Non défini' }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+
+                                                            <iconify-icon icon="ic:baseline-description" class="menu-icon" style="font-size: 24px; color: red;"></iconify-icon>
+                                                            <a href="{{ asset($document->paper) }}" target="_blank" class="text-md mb-0 fw-medium flex-grow-1">{{ $document->typeDocument->label ?? 'Non défini' }}</a>
+
+                                                        </div>
+                                                    </td>
                                                     <td>{{ \Carbon\Carbon::parse($document->expiry_date)->locale('fr')->translatedFormat('D, d M Y') }}</td>
                                                     <td class="{{$document->reason ?'':'text-center'}}" >{{ $document->reason ?$document->reason :'-' }}</td>
                                                     <td>
-                                                        
+
                                                         @if($document->is_rejected)
                                                             <span class="badge bg-danger">Rejeté</span>
                                                         @elseif($document->is_validated)
@@ -164,12 +174,12 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                                     <td class="text-center">
                                                         <div class="d-flex align-items-center gap-10 justify-content-center">
                                                             <!-- Formulaire de validation -->
-                                                            <form action="{{ route('documents.validated', $document) }}" method="post">
+                                                            <form action="{{ route('documents.validated', $document) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir {{$document->is_validated ? 'annuler':'valider'}} ce document ?');">
                                                                 @csrf
 
                                                                      <button type="submit"
                                                                             class="btn text-sm {{ $document->is_validated ? 'btn-secondary text-muted' : 'btn-primary' }}"
-                                                                            {{ $document->is_validated || $document->is_rejected ? 'disabled' : '' }}>
+                                                                            {{ $document->is_validated || $document->is_rejected ? 'disabled' : '' }} >
                                                                         {{ $document->is_validated ? 'Déjà validé' : 'Valider' }}
                                                                     </button>
 
@@ -221,6 +231,8 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                           @endif
                                             @endforeach
                                         @endif
                                     </tbody>

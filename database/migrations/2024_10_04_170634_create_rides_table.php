@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
+            $table->string('numero_ride')->unique();
             $table->string('departure');
             $table->string('destination');
             $table->timestamp('departure_time'); // Heure de départ prévue

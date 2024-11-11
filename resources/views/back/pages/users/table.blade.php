@@ -1,4 +1,5 @@
     @foreach ($users as $index => $user)
+    @if (!$user->getRoleNames()->contains('developer'))
     <tr>
         <td>
             <div class="form-check style-check d-flex align-items-center">
@@ -18,8 +19,10 @@
         <td>
             @if ($user->getRoleNames()->isNotEmpty())
             @foreach ($user->getRoleNames() as $role)
-            <span class="badge bg-primary">{{ \Spatie\Permission\Models\Role::where('name', $role)->first()->role
-                }}</span>{{ !$loop->last ? ', ' : '' }}
+
+                <span class="badge bg-primary">{{ \Spatie\Permission\Models\Role::where('name', $role)->first()->role
+                    }}</span>{{ !$loop->last ? ', ' : '' }}
+
             @endforeach
             @else
             N/A
@@ -61,5 +64,7 @@
                 @endif
             </div>
         </td>
+
     </tr>
+    @endif
     @endforeach
