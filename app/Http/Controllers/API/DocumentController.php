@@ -30,6 +30,7 @@ class DocumentController extends Controller
     {
         $rules = [
             'type_document_id' => 'required|max:255|string',
+            'number' => 'required|max:255|string',
             'expiry_date' => 'required|date',
             'vehicle_id' => 'required|max:255|string',
             'paper' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
@@ -44,20 +45,37 @@ class DocumentController extends Controller
             ], 422);
         }
 
-        $user = $request->user();
+        $type_document = TypeDocument::whereLabel($request->type_document_id)->first();
+        if (!$type_document) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Type de document invalide !',
+            ], 422);
+        }
 
-        // $number = Str::random(8);
+        // Vérifiez si un document de ce type existe déjà pour le véhicule
+        $existingDocument = Document::where('vehicle_id', $request->vehicle_id)
+            ->where('type_document_id', $type_document->id)
+            ->first();
+
+        if ($existingDocument) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Un document de ce type est déjà ajouté pour ce véhicule.',
+            ], 422);
+        }
+
+        $user = $request->user();
+        $number = Str::random(8);
 
         $paperPath = null;
         if ($request->hasFile('paper')) {
             $paperPath = $request->file('paper')->store("api/drivers/$user->id/documents", 'public'); 
         }
 
-        $type_document = TypeDocument::whereLabel($request->type_document_id)->first();
-
         $document = Document::create([
-            'slug' => Str::slug('111111'),
-            'number' => '111111',
+            'slug' => Str::slug($number),
+            'number' => $request->number,
             'paper' => $paperPath,
             'vehicle_id' => $request->vehicle_id,
             'type_document_id' => $type_document->id,
