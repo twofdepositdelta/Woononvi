@@ -126,7 +126,7 @@ class VehicleController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'licence_plate' => 'required|max:255|string|unique:vehicles,licence_plate,' . $request->vehicleId,
+            'licence_plate' => 'required|max:255|string|unique:vehicles,licence_plate,' . $request->vehicle_id,
             'mark' => 'required|max:255|string',
             'seats' => 'required|max:255|string',
             'color' => 'required|max:255|string',
@@ -147,7 +147,7 @@ class VehicleController extends Controller
         }
 
         $user = $request->user();
-        $vehicle = Vehicle::where('id', $request->vehicleId)->where('driver_id', $user->id)->first();
+        $vehicle = Vehicle::where('id', $request->vehicle_id)->where('driver_id', $user->id)->first();
 
         if (!$vehicle) {
             return response()->json([
