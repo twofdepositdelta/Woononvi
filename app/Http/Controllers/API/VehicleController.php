@@ -133,7 +133,7 @@ class VehicleController extends Controller
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
             'logbook' => 'required|mimes:pdf|max:2048',
-            'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'main_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
         ];
@@ -161,13 +161,9 @@ class VehicleController extends Controller
 
         if ($vehiculeType) {
             // Si une nouvelle image est fournie, remplacez l'ancienne et supprimez-la
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store("api/drivers/$user->id/images", 'public');
+            if ($request->hasFile('main_image')) {
+                $imagePath = $request->file('main_image')->store("api/drivers/$user->id/images", 'public');
                 $vehicle->main_image = $imagePath;
-            }
-
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store("api/drivers/$user->id/images", 'public'); 
             }
 
             // Si un nouveau logbook est fourni, remplacez l'ancien et supprimez-le
