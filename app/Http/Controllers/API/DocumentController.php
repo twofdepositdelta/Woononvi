@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Vehicle;
-use App\Models\TypeVehicle;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
