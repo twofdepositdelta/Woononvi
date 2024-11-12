@@ -69,12 +69,12 @@ class VehicleController extends Controller
         if($vehiculeType) {
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store("storage/back/drivers/$user->id/images", 'public'); 
+                $imagePath = $request->file('image')->store("api/drivers/$user->id/images", 'public'); 
             }
 
             $logbookPath = null;
             if ($request->hasFile('logbook')) {
-                $logbookPath = $request->file('logbook')->store("storage/back/drivers/$user->id/logbooks", 'public'); 
+                $logbookPath = $request->file('logbook')->store("api/drivers/$user->id/logbooks", 'public'); 
             }
 
             $vehicle = Vehicle::create([
