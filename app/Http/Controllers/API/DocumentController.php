@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Vehicle;
 use App\Models\Document;
+use App\Models\TypeDocument;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
