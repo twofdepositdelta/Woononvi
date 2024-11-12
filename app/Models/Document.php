@@ -36,4 +36,9 @@ class Document extends Model
     {
         return $this->belongsTo(Vehicle::class); // Assurez-vous d'importer le modèle Booking
     }
+
+    public function getDocumentAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
 }
