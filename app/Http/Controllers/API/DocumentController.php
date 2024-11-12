@@ -118,8 +118,43 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Country $country)
+    public function destroy(Request $request)
     {
-        //
+        $rules = [
+            'document_id' => 'required|max:255|string',
+        ];
+        
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = $request->user();
+
+        $document = Document::where('id', $request->document_id)->first();
+
+        if (!$document) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Document introuvable !',
+            ], 404);
+        }
+
+        // Supprimer le fichier du stockage si le chemin existe
+        if ($document->paper && Storage::disk('public')->exists($document->paper)) {
+            Storage::disk('public')->delete($document->paper);
+        }
+
+        // Supprimer le document de la base de données
+        $document->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Document supprimé avec succès.',
+        ], 200);
     }
 }
