@@ -49,4 +49,9 @@ class Vehicle extends Model
     {
         return asset($value);
     }
+
+    public function getLogbookAttribute($value)
+    {
+        return asset($value);
+    }
 }
