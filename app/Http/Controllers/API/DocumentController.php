@@ -44,6 +44,8 @@ class DocumentController extends Controller
             ], 422);
         }
 
+        $user = $request->user();
+
         $number = Str::random(8);
 
         $paperPath = null;
