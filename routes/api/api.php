@@ -6,6 +6,7 @@ use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VehicleController;
 use App\Http\Controllers\API\ConversationController;
+use App\Http\Controllers\API\DocumentController;
 
 require __DIR__ . '/auth_api.php';
 
