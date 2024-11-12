@@ -165,7 +165,6 @@ class VehicleController extends Controller
                     Storage::disk('public')->delete($vehicle->main_image);
                 }
                 $imagePath = $request->file('image')->store("storage/drivers/$user->id/images", 'public');
-                $vehicle->main_image = $imagePath;
             }
 
             // Si un nouveau logbook est fourni, remplacez l'ancien et supprimez-le
@@ -174,7 +173,6 @@ class VehicleController extends Controller
                     Storage::disk('public')->delete($vehicle->logbook);
                 }
                 $logbookPath = $request->file('logbook')->store("storage/drivers/$user->id/logbooks", 'public');
-                $vehicle->logbook = $logbookPath;
             }
 
             // Mettre à jour les autres informations
@@ -187,6 +185,8 @@ class VehicleController extends Controller
                 'color' => $request->color,
                 'slug' => Str::slug($request->licence_plate),
                 'type_vehicle_id' => $vehiculeType->id,
+                'main_image' => $imagePath,
+                'logbook' => $logbookPath,
             ]);
 
             return response()->json([
