@@ -160,6 +160,7 @@ class VehicleController extends Controller
 
         if ($vehiculeType) {
             // Si une nouvelle image est fournie, remplacez l'ancienne et supprimez-la
+            $imagePath = null;
             if ($request->hasFile('image')) {
                 if ($vehicle->main_image && Storage::disk('public')->exists($vehicle->main_image)) {
                     Storage::disk('public')->delete($vehicle->main_image);
@@ -167,6 +168,7 @@ class VehicleController extends Controller
                 $imagePath = $request->file('image')->store("storage/drivers/$user->id/images", 'public');
             }
 
+            $logbookPath = null;
             // Si un nouveau logbook est fourni, remplacez l'ancien et supprimez-le
             if ($request->hasFile('logbook')) {
                 if ($vehicle->logbook && Storage::disk('public')->exists($vehicle->logbook)) {
