@@ -47,11 +47,11 @@ class Vehicle extends Model
 
     public function getMainImageAttribute($value)
     {
-        return asset($value);
+        return asset('storage/' . $value);
     }
 
     public function getLogbookAttribute($value)
     {
-        return asset($value);
+        return asset('storage/' . $value);
     }
 }
