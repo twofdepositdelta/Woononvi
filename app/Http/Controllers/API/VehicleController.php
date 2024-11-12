@@ -175,7 +175,7 @@ class VehicleController extends Controller
                     unlink('storage/' . $vehicle->logbook);
                 }
                 $logbookPath = $request->file('logbook')->store("api/drivers/$user->id/logbooks", 'public');
-                $vehicle->main_image = $logbookPath;
+                $vehicle->logbook = $logbookPath;
             }
 
             // Mettre à jour les autres informations
@@ -188,8 +188,6 @@ class VehicleController extends Controller
                 'color' => $request->color,
                 'slug' => Str::slug($request->licence_plate),
                 'type_vehicle_id' => $vehiculeType->id,
-                'main_image' => $imagePath,
-                'logbook' => $logbookPath,
             ]);
 
             return response()->json([
