@@ -24,6 +24,17 @@ class VehicleController extends Controller
         ], 200);
     }
 
+    public function getUserVehicles(Request $request)
+    {
+        $user = $request->user();
+        $data = Vehicle::whereUserId($user->id)->with('typeVehicle')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
