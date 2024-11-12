@@ -26,5 +26,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('drivers/vehicles/get-documents-types', [DocumentController::class, 'getDocumentTypes'])->name('api.vehicle.getDocumentTypes');
     Route::post('drivers/vehicles/store', [VehicleController::class, 'store'])->name('api.vehicle.store');
     Route::post('drivers/vehicles/edit', [VehicleController::class, 'update'])->name('api.vehicle.update');
-    Route::post('drivers/vehicles/documents/store', [DocumentController::class, 'store'])->name('api.document.store');
+    Route::post('drivers/documents/store', [DocumentController::class, 'store'])->name('api.document.store');
 });
