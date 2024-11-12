@@ -42,7 +42,7 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'licence_plate' => 'required|max:255|string|unique:vehicules',
+            'licence_plate' => 'required|max:255|string|unique:vehicles',
             'mark' => 'required|max:255|string',
             'seats' => 'required|max:255|string',
             'color' => 'required|max:255|string',
