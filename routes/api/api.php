@@ -23,5 +23,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('drivers/vehicles', [VehicleController::class, 'getUserVehicles'])->name('api.vehicle.get');
     Route::get('drivers/vehicles/get-types', [VehicleController::class, 'getVehicleTypes'])->name('api.vehicle.getTypes');
     Route::post('drivers/vehicles/store', [VehicleController::class, 'store'])->name('api.vehicle.store');
-    Route::put('drivers/vehicles/edit', [VehicleController::class, 'update'])->name('api.vehicle.update');
+    Route::post('drivers/vehicles/edit', [VehicleController::class, 'update'])->name('api.vehicle.update');
 });
