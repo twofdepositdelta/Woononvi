@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     */
     public function getVehicleTypes()
     {
         $data = TypeVehicle::orderBy('label')->get();
