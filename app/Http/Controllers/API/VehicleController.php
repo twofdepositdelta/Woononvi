@@ -187,8 +187,8 @@ class VehicleController extends Controller
                 'color' => $request->color,
                 'slug' => Str::slug($request->licence_plate),
                 'type_vehicle_id' => $vehiculeType->id,
-                'main_image' => $imagePath,
-                'logbook' => $logbookPath,
+                'main_image' => 'drivers/12/images/5F591VMj5oN9I4rIYLru9RbAcYaYzlsKdYZvgMia.png',
+                'logbook' => 'drivers/12/logbooks/ivc6JBCCU7PuHub1hgMT0u1U2FoTcau5wPwEj9Ic.pdf',
             ]);
 
             return response()->json([
