@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('reason')->nullable();
             $table->date('expiry_date');
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->nullable();
             $table->foreignIdFor(TypeDocument::class);
             $table->boolean('is_validated')->default(false); // Attribut pour la validation par l'admin
             $table->boolean('is_rejected')->default(false);

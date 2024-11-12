@@ -21,6 +21,8 @@ class Document extends Model
         'vehicle_id'
     ];
 
+    protected $appends = ['paper_url'];
+
     public function user()
     {
         return $this->belongsTo(User::class); // Assurez-vous d'importer le modèle User
@@ -35,5 +37,10 @@ class Document extends Model
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function getPaperUrlAttribute()
+    {
+        return $this->paper ? asset('storage/' . $this->paper) : null;
     }
 }

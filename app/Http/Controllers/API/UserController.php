@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -33,8 +35,20 @@ class UserController extends Controller
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
 
-        $role = Role::findByName($role, 'api');
-        $user->assignRole($role);
+        $roleGet = Role::findByName($role, 'api');
+        $user->assignRole($roleGet);
+
+        $userArray = $user->toArray();
+
+        unset($userArray['roles']);
+
+        $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+        $country = Country::find($user->country_id);
+        $userArray['country_name'] = $user->country_name;
+        $userArray['city_name'] = $user->city_name;
+        $userArray['indicatif'] = $user->country_code;
+        $userArray['phone_number'] = $user->phone_number;
 
         if($role == 'driver')
             $message = "Vous êtes passés en mode conducteur avec succès !";
@@ -44,7 +58,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'user' => $user,
+            'user' => $userArray,
         ]);
     }
 
