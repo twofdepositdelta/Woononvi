@@ -165,7 +165,7 @@ class VehicleController extends Controller
                 if ($vehicle->main_image && Storage::disk('public')->exists($vehicle->main_image)) {
                     Storage::disk('public')->delete($vehicle->main_image);
                 }
-                $imagePath = $request->file('image')->store("storage/drivers/$user->id/images", 'public');
+                $imagePath = $request->file('image')->store("drivers/$user->id/images", 'public');
             }
 
             $logbookPath = $vehicle->logbook;
@@ -174,7 +174,7 @@ class VehicleController extends Controller
                 if ($vehicle->logbook && Storage::disk('public')->exists($vehicle->logbook)) {
                     Storage::disk('public')->delete($vehicle->logbook);
                 }
-                $logbookPath = $request->file('logbook')->store("storage/drivers/$user->id/logbooks", 'public');
+                $logbookPath = $request->file('logbook')->store("drivers/$user->id/logbooks", 'public');
             }
 
             // Mettre à jour les autres informations
