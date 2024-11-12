@@ -53,12 +53,14 @@ class DocumentController extends Controller
             $paperPath = $request->file('paper')->store("api/drivers/$user->id/documents", 'public'); 
         }
 
+        $type_document = TypeDocument::whereLabel($request->type_document_id)->first();
+
         $document = Document::create([
             'slug' => Str::slug('111111'),
             'number' => '111111',
             'paper' => $paperPath,
             'vehicle_id' => $request->vehicle_id,
-            'type_document_id' => $request->type_document_id,
+            'type_document_id' => $type_document->id,
             'expiry_date' => $request->expiry_date,
         ]);
 
