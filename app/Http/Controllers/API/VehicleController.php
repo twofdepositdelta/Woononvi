@@ -161,21 +161,21 @@ class VehicleController extends Controller
 
         if ($vehiculeType) {
             // Si une nouvelle image est fournie, remplacez l'ancienne et supprimez-la
-            $imagePath = $vehicle->main_image;
             if ($request->hasFile('image')) {
                 if ($vehicle->main_image && file_exists($vehicle->main_image)) {
                     unlink('storage/' . $vehicle->main_image);
                 }
                 $imagePath = $request->file('image')->store("api/drivers/$user->id/images", 'public');
+                $vehicle->main_image = $imagePath;
             }
 
-            $logbookPath = $vehicle->logbook;
             // Si un nouveau logbook est fourni, remplacez l'ancien et supprimez-le
             if ($request->hasFile('logbook')) {
                 if ($vehicle->logbook && file_exists($vehicle->logbook)) {
                     unlink('storage/' . $vehicle->logbook);
                 }
                 $logbookPath = $request->file('logbook')->store("api/drivers/$user->id/logbooks", 'public');
+                $vehicle->main_image = $logbookPath;
             }
 
             // Mettre à jour les autres informations
