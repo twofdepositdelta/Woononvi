@@ -42,7 +42,7 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'licence_plate' => 'required|max:255|string|vehicles:unique',
+            'licence_plate' => 'required|max:255|string|unique:vehicules',
             'mark' => 'required|max:255|string',
             'seats' => 'required|max:255|string',
             'color' => 'required|max:255|string',
@@ -69,12 +69,12 @@ class VehicleController extends Controller
         if($vehiculeType) {
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store("storage/drivers/$user->id/images", 'public'); 
+                $imagePath = $request->file('image')->store("storage/back/drivers/$user->id/images", 'public'); 
             }
 
             $logbookPath = null;
             if ($request->hasFile('logbook')) {
-                $logbookPath = $request->file('logbook')->store("storage/drivers/$user->id/logbooks", 'public'); 
+                $logbookPath = $request->file('logbook')->store("storage/back/drivers/$user->id/logbooks", 'public'); 
             }
 
             $vehicle = Vehicle::create([
@@ -135,6 +135,7 @@ class VehicleController extends Controller
             'logbook' => 'nullable|mimes:pdf|max:2048',
             'image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
+            'vehicle_id' => 'required|max:255|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -165,7 +166,7 @@ class VehicleController extends Controller
                 if ($vehicle->main_image && file_exists($vehicle->main_image)) {
                     unlink($vehicle->main_image);
                 }
-                $imagePath = $request->file('image')->store("drivers/$user->id/images", 'public');
+                $imagePath = $request->file('image')->store("storage/back/$user->id/images", 'public');
             }
 
             $logbookPath = $vehicle->logbook;
@@ -174,7 +175,7 @@ class VehicleController extends Controller
                 if ($vehicle->logbook && Storage::disk('public')->exists($vehicle->logbook)) {
                     Storage::disk('public')->delete($vehicle->logbook);
                 }
-                $logbookPath = $request->file('logbook')->store("drivers/$user->id/logbooks", 'public');
+                $logbookPath = $request->file('logbook')->store("storage/back/$user->id/logbooks", 'public');
             }
 
             // Mettre à jour les autres informations
