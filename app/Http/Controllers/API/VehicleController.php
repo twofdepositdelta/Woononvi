@@ -162,8 +162,8 @@ class VehicleController extends Controller
             // Si une nouvelle image est fournie, remplacez l'ancienne et supprimez-la
             $imagePath = $vehicle->main_image;
             if ($request->hasFile('image')) {
-                if ($vehicle->main_image && Storage::disk('public')->exists($vehicle->main_image)) {
-                    Storage::disk('public')->delete($vehicle->main_image);
+                if ($vehicle->main_image && file_exists($vehicle->main_image)) {
+                    unlink($vehicle->main_image);
                 }
                 $imagePath = $request->file('image')->store("drivers/$user->id/images", 'public');
             }
