@@ -152,8 +152,11 @@ class DocumentController extends Controller
         // Supprimer le document de la base de données
         $document->delete();
 
+        $vehicle = Vehicle::whereId($document->vehicle_id)->with(['typeVehicle', 'documents.typeDocument'])->first();
+
         return response()->json([
             'success' => true,
+            'vehicle' => $vehicle,
             'message' => 'Document supprimé avec succès.',
         ], 200);
     }

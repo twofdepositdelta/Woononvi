@@ -27,5 +27,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('drivers/vehicles/store', [VehicleController::class, 'store'])->name('api.vehicle.store');
     Route::post('drivers/vehicles/edit', [VehicleController::class, 'update'])->name('api.vehicle.update');
     Route::post('drivers/documents/store', [DocumentController::class, 'store'])->name('api.document.store');
-    Route::delete('drivers/documents/destroy', [DocumentController::class, 'destroy'])->name('api.document.destroy');
+    Route::delete('drivers/vehicles/documents/destroy', [DocumentController::class, 'destroy'])->name('api.document.destroy');
 });
