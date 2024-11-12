@@ -46,7 +46,7 @@ class DocumentController extends Controller
 
         $user = $request->user();
 
-        $number = Str::random(8);
+        // $number = Str::random(8);
 
         $paperPath = null;
         if ($request->hasFile('paper')) {
@@ -54,8 +54,8 @@ class DocumentController extends Controller
         }
 
         $document = Document::create([
-            'slug' => Str::slug($number),
-            'number' => $number,
+            'slug' => Str::slug('111111'),
+            'number' => '111111',
             'paper' => $paperPath,
             'vehicle_id' => $request->vehicle_id,
             'type_document_id' => $request->type_document_id,
