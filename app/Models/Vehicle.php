@@ -44,4 +44,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function getMainImageAttribute($value)
+    {
+        return asset($value);
+    }
 }
