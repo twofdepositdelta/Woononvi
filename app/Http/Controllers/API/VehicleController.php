@@ -132,8 +132,8 @@ class VehicleController extends Controller
             'color' => 'required|max:255|string',
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
-            'logbook' => 'required|mimes:pdf|max:2048',
-            'main_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'logbook' => 'nullable|mimes:pdf|max:2048',
+            'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
         ];
