@@ -6,18 +6,14 @@ var tooltipList=tooltipTriggerList.map(function(tooltipTriggerEl){return new boo
 $(".profile-img-btn").on('click',function(){$(".profile-img-file").click();});if($('.date-picker').length){$(function(){$(".date-picker").datepicker();});}
 if($('.time-picker').length){$(function(){$(".time-picker").timepicker();});}})(jQuery);
 
-// Code WebSocket
-const socket = new WebSocket('ws://apicitygo.twoftechnologies.fr:443/app/ab3b9fc88fa2fe058a98?protocol=7&client=js&version=4.0&flash=false');
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = true;
 
-socket.onopen = function() {
-    console.log('WebSocket Connected');
-    socket.send(JSON.stringify({ message: 'Hello from client!' }));
-};
+var pusher = new Pusher('ab3b9fc88fa2fe058a98', {
+  cluster: 'eu'
+});
 
-socket.onmessage = function(event) {
-    console.log('Received message:', event.data);
-};
-
-socket.onclose = function() {
-    console.log('WebSocket Closed');
-};
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  alert(JSON.stringify(data));
+});

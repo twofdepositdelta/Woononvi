@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/jquery.timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/style.css') }}">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body class="{{Route::currentRouteName() == 'index' ? 'home-3':'' }}">
 
