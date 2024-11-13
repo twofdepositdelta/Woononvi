@@ -2,79 +2,63 @@
 @section('title', 'Vue d\'ensemble des trajets')
 
 @section('customCSS')
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
 
-        .place-picker-container {
-            padding: 20px;
-        }
-    </style>
+    #myMap {
+        height: 100vh;
+        width: 100%;
+    }
+</style>
 @endsection
 
 @section('content')
-    <gmpx-api-loader key="AIzaSyCBteeTZAzfzhLkWeucdSI--ReIT_GLpmQ" solution-channel="GMP_GE_mapsandplacesautocomplete_v1"></gmpx-api-loader>
+    <!-- Inclure l'API Google Maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBteeTZAzfzhLkWeucdSI--ReIT_GLpmQ&callback=initMap&libraries=places" async defer></script>
 
-    <!-- Map Component -->
-    <gmp-map id="myMap" center="40.749933,-73.98633" zoom="13">
-        <div slot="control-block-start-inline-start" class="place-picker-container">
-            <gmpx-place-picker placeholder="Entrez une adresse"></gmpx-place-picker>
-        </div>
-        <gmp-advanced-marker id="rideMarker"></gmp-advanced-marker>
-    </gmp-map>
+    <!-- Div pour la carte -->
+    <div id="myMap"></div>
 @endsection
 
 @section('customJS')
-    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6"></script>
+<script>
+    // Initialisation de la carte
+    let map;
 
-    <script>
-        async function init() {
-            await customElements.whenDefined('gmp-map');
+    async function initMap() {
+        // Créer la carte avec un centre par défaut
+        map = new google.maps.Map(document.getElementById("myMap"), {
+            zoom: 13,
+            center: { lat: 40.749933, lng: -73.98633 }  // Coordonnées par défaut
+        });
 
-            const map = document.querySelector('gmp-map');
-            const marker = document.querySelector('gmp-advanced-marker');
-            const infowindow = new google.maps.InfoWindow();
-
-            map.innerMap.setOptions({
-                mapTypeControl: false
-            });
-
-            // Exemple d'appel de la fonction updateRideLocation
-            setInterval(() => {
-                // Remplacer par des données dynamiques
-                updateRideLocation(1, 40.749933, -73.98633, 500);  // Remplacer par des données en temps réel
-            }, 5000);  // Actualiser toutes les 5 secondes
-
-            // Méthode pour mettre à jour la position du véhicule en temps réel
-            function updateRideLocation(rideId, latitude, longitude, distanceTravelled) {
-                fetch(`/ride/${rideId}/update-location`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        latitude: latitude,
-                        longitude: longitude,
-                        distance_travelled: distanceTravelled
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Mise à jour de la position du marqueur sur la carte
-                    const position = new google.maps.LatLng(latitude, longitude);
-                    marker.position = position;
-                    map.innerMap.panTo(position); // Déplacer la carte vers la nouvelle position
-                    infowindow.setContent(`<strong>Trajet ${rideId}</strong><br><span>Distance parcourue: ${distanceTravelled} m</span>`);
-                    infowindow.open(map.innerMap, marker);
-                })
-                .catch(error => console.error('Error:', error));
+        try {
+            // Appeler l'API pour obtenir les trajets actifs
+            const response = await fetch('/api/active-rides'); // Remplacer par votre endpoint API
+            if (!response.ok) {
+                throw new Error('Erreur lors du chargement des trajets actifs');
             }
+            const data = await response.json();
+            displayRides(data.rides);
+        } catch (error) {
+            console.error('Erreur lors du chargement des trajets actifs:', error);
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+    // Affichage des trajets sur la carte
+    function displayRides(rides) {
+        rides.forEach(ride => {
+            const position = new google.maps.LatLng(ride.latitude, ride.longitude);
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: `Trajet ID: ${ride.id} - Conducteur ID: ${ride.driver_id}`
+            });
+        });
+    }
+</script>
 @endsection

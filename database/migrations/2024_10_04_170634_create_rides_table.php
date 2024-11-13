@@ -30,6 +30,7 @@ return new class extends Migration
             $table->timestamp('arrival_time')->nullable(); // Heure d'arrivée estimée
             $table->enum('status', ['active','pending', 'completed', 'cancelled','suspend'])->default('pending'); // Statut du trajet (pending, completed, canceled)
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
+            $table->foreignIdFor(Vehicle::class);
             $table->timestamps();
         });
     }

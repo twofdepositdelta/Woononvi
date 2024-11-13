@@ -120,7 +120,7 @@ Route::middleware('auth')->group(function () {
 
     // Maps & Cartographie
     Route::get('/vues-d-ensemble/tarjets/reels', [DashboardController::class, 'cartograpie'])->name('tarjets.cartograpie');
-    Route::get('/trajets-en-cours', [RideController::class, 'getTrajetsEnCours'])->name('trajets.en.cours');
+    // Route::get('/trajets-en-cours', [RideController::class, 'getTrajetsEnCours'])->name('trajets.en.cours');
     Route::post('/ride/{rideId}/update-location', [RideController::class, 'updateLocation']);
 
     Route::resource('faqs', FaqController::class)->parameters([

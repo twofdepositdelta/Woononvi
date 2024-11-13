@@ -116,10 +116,16 @@ class RideController extends Controller
         return redirect()->back()->with('success', 'Le trajet  a été mis à jour.');
     }
 
-    public function getTrajetsEnCours()
+    public function getActiveRides()
     {
-        $trajets = Ride::where('status', 'active')->get(); // Récupère les trajets en cours
-        return response()->json($trajets);
+        $rides = Ride::where('status', 'active')->get(['id', 'latitude', 'longitude', 'driver_id']);
+
+        // Vérifiez que des trajets sont bien renvoyés
+        if ($rides->isEmpty()) {
+            return response()->json(['rides' => []]); // Renvoie un tableau vide si aucun trajet actif
+        }
+
+        return response()->json(['rides' => $rides]);
     }
 
     // Fonction pour mettre à jour la localisation d'un trajet

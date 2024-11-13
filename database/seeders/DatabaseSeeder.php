@@ -14,36 +14,35 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RolePermissionSeeder::class,
             CountrySeeder::class,
             CitySeeder::class,
+            RolePermissionSeeder::class,
             UserSeeder::class,
             ProfileSeeder::class,
             UserNotificationSettingSeeder::class,
             SettingsSeeder::class,
             EnvironmentSeeder::class,
-            ApiSeeder::class,
+            TypeVehicleSeeder::class,
+            VehicleSeeder::class,          // Ajoutez le véhicule avant les trajets
             RideSeeder::class,
+            BookingSeeder::class,          // Ajoutez les réservations après les trajets
+            ReportTypeSeeder::class,       // Ajoutez les types de rapports avant les rapports
+            ReportSeeder::class,           // Ajoutez les rapports après les réservations
             RideRequestSeeder::class,
             ConversationSeeder::class,
             MessageSeeder::class,
             TypeNewSeeder::class,
             ActualitySeeder::class,
-            BookingSeeder::class,
             ReviewSeeder::class,
-            RideSearcheSeeder::class,
             TransactionSeeder::class,
-            ReportTypeSeeder::class,
-            ReportSeeder::class,
             FaqTypeSeeder::class,
             FaqSeeder::class,
-            TypeVehicleSeeder::class,
-            VehicleSeeder::class,
             TypeDocumentSeeder::class,
             DocumentSeeder::class,
-            ComissionSeeder::class
-
-
+            ComissionSeeder::class,
+            ApiSeeder::class,
+            RideSearcheSeeder::class,
         ]);
     }
+
 }
