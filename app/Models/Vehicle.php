@@ -24,7 +24,7 @@ class Vehicle extends Model
         'type_vehicle_id', // Clé étrangère pour le type de véhicule
     ];
 
-    protected $appends = ['is_active_label'];
+    protected $appends = ['is_active_label', 'status_label'];
 
     // Relation avec le conducteur (utilisateur)
     public function driver()
@@ -59,12 +59,12 @@ class Vehicle extends Model
         return asset('storage/' . $value);
     }
 
-    public function getIsActiveLabelAttribute($value)
+    public function getIsActiveLabelAttribute()
     {
         return $this->is_active ? 'Actif' : 'Non actif';
     }
 
-    public function getStatusAttribute($value)
+    public function getStatusLabelAttribute()
     {
         return $this->status ? 'Validé' : 'Non validé';
     }
