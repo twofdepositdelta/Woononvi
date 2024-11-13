@@ -16,6 +16,8 @@ class Vehicle extends Model
         'seats',
         'logbook',
         'color',
+        'is_active',
+        'status',
         'main_image',
         'driver_id', // Clé étrangère pour le conducteur
         'slug',
