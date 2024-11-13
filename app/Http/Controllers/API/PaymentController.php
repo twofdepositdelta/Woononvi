@@ -14,11 +14,11 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function rechargeBalance(Request $request)
     {
         $rules = [
             'mode' => 'required|max:255|string',
-            'phoneNnumber' => 'required|max:255|string',
+            'phoneNumber' => 'required|max:255|string',
             'amount' => 'required|integer',
             'shop' => 'required|max:255|string',
             'fToken' => 'required|max:255|string',
