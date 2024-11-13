@@ -62,7 +62,7 @@ class PaymentController extends Controller
         ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
             'shop' => $shop,
             'amount' => $amount,
-            'phoneNumber' => $phone,
+            'phoneNumber' => $phoneNumber,
             'description' => $description,
         ]);
 
