@@ -102,22 +102,6 @@ class VehicleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request)
@@ -201,8 +185,54 @@ class VehicleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Country $country)
+    public function destroy(Request $request)
     {
-        //
+        $rules = [
+            'vehicle_id' => 'required|max:255|string',
+        ];
+        
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $vehicle = Vehicle::where('id', $request->vehicle_id)->first();
+
+        if (!$vehicle) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Véhicule introuvable !',
+            ], 404);
+        }
+
+        // if($vehicle->is_validated == true) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Vous ne pouvez plus supprimer ce document !',
+        //     ], 422);
+        // }
+
+        $user = $request->user();
+
+        // Supprimer le fichier du stockage si le chemin existe
+        if ($vehicle->logbook && Storage::disk('public')->exists($vehicle->logbook)) {
+            Storage::disk('public')->delete($vehicle->logbook);
+        }
+
+        if ($vehicle->main_image && Storage::disk('public')->exists($vehicle->main_image)) {
+            Storage::disk('public')->delete($vehicle->main_image);
+        }
+
+        // Supprimer le vehicle de la base de données
+        $vehicle->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Véhicule supprimé avec succès.',
+        ], 200);
     }
 }

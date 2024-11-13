@@ -21,7 +21,7 @@ class Document extends Model
         'vehicle_id'
     ];
 
-    protected $appends = ['paper_url'];
+    protected $appends = ['paper_url', 'status', 'api_reason'];
 
     public function user()
     {
@@ -42,5 +42,21 @@ class Document extends Model
     public function getPaperUrlAttribute()
     {
         return $this->paper ? asset('storage/' . $this->paper) : null;
+    }
+
+    public function getStatusAttribute()
+    {
+        if($this->is_validated == false && $this->is_rejected == false) {
+            return 'En cours';
+        } elseif($this->is_validated == true) {
+            return 'Validé';
+        } else {
+            return 'Rejeté';
+        }
+    }
+
+    public function getApiReasonAttribute()
+    {
+        return $this->reason ?? '-';
     }
 }

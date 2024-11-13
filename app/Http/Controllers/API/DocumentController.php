@@ -133,8 +133,6 @@ class DocumentController extends Controller
             ], 422);
         }
 
-        $user = $request->user();
-
         $document = Document::where('id', $request->document_id)->first();
 
         if (!$document) {
@@ -143,6 +141,15 @@ class DocumentController extends Controller
                 'message' => 'Document introuvable !',
             ], 404);
         }
+
+        if($document->is_validated == true) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez plus supprimer ce document !',
+            ], 422);
+        }
+
+        $user = $request->user();
 
         // Supprimer le fichier du stockage si le chemin existe
         if ($document->paper && Storage::disk('public')->exists($document->paper)) {

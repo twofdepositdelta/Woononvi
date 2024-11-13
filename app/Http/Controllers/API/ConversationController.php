@@ -120,19 +120,19 @@ class ConversationController extends Controller
             ]);
         } else {
             // Assigner un support
-            $support = $this->assignSupportToConversation();
+            // $support = $this->assignSupportToConversation();
     
-            if (!$support) {
-                // Si aucun support disponible, annuler la création de la conversation
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Aucun support disponible actuellement.'
-                ], 400);
-            }
+            // if (!$support) {
+            //     // Si aucun support disponible, annuler la création de la conversation
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Aucun support disponible actuellement.'
+            //     ], 400);
+            // }
 
             $conversation = Conversation::create([
                 'user_id' => $user->id,
-                'support_id' => $support->id,
+                // 'support_id' => $support->id,
                 'status' => 'open',
             ]);
 
@@ -177,7 +177,7 @@ class ConversationController extends Controller
                 'createdAtTrue' => $message->created_at,
                 'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
                 'isSender' => Auth::id() == $message->sender_id ? true : false,
-                'image' => $message->sender->profile->avatar ? url($message->sender->profile->avatar) : null,
+                'image' => $message->sender->profile ? url($message->sender->profile->avatar) : null,
                 'senderId' => $message->sender_id,
             ];
         });
