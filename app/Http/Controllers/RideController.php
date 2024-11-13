@@ -118,15 +118,32 @@ class RideController extends Controller
 
     public function getActiveRides()
     {
-        $rides = Ride::where('status', 'active')->get(['id', 'latitude', 'longitude', 'driver_id']);
+        // Récupère les trajets actifs avec les informations du conducteur
+        $rides = Ride::where('status', 'active')
+                    ->with('driver')  // Inclut les informations du conducteur via la relation
+                    ->get(['id', 'latitude', 'longitude', 'driver_id', 'numero_ride']);
 
         // Vérifiez que des trajets sont bien renvoyés
         if ($rides->isEmpty()) {
             return response()->json(['rides' => []]); // Renvoie un tableau vide si aucun trajet actif
         }
 
-        return response()->json(['rides' => $rides]);
+        // Transforme les trajets pour inclure le nom du conducteur
+        $ridesWithDriver = $rides->map(function ($ride) {
+            return [
+                'id' => $ride->id,
+                'latitude' => $ride->latitude,
+                'longitude' => $ride->longitude,
+                'driver_id' => $ride->driver_id,
+                'numero' => $ride->numero_ride,
+                'phone' => $ride->driver->phone,
+                'driver_name' => $ride->driver->firstname.' '.$ride->driver->lastname,  // Accède au nom du conducteur via la relation
+            ];
+        });
+
+        return response()->json(['rides' => $ridesWithDriver]);
     }
+
 
     // Fonction pour mettre à jour la localisation d'un trajet
     public function updateLocation(Request $request, $rideId)
