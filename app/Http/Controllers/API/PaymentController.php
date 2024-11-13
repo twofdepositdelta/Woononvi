@@ -56,8 +56,14 @@ class PaymentController extends Controller
         // Construire l'URL avec le mode
         $url = "https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}";
 
+        $response = Http::withOptions([
+            'curl' => [
+                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2, // Force l'utilisation de TLS 1.2
+            ],
+        ])->post($url, $data);
+
         // Envoyer la requête POST avec les données
-        $response = Http::post($url, $data);
+        // $response = Http::post($url, $data);
 
         // Vérifier la réponse de l'API
         if ($response->successful()) {
