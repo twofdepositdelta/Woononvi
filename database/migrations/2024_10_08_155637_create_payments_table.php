@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('amount');
             $table->integer('total_price'); // Heure de départ prévue
-            $table->enum('payment_method', ['credit_card', 'paypal', 'cash','momo'])->default('momo'); // Statut du trajet (pending, completed, canceled)
+            $table->enum('payment_method', ['credit_card', 'paypal', 'cash', 'momo'])->default('momo'); // Statut du trajet (pending, completed, canceled)
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending'); // Statut du trajet (pending, completed, canceled)
             $table->foreignIdFor(Booking::class);
             $table->timestamps();
