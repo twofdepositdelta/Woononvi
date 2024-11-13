@@ -64,6 +64,18 @@ class VehicleController extends Controller
         $vehiculeType = TypeVehicle::whereLabel($request->vehicle_type)->first();
 
         if($vehiculeType) {
+            // Vérifiez si l'utilisateur a déjà un véhicule
+            $existingVehicle = Vehicle::whereDriverId($user->id)->first();
+
+            $is_active = true;
+
+            if($existingVehicle) {
+                $is_active = false;
+                $message = "Véhicule ajouté avec succès ! Activez cela pour le prendre en compte dans les prochains trajets.";
+            } else {
+                $message = "Véhicule ajouté avec succès !";
+            }
+
             $imagePath = null;
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store("api/drivers/$user->id/images", 'public'); 
@@ -79,6 +91,7 @@ class VehicleController extends Controller
                 'seats' => $request->seats,
                 'vehicle_mark' => $request->mark,
                 'vehicle_model' => $request->model,
+                'is_active' => $is_active,
                 'vehicle_year' => $request->year,
                 'color' => $request->color,
                 'main_image' => $imagePath,
@@ -91,7 +104,7 @@ class VehicleController extends Controller
             return response()->json([
                 'success' => true,
                 'vehicle' => $vehicle,
-                'message' => 'Véhicule ajouté avec succès !',
+                'message' => $message,
             ]);
         } else {
             return response()->json([
