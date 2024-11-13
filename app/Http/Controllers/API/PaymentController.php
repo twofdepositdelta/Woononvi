@@ -45,22 +45,32 @@ class PaymentController extends Controller
         $description = $request->input('description');
 
         // Préparer les données pour la requête
-        $data = [
-            'token' => $token,
-            'phoneNumber' => $phoneNumber,
-            'amount' => 1,
-            'shop' => $shop,
-            'description' => $description,
-        ];
+        // $data = [
+        //     'token' => $token,
+        //     'phoneNumber' => $phoneNumber,
+        //     'amount' => 1,
+        //     'shop' => $shop,
+        //     'description' => $description,
+        // ];
 
         // Construire l'URL avec le mode
-        $url = "https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}";
+        // $url = "https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}";
 
-        $response = Http::withOptions([
-            'curl' => [
-                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2, // Force l'utilisation de TLS 1.2
-            ],
-        ])->post($url, $data);
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer $token",
+            'Content-Type' => 'application/json'
+        ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
+            'shop' => $shop,
+            'amount' => $amount,
+            'phoneNumber' => $phone,
+            'description' => $description,
+        ]);
+
+        // $response = Http::withOptions([
+        //     'curl' => [
+        //         CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2, // Force l'utilisation de TLS 1.2
+        //     ],
+        // ])->post($url, $data);
 
         // Envoyer la requête POST avec les données
         // $response = Http::post($url, $data);
