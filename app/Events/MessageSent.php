@@ -24,17 +24,18 @@ class MessageSent implements ShouldBroadcast
     public function broadcastOn()
     {
         return [
-            new PrivateChannel('conversations.' . $this->message->conversation_id),
+            new PrivateChannel('conversation.' . $this->message->conversation_id),
         ];
     }
 
-    public function broadcastWith()
-    {
-        return [
-            'id' => $this->message->id,
-            'sender_id' => $this->message->sender_id,
-            'content' => $this->message->content,
-            'created_at' => $this->message->created_at->toDateTimeString(),
-        ];
-    }
+    // public function broadcastWith()
+    // {
+    //     return [
+    //         'id' => $this->message->id,
+    //         'sender_id' => $this->message->sender_id,
+    //         'text' => $this->message->text,
+    //         'messageImage' => $this->message->image,
+    //         'created_at' => $this->message->created_at->toDateTimeString(),
+    //     ];
+    // }
 }

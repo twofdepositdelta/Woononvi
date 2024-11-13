@@ -5,3 +5,19 @@ let date=new Date().getFullYear();$("#date").html(date);$('.select').niceSelect(
 var tooltipList=tooltipTriggerList.map(function(tooltipTriggerEl){return new bootstrap.Tooltip(tooltipTriggerEl)})
 $(".profile-img-btn").on('click',function(){$(".profile-img-file").click();});if($('.date-picker').length){$(function(){$(".date-picker").datepicker();});}
 if($('.time-picker').length){$(function(){$(".time-picker").timepicker();});}})(jQuery);
+
+// Code WebSocket
+const socket = new WebSocket('ws://apicitygo.twoftechnologies.fr:443/app/ab3b9fc88fa2fe058a98?protocol=7&client=js&version=4.0&flash=false');
+
+socket.onopen = function() {
+    console.log('WebSocket Connected');
+    socket.send(JSON.stringify({ message: 'Hello from client!' }));
+};
+
+socket.onmessage = function(event) {
+    console.log('Received message:', event.data);
+};
+
+socket.onclose = function() {
+    console.log('WebSocket Closed');
+};

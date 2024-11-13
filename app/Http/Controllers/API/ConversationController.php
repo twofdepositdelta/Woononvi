@@ -245,11 +245,32 @@ class ConversationController extends Controller
             'status' => 'sent',
         ]);
 
-        // event(new MessageSent($message));
+        $createdAt = $message->created_at;
+        if ($createdAt->diffInMinutes() < 60) {
+            $timeAgo = intval($createdAt->diffInMinutes()) . ' minute' . (intval($createdAt->diffInMinutes()) > 1 ? 's' : '');
+        } elseif ($createdAt->diffInHours() < 24) {
+            $timeAgo = intval($createdAt->diffInHours()) . ' heure' . (intval($createdAt->diffInHours()) > 1 ? 's' : '');
+        } else {
+            $timeAgo = intval($createdAt->diffInDays()) . ' jour' . (intval($createdAt->diffInDays()) > 1 ? 's' : '');
+        }
+
+        // Construction du mappage du message
+        $mappedMessage = [
+            'id' => $message->id,
+            'text' => $message->content ?: null,
+            'createdAt' => 'Il y a ' . $timeAgo,
+            'createdAtTrue' => $message->created_at,
+            'messageImage' => $message->file_path ? url('storage/' . $message->file_path) : null,
+            'isSender' => Auth::id() == $message->sender_id,
+            'image' => $message->sender->profile ? url($message->sender->profile->avatar) : null,
+            'senderId' => $message->sender_id,
+        ];
+
+        event(new MessageSent($mappedMessage));
 
         return response()->json([
             'success' => true,
-            'message' => 'Message ajouté à la conversation en cours.',
+            'message' => $mappedMessage,
         ]);
     }
 
