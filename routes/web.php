@@ -115,9 +115,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('reports', ReportController::class)->parameters([
         'reports' => 'report',
     ]);
+
     Route::get('/signaler/filter', [ReportController::class, 'filterByType'])->name('reports.filterByType');
 
-
+    // Maps & Cartographie
+    Route::get('/vues-d-ensemble/tarjets/reels', [DashboardController::class, 'cartograpie'])->name('tarjets.cartograpie');
+    Route::get('/trajets-en-cours', [RideController::class, 'getTrajetsEnCours'])->name('trajets.en.cours');
+    Route::post('/ride/{rideId}/update-location', [RideController::class, 'updateLocation']);
 
     Route::resource('faqs', FaqController::class)->parameters([
         'faqs' => 'faq:slug',
@@ -161,7 +165,6 @@ Route::get('/commission/statistique', [CommissionController::class, 'index'])->n
     Route::get('/users/certified/{user}', [UserController::class, 'updateIsCertified'])->name('users.updateIsCertified');
     Route::get('/assign-role', [UserController::class, 'Indexrole'])->name('users.Role');
     Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
-
 
     // Support Chat
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');

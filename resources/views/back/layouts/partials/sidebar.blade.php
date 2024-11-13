@@ -3,12 +3,15 @@
         <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
     </button>
     <div>
-        <a href="index.php" class="sidebar-logo">
-            {{-- <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo.png') }}" alt="site logo" class="light-logo">
-            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-light.png') }}" alt="site logo" class="dark-logo"> --}}
+        <a href="{{ route('dashboard') }}" class="sidebar-logo">
+            {{-- <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo.png') }}"
+                alt="site logo" class="light-logo">
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-light.png') }}"
+                alt="site logo" class="dark-logo"> --}}
 
             <h6 class="text-warning">WONONVI</h6>
-            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-icon.png') }}" alt="site logo" class="logo-icon">
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-icon.png') }}"
+                alt="site logo" class="logo-icon">
         </a>
     </div>
     <div class="sidebar-menu-area">
@@ -20,19 +23,24 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="index.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Back office</a>
+                        <a href="{{ route('dashboard') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Back
+                            office</a>
                     </li>
                     <li>
-                        <a href="index-2.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Vue d'ensemble</a>
+                        <a href="{{ route('tarjets.cartograpie') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Vue
+                            d'ensemble</a>
                     </li>
                     {{-- <li>
-                        <a href="index-3.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> eCommerce</a>
+                        <a href="index-3.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                            eCommerce</a>
                     </li>
                     <li>
-                        <a href="index-4.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Cryptocurrency</a>
+                        <a href="index-4.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
+                            Cryptocurrency</a>
                     </li>
                     <li>
-                        <a href="index-5.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Investment</a>
+                        <a href="index-5.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>
+                            Investment</a>
                     </li> --}}
                 </ul>
             </li>
@@ -72,16 +80,20 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('rides.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                        <a href="{{route('rides.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="{{route('rides.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
+                        <a href="{{route('rides.create')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
                     </li>
                     <li>
-                        <a href="{{route('ridesearches.index')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
+                        <a href="{{route('ridesearches.index')}}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
                     </li>
                     <li>
-                        <a href="{{route('rides.historique')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
+                        <a href="{{route('rides.historique')}}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>
@@ -96,14 +108,18 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('bookings.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                        <a href="{{route('bookings.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        {{-- <a href="{{route('bookings.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Faire une reservation</a> --}}
+                        {{-- <a href="{{route('bookings.create')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Faire une
+                            reservation</a> --}}
                     </li>
 
                     <li>
-                        <a href="{{route('bookings.historique')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
+                        <a href="{{route('bookings.historique')}}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>
@@ -116,13 +132,16 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('ride_requests.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
+                        <a href="{{route('ride_requests.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="{{route('ride_requests.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
+                        <a href="{{route('ride_requests.create')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
                     </li>
                     <li>
-                        <a href="{{route('ride_requests.historique')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
+                        <a href="{{route('ride_requests.historique')}}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
                     </li>
                 </ul>
             </li>
@@ -137,18 +156,21 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('transactions.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
+                        <a href="{{route('transactions.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
-                        <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Nouvelle transac</a>
+                        <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Nouvelle transac</a>
                     </li> --}}
                     <li>
-                        <a href="{{route('transactions.historique')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
+                        <a href="{{route('transactions.historique')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
             </li>
 
-             {{-- avis --}}
+            {{-- avis --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:comment-text-outline" class="menu-icon"></iconify-icon>
@@ -156,10 +178,12 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('reports.index')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Signaler</a>
+                        <a href="{{route('reports.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Signaler</a>
                     </li>
                     <li>
-                        <a href="{{route('reviews.index')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Commentaire</a>
+                        <a href="{{route('reviews.index')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Commentaire</a>
                     </li>
                 </ul>
             </li>
@@ -172,17 +196,21 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('chat.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
+                        <a href="{{ route('chat.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
                     </li>
                     <li>
-                        <a href="{{route('faqs.index')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
+                        <a href="{{route('faqs.index')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
                     </li>
                     <li>
-                        <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
+                        <a href="form-validation.php"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
                     </li>
 
                     <li>
-                        <a href="{{route('contact.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
+                        <a href="{{route('contact.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
                     </li>
                 </ul>
             </li>
@@ -196,30 +224,37 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Ville</a>
+                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            Ville</a>
                     </li>
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Pays</a>
-                    </li>
-
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Trajet</a>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Pays</a>
                     </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Utilisateur</a>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Trajet</a>
                     </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Véhicules</a>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Utilisateur</a>
                     </li>
 
                     <li>
-                        <a href="{{route('commissions.index')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Véhicules</a>
                     </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Transaction</a>
+                        <a href="{{route('commissions.index')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
+                    </li>
+
+                    <li>
+                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Transaction</a>
                     </li>
                 </ul>
             </li>
@@ -232,35 +267,40 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('actualities.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        <a href="{{route('actualities.index')}}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     <li>
-                        <a href="{{route('actualities.create')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                        <a href="{{route('actualities.create')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li>
                     <li>
-                        <a href="{{route('typenews.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
+                        <a href="{{route('typenews.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
                     </li>
                 </ul>
             </li>
 
-              {{-- vehicule --}}
-              <li class="dropdown">
+            {{-- vehicule --}}
+            <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="ic:baseline-directions-car" class="menu-icon"></iconify-icon>
                     <span>VEHICULE</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('vehicles.index')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        <a href="{{route('vehicles.index')}}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li> --}}
                     {{-- <li>
-                        <a href="{{route('typevehicles.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
+                        <a href="{{route('typevehicles.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
                     </li> --}}
                 </ul>
-              </li>
+            </li>
 
             {{-- document --}}
             <li class="dropdown">
@@ -270,19 +310,21 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('users.doc')}}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        <a href="{{route('users.doc')}}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li> --}}
                     {{-- <li>
-                        <a href="{{route('typevehicles.index')}}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
+                        <a href="{{route('typevehicles.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
                     </li> --}}
                 </ul>
-              </li>
+            </li>
 
 
-              {{-- utilisateur --}}
+            {{-- utilisateur --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
@@ -290,13 +332,16 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('users.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
+                        <a href="{{ route('users.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
                     <li>
-                        <a href="{{ route('users.create') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
+                        <a href="{{ route('users.create') }}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
                     </li>
                     <li>
-                        <a href="{{route('users.Role')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
+                        <a href="{{route('users.Role')}}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
                     </li>
 
                 </ul>
@@ -311,21 +356,24 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('settings')}}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
+                        <a href="{{route('settings')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
                     </li>
                     @hasrole('developer')
                     <li>
-                        <a href="{{route('setting.city')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
+                        <a href="{{route('setting.city')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
                     </li>
                     @endhasrole
                     <li>
-                        <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> API</a>
+                        <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                            API</a>
                     </li>
 
                 </ul>
             </li>
 
-              <li>
+            <li>
                 <a href="{{route('profile.edit')}}">
                     <iconify-icon icon="solar:user-linear" class="menu-icon "></iconify-icon>
                     <span>Profil</span>

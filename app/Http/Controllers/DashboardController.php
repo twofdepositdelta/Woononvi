@@ -15,7 +15,6 @@ class DashboardController extends Controller
     public function index()
     {
 
-
     }
 
     /**
@@ -115,23 +114,23 @@ class DashboardController extends Controller
     return view('back.pages.settings.gestcity', compact('countries','cities','countryactives'));
 }
 
-public function countryStatus(Request $request, Country $country)
-{
-    $country->update([
-        'is_active' => $country->is_active ? 0 : 1
-    ]);
+    public function countryStatus(Request $request, Country $country)
+    {
+        $country->update([
+            'is_active' => $country->is_active ? 0 : 1
+        ]);
 
-    return redirect()->back();
-}
+        return redirect()->back();
+    }
 
-public function cityStatus(Request $request, City $city)
-{
-    $city->update([
-        'status' => $city->status ? 0 : 1
-    ]);
+    public function cityStatus(Request $request, City $city)
+    {
+        $city->update([
+            'status' => $city->status ? 0 : 1
+        ]);
 
-    return redirect()->back();
-}
+        return redirect()->back();
+    }
 
 
 
@@ -148,7 +147,9 @@ public function cityStatus(Request $request, City $city)
         return view('back.pages.settings.city_table', compact('cities'));
     }
 
-
+    public function cartograpie()
+    {
+        return view('back.pages.trajets.cartograpie');
+    }
 
 }
-

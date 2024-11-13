@@ -46,4 +46,5 @@ class Ride extends Model
     {
         return $this->hasMany(Notification::class); // Assurez-vous d'importer le modèle Booking
     }
+
 }
