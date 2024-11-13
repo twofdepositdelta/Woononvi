@@ -46,7 +46,7 @@ class PaymentController extends Controller
 
         // Préparer les données pour la requête
         $data = [
-            'token' => $fToken,
+            'token' => $token,
             'phoneNumber' => $phoneNumber,
             'amount' => 1,
             'shop' => $shop,
