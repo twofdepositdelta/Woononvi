@@ -14,6 +14,6 @@ var pusher = new Pusher('ab3b9fc88fa2fe058a98', {
 });
 
 var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data) {
+channel.bind('event-sent', function(data) {
   alert(JSON.stringify(data));
 });
