@@ -102,17 +102,63 @@ class RideController extends Controller
 
 
     public function updatestatus(Ride $ride, $status)
-{
-    // Vérifier si le statut est valide
-    if (!($status=='suspend')) {
-        return redirect()->back()->with('error', 'Statut invalide.');
-    }
-    // Mettre à jour le statut
-    $ride->status = $status;
-    $ride->save();
+    {
+        // Vérifier si le statut est valide
+        if (!($status=='suspend')) {
+            return redirect()->back()->with('error', 'Statut invalide.');
+        }
+        // Mettre à jour le statut
+        $ride->status = $status;
+        $ride->save();
 
-    // Mail::to($order->user->email)->send(new UpdateStatusMail($order));
-    // Rediriger avec un message de succès
-    return redirect()->back()->with('success', 'Le trajet  a été mis à jour.');
-}
+        // Mail::to($order->user->email)->send(new UpdateStatusMail($order));
+        // Rediriger avec un message de succès
+        return redirect()->back()->with('success', 'Le trajet  a été mis à jour.');
+    }
+
+    public function getTrajetsEnCours()
+    {
+        $trajets = Ride::where('status', 'active')->get(); // Récupère les trajets en cours
+        return response()->json($trajets);
+    }
+
+    // Fonction pour mettre à jour la localisation d'un trajet
+    public function updateLocation(Request $request, $rideId)
+    {
+        // Valider les données envoyées
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'distance_travelled' => 'nullable|integer',
+        ]);
+
+        // Appeler la méthode pour mettre à jour la position
+        $this->updateRideLocation(
+            $rideId,
+            $request->latitude,
+            $request->longitude,
+            $request->distance_travelled
+        );
+
+        return response()->json(['message' => 'Position mise à jour avec succès']);
+    }
+
+    // Fonction qui met à jour la position du trajet dans la base de données
+    public function updateRideLocation($rideId, $latitude, $longitude, $distanceTravelled)
+    {
+        // Trouver le trajet par son ID
+        $ride = Ride::find($rideId);
+
+        if ($ride) {
+            // Mettre à jour la latitude, la longitude et la distance parcourue
+            $ride->latitude = $latitude;
+            $ride->longitude = $longitude;
+            $ride->distance_travelled = $distanceTravelled;
+
+            // Sauvegarder les changements dans la base de données
+            $ride->save();
+        } else {
+            return response()->json(['message' => 'Trajet introuvable'], 404);
+        }
+    }
 }

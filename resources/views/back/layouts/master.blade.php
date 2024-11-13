@@ -21,8 +21,6 @@
         @include('back.layouts.partials.footer')
     </main>
     @include('back.layouts.partials.end')
-
-    
 </body>
 
 </html>
