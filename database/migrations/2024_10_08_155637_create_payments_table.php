@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->double('amount');
-            $table->string('reference'); 
-            $table->enum('payment_method', ['credit_card', 'paypal', 'cash', 'momo'])->default('momo');
+            $table->string('reference');
+            $table->enum('payment_method', ['CREDITCARD', 'PAYPAL', 'CASH', 'MOMO'])->default('MOMO');
             $table->enum('status', ['PENDING', 'SUCCESSFUL', 'FAILED'])->default('PENDING');
             $table->foreignIdFor(Booking::class)->nullable();
             $table->foreignIdFor(User::class)->nullable();
