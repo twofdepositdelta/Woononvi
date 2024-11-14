@@ -83,10 +83,10 @@
                         <a href="{{route('rides.index')}}"><i
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{route('rides.create')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{route('ridesearches.index')}}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
@@ -135,10 +135,10 @@
                         <a href="{{route('ride_requests.index')}}"><i
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{route('ride_requests.create')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Faire une demande</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{route('ride_requests.historique')}}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i>Historiques</a>
@@ -322,7 +322,6 @@
                     </li> --}}
                 </ul>
             </li>
-
 
             {{-- utilisateur --}}
             <li class="dropdown">

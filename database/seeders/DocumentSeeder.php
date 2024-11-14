@@ -52,7 +52,7 @@ class DocumentSeeder extends Seeder
         // }
         $users = User::whereHas('roles', function($query) {
             $query->where('name', 'driver');
-        })->distinct()->get();
+        })->get();
         $typeDocuments = TypeDocument::all();
         $vehicles=Vehicle::all();
 

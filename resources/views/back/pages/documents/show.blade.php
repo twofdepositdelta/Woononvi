@@ -146,7 +146,6 @@ setlocale(LC_TIME, 'fr_FR.UTF-8');
                                             @foreach ($user->documents as $index => $document)
                                             @if ($document->typeDocument->label=="Permis de conduire")
 
-
                                                 <tr>
                                                     <td>#{{ $document->number ?? 'Non disponible' }}</td>
                                                     <td>

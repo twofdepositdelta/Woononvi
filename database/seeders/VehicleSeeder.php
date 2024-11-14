@@ -31,8 +31,8 @@ class VehicleSeeder extends Seeder
                 'slug' => Str::slug('AB123CD'),
                 'driver_id' => 6,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Berline')->first()->id,
-                'is_active' => true, // Définir is_active à true
-                'status' => true,    // Définir status à true
+                'is_active' => false, // Définir is_active à trfalse              
+                 'status' => true,    // Définir status à true
             ],
             [
                 'licence_plate' => 'EF456GH',
@@ -46,7 +46,7 @@ class VehicleSeeder extends Seeder
                 'slug' => Str::slug('EF456GH'),
                 'driver_id' => 7,
                 'type_vehicle_id' => TypeVehicle::where('label', 'SUV')->first()->id,
-                'is_active' => true, // Définir is_active à true
+                'is_active' => false, // Définir is_active à trfalse               
                 'status' => true,    // Définir status à true
             ],
             [
@@ -61,7 +61,7 @@ class VehicleSeeder extends Seeder
                 'slug' => Str::slug('IJ789KL'),
                 'driver_id' => 6,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Minivan')->first()->id,
-                'is_active' => true, // Définir is_active à true
+                'is_active' => false, // Définir is_active à trfalse               
                 'status' => true,    // Définir status à true
             ]
         ];

@@ -28,9 +28,7 @@ use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/contacter-nous', [ContactController::class, 'create'])->name('contact');
 Route::post('/contacter-nous/send', [ContactController::class, 'store'])->name('contact.send');
@@ -131,6 +129,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('vehicles', VehicleController::class)->parameters([
         'vehicles' => 'vehicle:slug',
     ]);
+
+    Route::post('/vehicule/{vehicle:slug}/', [VehicleController::class, 'status'])->name('vehicles.validated');
+
     Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
 
 
@@ -142,12 +143,14 @@ Route::middleware('auth')->group(function () {
 
 // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
-
-//commission
-Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
-
+   
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
+//commission
+Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
+Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
+
+    
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');

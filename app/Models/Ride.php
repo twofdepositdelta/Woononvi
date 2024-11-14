@@ -15,11 +15,18 @@ class Ride extends Model
         'departure_time',
         'available_seats',
         'price_per_km',
+        'latitude',
+        'longitude',
+        'distance_travelled',
+        'passenger_count',
         'is_nearby_ride',
-        'status',
-        'driver_id', // Clé étrangère pour le conducteur
         'commission_rate',
+        'arrival_time',
+        'status',
+        'driver_id',
+        'vehicle_id',
     ];
+
 
     // Relation avec le conducteur (utilisateur)
     public function driver()

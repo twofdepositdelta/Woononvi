@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Mail\VehicleStatus;
 use App\Models\TypeVehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class VehicleController extends Controller
 {
@@ -90,5 +92,15 @@ class VehicleController extends Controller
     // Retourner la vue partielle de la table avec les véhicules filtrés
     return view('back.pages.vehicules.table', compact('vehicles'));
 }
+
+    public function status($slug){
+        $vehicle=Vehicle::where('slug',$slug)->first();
+        $vehicle->is_active=!$vehicle->is_active;
+        $vehicle->save();
+        Mail::to($vehicle->drivver->email)->send(new VehicleStatus($vehicle));
+
+        return redirect()->route('vehicles.index')->with('success', 'vehicule a été supprimé avec succès !');
+        
+    }
 
 }
