@@ -50,24 +50,58 @@ class PaymentController extends Controller
             'description' => $description,
         ]);
 
-        // Vérifier la réponse de l'API
         if ($response->successful()) {
+            $transactionRef = $response->json()['reference']; // Assume the response contains a 'reference'
+    
+            // Lancer les vérifications du statut de la transaction toutes les 5 secondes
+            for ($i = 0; $i < 100; $i++) {
+                sleep(5); // Pause de 5 secondes
+                
+                $statusResponse = $this->checkTransactionStatus($transactionRef);
+    
+                if ($statusResponse->successful()) {
+                    $statusData = $statusResponse->json();
+                    $transactionStatus = $statusData['status']; // Assume the response contains a 'status' field
+    
+                    if ($transactionStatus === 'SUCCESSFUL') {
+                        // Enregistrer la transaction en base de données
+                        Payment::create([
+                            'user_id' => $request->user()->id,
+                            'reference' => $transactionRef,
+                            'amount' => $amount,
+                            'status' => 'SUCCESSFUL',
+                            'phoneNumber' => $phoneNumber,
+                            'shop' => $shop,
+                            'description' => $description
+                        ]);
+    
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Compte rechargé avec succès !',
+                            'data' => $statusData
+                        ]);
+                    } elseif ($transactionStatus === 'FAILED') {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Transaction échouée !',
+                            'data' => $statusData
+                        ]);
+                    }
+                }
+            }
+    
+            // Si aucune réponse positive après 50 essais
             return response()->json([
-                'message' => 'Compte recharger avec succès !',
-                'data' => $response->json()
+                'success' => false,
+                'message' => 'Échec de la vérification du statut de la transaction. Veuillez réessayer plus tard.'
             ]);
         } else {
             return response()->json([
-                'message' => 'Failed to initiate transaction',
+                'success' => false,
+                'message' => 'Échec de l\'initiation de la transaction',
                 'error' => $response->json()
             ], $response->status());
         }
-
-        return response()->json([
-            'success' => true,
-            'vehicle' => $vehicle,
-            'message' => 'Document ajouté avec succès !',
-        ]);
     }
 
     public function checkTransactionStatus($reference)
@@ -81,7 +115,7 @@ class PaymentController extends Controller
             return $response->json();
         } else {
             return response()->json([
-                'error' => 'Failed to retrieve transaction status',
+                'message' => 'Échec de la récupération du statut de la transaction !',
                 'details' => $response->json()
             ], $response->status());
         }
