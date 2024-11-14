@@ -65,6 +65,12 @@
                     <strong>Numero du trajet :</strong>
                     <p class="mb-0">#{{$ride->numero_ride }}</p>
                 </div>
+
+                <div class="col-md-6">
+                    <strong>Commission :</strong>
+                    <p class="mb-0">{{$ride->commission_rate }}</p>
+                </div>
+
             </div>
         </div>
         <!-- / Content -->

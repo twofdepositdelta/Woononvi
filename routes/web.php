@@ -141,6 +141,7 @@ Route::middleware('auth')->group(function () {
 
 //commission
 Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
+Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
 
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
