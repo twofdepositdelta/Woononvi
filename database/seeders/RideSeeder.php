@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use App\Models\Vehicle;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class RideSeeder extends Seeder
@@ -36,38 +36,43 @@ class RideSeeder extends Seeder
             ]
         ];
 
-        // Boucle sur les conducteurs pour créer des trajets
+        // Statuts possibles
+        $statuses = ['pending', 'active', 'completed'];
+        // $statuses = ['pending', 'active', 'completed', 'cancelled', 'suspend'];
+
+        // Boucle sur les conducteurs pour créer 10 trajets chacun
         foreach ($drivers as $driver_id) {
             // Vérifie si le conducteur a un véhicule associé
             $vehicle = Vehicle::where('driver_id', $driver_id)->first();
 
             if ($vehicle) {
-                // Boucle sur les trajets définis pour insérer les trajets
-                foreach ($routes as $route) {
+                for ($i = 0; $i < 10; $i++) {
+                    // Sélection aléatoire d'un trajet
+                    $route = $routes[array_rand($routes)];
+                    // Sélection aléatoire d'un statut
+                    $status = $statuses[array_rand($statuses)];
+
                     DB::table('rides')->insert([
-                        [
-                            'numero_ride' => random_int(100000, 999999),
-                            'departure' => $route['departure'], // Ville de départ
-                            'destination' => $route['destination'], // Ville de destination
-                            'departure_time' => Carbon::now()->addDays(1),
-                            'available_seats' => 3,
-                            'price_per_km' => 1000,
-                            'latitude' => $route['latitude'], // Latitude de la ville de départ
-                            'longitude' => $route['longitude'], // Longitude de la ville de départ
-                            'distance_travelled' => 0,
-                            'passenger_count' => 0,
-                            'is_nearby_ride' => true,
-                            'status' => 'active',
-                            'driver_id' => $driver_id,
-                            'vehicle_id' => $vehicle->id,
-                            'commission_rate' => 10,
-                            'created_at' => Carbon::now()->subYear(),
-                            'updated_at' => now(),
-                        ],
+                        'numero_ride' => random_int(100000, 999999),
+                        'departure' => $route['departure'],
+                        'destination' => $route['destination'],
+                        'departure_time' => Carbon::now()->addDays(rand(1, 30)),
+                        'available_seats' => rand(1, 5),
+                        'price_per_km' => 1000,
+                        'latitude' => $route['latitude'],
+                        'longitude' => $route['longitude'],
+                        'distance_travelled' => rand(0, 1000),
+                        'passenger_count' => rand(0, 3),
+                        'is_nearby_ride' => rand(0, 1) === 1,
+                        'status' => $status,
+                        'driver_id' => $driver_id,
+                        'vehicle_id' => $vehicle->id,
+                        'commission_rate' => 10,
+                        'created_at' => Carbon::now()->subDays(rand(1, 365)),
+                        'updated_at' => now(),
                     ]);
                 }
             } else {
-                // Si aucun véhicule n'est trouvé pour le conducteur
                 echo "Aucun véhicule trouvé pour le conducteur ID: {$driver_id}.";
             }
         }
