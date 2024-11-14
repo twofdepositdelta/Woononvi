@@ -82,6 +82,10 @@ class AuthenticatedSessionController extends Controller
                 $userArray['indicatif'] = $user->country_code;
                 $userArray['phone_number'] = $user->phone_number;
 
+                // Ajouter le profil et les préférences au tableau de réponse
+                $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
+                $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+
                 return response()->json([
                     'success' => true,
                     'reason' => false,
