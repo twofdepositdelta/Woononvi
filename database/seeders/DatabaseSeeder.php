@@ -44,5 +44,4 @@ class DatabaseSeeder extends Seeder
             PaymentTypeSeeder::class,
         ]);
     }
-
 }
