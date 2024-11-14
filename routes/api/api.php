@@ -31,4 +31,5 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('drivers/vehicles/documents/destroy', [DocumentController::class, 'destroy'])->name('api.document.destroy');
     
     Route::post('payments/recharge-balance', [PaymentController::class, 'rechargeBalance'])->name('api.user.rechargeBalance');
+    Route::get('payments/get-status/{reference}', [PaymentController::class, 'checkTransactionStatus'])->name('api.user.rechargeBalance');
 });

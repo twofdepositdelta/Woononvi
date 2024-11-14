@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('avatar');
-            $table->string('bio');
+            $table->string('avatar')->nullable();
+            $table->string('bio')->nullable();
             $table->string('identy_card')->unique()->nullable();
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->foreignIdFor(User::class);
             $table->timestamps();
         });

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(TypeDocument::class);
             $table->boolean('is_validated')->default(false); // Attribut pour la validation par l'admin
             $table->boolean('is_rejected')->default(false);
-            $table->foreignIdFor(Vehicle::class);
+            $table->foreignIdFor(Vehicle::class)->nullable();
             $table->timestamps();
         });
 

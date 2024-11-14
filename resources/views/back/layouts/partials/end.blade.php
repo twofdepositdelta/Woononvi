@@ -30,7 +30,7 @@
     <!-- main js -->
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/app.js') }}"></script>
     <script src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/js/homeFourChart.js')}}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $('.remove-button').on('click', function() {
             $(this).closest('.alert').addClass('d-none')
