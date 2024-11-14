@@ -12,32 +12,31 @@ class CommissionController extends Controller
      */
     public function index()
     {
-        //
-        $commissions=Commission::all();
-        $totalcommission=$commissions->sum('amount');
-
-            foreach ($commissions as $commission) {
-                $commission_rides=$commission->ride->where('status','pending')->get();
-                $commission_ridesactives=$commission->ride->where('status','active')->get();
-                foreach ($commission_rides as $commission_ride) {
-                    $commission_pending=Commission::where('ride_id',$commission_ride->id)->get();
-                    # code...
-                }
-
-                foreach ($commission_ridesactives as $commission_ridesactif) {
-                    $commission_actif=Commission::where('ride_id',$commission_ridesactif->id)->get();
-                    # code...
-                }
-
+        $commissions = Commission::all();
+        $totalcommission = $commissions->sum('amount');
+    
+        // Initialize variables
+        $totalpendingcomiss = 0;
+        $totalactifcomiss = 0;
+    
+        foreach ($commissions as $commission) {
+            $commission_rides = $commission->ride->where('status', 'pending');
+            $commission_ridesactives = $commission->ride->where('status', 'active');
+    
+            // Calculate pending commissions
+            foreach ($commission_rides as $commission_ride) {
+                $commission_pending = Commission::where('ride_id', $commission_ride->id)->get();
+                $totalpendingcomiss += $commission_pending->sum('amount');
             }
-            # code...
-
-
-        $totalpendingcomiss=$commission_pending->sum('amount');
-        $totalactifcomiss=$commission_actif->sum('amount');
-
-
-        return view('back.pages.commission.index',compact('totalcommission','totalpendingcomiss','totalactifcomiss'));
+    
+            // Calculate active commissions
+            foreach ($commission_ridesactives as $commission_ridesactif) {
+                $commission_actif = Commission::where('ride_id', $commission_ridesactif->id)->get();
+                $totalactifcomiss += $commission_actif->sum('amount');
+            }
+        }
+    
+        return view('back.pages.commission.index', compact('totalcommission', 'totalpendingcomiss', 'totalactifcomiss'));
     }
 
     /**

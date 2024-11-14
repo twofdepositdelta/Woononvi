@@ -33,7 +33,9 @@
                     <td>{{ $vehicle->vehicle_mark }}</td>
                     <td>{{ $vehicle->vehicle_year }}</td>
                     <td>{{ $vehicle->driver->firstname.' '.$vehicle->driver->lastname }}</td>
-                    <td>{{ $vehicle->is_active ?'Actif':"Non actif" }}</td>
+                    <td>
+                       <span class="badge bg-{{ $vehicle->is_active ?"primary":"danger" }}"> {{ $vehicle->is_active ?" Actif":" Non actif " }}</span>
+                    </td>
                     <td class="text-center">
                         <div class="d-flex align-items-center gap-10 justify-content-center">
                             <a href="{{ route('vehicles.show', $vehicle)}}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
@@ -46,16 +48,15 @@
                                     <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                 </button>
                             </form>
-                                @if ($vehicle->is_active==false)
+                             
                                     <form action="{{ route('vehicles.validated', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir valider ce véhicule ?');">
                                         @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-primary"  {{ $vehicle->documents->where('is_validated', true)->count() > 0 ? '' : 'disabled' }}>
+                                        <button type="submit" class="btn btn-primary"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
                                             Finaliser
                                         </button>
                                     </form>
                                     
-                                @endif
+                                
                         </div>
                     </td>
                 </tr>

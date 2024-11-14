@@ -77,7 +77,7 @@
                                     </tr>
                                 @else
                                     @foreach ($vehicle->documents as $index => $document)
-                                    @if ($document->typeDocument->label != "Permis de conduire")
+                                    @if ($document->vehicle_id != null)
                                         <tr>
                                             <td>#{{ $document->number ?? 'Non disponible' }}</td>
                                             <td>

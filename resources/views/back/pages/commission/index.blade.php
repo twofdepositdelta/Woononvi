@@ -63,7 +63,7 @@
                     <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center gap-1">
                         <div class="">
                             <h6 class="mb-8">{{ $totalactifcomiss }} Fcfa</h6>
-                            <span class="text-success-main text-md">+ 27%</span>
+                            <span class="text-success-main text-md"></span>
                         </div>
                         <div id="solanaAreaChart" class="remove-tooltip-title rounded-tooltip-value"></div>
                     </div>
@@ -71,50 +71,7 @@
             </div>
         </div>
 
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-end-6">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <img src="assets/images/currency/crypto-img4.png" alt=""
-                            class="w-40-px h-40-px rounded-circle flex-shrink-0">
-                        <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Litecoin</h6>
-                            <p class="fw-medium text-secondary-light mb-0">LTE</p>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center gap-1">
-                        <div class="">
-                            <h6 class="mb-8">$45,138</h6>
-                            <span class="text-success-main text-md">+ 27%</span>
-                        </div>
-                        <div id="litecoinAreaChart" class="remove-tooltip-title rounded-tooltip-value"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-end-3">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <img src="assets/images/currency/crypto-img5.png" alt=""
-                            class="w-40-px h-40-px rounded-circle flex-shrink-0">
-                        <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Dogecoin</h6>
-                            <p class="fw-medium text-secondary-light mb-0">DOGE</p>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center gap-1">
-                        <div class="">
-                            <h6 class="mb-8">$45,138</h6>
-                            <span class="text-success-main text-md">+ 27%</span>
-                        </div>
-                        <div id="dogecoinAreaChart" class="remove-tooltip-title rounded-tooltip-value"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+       
     </div>
     <!-- Crypto Home Widgets End -->
 
@@ -127,30 +84,8 @@
                     <div class="card h-100 radius-8 border-0">
                         <div class="card-body p-24">
                             <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                <h6 class="mb-2 fw-bold text-lg">Coin Analytics</h6>
+                                <h6 class="mb-2 fw-bold text-lg">Comissions</h6>
 
-                                <div class="d-flex flex-wrap align-items-center gap-4">
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input" type="radio" name="crypto" id="BTC">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="BTC"> BTC </label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input" type="radio" name="crypto" id="ETH">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="ETH"> ETH </label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input" type="radio" name="crypto" id="SOL">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="SOL"> SOL </label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input" type="radio" name="crypto" id="LTE">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="LTE"> LTE </label>
-                                    </div>
-                                </div>
 
                                 <select id="commission-period"
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
@@ -172,7 +107,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-6">
+                {{-- <div class="col-xxl-6">
                     <div class="card h-100 radius-8 border-0">
                         <div class="card-body p-24">
                             <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between mb-20">
@@ -550,298 +485,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         <!-- Crypto Home Widgets End -->
 
-        <div class="col-xxl-4">
-            <div class="row gy-4">
-                <div class="col-xxl-12 col-lg-6">
-                    <div class="card h-100 radius-8 border-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between mb-20">
-                                <h6 class="mb-2 fw-bold text-lg">My Cards</h6>
-                                <a href="#"
-                                    class="btn btn-outline-primary d-inline-flex align-items-center gap-2 text-sm btn-sm px-8 py-6">
-                                    <iconify-icon icon="ph:plus-circle" class="icon text-xl"></iconify-icon>
-                                    Button
-                                </a>
-                            </div>
-
-                            <div>
-                                <div class="card-slider">
-                                    <div class="p-20 h-240-px radius-8 overflow-hidden position-relative z-1">
-                                        <img src="assets/images/card/card-bg.png" alt=""
-                                            class="position-absolute start-0 top-0 w-100 h-100 object-fit-cover z-n1">
-
-                                        <div class="d-flex flex-column justify-content-between h-100">
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                <h6 class="text-white mb-0">Master Card</h6>
-                                                <img src="assets/images/card/card-logo.png" alt="">
-                                            </div>
-
-                                            <div>
-                                                <span class="text-white text-xs fw-normal text-opacity-75">Credit
-                                                    Card Number</span>
-                                                <h6 class="text-white text-xl fw-semibold mt-1 mb-0">2356 9854
-                                                    3652 5612</h6>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Name</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">Arlene McCoy
-                                                    </h6>
-                                                </div>
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Exp.
-                                                        Date</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">05/26</h6>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="p-20 h-240-px radius-8 overflow-hidden position-relative z-1">
-                                        <img src="assets/images/card/card-bg.png" alt=""
-                                            class="position-absolute start-0 top-0 w-100 h-100 object-fit-cover z-n1">
-
-                                        <div class="d-flex flex-column justify-content-between h-100">
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                <h6 class="text-white mb-0">Master Card</h6>
-                                                <img src="assets/images/card/card-logo.png" alt="">
-                                            </div>
-
-                                            <div>
-                                                <span class="text-white text-xs fw-normal text-opacity-75">Credit
-                                                    Card Number</span>
-                                                <h6 class="text-white text-xl fw-semibold mt-1 mb-0">2356 9854
-                                                    3652 5612</h6>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Name</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">Arlene McCoy
-                                                    </h6>
-                                                </div>
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Exp.
-                                                        Date</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">05/26</h6>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="p-20 h-240-px radius-8 overflow-hidden position-relative z-1">
-                                        <img src="assets/images/card/card-bg.png" alt=""
-                                            class="position-absolute start-0 top-0 w-100 h-100 object-fit-cover z-n1">
-
-                                        <div class="d-flex flex-column justify-content-between h-100">
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                                <h6 class="text-white mb-0">Master Card</h6>
-                                                <img src="assets/images/card/card-logo.png" alt="">
-                                            </div>
-
-                                            <div>
-                                                <span class="text-white text-xs fw-normal text-opacity-75">Credit
-                                                    Card Number</span>
-                                                <h6 class="text-white text-xl fw-semibold mt-1 mb-0">2356 9854
-                                                    3652 5612</h6>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Name</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">Arlene McCoy
-                                                    </h6>
-                                                </div>
-                                                <div>
-                                                    <span class="text-white text-xs fw-normal text-opacity-75">Exp.
-                                                        Date</span>
-                                                    <h6 class="text-white text-xl fw-semibold mb-0">05/26</h6>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-12 col-lg-6">
-                    <div class="card h-100">
-                        <div class="card-body p-24">
-                            <span class="mb-4 text-sm text-secondary-light">Total Balance</span>
-                            <h6 class="mb-4">$320,320.00</h6>
-
-                            <ul class="nav nav-pills pill-tab mb-24 mt-28 border input-form-light p-1 radius-8 bg-neutral-50"
-                                id="pills-tab" role="tablist">
-                                <li class="nav-item w-50" role="presentation">
-                                    <button class="nav-link px-12 py-10 text-md w-100 text-center radius-8 active"
-                                        id="pills-Buy-tab" data-bs-toggle="pill" data-bs-target="#pills-Buy"
-                                        type="button" role="tab" aria-controls="pills-Buy"
-                                        aria-selected="true">Buy</button>
-                                </li>
-                                <li class="nav-item w-50" role="presentation">
-                                    <button class="nav-link px-12 py-10 text-md w-100 text-center radius-8"
-                                        id="pills-Sell-tab" data-bs-toggle="pill" data-bs-target="#pills-Sell"
-                                        type="button" role="tab" aria-controls="pills-Sell"
-                                        aria-selected="false">Sell</button>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-Buy" role="tabpanel"
-                                    aria-labelledby="pills-Buy-tab" tabindex="0">
-                                    <div class="mb-20">
-                                        <label for="estimatedValue" class="fw-semibold mb-8 text-primary-light">Estimated
-                                            Purchase
-                                            Value</label>
-                                        <div class="input-group input-group-lg border input-form-light radius-8">
-                                            <input type="text" class="form-control bg-base border-0 radius-8"
-                                                id="estimatedValue" placeholder="Estimated Value">
-                                            <div
-                                                class="input-group-text bg-neutral-50 border-0 fw-normal text-md ps-1 pe-1">
-                                                <select
-                                                    class="form-select form-select-sm w-auto bg-transparent fw-bolder border-0 text-secondary-light">
-                                                    <option class="bg-base">BTC</option>
-                                                    <option class="bg-base">LTC</option>
-                                                    <option class="bg-base">ETC</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-20">
-                                        <label for="tradeValue" class="fw-semibold mb-8 text-primary-light">Trade
-                                            Value</label>
-                                        <div class="input-group input-group-lg border input-form-light radius-8">
-                                            <input type="text" class="form-control bg-base border-0 radius-8"
-                                                id="tradeValue" placeholder="Trade Value">
-                                            <div
-                                                class="input-group-text bg-neutral-50 border-0 fw-normal text-md ps-1 pe-1">
-                                                <select
-                                                    class="form-select form-select-sm w-auto bg-transparent fw-bolder border-0 text-secondary-light">
-                                                    <option class="bg-base">USD</option>
-                                                    <option class="bg-base">BTC</option>
-                                                    <option class="bg-base">LTC</option>
-                                                    <option class="bg-base">ETC</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-20">
-                                        <label class="fw-semibold mb-8 text-primary-light">Trade Value</label>
-                                        <textarea class="form-control bg-base h-80-px radius-8" placeholder="Enter Address"></textarea>
-                                    </div>
-                                    <div class="mb-24">
-                                        <span class="mb-4 text-sm text-secondary-light">Total Balance</span>
-                                        <h6 class="mb-4 fw-semibold text-xl text-warning-main">$320,320.00</h6>
-                                    </div>
-                                    <a href="#" class="btn btn-primary text-sm btn-sm px-8 py-12 w-100 radius-8">
-                                        Transfer Now</a>
-                                </div>
-                                <div class="tab-pane fade" id="pills-Sell" role="tabpanel"
-                                    aria-labelledby="pills-Sell-tab" tabindex="0">
-                                    <div class="mb-20">
-                                        <label for="estimatedValueSell"
-                                            class="fw-semibold mb-8 text-primary-light">Estimated Purchase
-                                            Value</label>
-                                        <div class="input-group input-group-lg border input-form-light radius-8">
-                                            <input type="text" class="form-control border-0 radius-8"
-                                                id="estimatedValueSell" placeholder="Estimated Value">
-                                            <div
-                                                class="input-group-text bg-neutral-50 border-0 fw-normal text-md ps-1 pe-1">
-                                                <select
-                                                    class="form-select form-select-sm w-auto bg-transparent fw-bolder border-0 text-secondary-light">
-                                                    <option>BTC</option>
-                                                    <option>LTC</option>
-                                                    <option>USD</option>
-                                                    <option>ETC</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-20">
-                                        <label for="tradeValueSell" class="fw-semibold mb-8 text-primary-light">Trade
-                                            Value</label>
-                                        <div class="input-group input-group-lg border input-form-light radius-8">
-                                            <input type="text" class="form-control border-0 radius-8"
-                                                id="tradeValueSell" placeholder="Trade Value">
-                                            <div
-                                                class="input-group-text bg-neutral-50 border-0 fw-normal text-md ps-1 pe-1">
-                                                <select
-                                                    class="form-select form-select-sm w-auto bg-transparent fw-bolder border-0 text-secondary-light">
-                                                    <option>BTC</option>
-                                                    <option>LTC</option>
-                                                    <option>USD</option>
-                                                    <option>ETC</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-20">
-                                        <label class="fw-semibold mb-8">Trade Value</label>
-                                        <textarea class="form-control h-80-px radius-8" placeholder="Enter Address"></textarea>
-                                    </div>
-                                    <div class="mb-24">
-                                        <span class="mb-4 text-sm text-secondary-light">Total Balance</span>
-                                        <h6 class="mb-4 fw-semibold text-xl text-warning-main">$320,320.00</h6>
-                                    </div>
-                                    <a href="#" class="btn btn-primary text-sm btn-sm px-8 py-12 w-100 radius-8">
-                                        Transfer Now</a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-12 col-lg-6">
-                    <div class="card h-100 radius-8 border-0">
-                        <div class="card-body p-24">
-                            <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                <h6 class="mb-2 fw-bold text-lg">User Activates</h6>
-                                <div class="">
-                                    <select class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                                        <option>This Week</option>
-                                        <option>This Month</option>
-                                        <option>This Year</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="position-relative">
-                                <span
-                                    class="w-80-px h-80-px bg-base shadow text-primary-light fw-semibold text-xl d-flex justify-content-center align-items-center rounded-circle position-absolute end-0 top-0 z-1">+30%</span>
-                                <div id="statisticsDonutChart"
-                                    class="mt-36 flex-grow-1 apexcharts-tooltip-z-none title-style circle-none">
-                                </div>
-                                <span
-                                    class="w-80-px h-80-px bg-base shadow text-primary-light fw-semibold text-xl d-flex justify-content-center align-items-center rounded-circle position-absolute start-0 bottom-0 z-1">+25%</span>
-                            </div>
-
-                            <ul class="d-flex flex-wrap align-items-center justify-content-between mt-3 gap-3">
-                                <li class="d-flex align-items-center gap-2">
-                                    <span class="w-12-px h-12-px radius-2 bg-primary-600"></span>
-                                    <span class="text-secondary-light text-sm fw-normal">Visits By Day:
-                                        <span class="text-primary-light fw-bold">20,000</span>
-                                    </span>
-                                </li>
-                                <li class="d-flex align-items-center gap-2">
-                                    <span class="w-12-px h-12-px radius-2 bg-yellow"></span>
-                                    <span class="text-secondary-light text-sm fw-normal">Referral Join:
-                                        <span class="text-primary-light fw-bold">25,000</span>
-                                    </span>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
     </div>
 
     <script>

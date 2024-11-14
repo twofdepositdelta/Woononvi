@@ -97,9 +97,9 @@ class VehicleController extends Controller
         $vehicle=Vehicle::where('slug',$slug)->first();
         $vehicle->is_active=!$vehicle->is_active;
         $vehicle->save();
-        Mail::to($vehicle->drivver->email)->send(new VehicleStatus($vehicle));
+        Mail::to($vehicle->driver->email)->send(new VehicleStatus($vehicle));
 
-        return redirect()->route('vehicles.index')->with('success', 'vehicule a été supprimé avec succès !');
+        return redirect()->route('vehicles.index')->with('success', 'vehicule a été validé avec succès !');
         
     }
 
