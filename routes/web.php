@@ -28,9 +28,7 @@ use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/contacter-nous', [ContactController::class, 'create'])->name('contact');
 Route::post('/contacter-nous/send', [ContactController::class, 'store'])->name('contact.send');

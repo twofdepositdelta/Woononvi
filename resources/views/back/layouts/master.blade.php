@@ -10,9 +10,7 @@
 
         <div class="dashboard-main-body">
 
-            @if (Route::currentRouteName() != 'dashboard')
-                @include('back.layouts.partials.includes.breadcrumb')
-            @endif
+            @include('back.layouts.partials.includes.breadcrumb')
 
             @include('back.layouts.partials.includes.alert')
 
