@@ -76,6 +76,7 @@ class PaymentController extends Controller
                         // ]);
 
                         $user->balance += (int) $request->amount;
+                        $user->update();
     
                         return response()->json([
                             'success' => true,
