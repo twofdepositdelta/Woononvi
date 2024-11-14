@@ -81,7 +81,7 @@ class PaymentController extends Controller
                         return response()->json([
                             'success' => true,
                             'message' => 'Compte rechargé avec succès !',
-                            'data' => $statusData
+                            'user' => $user
                         ]);
                     } elseif ($transactionStatus === 'FAILED') {
                         return response()->json([
