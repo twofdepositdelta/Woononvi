@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Booking;
-use App\Models\TransactionType;
+use App\Models\PaymentType;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,13 +16,13 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount');
-            $table->integer('total_price'); // Heure de départ prévue
-            $table->enum('payment_method', ['credit_card', 'paypal', 'cash', 'momo'])->default('momo'); // Statut du trajet (pending, completed, canceled)
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending'); // Statut du trajet (pending, completed, canceled)
+            $table->double('amount');
+            $table->string('reference');
+            $table->enum('payment_method', ['CREDITCARD', 'PAYPAL', 'CASH', 'MOMO'])->default('MOMO');
+            $table->enum('status', ['PENDING', 'SUCCESSFUL', 'FAILED'])->default('PENDING');
             $table->foreignIdFor(Booking::class)->nullable();
-            // $table->foreignIdFor(User::class)->nullable();
-            // $table->foreignIdFor(TransactionType::class);
+            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(PaymentType::class);
             $table->timestamps();
         });
     }

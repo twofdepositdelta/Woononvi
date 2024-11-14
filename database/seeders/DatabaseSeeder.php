@@ -41,8 +41,7 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             ComissionSeeder::class,
             ApiSeeder::class,
-            RideSearcheSeeder::class,
+            PaymentTypeSeeder::class,
         ]);
     }
-
 }

@@ -64,16 +64,16 @@ class PaymentController extends Controller
                     $transactionStatus = $statusData['status']; // Assume the response contains a 'status' field
     
                     if ($transactionStatus === 'SUCCESSFUL') {
-                        // Enregistrer la transaction en base de données
-                        // Payment::create([
-                        //     'user_id' => $request->user()->id,
-                        //     'reference' => $transactionRef,
-                        //     'amount' => $amount,
-                        //     'status' => 'SUCCESSFUL',
-                        //     'phoneNumber' => $phoneNumber,
-                        //     'shop' => $shop,
-                        //     'description' => $description
-                        // ]);
+                        //Enregistrer la transaction en base de données
+                        Payment::create([
+                            'user_id' => $request->user()->id,
+                            'reference' => $transactionRef,
+                            'amount' => $amount,
+                            'status' => 'SUCCESSFUL',
+                            'phoneNumber' => $phoneNumber,
+                            'shop' => $shop,
+                            'description' => $description
+                        ]);
 
                         $user->balance += (int) $request->amount;
                         $user->update();
