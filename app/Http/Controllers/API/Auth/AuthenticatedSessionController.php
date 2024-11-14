@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Preference;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -172,7 +173,9 @@ class AuthenticatedSessionController extends Controller
             'npi' => 'required|string|size:9|unique:users',
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255', 
+            'email' => 'required|string|email|max:255',
+            'npi' => 'required|mimes:pdf|max:1024',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -184,6 +187,24 @@ class AuthenticatedSessionController extends Controller
                 'errors' => $validator->errors()->all()
             ], 422);
         }
+
+        $user = $request->user();
+
+        $npiPath = null;
+        if ($request->hasFile('npi')) {
+            $npiPath = $request->file('npi')->store("api/users/$user->id/documents", 'public'); 
+        }
+
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store("api/users/$user->id/documents", 'public'); 
+        }
+
+        Profile::create([
+            'user_id' => $user->id,
+            'avatar' => $avatarPath,
+            'identy_card' => $npiPath,
+        ]);
 
         // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
         $birthDate = new \DateTime($request->birth_of_date);
@@ -198,44 +219,43 @@ class AuthenticatedSessionController extends Controller
             ], 401); // Statut 401 pour indiquer que l'inscription est refusée
         }
 
-        $user = User::whereEmail($request->email)->first();
         $city = City::whereName($request->city_id)->first();
 
-        if($user) {
-            $user->update([
-                'date_of_birth' => $request->birth_of_date,
-                'npi' => $request->npi,
-                'gender' => $request->gender,
-                'city_id' => $city->id,
-            ]);
+        $user->update([
+            'date_of_birth' => $request->birth_of_date,
+            'npi' => $request->npi,
+            'gender' => $request->gender,
+            'city_id' => $city->id,
+        ]);
 
-            Preference::create([
-                'user_id' => $user->id,
-            ]);
+        Preference::create([
+            'user_id' => $user->id,
+        ]);
 
-            $userArray = $user->toArray();
+        // Charger les relations profil et préférences de l'utilisateur
+        $user->load(['profile', 'preferences']);
 
-            unset($userArray['roles']);
+        $userArray = $user->toArray();
 
-            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-            $country = Country::find($user->country_id);
-            $userArray['country_name'] = $user->country_name;
-            $userArray['city_name'] = $user->city_name;
-            $userArray['indicatif'] = $user->country_code;
-            $userArray['phone_number'] = $user->phone_number;
+        unset($userArray['roles']);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Votre inscription a été finalisée avec succès.',
-                'user' => $userArray,
-            ], 201);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Il y a un souci avec l\'utilisateur.',
-            ], 422);
-        }
+        $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+        $country = Country::find($user->country_id);
+        $userArray['country_name'] = $user->country_name;
+        $userArray['city_name'] = $user->city_name;
+        $userArray['indicatif'] = $user->country_code;
+        $userArray['phone_number'] = $user->phone_number;
+
+        // Ajouter le profil et les préférences au tableau de réponse
+        $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
+        $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre inscription a été finalisée avec succès.',
+            'user' => $userArray,
+        ], 201);
     }
 
     public function verifyOtp(Request $request) {
