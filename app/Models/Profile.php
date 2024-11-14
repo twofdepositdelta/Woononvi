@@ -31,6 +31,6 @@ class Profile extends Model
 
     public function getIdentityFullAttribute()
     {
-        return asset('storage/' . $this->identity_card);
+        return asset('storage/' . $this->identy_card);
     }
 }
