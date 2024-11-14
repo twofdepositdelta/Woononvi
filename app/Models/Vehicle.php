@@ -22,6 +22,7 @@ class Vehicle extends Model
         'driver_id', // Clé étrangère pour le conducteur
         'slug',
         'type_vehicle_id', // Clé étrangère pour le type de véhicule
+        'is_active'
     ];
 
     protected $appends = ['is_active_label', 'status_label'];
