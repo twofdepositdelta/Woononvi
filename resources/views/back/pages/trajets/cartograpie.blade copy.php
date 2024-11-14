@@ -33,7 +33,7 @@ async function fetchActiveRides() {
     try {
         const response = await fetch('/api/active-rides'); // Remplacer par votre endpoint
         const data = await response.json();
-        console.log('Trajets récupérés :', data.rides); // Ajout d'un log pour vérifier les données
+        // console.log('Trajets récupérés :', data.rides); // Ajout d'un log pour vérifier les données
         return data.rides;
     } catch (error) {
         console.error('Erreur lors du chargement des trajets actifs:', error);
@@ -87,10 +87,10 @@ window.initMap = async function() {
                 icon: {
                     url: "{{ asset('taxi-solid.svg') }}", // Chemin relatif vers l'icône SVG
                     scaledSize: new google.maps.Size(30,
-                    30), // Ajustez la taille de l'icône selon vos besoins
+                        30), // Ajustez la taille de l'icône selon vos besoins
                     origin: new google.maps.Point(0, 0),
                     anchor: new google.maps.Point(30,
-                    30), // Point d'ancrage pour centrer l'icône
+                        30), // Point d'ancrage pour centrer l'icône
                     strokeColor: '#FF0',
                 }
             });
