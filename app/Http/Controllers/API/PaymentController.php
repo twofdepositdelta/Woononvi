@@ -70,9 +70,7 @@ class PaymentController extends Controller
                             'reference' => $transactionRef,
                             'amount' => $amount,
                             'status' => 'SUCCESSFUL',
-                            'phoneNumber' => $phoneNumber,
-                            'shop' => $shop,
-                            'description' => $description
+                            'phone' => $phoneNumber,
                         ]);
 
                         $user->balance += (int) $request->amount;
