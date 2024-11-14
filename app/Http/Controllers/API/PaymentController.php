@@ -21,8 +21,6 @@ class PaymentController extends Controller
             'mode' => 'required|max:255|string',
             'phoneNumber' => 'required|max:255|string',
             'amount' => 'required|integer',
-            'shop' => 'required|max:255|string',
-            'fToken' => 'required|max:255|string',
         ];
         
         $validator = Validator::make($request->all(), $rules);
