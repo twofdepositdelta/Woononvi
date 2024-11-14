@@ -222,9 +222,6 @@ class AuthenticatedSessionController extends Controller
             'user_id' => $user->id,
         ]);
 
-        // Charger les relations profil et préférences de l'utilisateur
-        $user->load(['profile', 'preferences']);
-
         // Appeler la méthode privée pour formater l'utilisateur
         $userArray = $this->formatUserArray($user);
 
@@ -284,6 +281,9 @@ class AuthenticatedSessionController extends Controller
 
     private function formatUserArray(User $user)
     {
+        // Charger les relations profil et préférences de l'utilisateur
+        $user->load(['profile', 'preferences', 'vehicles.rides']);
+        
         $userArray = $user->toArray();
 
         unset($userArray['roles']);
@@ -300,8 +300,23 @@ class AuthenticatedSessionController extends Controller
         $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
         $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
 
-        // Ajouter le nombre de véhicules
-        $userArray['vehicles_count'] = $user->vehicles ? $user->vehicles->count() : 0;
+        // Charger les véhicules avec le nombre de trajets
+        $vehicles = $user->vehicles()->withCount('trips')->get();
+
+        // Nombre de véhicules
+        $userArray['vehicles_count'] = $vehicles->count();
+
+        // Nombre total de trajets pour l'utilisateur
+        $userArray['total_trip_count'] = $vehicles->sum('trips_count');
+
+        // Inclure les informations de chaque véhicule avec leur nombre de trajets
+        $userArray['vehicles'] = $vehicles->map(function ($vehicle) {
+            return [
+                'id' => $vehicle->id,
+                'model' => $vehicle->model,
+                'trip_count' => $vehicle->trips_count,
+            ];
+        });
 
         return $userArray;
     }

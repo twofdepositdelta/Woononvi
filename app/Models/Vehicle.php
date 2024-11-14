@@ -36,13 +36,18 @@ class Vehicle extends Model
     // Relation avec le type de véhicule
     public function typeVehicle()
     {
-        return $this->belongsTo(TypeVehicle::class); // Assurez-vous d'importer le modèle TypeVehicle
+        return $this->belongsTo(TypeVehicle::class); 
     }
 
 
     public function images()
     {
-        return $this->hasMany(Image::class); // Assurez-vous d'importer le modèle TypeVehicle
+        return $this->hasMany(Image::class); 
+    }
+
+    public function rides()
+    {
+        return $this->hasMany(Ride::class); 
     }
 
     public function documents()
