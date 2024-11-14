@@ -161,7 +161,7 @@
   --primary-300: #6BB1FF;
   --primary-400: #519FFF;
   --primary-500: #458EFF;
-  --primary-600: #487FFF;
+  --primary-600: #F5FF78;
   --primary-700: #486CEA;
   --primary-800: #4759D6;
   --primary-900: #4536B6;
@@ -8489,7 +8489,7 @@ h6, .h6 {
 
 .btn-primary-600 {
   background-color: var(--primary-600);
-  color: #fff;
+  /* color: #fff; */
   border-color: var(--primary-600);
 }
 
@@ -14847,11 +14847,11 @@ td.fc-header-center {
 }
 .sidebar-menu li.dropdown.open > a, .sidebar-menu li.dropdown.dropdown-open > a {
   background-color: var(--brand);
-  color: #fff;
+  /* color: #fff; */
 }
 
 .sidebar-menu li.dropdown.open > a:hover, .sidebar-menu li.dropdown.dropdown-open > a:hover {
-  color: #fff;
+  /* color: #fff; */
 }
 
 .sidebar-menu li.dropdown.open > a::after, .sidebar-menu li.dropdown.dropdown-open > a::after {
@@ -14866,11 +14866,11 @@ td.fc-header-center {
 
 .sidebar-menu li > a.active-page {
   background-color: var(--brand);
-  color: #fff;
+  /* color: #fff; */
 }
 
 .sidebar-menu li > a.active-page:hover {
-  color: #fff;
+  /* color: #fff; */
 }
 
 .sidebar-menu li a {

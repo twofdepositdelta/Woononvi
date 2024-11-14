@@ -69,8 +69,14 @@ class ConversationController extends Controller
     public function allMessages($conversationId)
     {
         // Récupérer les messages de la conversation avec les informations sur l'utilisateur
-        $messages = Message::with('sender') // Assurez-vous que le modèle Message a la relation 'sender'
+        $messages = Message::with('sender')
             ->where('conversation_id', $conversationId)
+            ->when(!Auth::user()->hasRole('super admin'), function ($query) {
+                // Si l'utilisateur n'est pas super admin, il ne voit que les messages des conversations résolues
+                $query->whereHas('conversation', function ($query) {
+                    $query->where('status', '!=', 'resolved');
+                });
+            })
             ->get();
 
         return response()->json($messages->map(function($message) {
@@ -98,7 +104,24 @@ class ConversationController extends Controller
             'lastname' => $user->lastname,
             'userId' => $user->id,
             'status' => $user->status,
+            'statusConversation' => $conversation->status,
             'role' => $user->getRoleNames() // par exemple : 'Available', 'Offline'
         ]);
+    }
+
+    public function close($id)
+    {
+        $conversation = Conversation::findOrFail($id);
+
+        // Ici, on pourrait vérifier si l'utilisateur est bien le support ou l'initiateur de la conversation.
+        if (auth()->id() != $conversation->support_id && !auth()->user()->hasRole('super admin')) {
+            return redirect()->back()->with('error', 'Non autorisé à clôturer cette conversation.');
+        }
+
+        // Mettre à jour le statut de la conversation
+        $conversation->status = 'resolved';
+        $conversation->save();
+
+        return redirect()->back()->with('success', 'Conversation clôturée avec succès.');
     }
 }

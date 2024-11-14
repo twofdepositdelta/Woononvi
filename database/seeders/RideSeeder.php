@@ -2,90 +2,74 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use App\Models\Vehicle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class RideSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::table('rides')->insert([
+        // Liste des conducteurs à vérifier
+        $drivers = [6, 7]; // Conducteurs 6 et 7
+
+        // Trajets disponibles entre les villes du Bénin
+        $routes = [
             [
-                'numero_ride' =>  random_int(100000, 999999),
                 'departure' => 'Cotonou',
                 'destination' => 'Porto-Novo',
-                'departure_time' => Carbon::now()->addDays(1),
-                'available_seats' => 3,
-                'price_per_km' => 1000,
-                'is_nearby_ride' => true,
-                'status' => 'active',
-                'driver_id' => 1,
-                'commission_rate' => 10,
-                'created_at' => Carbon::now()->subYear(),
-                'updated_at' => now(),
+                'latitude' => 6.3656,
+                'longitude' => 2.4188,
             ],
             [
-                'numero_ride' =>  random_int(100000, 999999),
-                'departure' => 'Ouidah',
-                'destination' => 'Cotonou',
-                'departure_time' => Carbon::now()->addDays(2),
-                'available_seats' => 2,
-                'price_per_km' => 800,
-                'is_nearby_ride' => false,
-                'status' => 'pending',
-                'driver_id' => 2,
-                'commission_rate' => 10,
-                'created_at' => Carbon::now()->subYear(),
-                'updated_at' => now(),
-            ],
-            [
-                'numero_ride' =>  random_int(100000, 999999),
-                'departure' => 'Parakou',
-                'destination' => 'Natitingou',
-                'departure_time' => Carbon::now()->addDays(3),
-                'available_seats' => 4,
-                'price_per_km' => 1200,
-                'is_nearby_ride' => true,
-                'status' => 'completed',
-                'driver_id' => 3,
-                'commission_rate' => 15,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'numero_ride' =>  random_int(100000, 999999),
-                'departure' => 'Dassa-Zoumé',
+                'departure' => 'Porto-Novo',
                 'destination' => 'Abomey',
-                'departure_time' => Carbon::now()->addDays(4),
-                'available_seats' => 5,
-                'price_per_km' => 1500,
-                'is_nearby_ride' => false,
-                'status' => 'cancelled',
-                'driver_id' => 1,
-                'commission_rate' => 5,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'latitude' => 7.1833,
+                'longitude' => 2.2833,
             ],
             [
-                'numero_ride' =>  random_int(100000, 999999),
-                'departure' => 'Cotonou',
-                'destination' => 'Bohicon',
-                'departure_time' => Carbon::now()->addDays(5),
-                'available_seats' => 1,
-                'price_per_km' => 900,
-                'is_nearby_ride' => true,
-                'status' => 'suspend',
-                'driver_id' => 2,
-                'commission_rate' => 10,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+                'departure' => 'Abomey',
+                'destination' => 'Ouidah',
+                'latitude' => 6.3611,
+                'longitude' => 2.0811,
+            ]
+        ];
+
+        // Boucle sur les conducteurs pour créer des trajets
+        foreach ($drivers as $driver_id) {
+            // Vérifie si le conducteur a un véhicule associé
+            $vehicle = Vehicle::where('driver_id', $driver_id)->first();
+
+            if ($vehicle) {
+                // Boucle sur les trajets définis pour insérer les trajets
+                foreach ($routes as $route) {
+                    DB::table('rides')->insert([
+                        [
+                            'numero_ride' => random_int(100000, 999999),
+                            'departure' => $route['departure'], // Ville de départ
+                            'destination' => $route['destination'], // Ville de destination
+                            'departure_time' => Carbon::now()->addDays(1),
+                            'available_seats' => 3,
+                            'price_per_km' => 1000,
+                            'latitude' => $route['latitude'], // Latitude de la ville de départ
+                            'longitude' => $route['longitude'], // Longitude de la ville de départ
+                            'distance_travelled' => 0,
+                            'passenger_count' => 0,
+                            'is_nearby_ride' => true,
+                            'status' => 'active',
+                            'driver_id' => $driver_id,
+                            'vehicle_id' => $vehicle->id,
+                            'commission_rate' => 10,
+                            'created_at' => Carbon::now()->subYear(),
+                            'updated_at' => now(),
+                        ],
+                    ]);
+                }
+            } else {
+                // Si aucun véhicule n'est trouvé pour le conducteur
+                echo "Aucun véhicule trouvé pour le conducteur ID: {$driver_id}.";
+            }
+        }
     }
 }

@@ -9,23 +9,20 @@ class BookingSeeder extends Seeder
 {
     public function run()
     {
-        // Assurez-vous d'avoir des utilisateurs et des trajets dans la base de données
         $users = User::all();
         $rides = Ride::all();
 
+        // Insérer des réservations
         foreach ($rides as $ride) {
-            foreach ($users->random(5) as $user) { // Random 5 passagers pour chaque trajet
-                do {
-                    $uniqueNumber = random_int(1000000000, 9999999999); // Génère un nombre à 10 chiffres
-                } while (Booking::where('booking_number', $uniqueNumber)->exists()); // Vérifie l'unicité en base
-
+            foreach ($users->random(5) as $user) { // 5 passagers par trajet
+                $uniqueNumber = random_int(1000000000, 9999999999);
                 Booking::create([
-                    'seats_reserved' => rand(1, 4), // Réservant entre 1 et 4 sièges
-                    'total_price' => rand(1000, 20000), // Prix total entre 20 et 100
+                    'seats_reserved' => rand(1, 4), // Réservations entre 1 et 4 sièges
+                    'total_price' => rand(1000, 20000), // Prix entre 1000 et 20000
                     'status' => ['pending', 'confirmed', 'cancelled', 'refunded'][rand(0, 3)],
                     'ride_id' => $ride->id,
                     'passenger_id' => $user->id,
-                    'booking_number'=>$uniqueNumber
+                    'booking_number' => $uniqueNumber
                 ]);
             }
         }

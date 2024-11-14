@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('logbook');
             $table->string('color');
             $table->string('main_image');
+            $table->boolean('is_active')->default(false);
+            $table->boolean('status')->default(false);
             $table->string('slug')->unique();
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->foreignIdFor(TypeVehicle::class);

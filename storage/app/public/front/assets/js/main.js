@@ -5,3 +5,15 @@ let date=new Date().getFullYear();$("#date").html(date);$('.select').niceSelect(
 var tooltipList=tooltipTriggerList.map(function(tooltipTriggerEl){return new bootstrap.Tooltip(tooltipTriggerEl)})
 $(".profile-img-btn").on('click',function(){$(".profile-img-file").click();});if($('.date-picker').length){$(function(){$(".date-picker").datepicker();});}
 if($('.time-picker').length){$(function(){$(".time-picker").timepicker();});}})(jQuery);
+
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = true;
+
+var pusher = new Pusher('ab3b9fc88fa2fe058a98', {
+  cluster: 'eu'
+});
+
+var channel = pusher.subscribe('my-channel');
+channel.bind('event-sent', function(data) {
+  alert(JSON.stringify(data));
+});

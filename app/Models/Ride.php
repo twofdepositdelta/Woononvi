@@ -18,7 +18,7 @@ class Ride extends Model
         'is_nearby_ride',
         'status',
         'driver_id', // Clé étrangère pour le conducteur
-        'commission_rate'
+        'commission_rate',
     ];
 
     // Relation avec le conducteur (utilisateur)
@@ -46,4 +46,5 @@ class Ride extends Model
     {
         return $this->hasMany(Notification::class); // Assurez-vous d'importer le modèle Booking
     }
+
 }

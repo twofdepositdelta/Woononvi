@@ -16,11 +16,15 @@ class Vehicle extends Model
         'seats',
         'logbook',
         'color',
+        'is_active',
+        'status',
         'main_image',
         'driver_id', // Clé étrangère pour le conducteur
         'slug',
         'type_vehicle_id', // Clé étrangère pour le type de véhicule
     ];
+
+    protected $appends = ['is_active_label', 'status_label'];
 
     // Relation avec le conducteur (utilisateur)
     public function driver()
@@ -43,5 +47,25 @@ class Vehicle extends Model
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function getMainImageAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
+
+    public function getLogbookAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
+
+    public function getIsActiveLabelAttribute()
+    {
+        return $this->is_active ? 'Actif' : 'Non actif';
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return $this->status ? 'Validé' : 'Non validé';
     }
 }

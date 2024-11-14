@@ -29,8 +29,10 @@ class VehicleSeeder extends Seeder
                 'color' => 'Rouge',
                 'main_image' => BackHelper::getEnvFolder() . 'storage/front/assets/img/taxi/01.png',
                 'slug' => Str::slug('AB123CD'),
-                'driver_id' => User::inRandomOrder()->first()->id,
+                'driver_id' => 6,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Berline')->first()->id,
+                'is_active' => true, // Définir is_active à true
+                'status' => true,    // Définir status à true
             ],
             [
                 'licence_plate' => 'EF456GH',
@@ -40,10 +42,12 @@ class VehicleSeeder extends Seeder
                 'seats' => 5,
                 'logbook' => 'logbook_2.pdf',
                 'color' => 'Bleu',
-                'main_image' =>  BackHelper::getEnvFolder() . 'storage/front/assets/img/taxi/01.png',
-                'slug'=>Str::slug('EF456GH'),
-                'driver_id' => User::inRandomOrder()->first()->id,
+                'main_image' => BackHelper::getEnvFolder() . 'storage/front/assets/img/taxi/01.png',
+                'slug' => Str::slug('EF456GH'),
+                'driver_id' => 7,
                 'type_vehicle_id' => TypeVehicle::where('label', 'SUV')->first()->id,
+                'is_active' => true, // Définir is_active à true
+                'status' => true,    // Définir status à true
             ],
             [
                 'licence_plate' => 'IJ789KL',
@@ -54,15 +58,18 @@ class VehicleSeeder extends Seeder
                 'logbook' => 'logbook_3.pdf',
                 'color' => 'Noir',
                 'main_image' => BackHelper::getEnvFolder() . 'storage/front/assets/img/taxi/01.png',
-                'slug'=>Str::slug('IJ789KL'),
-                'driver_id' => User::inRandomOrder()->first()->id,
+                'slug' => Str::slug('IJ789KL'),
+                'driver_id' => 6,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Minivan')->first()->id,
+                'is_active' => true, // Définir is_active à true
+                'status' => true,    // Définir status à true
             ]
         ];
 
         foreach ($vehicles as $vehicle) {
             Vehicle::create($vehicle);
         }
+
     }
 
 }
