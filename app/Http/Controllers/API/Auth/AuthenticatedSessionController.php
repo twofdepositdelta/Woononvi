@@ -70,21 +70,8 @@ class AuthenticatedSessionController extends Controller
             if($user->hasrole('passenger|driver|manager|super-admin')) {
                 $token = $user->createToken('mobile--token')->plainTextToken;
 
-                $userArray = $user->toArray();
-
-                unset($userArray['roles']);
-
-                $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-                $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-                $country = Country::find($user->country_id);
-                $userArray['country_name'] = $user->country_name;
-                $userArray['city_name'] = $user->city_name;
-                $userArray['indicatif'] = $user->country_code;
-                $userArray['phone_number'] = $user->phone_number;
-
-                // Ajouter le profil et les préférences au tableau de réponse
-                $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
-                $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+                // Appeler la méthode privée pour formater l'utilisateur
+                $userArray = $this->formatUserArray($user);
 
                 return response()->json([
                     'success' => true,
@@ -238,21 +225,8 @@ class AuthenticatedSessionController extends Controller
         // Charger les relations profil et préférences de l'utilisateur
         $user->load(['profile', 'preferences']);
 
-        $userArray = $user->toArray();
-
-        unset($userArray['roles']);
-
-        $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-        $country = Country::find($user->country_id);
-        $userArray['country_name'] = $user->country_name;
-        $userArray['city_name'] = $user->city_name;
-        $userArray['indicatif'] = $user->country_code;
-        $userArray['phone_number'] = $user->phone_number;
-
-        // Ajouter le profil et les préférences au tableau de réponse
-        $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
-        $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+        // Appeler la méthode privée pour formater l'utilisateur
+        $userArray = $this->formatUserArray($user);
 
         return response()->json([
             'success' => true,
@@ -306,5 +280,29 @@ class AuthenticatedSessionController extends Controller
                 'message' => 'Nom d\'utilisateur invalide !',
             ], 422);
         }
+    }
+
+    private function formatUserArray(User $user)
+    {
+        $userArray = $user->toArray();
+
+        unset($userArray['roles']);
+
+        $userArray['username'] = $userArray['username'] ?? '';
+        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+        
+        $userArray['country_name'] = $user->country_name;
+        $userArray['city_name'] = $user->city_name;
+        $userArray['indicatif'] = $user->country_code;
+        $userArray['phone_number'] = $user->phone_number;
+
+        // Ajouter le profil et les préférences au tableau de réponse
+        $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
+        $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+
+        // Ajouter le nombre de véhicules
+        $userArray['vehicles_count'] = $user->vehicles ? $user->vehicles->count() : 0;
+
+        return $userArray;
     }
 }
