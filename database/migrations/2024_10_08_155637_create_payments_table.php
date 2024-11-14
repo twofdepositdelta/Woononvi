@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('amount');
             $table->string('reference'); 
             $table->enum('payment_method', ['credit_card', 'paypal', 'cash', 'momo'])->default('momo');
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->enum('status', ['PENDING', 'SUCCESSFUL', 'FAILED'])->default('PENDING');
             $table->foreignIdFor(Booking::class)->nullable();
             $table->foreignIdFor(User::class)->nullable();
             $table->foreignIdFor(PaymentType::class);
