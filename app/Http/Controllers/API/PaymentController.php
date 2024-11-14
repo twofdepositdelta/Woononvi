@@ -113,15 +113,8 @@ class PaymentController extends Controller
             'Authorization' => 'Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL',
         ])->get("https://api.feexpay.me/api/transactions/public/single/status/{$reference}");
 
-        // Gérer la réponse de l'API
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            return response()->json([
-                'message' => 'Échec de la récupération du statut de la transaction !',
-                'details' => $response->json()
-            ], $response->status());
-        }
+        // Retourner directement la réponse HTTP
+        return $response;
     }
 
     /**
