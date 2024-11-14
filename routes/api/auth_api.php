@@ -20,7 +20,7 @@ Route::middleware('guest:api')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::put('finalise', [AuthenticatedSessionController::class, 'finalise'])->name('api.finalise');
+    Route::post('finalise', [AuthenticatedSessionController::class, 'finalise'])->name('api.finalise');
     Route::put('profile', [ProfileController::class, 'update'])->name('api.profile.update');
     Route::put('change-password', [PasswordController::class, 'update'])->name('api.password.update');
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('api.verification.send');

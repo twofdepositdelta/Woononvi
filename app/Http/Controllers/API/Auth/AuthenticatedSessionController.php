@@ -173,7 +173,7 @@ class AuthenticatedSessionController extends Controller
             'npi' => 'required|string|size:9|unique:users',
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
-            'npi' => 'required|mimes:pdf|max:1024',
+            'npi_file' => 'required|mimes:pdf|max:1024',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
         ];
 
@@ -190,8 +190,8 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         $npiPath = null;
-        if ($request->hasFile('npi')) {
-            $npiPath = $request->file('npi')->store("api/users/$user->id/documents", 'public'); 
+        if ($request->hasFile('npi_file')) {
+            $npiPath = $request->file('npi_file')->store("api/users/$user->id/documents", 'public'); 
         }
 
         $avatarPath = null;
