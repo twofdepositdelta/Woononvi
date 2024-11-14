@@ -173,7 +173,6 @@ class AuthenticatedSessionController extends Controller
             'npi' => 'required|string|size:9|unique:users',
             'birth_of_date' => 'required|date|max:10',
             'city_id' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
             'npi' => 'required|mimes:pdf|max:1024',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
         ];
