@@ -16,9 +16,21 @@ class Profile extends Model
         'user_id', // Clé étrangère pour l'utilisateur
     ];
 
+    protected $appends = ['avatar_full', 'identity_full'];
+
     // Relation avec l'utilisateur
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id'); // Assurez-vous d'importer le modèle User
+    }
+
+    public function getAvatarFullAttribute()
+    {
+        return asset('storage/' . $this->avatar);
+    }
+
+    public function getIdentityFullAttribute()
+    {
+        return asset('storage/' . $this->identity_card);
     }
 }
