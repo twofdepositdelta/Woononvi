@@ -43,7 +43,7 @@ class PaymentController extends Controller
         $description = $request->input('description');
 
         $response = Http::withHeaders([
-            'Authorization' => "Bearer fp_M6tuzYgsYl39d6kJvdaLmYGQcEAWvLRivVhbeK4UCwbDiyMlj9UPMO",
+            'Authorization' => "Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL",
             'Content-Type' => 'application/json'
         ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
             'shop' => '672dfbc9ff4146187db288cc',
@@ -75,7 +75,7 @@ class PaymentController extends Controller
     public function checkTransactionStatus($reference)
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer fp_M6tuzYgsYl39d6kJvdaLmYGQcEAWvLRivVhbeK4UCwbDiyMlj9UPMO',
+            'Authorization' => 'Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL',
         ])->get("https://api.feexpay.me/api/transactions/public/single/status/{$reference}");
 
         // Gérer la réponse de l'API
