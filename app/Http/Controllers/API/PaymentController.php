@@ -38,17 +38,15 @@ class PaymentController extends Controller
 
         // Récupérer les données depuis la requête
         $mode = strtolower($request->input('mode'));
-        $token = $request->input('fToken');
         $phoneNumber = $request->input('phoneNumber');
         $amount = $request->input('amount');
-        $shop = $request->input('shop');
         $description = $request->input('description');
 
         $response = Http::withHeaders([
-            'Authorization' => "Bearer $token",
+            'Authorization' => "Bearer fp_M6tuzYgsYl39d6kJvdaLmYGQcEAWvLRivVhbeK4UCwbDiyMlj9UPMO",
             'Content-Type' => 'application/json'
         ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
-            'shop' => $shop,
+            'shop' => '672dfbc9ff4146187db288cc',
             'amount' => 1,
             'phoneNumber' => $phoneNumber,
             'description' => $description,
@@ -72,6 +70,23 @@ class PaymentController extends Controller
             'vehicle' => $vehicle,
             'message' => 'Document ajouté avec succès !',
         ]);
+    }
+
+    public function checkTransactionStatus($reference)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer fp_M6tuzYgsYl39d6kJvdaLmYGQcEAWvLRivVhbeK4UCwbDiyMlj9UPMO',
+        ])->get("https://api.feexpay.me/api/transactions/public/single/status/{$reference}");
+
+        // Gérer la réponse de l'API
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return response()->json([
+                'error' => 'Failed to retrieve transaction status',
+                'details' => $response->json()
+            ], $response->status());
+        }
     }
 
     /**
