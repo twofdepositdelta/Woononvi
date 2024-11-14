@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Booking;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -16,22 +17,21 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $totalUsers = User::all()->count();
         $last30Days = User::where('created_at', '>=', Carbon::now()->subDays(30));
         $totalUsersLast30Days = $last30Days->count();
 
         $totalPassengersLast30Days = $last30Days->role('passenger')->count();
-        $totalPassengers = User::role('passenger')->count();
 
-        $totalDriversLast30Days = $last30Days->role('driver')->count();
+
+        $totalDriversLast30Days = User::where('created_at', '>=', Carbon::now()->subDays(30))
+                         ->role('driver')
+                         ->count();
         $totalDrivers = User::role('driver')->count();
 
         return view('dashboard',
-                    compact('totalUsers',
+                    compact(
                             'totalUsersLast30Days',
-                            'totalPassengers',
                             'totalPassengersLast30Days',
-                            'totalDrivers',
                             'totalDriversLast30Days',
                         )
                     );
