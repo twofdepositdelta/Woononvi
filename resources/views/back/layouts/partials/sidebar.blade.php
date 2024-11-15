@@ -230,17 +230,6 @@
                     </li>
 
                     <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Ville</a>
-                    </li>
-
-
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Demande</a>
-                    </li>
-
-                    <li>
                         <a href="{{route('commissions.index')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
                     </li>

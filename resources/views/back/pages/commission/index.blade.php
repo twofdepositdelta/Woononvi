@@ -9,7 +9,8 @@
             <div class="card shadow-none border bg-gradient-end-3">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:coins" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -31,7 +32,8 @@
             <div class="card shadow-none border bg-gradient-end-1">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:coins" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -53,7 +55,8 @@
             <div class="card shadow-none border bg-gradient-end-5">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:coins" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -91,8 +94,8 @@
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
                                     <option value="yearly">Annuel</option>
                                     <option value="monthly">Mensuel</option>
-                                    <option value="weekly">Hebdomadaire</option>
-                                    <option value="today">Aujourd'hui</option>
+                                    <option value="weekly"selected>Hebdomadaire</option>
+
                                 </select>
                             </div>
 
@@ -116,79 +119,65 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('commission-period').addEventListener('change', function() {
-                const period = this.value;
+            let commissionChart; // Variable pour stocker le graphique
 
-                // Envoie une requête AJAX pour obtenir les données des commissions
+            // Fonction pour initialiser ou réinitialiser le graphique
+            function initCommissionChart(data) {
+                const ctx = document.getElementById('commissionChart').getContext('2d');
+
+                // Si le graphique existe déjà, on le détruit
+                if (commissionChart) {
+                    commissionChart.destroy();
+                }
+
+                // Création d'un nouveau graphique
+                commissionChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels, // Labels dynamiques (mois, années, etc.)
+                        datasets: [{
+                            label: 'Commissions',
+                            data: data.amounts, // Montants des commissions
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true // Assure que l'axe Y commence à 0
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Fonction pour charger les données en fonction de la période sélectionnée
+            function loadCommissionData(period) {
                 fetch(`/commissions/report?period=${period}`)
                     .then(response => response.json())
                     .then(data => {
-                        // Met à jour le total des commissions affiché
+                        // Met à jour le total des commissions
                         document.getElementById('total-commission').innerText = `${data.total} Fcfa`;
 
-                        // Met à jour les données du graphique
-                        commissionChart.data.labels = data.labels;
-                        commissionChart.data.datasets[0].data = data.amounts;
-                        commissionChart.update();
+                        // Initialise ou met à jour le graphique avec les nouvelles données
+                        initCommissionChart(data);
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des données :', error);
                     });
-            });
+            }
 
-
-
-            // Initialise le graphique
-            const ctx = document.getElementById('commissionChart').getContext('2d');
-            const commissionChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [], // Labels dynamiques en fonction de la période sélectionnée
-                    datasets: [{
-                        label: 'Commissions',
-                        data: [],
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Écouteur pour mettre à jour les labels et les données en fonction de la période
+            // Écouteur pour le changement de période
             document.getElementById('commission-period').addEventListener('change', function() {
-                const period = this.value;
-
-                if (period === 'monthly') {
-                    // Labels pour les mois
-                    commissionChart.data.labels = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-                    ];
-
-                    // Requête pour les données mensuelles
-                    fetch(`/commissions/report?period=monthly`)
-                        .then(response => response.json())
-                        .then(data => {
-                            commissionChart.data.datasets[0].data = data
-                            .amounts; // Montants des commissions par mois
-                            commissionChart.update();
-                        });
-                } else {
-                    // Labels et données par défaut pour les autres périodes (annuel, hebdomadaire, aujourd'hui)
-                    commissionChart.data.labels = []; // Par exemple, ici les noms des jours ou des années
-                    fetch(`/commissions/report?period=${period}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            commissionChart.data.datasets[0].data = data.amounts;
-                            commissionChart.update();
-                        });
-                }
+                const period = this.value; // Récupère la période sélectionnée
+                loadCommissionData(period); // Charge les données correspondantes
             });
 
+            // Charge les données mensuelles par défaut au chargement de la page
+            loadCommissionData('weekly');
         });
     </script>
 

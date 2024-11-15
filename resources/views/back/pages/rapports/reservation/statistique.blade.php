@@ -97,7 +97,7 @@
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
                                     <option value="yearly">Annuel</option>
                                     <option value="monthly">Mensuel</option>
-                                    <option value="weekly">Hebdomadaire</option>
+                                    <option value="weekly" selected>Hebdomadaire</option>
                                     <option value="today">Aujourd'hui</option>
                                 </select>
                             </div>
@@ -123,9 +123,8 @@
 
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             let bookingsChart; // Variable pour stocker le graphique
 
             // Fonction pour initialiser ou réinitialiser le graphique
@@ -138,48 +137,52 @@
                 // Crée un nouveau graphique
                 const ctx = document.getElementById('bookingsChart').getContext('2d');
                 bookingsChart = new Chart(ctx, {
-                    type: 'bar', // Type de graphique (ici un graphique à barres)
+                    type: 'bar',
                     data: {
-                        labels: data.labels, // Labels dynamiques (mois, année, semaine, jour)
+                        labels: data.labels,
                         datasets: [{
                             label: 'Réservations',
-                            data: data.amounts, // Montants des réservations pour chaque période
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Couleur de fond des barres
-                            borderColor: 'rgba(54, 162, 235, 1)', // Couleur des bordures des barres
-                            borderWidth: 1 // Largeur des bordures
+                            data: data.amounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
                         }]
                     },
                     options: {
-                        responsive: true, // Le graphique est responsive (s'adapte à la taille de l'écran)
+                        responsive: true,
                         scales: {
                             y: {
-                                beginAtZero: true // Assure que l'axe Y commence à 0
+                                beginAtZero: true
                             }
                         }
                     }
                 });
             }
 
-            // Appel AJAX pour récupérer les données et mettre à jour le graphique
-            document.getElementById('periodSelect').addEventListener('change', function() {
-                const period = this.value; // Récupère la période choisie (jour, semaine, mois, année)
-
-                // Effectue une requête vers l'API pour obtenir les données en fonction de la période sélectionnée
+            // Fonction pour charger les données dynamiquement via AJAX
+            function loadBookingsData(period) {
                 fetch(`/bookings-report?period=${period}`)
-                    .then(response => response.json()) // Parse la réponse JSON
+                    .then(response => response.json())
                     .then(data => {
-                        initBookingsChart(
-                        data); // Initialise ou met à jour le graphique avec les nouvelles données
+                        initBookingsChart(data); // Met à jour le graphique
                         document.getElementById('total-booking').innerText = `${data.total}`;
-
                     })
                     .catch(error => {
                         console.error('Erreur lors de la récupération des données :', error);
                     });
-            });
+            }
 
+            // Charger les données par défaut (weekly) au chargement de la page
+            loadBookingsData('weekly');
+
+            // Ajouter un listener pour changer la période
+            document.getElementById('periodSelect').addEventListener('change', function () {
+                const period = this.value; // Récupère la période choisie
+                loadBookingsData(period); // Charge les données pour la période sélectionnée
+            });
         });
     </script>
+
 
 
 
