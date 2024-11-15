@@ -12,32 +12,33 @@ class CommissionController extends Controller
      */
     public function index()
     {
+        // Récupérer toutes les commissions
         $commissions = Commission::all();
-        $totalcommission = $commissions->sum('amount');
     
-        // Initialize variables
+        // Calcul du total des commissions (toutes)
+        $totalcommission = $commissions->sum('amount');
+        
+        // Initialisation des variables pour les totaux des commissions "pending" et "active"
         $totalpendingcomiss = 0;
         $totalactifcomiss = 0;
+        
+        // Récupérer les commissions associées aux trajets en attente et actifs
+        $commission_pending = Commission::whereHas('ride', function ($query) {
+            $query->where('status', 'pending');
+        })->get();
     
-        foreach ($commissions as $commission) {
-            $commission_rides = $commission->ride->where('status', 'pending');
-            $commission_ridesactives = $commission->ride->where('status', 'active');
-    
-            // Calculate pending commissions
-            foreach ($commission_rides as $commission_ride) {
-                $commission_pending = Commission::where('ride_id', $commission_ride->id)->get();
-                $totalpendingcomiss += $commission_pending->sum('amount');
-            }
-    
-            // Calculate active commissions
-            foreach ($commission_ridesactives as $commission_ridesactif) {
-                $commission_actif = Commission::where('ride_id', $commission_ridesactif->id)->get();
-                $totalactifcomiss += $commission_actif->sum('amount');
-            }
-        }
-    
+        $commission_actif = Commission::whereHas('ride', function ($query) {
+            $query->where('status', 'active');
+        })->get();
+        
+        // Calcul des totaux pour les commissions "pending" et "active"
+        $totalpendingcomiss = $commission_pending->sum('amount');
+        $totalactifcomiss = $commission_actif->sum('amount');
+        
+        // Retourner la vue avec les totaux calculés
         return view('back.pages.commission.index', compact('totalcommission', 'totalpendingcomiss', 'totalactifcomiss'));
     }
+    
 
     /**
      * Show the form for creating a new resource.

@@ -143,17 +143,20 @@ Route::middleware('auth')->group(function () {
 
 // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
-   
+
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
 //commission
 Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
 Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
 
-    
+
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
+    Route::get('/trajet/statistics', [RideController::class, 'statistique'])->name('rides.rapports');
+
+
 //transaction
 
     Route::get('/transac/historique', [TransactionController::class, 'historique'])->name('transactions.historique');
@@ -162,6 +165,7 @@ Route::get('/commissions/report', [CommissionController::class, 'getCommissionRe
     Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
     Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
     Route::post('/rides/filter', [BookingController::class, 'filterRides'])->name('rides.filter');
+    Route::get('/reservation/statistics', [BookingController::class, 'statistique'])->name('bookings.rapports');
 
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');

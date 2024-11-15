@@ -184,4 +184,21 @@ class RideController extends Controller
             return response()->json(['message' => 'Trajet introuvable'], 404);
         }
     }
+
+
+    public function statistique()
+    {
+        //
+
+
+        $ridecount = Ride::count();
+        $ridecountactive = Ride::where('status', 'active')->count();
+         $rides = Ride::select('departure', 'destination', \DB::raw('count(*) as count'))
+                 ->groupBy('departure', 'destination')
+                 ->get();
+        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','rides'));
+    }
+
+
+
 }

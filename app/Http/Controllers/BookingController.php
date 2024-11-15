@@ -144,4 +144,15 @@ class BookingController extends Controller
 // }
 
 
+public function statistique()
+    {
+        //
+
+        $bookingcount = Booking::count();
+        $bookingcountrefunded = Booking::where('status', 'refunded')->count();
+        $bookingcountpending = Booking::where('status', 'pending')->count();
+
+
+        return view('back.pages.rapports.reservation.statistique',compact('bookingcount','bookingcountpending','bookingcountrefunded'));
+    }
 }

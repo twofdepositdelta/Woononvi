@@ -223,38 +223,31 @@
                     <span>RAPPORTS</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Ville</a>
-                    </li>
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Pays</a>
-                    </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                        <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
                             Trajet</a>
                     </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Utilisateur</a>
+                        <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Réservation</a>
                     </li>
 
                     <li>
+                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            Ville</a>
+                    </li>
+
+
+                    <li>
                         <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Véhicules</a>
+                            Demande</a>
                     </li>
 
                     <li>
                         <a href="{{route('commissions.index')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
-                    </li>
-
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Transaction</a>
                     </li>
                 </ul>
             </li>
