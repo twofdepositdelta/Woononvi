@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+
+        public function index()
+        {
+            $payments = Payment::orderBy('created_at', 'desc')->paginate(10);
+            return view('back.pages.paiements.index', compact('payments'));
+        }
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,9 +38,10 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Payment $payment)
+    public function show( $reference)
     {
-        //
+        $payment=Payment::where('reference',$reference)->first();
+        return view('back.pages.paiements.show', compact('payment'));
     }
 
     /**
@@ -62,4 +67,14 @@ class PaymentController extends Controller
     {
         //
     }
+
+    public function historique()
+    {
+        //
+        $user=Auth::user();
+
+        $payments = Payment::where('user_id', $user->id)->paginate(10);
+        return view('back.pages.paiements.historique',compact('payments'));
+    }
+
 }

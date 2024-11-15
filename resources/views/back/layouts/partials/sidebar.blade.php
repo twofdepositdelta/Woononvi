@@ -152,11 +152,11 @@
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:transfer" class="menu-icon"></iconify-icon>
-                    <span>TRANSACTIONS</span>
+                    <span>PAIEMENTS</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('transactions.index')}}"><i
+                        <a href="{{route('payments.index')}}"><i
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
@@ -164,7 +164,7 @@
                             Nouvelle transac</a>
                     </li> --}}
                     <li>
-                        <a href="{{route('transactions.historique')}}"><i
+                        <a href="{{route('payments.historique')}}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Ride;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -193,10 +194,85 @@ class RideController extends Controller
 
         $ridecount = Ride::count();
         $ridecountactive = Ride::where('status', 'active')->count();
+        $ridecountcomplete=Ride::where('status', 'suspend')->count();
          $rides = Ride::select('departure', 'destination', \DB::raw('count(*) as count'))
                  ->groupBy('departure', 'destination')
                  ->get();
-        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','rides'));
+        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','rides','ridecountcomplete'));
+    }
+
+
+    public function getRidesReport(Request $request)
+    {
+        $period = $request->get('period');
+        $query = Ride::query();
+
+        switch ($period) {
+            case 'weekly':
+                // Définir les 4 dernières semaines
+                $startDate = Carbon::now()->subWeeks(4)->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
+
+                // Réservations des 4 dernières semaines
+                $data = $query->whereBetween('created_at', [$startDate, $endDate])
+                              ->selectRaw('WEEK(created_at) as label, COUNT(id) as total')
+                              ->groupBy('label')
+                              ->orderBy('label', 'asc')
+                              ->get();
+
+                // Générer les labels "Semaine X"
+                $labels = $data->pluck('label')->map(function ($weekNumber) {
+                    return 'Semaine ' . $weekNumber;
+                })->toArray();
+                break;
+
+            case 'monthly':
+                // Réservations par mois
+                $data = $query->selectRaw('MONTH(created_at) as label, COUNT(id) as total')
+                              ->groupBy('label')
+                              ->get();
+
+                $labels = $data->pluck('label')->map(function ($month) {
+                    $monthNames = [
+                        1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
+                        5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
+                        9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
+                    ];
+                    return $monthNames[$month];
+                })->toArray();
+                break;
+
+            case 'yearly':
+                // Réservations par année
+                $data = $query->selectRaw('YEAR(created_at) as label, COUNT(id) as total')
+                              ->groupBy('label')
+                              ->get();
+
+                $labels = $data->pluck('label')->toArray();
+                break;
+
+            case 'today':
+                // Réservations pour aujourd'hui
+                $data = $query->whereDate('created_at', today())
+                              ->selectRaw('COUNT(id) as total')
+                              ->get();
+
+                $labels = ['Aujourd\'hui'];
+                break;
+
+            default:
+                $data = [];
+                $labels = [];
+        }
+
+        $amounts = $data->pluck('total')->toArray();
+        $total = array_sum($amounts);
+
+        return response()->json([
+            'labels' => $labels,
+            'amounts' => $amounts,
+            'total'=>$total
+        ]);
     }
 
 

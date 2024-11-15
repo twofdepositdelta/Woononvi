@@ -8,7 +8,8 @@
             <div class="card shadow-none border bg-gradient-end-3">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -31,7 +32,8 @@
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
 
-                        <div class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -55,7 +57,8 @@
             <div class="card shadow-none border bg-gradient-end-5">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -65,7 +68,7 @@
                     </div>
                     <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center gap-1">
                         <div class="">
-                            <h6 class="mb-8"> {{ $bookingcountrefunded}}</h6>
+                            <h6 class="mb-8"> {{ $bookingcountrefunded }}</h6>
                             <span class="text-success-main text-md"></span>
                         </div>
                     </div>
@@ -86,7 +89,8 @@
                     <div class="card h-100 radius-8 border-0">
                         <div class="card-body p-24">
                             <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                <h6 class="mb-2 fw-bold text-lg">Comissions</h6>
+                                <h6 class="mb-2 fw-bold text-lg">Réservations</h6>
+
 
 
                                 <select id="periodSelect"
@@ -98,7 +102,16 @@
                                 </select>
                             </div>
 
-                            <canvas id="commissionChart"></canvas>
+
+
+                            <div id="commission-summary" class="d-flex align-items-center gap-2">
+                                <h6 class="fw-semibold mb-0" id="total-booking">O </h6>
+                                <p class="text-sm mb-0 d-flex align-items-center gap-1">
+                                    Total des reservations
+                                </p>
+                            </div>
+
+                            <canvas id="bookingsChart"></canvas>
 
                         </div>
                     </div>
@@ -112,36 +125,60 @@
 
 
     <script>
-       document.getElementById('periodSelect').addEventListener('change', function() {
-    const period = this.value;
-    fetch(`/api/bookings-report?period=${period}`)  // Appel API avec la période sélectionnée
-        .then(response => response.json())
-        .then(data => {
-            const ctx = document.getElementById('bookingsChart').getContext('2d');
-            const myChart = new Chart(ctx, {
-                type: 'bar',  // Le type de graphique
-                data: {
-                    labels: data.labels,  // Les labels (mois, années ou semaines)
-                    datasets: [{
-                        label: 'Nombre de Réservations',
-                        data: data.amounts,  // Les valeurs de réservation
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+        document.addEventListener('DOMContentLoaded', function() {
+            let bookingsChart; // Variable pour stocker le graphique
+
+            // Fonction pour initialiser ou réinitialiser le graphique
+            function initBookingsChart(data) {
+                // Si un graphique existe déjà, détruis-le avant de le recréer
+                if (bookingsChart) {
+                    bookingsChart.destroy(); // Détruit l'ancien graphique
+                }
+
+                // Crée un nouveau graphique
+                const ctx = document.getElementById('bookingsChart').getContext('2d');
+                bookingsChart = new Chart(ctx, {
+                    type: 'bar', // Type de graphique (ici un graphique à barres)
+                    data: {
+                        labels: data.labels, // Labels dynamiques (mois, année, semaine, jour)
+                        datasets: [{
+                            label: 'Réservations',
+                            data: data.amounts, // Montants des réservations pour chaque période
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Couleur de fond des barres
+                            borderColor: 'rgba(54, 162, 235, 1)', // Couleur des bordures des barres
+                            borderWidth: 1 // Largeur des bordures
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Le graphique est responsive (s'adapte à la taille de l'écran)
+                        scales: {
+                            y: {
+                                beginAtZero: true // Assure que l'axe Y commence à 0
+                            }
                         }
                     }
-                }
-            });
-        });
-});
+                });
+            }
 
+            // Appel AJAX pour récupérer les données et mettre à jour le graphique
+            document.getElementById('periodSelect').addEventListener('change', function() {
+                const period = this.value; // Récupère la période choisie (jour, semaine, mois, année)
+
+                // Effectue une requête vers l'API pour obtenir les données en fonction de la période sélectionnée
+                fetch(`/bookings-report?period=${period}`)
+                    .then(response => response.json()) // Parse la réponse JSON
+                    .then(data => {
+                        initBookingsChart(
+                        data); // Initialise ou met à jour le graphique avec les nouvelles données
+                        document.getElementById('total-booking').innerText = `${data.total}`;
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des données :', error);
+                    });
+            });
+
+        });
     </script>
 
 

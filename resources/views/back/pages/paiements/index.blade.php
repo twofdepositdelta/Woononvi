@@ -1,10 +1,10 @@
 @extends('back.layouts.master')
-@section('title', 'Liste des Transactions ')
+@section('title', 'Liste des Paiements ')
 @section('content')
 
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-        <h5 class=" card-title mb-0">Liste des Transactions</h5>
+        <h5 class="card-title mb-0">Liste des Paiements</h5>
     </div>
     <!-- Content -->
     <div class="card-body p-24">
@@ -12,55 +12,43 @@
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Passager</th>
-                        <th>Conducteur</th>
+
+                        <th>Référence</th>
+                        <th>Méthode de paiement</th>
                         <th>Montant</th>
-                        <th>Trajet</th>
                         <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($transactions->isEmpty())
+                    @if ($payments->isEmpty())
                         <tr>
-                            <td colspan="8" class="text-danger text-center">Aucune transaction enregistrée</td>
+                            <td colspan="7" class="text-danger text-center">Aucun paiement enregistré</td>
                         </tr>
                     @else
-                        @foreach ($transactions as $index => $transaction)
+                        @foreach ($payments as $index => $payment)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $transaction->booking->passenger->firstname.' '.$transaction->booking->passenger->lastname ?? 'N/A' }}</td>
-                                <td>{{ $transaction->driver->firstname.' '.$transaction->driver->lastname ?? 'N/A' }}</td>
-                                <td>{{ number_format($transaction->booking->total_price,0, ',', ' ') }} Fcfa</td>
-                                <td>{{ ($transaction->booking->ride->departure.'-'.$transaction->booking->ride->destination) }}</td>
-
+                               
+                                <td>{{ $payment->reference }}</td>
+                                <td>{{ $payment->payment_method }}</td>
+                                <td>{{ number_format($payment->amount, 0, ',', ' ') }} Fcfa</td>
                                 <td>
-                                    @if ($transaction->status == 'completed')
-                                        <span class="badge bg-success">Réussi </span>
-                                    @elseif ($transaction->status == 'pending')
+                                    @if ($payment->status == 'SUCCESSFUL')
+                                        <span class="badge bg-success">Réussi</span>
+                                    @elseif ($payment->status == 'PENDING')
                                         <span class="badge bg-warning">En attente</span>
-                                    @elseif ($transaction->status == 'cancelled')
-                                        <span class="badge bg-danger">Annulé</span>
-                                    @elseif ($transaction->status == 'refunded')
-                                        <span class="badge bg-secondary">Remboursé</span>
+                                    @elseif ($payment->status == 'FAILED')
+                                        <span class="badge bg-danger">Échoué</span>
                                     @endif
                                 </td>
+
                                 <td class="text-center">
                                     <div class="d-flex align-items-center gap-10 justify-content-center">
                                         <!-- Bouton pour voir les détails -->
-                                        <a href="{{ route('transactions.show', $transaction) }}"
+                                        <a href="{{ route('payments.show', $payment) }}"
                                            class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                             <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                                         </a>
-
-                                            {{-- <form action="{{ route('transactions.status',[$transaction,'status'=> 'refunded']) }}" method="get">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary text-sm" {{ $transaction->status != 'cancelled' ? 'disabled' : '' }}>
-                                                    Remboursé
-                                                </button>
-                                            </form> --}}
-
                                     </div>
                                 </td>
                             </tr>
@@ -69,13 +57,13 @@
                 </tbody>
             </table>
 
-            @if (!$transactions->isEmpty())
+            @if (!$payments->isEmpty())
                 {{-- pagination --}}
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                    <span>Affichage {{ $transactions->firstItem() }} à {{ $transactions->lastItem() }} de {{ $transactions->total() }} transactions</span>
+                    <span>Affichage {{ $payments->firstItem() }} à {{ $payments->lastItem() }} de {{ $payments->total() }} paiements</span>
                     <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
                         {{-- Previous Page Link --}}
-                        @if ($transactions->onFirstPage())
+                        @if ($payments->onFirstPage())
                             <li class="page-item disabled">
                                 <span class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px">
                                     <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
@@ -84,23 +72,20 @@
                         @else
                             <li class="page-item">
                                 <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                   href="{{ $transactions->previousPageUrl() }}">
+                                   href="{{ $payments->previousPageUrl() }}">
                                     <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
                                 </a>
                             </li>
                         @endif
 
                         {{-- Pagination Elements --}}
-                        @foreach ($transactions->links()->elements as $element)
-                            {{-- "Three Dots" Separator --}}
+                        @foreach ($payments->links()->elements as $element)
                             @if (is_string($element))
                                 <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
                             @endif
-
-                            {{-- Array Of Links --}}
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
-                                    @if ($page == $transactions->currentPage())
+                                    @if ($page == $payments->currentPage())
                                         <li class="page-item active">
                                             <span class="page-link bg-primary-600 text-white fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md">{{ $page }}</span>
                                         </li>
@@ -115,10 +100,10 @@
                         @endforeach
 
                         {{-- Next Page Link --}}
-                        @if ($transactions->hasMorePages())
+                        @if ($payments->hasMorePages())
                             <li class="page-item">
                                 <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                   href="{{ $transactions->nextPageUrl() }}">
+                                   href="{{ $payments->nextPageUrl() }}">
                                     <iconify-icon icon="ep:d-arrow-right" class=""></iconify-icon>
                                 </a>
                             </li>
@@ -137,6 +122,7 @@
     </div>
     <!-- / Content -->
 </div>
+
 
 
 
