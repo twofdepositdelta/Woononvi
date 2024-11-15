@@ -35,7 +35,7 @@
                 <span class="d-inline-flex align-items-center gap-1 text-success-main">
                     <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +{{ BackHelper::getTotalBookingPaymentsOther() }} XOF
                 </span>
-                Total Payement Non Terminé
+                Total Paiement Non Terminé
             </p>
         </div>
     </div><!-- card end -->
