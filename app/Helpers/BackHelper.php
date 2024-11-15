@@ -166,4 +166,62 @@ class BackHelper
     {
        return Commission::sum('amount');
     }
+
+    public static function getTodayRides()
+    {
+        $today = Carbon::today();
+
+        // Récupère les trajets dont la date de départ est aujourd'hui
+        $todayRides = Ride::whereDate('departure_time', $today)
+                        ->orderBy('departure_time', 'desc')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(10);
+
+        return $todayRides;
+    }
+
+    public static function getTodayRidesTotal()
+    {
+        $today = Carbon::today();
+
+        // Récupère les trajets dont la date de départ est aujourd'hui
+        $total = Ride::whereDate('departure_time', $today)
+                            ->count();
+
+        return $total;
+    }
+
+    public static function getTodayBookings()
+    {
+        $today = Carbon::today();
+
+        return Booking::whereDate('created_at', $today)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10); // Pagination si nécessaire
+    }
+
+    public static function getTodayBookingsTotal()
+    {
+        $today = Carbon::today();
+
+        return Booking::whereDate('created_at', $today)
+                    ->count();
+    }
+
+    public static function showLastFiftyUsers()
+    {
+        $users = User::orderBy('created_at', 'desc')
+                    ->take(50)
+                    ->paginate(10);
+
+        return $users;
+    }
+
+    public static function showLastFiftyUsersTotal()
+    {
+        $users = User::take(50)
+                    ->count();
+
+        return $users;
+    }
 }

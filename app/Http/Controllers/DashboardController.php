@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Helpers\BackHelper;
 
 class DashboardController extends Controller
 {
@@ -27,6 +28,8 @@ class DashboardController extends Controller
                          ->role('driver')
                          ->count();
         $totalDrivers = User::role('driver')->count();
+
+        // dd(BackHelper::getTodayBookings());
 
         return view('dashboard',
                     compact(

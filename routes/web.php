@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('rides', RideController::class)->parameters([
-        'rides' => 'ride',
+        'rides' => 'ride:numero_ride',
     ]);
 
     Route::resource('reviews', ReviewController::class)->parameters([

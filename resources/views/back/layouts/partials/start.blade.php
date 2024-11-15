@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Wowdash - Bootstrap 5 Admin Dashboard HTML Template</title>
+    <title>WONONVI - @yield('title')</title>
     <link rel="icon" type="image/png" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/favicon.png') }}" sizes="16x16">
     <!-- remix icon font css  -->
     <link rel="stylesheet" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/css/remixicon.css') }}">
