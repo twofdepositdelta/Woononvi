@@ -138,6 +138,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Preference::class); // Assurez-vous d'importer le modèle Booking
     }
 
+    public function trips()
+    {
+        return $this->hasMany(Trip::class, 'driver_id');
+    }
+
     // public function sendPasswordResetNotification($token)
     // {
     //     $this->notify(new CustomResetPassword($token));
