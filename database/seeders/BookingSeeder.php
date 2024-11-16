@@ -25,7 +25,7 @@ class BookingSeeder extends Seeder
                     'seats_reserved' => rand(1, 4), // Réservations entre 1 et 4 sièges
                     'total_price' => rand(1000, 20000), // Prix entre 1000 et 20000
                     'status' => ['pending', 'confirmed', 'cancelled', 'refunded'][rand(0, 3)], // Statut aléatoire
-                    'ride_id' => $ride->id,
+                    'trip_id' => $ride->id,
                     'passenger_id' => $user->id,
                     'booking_number' => $uniqueNumber,
                     'created_at' => $randomDate,
