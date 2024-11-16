@@ -8,7 +8,7 @@ use TarfinLabs\LaravelSpatial\Casts\LocationCast;
 class Trip extends Model
 {
     protected $fillable = [
-        'driver_id', 'type', 'start_location', 'end_location',
+        'driver_id', 'type', 'start_location', 'end_location', 'departure_time',
         'days', 'departure_in', 'return_trip', 'departure_time', 'return_time'
     ];
 
