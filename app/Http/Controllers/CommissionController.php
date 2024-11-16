@@ -12,33 +12,33 @@ class CommissionController extends Controller
      */
     public function index()
     {
-        //
-        $commissions=Commission::all();
-        $totalcommission=$commissions->sum('amount');
+        // Récupérer toutes les commissions
+        $commissions = Commission::all();
 
-            foreach ($commissions as $commission) {
-                $commission_rides=$commission->ride->where('status','pending')->get();
-                $commission_ridesactives=$commission->ride->where('status','active')->get();
-                foreach ($commission_rides as $commission_ride) {
-                    $commission_pending=Commission::where('ride_id',$commission_ride->id)->get();
-                    # code...
-                }
+        // Calcul du total des commissions (toutes)
+        $totalcommission = $commissions->sum('amount');
 
-                foreach ($commission_ridesactives as $commission_ridesactif) {
-                    $commission_actif=Commission::where('ride_id',$commission_ridesactif->id)->get();
-                    # code...
-                }
+        // Initialisation des variables pour les totaux des commissions "pending" et "active"
+        $totalpendingcomiss = 0;
+        $totalactifcomiss = 0;
 
-            }
-            # code...
+        // Récupérer les commissions associées aux trajets en attente et actifs
+        $commission_pending = Commission::whereHas('ride', function ($query) {
+            $query->where('status', 'pending');
+        })->get();
 
+        $commission_actif = Commission::whereHas('ride', function ($query) {
+            $query->where('status', 'active');
+        })->get();
 
-        $totalpendingcomiss=$commission_pending->sum('amount');
-        $totalactifcomiss=$commission_actif->sum('amount');
+        // Calcul des totaux pour les commissions "pending" et "active"
+        $totalpendingcomiss = $commission_pending->sum('amount');
+        $totalactifcomiss = $commission_actif->sum('amount');
 
-
-        return view('back.pages.commission.index',compact('totalcommission','totalpendingcomiss','totalactifcomiss'));
+        // Retourner la vue avec les totaux calculés
+        return view('back.pages.commission.index', compact('totalcommission', 'totalpendingcomiss', 'totalactifcomiss'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -110,12 +110,7 @@ class CommissionController extends Controller
                           ->groupBy('label')
                           ->get();
             break;
-            case 'today':
-                // Commission totale pour aujourd'hui
-                $data = $query->whereDate('created_at', today())
-                              ->selectRaw('SUM(amount) as total') // Somme des commissions du jour
-                              ->get(); // Utiliser `first` car il n'y a qu'une seule ligne
-                break;
+            
     }
 
     if ($period === 'monthly') {

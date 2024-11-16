@@ -15,7 +15,10 @@ class RideRequestController extends Controller
     {
         //
         $rideRequests=RideRequest::orderBy('created_at','desc')->paginate(20);
-        return view('back.pages.demandes.index',compact('rideRequests'));
+        $rideRequestcount=RideRequest::count();
+        $rideRequestcountpending=RideRequest::where('status','pending')->count();
+        $rideRequestcountresponded=RideRequest::where('status','responded')->count();
+        return view('back.pages.demandes.index',compact('rideRequests','rideRequestcount','rideRequestcountpending','rideRequestcountresponded'));
     }
 
     public function historique()

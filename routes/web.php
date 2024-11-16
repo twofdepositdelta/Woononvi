@@ -12,6 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\VehicleController;
@@ -91,7 +92,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('rides', RideController::class)->parameters([
-        'rides' => 'ride',
+        'rides' => 'ride:numero_ride',
     ]);
 
     Route::resource('reviews', ReviewController::class)->parameters([
@@ -102,8 +103,8 @@ Route::middleware('auth')->group(function () {
         'ridesearches' => 'ridesearche',
     ]);
 
-    Route::resource('transactions', TransactionController::class)->parameters([
-        'transactions' => 'transaction',
+    Route::resource('payments', PaymentController::class)->parameters([
+        'payments' => 'payment:reference',
     ]);
 
     Route::resource('bookings', BookingController::class)->parameters([
@@ -143,25 +144,32 @@ Route::middleware('auth')->group(function () {
 
 // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
-   
+
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
 //commission
 Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
 Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
 
-    
+
 // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
+    Route::get('/trajet/statistics', [RideController::class, 'statistique'])->name('rides.rapports');
+    Route::get('/rides-distance-report', [RideController::class, 'getDistanceReport'])->name('rides.distance.report');
+    Route::get('/ride-report', [RideController::class, 'getRidesReport'])->name('rides.report');
+
+
 //transaction
 
-    Route::get('/transac/historique', [TransactionController::class, 'historique'])->name('transactions.historique');
+    Route::get('/paiement/historique', [PaymentController::class, 'historique'])->name('payments.historique');
     Route::get('/transac/{transaction}/{status}', [TransactionController::class, 'updatestatus'])->name('transactions.status');
 //reservation
     Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
     Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
     Route::post('/rides/filter', [BookingController::class, 'filterRides'])->name('rides.filter');
+    Route::get('/reservation/statistics', [BookingController::class, 'statistique'])->name('bookings.rapports');
+    Route::get('/bookings-report', [BookingController::class, 'getBookingsReport'])->name('bookings.report');
 
     Route::get('/users/delete/{user:email}', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users/status/{user}', [UserController::class, 'updateStatus'])->name('users.updateStatus');

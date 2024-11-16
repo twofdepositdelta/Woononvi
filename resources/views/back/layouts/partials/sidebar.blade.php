@@ -152,11 +152,11 @@
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:transfer" class="menu-icon"></iconify-icon>
-                    <span>TRANSACTIONS</span>
+                    <span>PAIEMENTS</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{route('transactions.index')}}"><i
+                        <a href="{{route('payments.index')}}"><i
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Liste</a>
                     </li>
                     {{-- <li>
@@ -164,7 +164,7 @@
                             Nouvelle transac</a>
                     </li> --}}
                     <li>
-                        <a href="{{route('transactions.historique')}}"><i
+                        <a href="{{route('payments.historique')}}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i> Historiques</a>
                     </li>
                 </ul>
@@ -204,11 +204,6 @@
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
                     </li>
                     <li>
-                        <a href="form-validation.php"><i
-                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>documentation</a>
-                    </li>
-
-                    <li>
                         <a href="{{route('contact.index')}}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
                     </li>
@@ -223,38 +218,20 @@
                     <span>RAPPORTS</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Ville</a>
-                    </li>
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Pays</a>
-                    </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                        <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
                             Trajet</a>
                     </li>
 
                     <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Utilisateur</a>
-                    </li>
-
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Véhicules</a>
+                        <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Réservation</a>
                     </li>
 
                     <li>
                         <a href="{{route('commissions.index')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
-                    </li>
-
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Transaction</a>
                     </li>
                 </ul>
             </li>

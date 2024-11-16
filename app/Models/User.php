@@ -247,4 +247,9 @@ class User extends Authenticatable implements MustVerifyEmail
 // {
 //     return $this->belongsToMany(Role::class);
 // }
+
+    public static function getTotalBalance()
+    {
+        return self::sum('balance');
+    }
 }

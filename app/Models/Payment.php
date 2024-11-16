@@ -14,11 +14,22 @@ class Payment extends Model
         'payment_method',
         'status',
         'booking_id', // Clé étrangère pour la réservation
+        'user_id'
     ];
 
     // Relation avec la réservation
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id'); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Assurez-vous d'importer le modèle Booking
+    }
+
+    public function typepayment()
+    {
+        return $this->belongsTo(PaymentType::class, 'payment_type_id'); // Assurez-vous d'importer le modèle Booking
     }
 }

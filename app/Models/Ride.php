@@ -24,7 +24,7 @@ class Ride extends Model
         'arrival_time',
         'status',
         'driver_id',
-        'vehicle_id',
+        'vehicle_id'
     ];
 
 

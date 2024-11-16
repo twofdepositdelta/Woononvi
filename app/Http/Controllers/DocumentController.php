@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Document;
+use App\Models\TypeDocument;
 use Illuminate\Http\Request;
 use App\Mail\DocumentRejetStatus;
 use Illuminate\Support\Facades\Mail;
@@ -88,27 +89,51 @@ class DocumentController extends Controller
 
         if ($document->is_validated) {
             $document->is_validated = true;
-
-            // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
-            if ($document->typeDocument->label == "Permis de conduire") {
-                $user->status = true; // Le compte devient désactivé
-                $user->save();
+            if ($document->user->hasRole('driver')) {
+                // Si le document est un "Permis de conduire numérique" ou un "Cip", on met à jour le statut de l'utilisateur
+                if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
+                    // Vérifier si les deux documents "Permis de conduire" et "Cip" sont validés
+                    $permits = $document->user->documents()->whereIn('type_document_id', [
+                        TypeDocument::where('label', 'Permis de conduire')->first()->id,
+                        TypeDocument::where('label', 'Cip')->first()->id
+                    ])->where('is_validated', true)->count();
+                    
+                    // Si les deux documents sont validés, on active le compte
+                    if ($permits == 2) {
+                        $user->status = true; // Le compte devient activé
+                        $user->save();
+                    }
+                        }
+            } else {
+                // Si l'utilisateur n'a pas le rôle 'driver' et que le document est un "Cip", on active l'utilisateur
+                if ($document->typeDocument->label == "Cip") {
+                    $user->status = true; // Le compte devient activé
+                    $user->save();
+                }
             }
-
+        
             $document->save();
         } else {
-            // Si le document n'est pas validé, on valide le document
+            // Si le document n'est pas validé
             $document->is_validated = false;
-
-            // Si le document est un "Permis de conduire numérique", on met à jour le statut de l'utilisateur
-            if ($document->typeDocument->label == "Permis de conduire") {
-                $user->status = false; // Le compte devient activé
-                $user->save();
+        
+            if ($document->user->hasRole('driver')) {
+                // Si le document est un "Permis de conduire" ou "Cip", on désactive le compte de l'utilisateur
+                if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
+                    $user->status = false; // Le compte devient désactivé
+                    $user->save();
+                }
+            } else {
+                // Si l'utilisateur n'a pas le rôle 'driver' et que le document est un "Cip", on désactive le compte de l'utilisateur
+                if ($document->typeDocument->label == "Cip") {
+                    $user->status = false; // Le compte devient désactivé
+                    $user->save();
+                }
             }
-
+        
             $document->save();
         }
-
+        
         // Vérifier si tous les documents de l'utilisateur sont validés
         $allDocumentsValidated = $user->documents->every(function($doc) {
             return $doc->is_validated;
@@ -129,10 +154,10 @@ class DocumentController extends Controller
     public function reason(Request $request)
     {
         //
-         // Récupérer l'ID du devis depuis le champ caché
+         // Récupérer l'ID du document depuis le champ caché
         $docId = $request->document_id;
 
-        // Trouver le devis dans la base de données
+        // Trouver le document dans la base de données
         $document = Document::find($docId);
 
 
