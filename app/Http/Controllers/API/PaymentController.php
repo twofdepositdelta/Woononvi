@@ -71,6 +71,7 @@ class PaymentController extends Controller
                             'amount' => $amount,
                             'status' => 'SUCCESSFUL',
                             'phone' => $phoneNumber,
+                            'payment_type_id' => 1,
                         ]);
 
                         $user->balance += (int) $request->amount;

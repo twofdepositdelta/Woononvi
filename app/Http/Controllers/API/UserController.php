@@ -32,23 +32,9 @@ class UserController extends Controller
 
         $user = $request->user();
 
-        // Supprime tous les rôles actuels de l'utilisateur
-        $user->syncRoles([]);
-
-        $roleGet = Role::findByName($role, 'api');
-        $user->assignRole($roleGet);
-
-        $userArray = $user->toArray();
-
-        unset($userArray['roles']);
-
-        $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-        $country = Country::find($user->country_id);
-        $userArray['country_name'] = $user->country_name;
-        $userArray['city_name'] = $user->city_name;
-        $userArray['indicatif'] = $user->country_code;
-        $userArray['phone_number'] = $user->phone_number;
+        // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
+        $authController = new AuthenticatedSessionController();
+        $userArray = $authController->formatUserArray($user);
 
         if($role == 'driver')
             $message = "Vous êtes passés en mode conducteur avec succès !";
