@@ -21,8 +21,11 @@ return new class extends Migration
             $table->boolean('return_trip')->default(false); // S’il y a un retour
             $table->time('return_time')->nullable();
             $table->time('departure_time');
-            $table->time('arrival_time');
-            $table->double('price');
+            $table->time('return_time');
+            $table->double('price_per_km');
+            $table->boolean('is_nearby_ride')->default(false);
+            $table->decimal('commission_rate')->default(10);
+            $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('pending');
             $table->timestamps();
 
             // Index

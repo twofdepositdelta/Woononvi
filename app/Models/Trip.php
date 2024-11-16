@@ -9,7 +9,7 @@ class Trip extends Model
 {
     protected $fillable = [
         'driver_id', 'type', 'start_location', 'end_location',
-        'days', 'departure_in', 'return_trip', 'departure_time', 'arrival_time'
+        'days', 'departure_in', 'return_trip', 'departure_time', 'return_time'
     ];
 
     protected $casts = [
