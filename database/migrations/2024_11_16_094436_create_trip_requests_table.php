@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messagees', function (Blueprint $table) {
+        Schema::create('trip_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('trip_id');
-            $table->unsignedBigInteger('sender_id');
-            $table->unsignedBigInteger('receiver_id');
-            $table->text('content');
+            $table->unsignedBigInteger('trip_id'); // ID du trajet concerné
+            $table->unsignedBigInteger('passenger_id'); // ID du passager
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending'); // Statut de la demande
             $table->timestamps();
 
             // Relations
             $table->foreign('trip_id')->references('id')->on('trips')->onDelete('cascade');
-            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('passenger_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messagees');
+        Schema::dropIfExists('trip_requests');
     }
 };

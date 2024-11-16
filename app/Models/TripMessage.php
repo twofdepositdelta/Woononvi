@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Messagee extends Model
+class TripMessage extends Model
 {
-    protected $fillable = ['trip_id', 'sender_id', 'receiver_id', 'content'];
+    protected $fillable = ['trip_id', 'sender_id', 'receiver_id', 'message'];
 
     public function trip()
     {

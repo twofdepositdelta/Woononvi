@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['regular', 'single']); // Trajet régulier ou ponctuel
-            $table->point('start_location'); // Latitude et longitude de départ
-            $table->point('end_location'); // Latitude et longitude d’arrivée
+            $table->geography('start_location'); // Latitude et longitude de départ
+            $table->geography('end_location'); // Latitude et longitude d’arrivée
             $table->json('days')->nullable(); // Jours pour les trajets réguliers
             $table->boolean('return_trip')->default(false); // S’il y a un retour
             $table->time('return_time')->nullable();
