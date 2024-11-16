@@ -1,32 +1,23 @@
 <header class="header">
-
     <div class="header-top">
         <div class="container">
             <div class="header-top-wrapper">
                 <div class="header-top-left">
                     <div class="header-top-contact">
                         <ul>
-                            <li><a
-                                    href="https://live.themewild.com/cdn-cgi/l/email-protection#b4dddad2dbf4d1ccd5d9c4d8d19ad7dbd9"><i
-                                        class="far fa-envelopes"></i>
-                                    <span class="__cf_email__"
-                                        data-cfemail="82ebece4edc2e7fae3eff2eee7ace1edef">[email&#160;protected]</span></a>
-                            </li>
-                            <li><a href="tel:+21236547898"><i class="far fa-phone-volume"></i> +2 123 654 7898</a>
-                            </li>
-                            <li><a href="#"><i class="far fa-alarm-clock"></i> Sun - Fri (08AM - 10PM)</a></li>
+                            <li><a href="mailto:contact@wononvi.com"><i class="far fa-envelope"></i> contact@wononvi.com</a></li>
+                            <li><a href="tel:+22912345678"><i class="far fa-phone-volume"></i> +229 12 34 56 78</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="header-top-right">
                     <div class="header-top-link">
-                        <a href="{{ route('login') }}"><i class="far fa-arrow-right-to-bracket"></i> Login</a>
-                        {{-- <a href="{{ route('register') }}"><i class="far fa-user-vneck"></i> Register</a> --}}
+                        <a href="{{ route('login') }}"><i class="far fa-arrow-right-to-bracket"></i> Connexion</a>
                     </div>
                     <div class="header-top-social">
-                        <span>Follow Us: </span>
+                        <span>Suivez-nous :</span>
                         <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-linkedin"></i></a>
                     </div>
@@ -34,47 +25,60 @@
             </div>
         </div>
     </div>
+
     <div class="main-navigation">
         <nav class="navbar navbar-expand-lg">
             <div class="container position-relative">
                 <a class="navbar-brand" href="{{ route('index') }}">
-                    <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo citygo">
+                    <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi">
                 </a>
-                <div class="mobile-menu-right">
-                    <div class="search-btn">
-                        <button type="button" class="nav-right-link"><i class="far fa-search"></i></button>
-                    </div>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-mobile-icon"><i class="far fa-bars"></i></span>
-                    </button>
-                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-mobile-icon"><i class="far fa-bars"></i></span>
+                </button>
+
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav">
 
-                        <li class="nav-item"><a class="nav-link active" href="/">Accueil</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">A Propos</a></li>
-
+                        <!-- A Propos (avec sous-menus) -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">À Propos</a>
                             <ul class="dropdown-menu fade-down">
-                                <li><a class="dropdown-item" href="service.html">Service</a></li>
-                                <li><a class="dropdown-item" href="service-single.html">Service Single</a></li>
+                                <li><a class="dropdown-item" href="#presentation">En savoir plus</a></li>
+                                <li><a class="dropdown-item" href="#vision">Notre Vision</a></li>
+                                <li><a class="dropdown-item" href="#communaute">Notre Communauté</a></li>
+                                <li><a class="dropdown-item" href="#securite">Notre Sécurité</a></li>
                             </ul>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link" href="#">Actualités</a></li>
+                        <!-- Documentation (avec sous-menus) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentation</a>
+                            <ul class="dropdown-menu fade-down">
+                                <li><a class="dropdown-item" href="#comment-ca-fonctionne">Comment ça fonctionne ?</a></li>
+                                <li><a class="dropdown-item" href="{{route('faqs.front')}}">FAQ Technique</a></li>
+                            </ul>
+                        </li>
 
-                        <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Nous-contacter</a></li>
+                        <!-- Devenir Conducteur et Passager -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Rejoignez-nous</a>
+                            <ul class="dropdown-menu fade-down">
+                                <li><a class="dropdown-item" href="#devenir-conducteur">Devenir Conducteur</a></li>
+                                <li><a class="dropdown-item" href="#devenir-passager">Devenir Passager</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Accueil -->
+                        <li class="nav-item"><a class="nav-link" href="/">Actualités</a></li>
                     </ul>
-                    <div class="nav-right">
 
+                    <!-- Bouton de téléchargement -->
+                    <div class="nav-right">
                         <div class="nav-right-btn mt-2">
-                            <a href="#" class="theme-btn"><span class="fas fa-download"></span>Télécharger App</a>
+                            <a href="#telechargement" class="theme-btn"><span class="fas fa-download"></span> Télécharger App</a>
                         </div>
                     </div>
                 </div>
-
             </div>
         </nav>
     </div>

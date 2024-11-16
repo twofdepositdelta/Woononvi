@@ -28,6 +28,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -107,8 +108,11 @@ Route::middleware('auth')->group(function () {
         'payments' => 'payment:reference',
     ]);
 
+    Route::get('/pa/filter', [PaymentController::class, 'filterByType'])->name('payments.filterByType');
+
+
     Route::resource('bookings', BookingController::class)->parameters([
-        'bookings' => 'booking',
+        'bookings' => 'booking:booking_number',
     ]);
 
     Route::resource('reports', ReportController::class)->parameters([
@@ -158,8 +162,6 @@ Route::get('/commissions/report', [CommissionController::class, 'getCommissionRe
     Route::get('/trajet/statistics', [RideController::class, 'statistique'])->name('rides.rapports');
     Route::get('/rides-distance-report', [RideController::class, 'getDistanceReport'])->name('rides.distance.report');
     Route::get('/ride-report', [RideController::class, 'getRidesReport'])->name('rides.report');
-
-
 //transaction
 
     Route::get('/paiement/historique', [PaymentController::class, 'historique'])->name('payments.historique');

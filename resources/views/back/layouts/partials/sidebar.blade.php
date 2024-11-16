@@ -75,7 +75,8 @@
             {{-- trajets --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="ic:baseline-directions-car" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="fa-solid:route" class="menu-icon"></iconify-icon>
+
                     <span>TRAJETS</span>
                 </a>
                 <ul class="sidebar-submenu">

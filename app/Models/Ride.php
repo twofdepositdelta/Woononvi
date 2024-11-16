@@ -54,4 +54,9 @@ class Ride extends Model
         return $this->hasMany(Notification::class); // Assurez-vous d'importer le modèle Booking
     }
 
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id'); // Assurez-vous d'importer le modèle User
+    }
 }

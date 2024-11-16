@@ -2,8 +2,6 @@
 
 @section('title', 'Accueil')
 @section('content')
-    @include('front.pages.includes._booking-area')
-    @include('front.pages.includes._about-area')
 
     @include('front.pages.includes._feature-area')
     @include('front.pages.includes._counter-area')

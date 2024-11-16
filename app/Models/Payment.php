@@ -14,7 +14,8 @@ class Payment extends Model
         'payment_method',
         'status',
         'booking_id', // Clé étrangère pour la réservation
-        'user_id'
+        'user_id',
+        'payment_type_id'
     ];
 
     // Relation avec la réservation
