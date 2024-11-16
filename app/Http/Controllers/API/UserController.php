@@ -33,7 +33,7 @@ class UserController extends Controller
         $user = $request->user();
 
         // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
-        $authController = new AuthenticatedSessionController();
+        $authController = new Auth\AuthenticatedSessionController();
         $userArray = $authController->formatUserArray($user);
 
         if($role == 'driver')
