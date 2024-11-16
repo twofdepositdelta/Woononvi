@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use TarfinLabs\LaravelSpatial\Casts\LocationCast;
 
 class Trip extends Model
 {
@@ -13,6 +14,8 @@ class Trip extends Model
 
     protected $casts = [
         'days' => 'array',
+        'start_location' => LocationCast::class,
+        'end_location' => LocationCast::class
     ];
 
     public function driver()
