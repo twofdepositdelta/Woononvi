@@ -55,7 +55,7 @@
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentation</a>
                             <ul class="dropdown-menu fade-down">
                                 <li><a class="dropdown-item" href="#comment-ca-fonctionne">Comment ça fonctionne ?</a></li>
-                                <li><a class="dropdown-item" href="#faq">FAQ Technique</a></li>
+                                <li><a class="dropdown-item" href="{{route('faqs.front')}}">FAQ Technique</a></li>
                             </ul>
                         </li>
 

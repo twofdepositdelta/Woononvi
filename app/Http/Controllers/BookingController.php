@@ -59,9 +59,10 @@ class BookingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Booking $booking)
+    public function show( $booking_number)
     {
         //
+        $booking=Booking::where('booking_number',$booking_number)->first();
         return view('back.pages.reservations.show',compact('booking'));
 
     }

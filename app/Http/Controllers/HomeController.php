@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FaqType;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -10,4 +11,12 @@ class HomeController extends Controller
     {
         return view('front.pages.index');
     }
+
+    public function faqs()
+{
+   
+    $faqGroups = FaqType::orderBy('created_at','desc')->get();
+
+    return view('front.pages.documentation.faq', compact('faqGroups'));
+}
 }
