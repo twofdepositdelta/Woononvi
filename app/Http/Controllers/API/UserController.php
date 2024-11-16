@@ -32,6 +32,12 @@ class UserController extends Controller
 
         $user = $request->user();
 
+        // Supprime tous les rôles actuels de l'utilisateur
+        $user->syncRoles([]);
+
+        $roleGet = Role::findByName($role, 'api');
+        $user->assignRole($roleGet);
+
         // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
         $authController = new Auth\AuthenticatedSessionController();
         $userArray = $authController->formatUserArray($user);
