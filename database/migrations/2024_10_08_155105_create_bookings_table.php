@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('booking_number')->unique();
             $table->integer('seats_reserved');
             $table->integer('total_price');
-            $table->foreignIdFor(Trip::class);
+            $table->foreignIdFor(Ride::class);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'accepted', 'rejected', 'confirmed', 'refunded', 'cancelled'])->default('pending');
             $table->timestamps();

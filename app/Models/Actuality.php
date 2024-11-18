@@ -21,9 +21,9 @@ class Actuality extends Model
     ];
 
     // Relation avec le modèle TypeActualite
-    public function typeactualite()
+    public function typeNew()
     {
-        return $this->belongsTo(TypeNew::class, 'type_new_id');
+        return $this->belongsTo(TypeNew::class);
     }
 
     public function roles()

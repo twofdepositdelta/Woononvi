@@ -69,7 +69,7 @@
                         </li>
 
                         <!-- Accueil -->
-                        <li class="nav-item"><a class="nav-link" href="/">Actualités</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('news') }}">Actualités</a></li>
                     </ul>
 
                     <!-- Bouton de téléchargement -->

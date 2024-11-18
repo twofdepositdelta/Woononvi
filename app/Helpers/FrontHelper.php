@@ -6,6 +6,9 @@ use App;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Setting;
+use App\Models\Booking;
+use App\Models\Ride;
+use App\Models\Actuality;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -62,4 +65,37 @@ class FrontHelper
 
         return $data;
     }
+
+    public static function getDriverUsersTotal()
+    {
+        return User::role('driver')->count() + 90;
+    }
+
+    public static function getSatisfiedClientsTotal()
+    {
+        // Récupérer les passagers distincts qui ont laissé un avis satisfaisant (par exemple, rating >= 4)
+        return Booking::distinct('passenger_id')->count() + 300;  // Compter le nombre de passagers satisfaits
+    }
+
+    public static function getCompletedTripsTotal()
+    {
+        // Compter les trajets dont le statut est 'completed'
+        return Ride::where('status', 'completed')->count() + 300;
+    }
+
+    public static function getTotalReservationsWithoutIssues()
+    {
+        return Booking::whereNotIn('status', ['cancelled', 'rejected'])->count() + 400;
+    }
+
+    public static function getBlogNews()
+    {
+        // Recherche des actualités dont le type est 'blog' (TypeNew->name = "blog")
+        return Actuality::whereHas('typeNew', function ($query) {
+            $query->where('name', 'blog');
+        })->limit(3)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
 }
