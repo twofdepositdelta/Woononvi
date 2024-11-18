@@ -15,7 +15,10 @@ class PaymentTypeSeeder extends Seeder
     {
         DB::table('payment_types')->insert([
             [
-                'label' => 'Balance',
+                'label' => 'Deposit',
+            ],
+            [
+                'label' => 'Withdraw',
             ],
             [
                 'label' => 'Booking',
