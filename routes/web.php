@@ -31,6 +31,8 @@ Route::get('/a-propos-de-wononvi', [HomeController::class, 'about'])->name('abou
 Route::get('/nos-infos-et-news', [HomeController::class, 'new'])->name('news');
 Route::get('/actualites/details/{actuality:slug}', [HomeController::class, 'newSow'])->name('actuality.show');
 Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
+Route::get('/securite', [HomeController::class, 'security'])->name('security.front');
+Route::get('/fonctionnement', [HomeController::class, 'functioning'])->name('fonction.front');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
