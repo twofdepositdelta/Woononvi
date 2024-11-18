@@ -28,6 +28,9 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/a-propos-de-wononvi', [HomeController::class, 'about'])->name('about');
+Route::get('/nos-infos-et-news', [HomeController::class, 'new'])->name('news');
+Route::get('/actualites/details/{actuality:slug}', [HomeController::class, 'newSow'])->name('actuality.show');
 Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');

@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             ComissionSeeder::class,
             ApiSeeder::class,
             PaymentTypeSeeder::class,
-            PaymentSeeder::class
+            // PaymentSeeder::class
         ]);
     }
 }
