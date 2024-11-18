@@ -33,7 +33,7 @@
                     </div>
                     <div class="contact-info-content">
                         <h5>Appelez-nous</h5>
-                        <p>+229 </p>
+                        <p>+229 12 34 56 78 </p>
                     </div>
                 </div>
             </div>

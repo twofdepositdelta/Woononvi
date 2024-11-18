@@ -11,7 +11,7 @@ class Booking extends Model
         'seats_reserved',
         'total_price',
         'status',
-        'trip_id', // Clé étrangère pour le trajet
+        'ride_id', // Clé étrangère pour le trajet
         'passenger_id', // Clé étrangère pour le passager
         'booking_number'
     ];
