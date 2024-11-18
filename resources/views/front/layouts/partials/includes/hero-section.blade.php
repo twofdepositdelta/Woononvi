@@ -1,4 +1,4 @@
-<div class="about-area py-120">
+<div class="about-area pt-120">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">

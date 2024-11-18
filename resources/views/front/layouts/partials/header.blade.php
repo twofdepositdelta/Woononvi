@@ -46,7 +46,7 @@
                                 <li><a class="dropdown-item" href="#presentation">En savoir plus</a></li>
                                 <li><a class="dropdown-item" href="#vision">Notre Vision</a></li>
                                 <li><a class="dropdown-item" href="#communaute">Notre Communauté</a></li>
-                                <li><a class="dropdown-item" href="#securite">Notre Sécurité</a></li>
+                                <li><a class="dropdown-item" href="{{route('security.front')}}">Notre Sécurité</a></li>
                             </ul>
                         </li>
 
@@ -54,7 +54,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentation</a>
                             <ul class="dropdown-menu fade-down">
-                                <li><a class="dropdown-item" href="#comment-ca-fonctionne">Comment ça fonctionne ?</a></li>
+                                <li><a class="dropdown-item" href="{{route('fonction.front')}}">Comment ça fonctionne ?</a></li>
                                 <li><a class="dropdown-item" href="{{route('faqs.front')}}">FAQ Technique</a></li>
                             </ul>
                         </li>
@@ -69,7 +69,7 @@
                         </li>
 
                         <!-- Accueil -->
-                        <li class="nav-item"><a class="nav-link" href="/">Actualités</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('news') }}">Actualités</a></li>
                     </ul>
 
                     <!-- Bouton de téléchargement -->

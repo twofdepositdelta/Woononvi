@@ -17,7 +17,7 @@
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/js/wow.min.js') }}"></script>
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/js/main.js') }}?v={{ uniqid() }}"></script>
     <script src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/assets/js/contact-form.js')}}"></script>
-
+    @yield('customJS')
 </body>
 
 </html>

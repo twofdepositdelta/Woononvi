@@ -3,9 +3,7 @@
         <div class="row">
             <div class="col-lg-6 mx-auto">
                 <div class="site-heading text-center">
-                    <span class="site-title-tagline">Feature</span>
-                    <h2 class="site-title">Our Awesome Feature</h2>
-                    <div class="heading-divider"></div>
+                    <span class="site-title-tagline">Nos Qualités Exceptionnelles</span>
                 </div>
             </div>
         </div>
@@ -16,9 +14,8 @@
                         <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/taxi-safety.svg') }}" alt>
                     </div>
                     <div class="feature-content">
-                        <h4>Safety Guarantee</h4>
-                        <p>There are many variations of majority have suffered alteration in some form injected
-                            humour randomised words.</p>
+                        <h4>Sécurité Assurée</h4>
+                        <p>Voyagez l’esprit tranquille avec notre système de sécurité avancé et des chauffeurs certifiés, prêts à vous offrir une expérience sereine.</p>
                     </div>
                 </div>
             </div>
@@ -28,9 +25,8 @@
                         <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/pickup.svg') }}" alt>
                     </div>
                     <div class="feature-content">
-                        <h4>Fast Pickup</h4>
-                        <p>There are many variations of majority have suffered alteration in some form injected
-                            humour randomised words.</p>
+                        <h4>Réponse Instantanée</h4>
+                        <p>Que ce soit pour un trajet urgent ou planifié, votre véhicule arrive rapidement pour vous emmener où vous le souhaitez, sans attendre.</p>
                     </div>
                 </div>
             </div>
@@ -40,9 +36,8 @@
                         <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/money.svg') }}" alt>
                     </div>
                     <div class="feature-content">
-                        <h4>Affordable Rate</h4>
-                        <p>There are many variations of majority have suffered alteration in some form injected
-                            humour randomised words.</p>
+                        <h4>Tarif Abordable</h4>
+                        <p>Bénéficiez de prix attractifs, sans compromis sur la qualité du service. Une solution idéale pour vos trajets quotidiens et spéciaux.</p>
                     </div>
                 </div>
             </div>
@@ -52,9 +47,8 @@
                         <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/support.svg') }}" alt>
                     </div>
                     <div class="feature-content">
-                        <h4>24/7 Support</h4>
-                        <p>There are many variations of majority have suffered alteration in some form injected
-                            humour randomised words.</p>
+                        <h4>Support 24/7</h4>
+                        <p>Notre équipe de support est toujours disponible pour vous aider, que ce soit pour des questions, des réservations ou des urgences.</p>
                     </div>
                 </div>
             </div>

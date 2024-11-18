@@ -5,14 +5,11 @@
                 <div class="choose-content">
                     <div class="site-heading wow fadeInDown mb-4" data-wow-delay=".25s">
                         <span class="site-title-tagline text-white justify-content-start">
-                            <i class="flaticon-drive"></i> Why Choose Us
+                            <i class="flaticon-drive"></i> Pourquoi Choisir Wononvi
                         </span>
-                        <h2 class="site-title text-white mb-10">We are dedicated <span>to provide</span> quality
-                            service</h2>
+                        <h2 class="site-title text-white mb-10">Nous sommes dédiés <span>à offrir</span> un service de qualité</h2>
                         <p class="text-white">
-                            There are many variations of passages available but the majority have suffered
-                            alteration in some form going to use a passage by injected humour randomised words
-                            which don't look even slightly believable.
+                            Avec Wononvi, profitez d'une expérience de covoiturage inégalée. Nos conducteurs experts et nos véhicules de qualité garantissent votre sécurité et confort tout au long de votre trajet.
                         </p>
                     </div>
                     <div class="choose-img wow fadeInUp" data-wow-delay=".25s">
@@ -28,10 +25,8 @@
                             <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/taxi-1.svg') }}" alt>
                         </div>
                         <div class="choose-item-info">
-                            <h3>Best Quality Taxi</h3>
-                            <p>There are many variations of passages available but the majority have suffered
-                                alteration in form injected humour words which don't look even slightly
-                                believable. If you are going passage you need there anything embar.</p>
+                            <h3>Véhicules de qualité</h3>
+                            <p>Nos véhicules sont soigneusement sélectionnés pour garantir sécurité et confort, avec des standards élevés pour chaque trajet effectué.</p>
                         </div>
                     </div>
                     <div class="choose-item ms-lg-5">
@@ -40,10 +35,8 @@
                             <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/driver.svg') }}" alt>
                         </div>
                         <div class="choose-item-info">
-                            <h3>Expert Drivers</h3>
-                            <p>There are many variations of passages available but the majority have suffered
-                                alteration in form injected humour words which even slightly believable. If you
-                                are going passage you need there anything.</p>
+                            <h3>Conducteurs Experts</h3>
+                            <p>Nos conducteurs sont formés pour offrir une conduite sûre, rapide et agréable, vous assurant une expérience sans souci à chaque trajet.</p>
                         </div>
                     </div>
                     <div class="choose-item mb-lg-0">
@@ -52,10 +45,8 @@
                             <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/icon/taxi-location.svg') }}" alt>
                         </div>
                         <div class="choose-item-info">
-                            <h3>Many Locations</h3>
-                            <p>There are many variations of passages available but the majority have suffered
-                                alteration in form injected humour words which don't look even slightly
-                                believable. If you are going passage you need there anything embar.</p>
+                            <h3>Nombreuses Destinations</h3>
+                            <p>Avec Wononvi, vous pouvez voyager dans de nombreuses villes et régions, que ce soit pour un trajet local ou interurbain, avec une couverture étendue pour tous vos besoins.</p>
                         </div>
                     </div>
                 </div>
