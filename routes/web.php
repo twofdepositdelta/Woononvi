@@ -1,33 +1,35 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\FaqController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RideController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TypeNewController;
-use App\Http\Controllers\VehicleController;
-use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\ActualityController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CommissionController;
-use App\Http\Controllers\RideSearchController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RideController;
 use App\Http\Controllers\RideRequestController;
+use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\TypeVehicleController;
-use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\DriverDocumentController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/a-propos-de-wononvi', [HomeController::class, 'about'])->name('about');
+Route::get('/nos-infos-et-news', [HomeController::class, 'new'])->name('news');
+Route::get('/actualites/details/{actuality:slug}', [HomeController::class, 'newSow'])->name('actuality.show');
 Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -61,10 +63,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/filter-cities', [DashboardController::class, 'filterCitiesByCountry'])->name('filter.cities');
 
-
     Route::get('/apis/edit/', [ApiController::class, 'api'])->name('apis');
     Route::put('/apis/update/', [ApiController::class, 'update'])->name('apis.update');
-
 
     Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');
 
@@ -91,7 +91,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/actualite/filter', [ActualityController::class, 'filterByType'])->name('actualities.filterByType');
 
-
     Route::resource('rides', RideController::class)->parameters([
         'rides' => 'ride:numero_ride',
     ]);
@@ -109,7 +108,6 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::get('/pa/filter', [PaymentController::class, 'filterByType'])->name('payments.filterByType');
-
 
     Route::resource('bookings', BookingController::class)->parameters([
         'bookings' => 'booking:booking_number',
@@ -130,7 +128,7 @@ Route::middleware('auth')->group(function () {
         'faqs' => 'faq:slug',
     ]);
 
-// vehicles
+    // vehicles
     Route::resource('vehicles', VehicleController::class)->parameters([
         'vehicles' => 'vehicle:slug',
     ]);
@@ -139,34 +137,30 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
 
-
     // Route::resource('typevehicles', TypeVehicleController::class)->parameters([
     //     'typevehicles' => 'typevehicle:slug',
     // ]);
 
-
-
-// document
+    // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
 
     Route::post('/paper/{document:number}/status', [DocumentController::class, 'validated'])->name('documents.validated');
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
-//commission
-Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
-Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
+    //commission
+    Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
+    Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
 
-
-// trajet
+    // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');
     Route::get('/trajet/{ride}/{status}', [RideController::class, 'updatestatus'])->name('rides.status');
     Route::get('/trajet/statistics', [RideController::class, 'statistique'])->name('rides.rapports');
     Route::get('/rides-distance-report', [RideController::class, 'getDistanceReport'])->name('rides.distance.report');
     Route::get('/ride-report', [RideController::class, 'getRidesReport'])->name('rides.report');
-//transaction
+    //transaction
 
     Route::get('/paiement/historique', [PaymentController::class, 'historique'])->name('payments.historique');
     Route::get('/transac/{transaction}/{status}', [TransactionController::class, 'updatestatus'])->name('transactions.status');
-//reservation
+    //reservation
     Route::get('/reservation/historique', [BookingController::class, 'historique'])->name('bookings.historique');
     Route::get('/reservation/{booking}/{status}', [BookingController::class, 'updatestatus'])->name('bookings.status');
     Route::post('/rides/filter', [BookingController::class, 'filterRides'])->name('rides.filter');
@@ -193,7 +187,5 @@ Route::get('/commissions/report', [CommissionController::class, 'getCommissionRe
     Route::get('/conversation/closed/{conversation}', [ConversationController::class, 'close'])->name('conversation.down');
 
 });
-
-
 
 require __DIR__.'/auth.php';
