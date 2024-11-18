@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('ride_searches', function (Blueprint $table) {
             $table->id();
-            $table->string('departure');        // Lieu de départ recherché
-            $table->string('destination');      // Lieu de destination recherché
+            $table->geography('start_location'); // Latitude et longitude de départ
+            $table->geography('end_location'); // Latitude et longitude d’arrivée
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade'); // Utilisateur ayant effectué la recherche
             $table->timestamps();
+
+            // Index
+            $table->spatialIndex('start_location');
+            $table->spatialIndex('end_location');
         });
     }
 

@@ -13,13 +13,26 @@ return new class extends Migration
     {
         Schema::create('ride_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('departure');
-            $table->string('destination');
+            $table->geography('start_location'); // Latitude et longitude de départ
+            $table->geography('end_location'); // Latitude et longitude d’arrivée
+            $table->integer('seats');
             $table->timestamp('preferred_time'); // Heure de départ prévue
-            $table->integer('preferred_amount'); // Nombre de places disponibles
-            $table->enum('status', ['pending', 'responded','completed', 'cancelled'])->default('pending'); // Statut du trajet (pending, completed, canceled)
+            $table->double('preferred_amount'); // Nombre de places disponibles
+            $table->integer('commission_rate');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'validated_by_passenger', 'validated_by_driver', 'refunded', 'cancelled'])->default('pending');
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->timestamps('accepted_at')->nullable();
+            $table->timestamps('rejected_at')->nullable();
+            $table->timestamps('validated_by_passenger_at')->nullable();
+            $table->timestamps('validated_by_driver_at')->nullable();
+            $table->timestamps('refunded_at')->nullable();
+            $table->timestamps('cancelled_at')->nullable();
             $table->timestamps();
+
+            // Index
+            $table->spatialIndex('start_location');
+            $table->spatialIndex('end_location');
         });
     }
 

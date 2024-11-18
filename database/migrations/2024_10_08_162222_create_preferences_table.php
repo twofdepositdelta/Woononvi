@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('music_preference', ['none', 'soft', 'loud', 'all'])->default('all'); // Préférence musicale
             $table->boolean('pet_allowed')->default(true);       // Si les animaux sont autorisés
             $table->text('other_preferences')->nullable();        // Autres préférences
+            $table->double('prefered_amount')->default(100);     
             $table->timestamps();
         });
     }
