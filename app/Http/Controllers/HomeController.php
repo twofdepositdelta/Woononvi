@@ -14,9 +14,22 @@ class HomeController extends Controller
 
     public function faqs()
 {
-   
+
     $faqGroups = FaqType::orderBy('created_at','desc')->get();
 
     return view('front.pages.documentation.faq', compact('faqGroups'));
+}
+
+public function functioning()
+{
+
+    return view('front.pages.documentation.fonctionnement');
+}
+
+
+public function security()
+{
+
+    return view('front.pages.about.security');
 }
 }

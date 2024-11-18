@@ -28,7 +28,10 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DriverDocumentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
+Route::get('/documentation/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
+Route::get('/documentation/fonctionnement', [HomeController::class, 'functioning'])->name('fonction.front');
+Route::get('about/securite', [HomeController::class, 'security'])->name('security.front');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
