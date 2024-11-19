@@ -81,8 +81,8 @@ class RideController extends Controller
         }
 
         // Création des objets Point pour les coordonnées géographiques
-        $startLocationWKT = "POINT({$request->start_lng} {$request->start_lat})";
-        $endLocationWKT = "POINT({$request->end_lng} {$request->end_lat})";
+        // $startLocationWKT = "POINT({$request->start_lng} {$request->start_lat})";
+        // $endLocationWKT = "POINT({$request->end_lng} {$request->end_lat})";
 
         // Si les jours sont fournis, les convertir en chaîne JSON
         $daysJson = $request->days ? json_encode($request->days) : null;
@@ -98,8 +98,8 @@ class RideController extends Controller
             'price_per_km' => $request->price_per_km,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
-            'start_location' => DB::raw("ST_GeomFromText(?)", [$startLocationWKT]),  // Coordonnées de départ
-            'end_location' => DB::raw("ST_GeomFromText(?)", [$endLocationWKT]),      // Coordonnées d'arrivée
+            'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})')"),  // Coordonnées de départ
+            'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})')"),      // Coordonnées d'arrivée
         ]);
 
         // Retourner une réponse avec succès
