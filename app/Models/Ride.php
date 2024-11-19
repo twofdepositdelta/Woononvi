@@ -28,8 +28,8 @@ class Ride extends Model
 
     protected $casts = [
         'days' => 'array',
-        'start_location' => LocationCast::class,
-        'end_location' => LocationCast::class
+        // 'start_location' => LocationCast::class,
+        // 'end_location' => LocationCast::class
     ];
 
     // Relation avec le conducteur (utilisateur)
