@@ -99,18 +99,28 @@ class RideSeeder extends Seeder
                     // Si c'est un trajet régulier, ajouter des jours
                     $days = null;
                     if ($type == 'regular') {
-                        $days = json_encode(['Monday', 'Wednesday', 'Friday']); // Exemple de jours réguliers
+                        $days = json_encode(['Lundi', 'Mardi', 'Mercredi']); // Exemple de jours réguliers
                     }
+
+                    // Définir un retour de trajet aléatoire
+                    $return_trip = rand(0, 1) === 1;
+                    $return_time = $return_trip ? Carbon::now()->addHour() : null; // L'heure de retour est définie uniquement si le retour est activé
 
                     // Insertion dans la table 'rides'
                     DB::table('rides')->insert([
                         'numero_ride' => random_int(100000, 999999),
                         'type' => $type,
+                        'start_location_name' => $route['departure'], // Nom de la ville de départ
                         'start_location' => DB::raw("ST_GeomFromText('POINT({$route['longitude']} {$route['latitude']})')"), // Coordonnées de départ
-                        'end_location' => DB::raw("ST_GeomFromText('POINT({$route['longitude']} {$route['latitude']})')"), // Coordonnées d'arrivée (ici, même coordonnées pour exemple)
+                        'end_location_name' => $route['destination'], // Nom de la ville de destination
+                        'end_location' => DB::raw("ST_GeomFromText('POINT({$route['longitude']} {$route['latitude']})')"), // Coordonnées d'arrivée
                         'days' => $days,
+                        'return_trip' => $return_trip,
+                        'return_time' => $return_time,
                         'departure_time' => Carbon::now(),
+                        'arrival_time' => $return_trip ? Carbon::now()->addMinutes(30) : null, // Si retour, on ajoute une arrivée fictive
                         'price_per_km' => 1000,
+                        'available_seats'=>rand(1, 10),
                         'price_maintain' => 500, // Exemple de prix de maintenance
                         'is_nearby_ride' => rand(0, 1) === 1,
                         'status' => $status,
@@ -125,6 +135,7 @@ class RideSeeder extends Seeder
             }
         }
     }
+
 
 
 }

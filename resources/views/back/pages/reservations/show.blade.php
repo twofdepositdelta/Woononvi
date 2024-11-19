@@ -17,14 +17,15 @@
                     </a>
                 </p>
             </div>
-            {{-- <div class="col-md-6">
+            <div class="col-md-6">
                 <strong>Trajet :</strong>
                 <p class="mb-0">
                     <a href="{{ route('rides.show', $booking->ride->id) }}">
-                        {{ $booking->ride->start_location }} - {{ $booking->ride->end_location }}
+                        {{ $booking->ride->start_location_name }} - {{ $booking->ride->end_location_name }}
+                        
                     </a>
                 </p>
-            </div> --}}
+            </div>
         </div>
 
         <div class="row mb-3">

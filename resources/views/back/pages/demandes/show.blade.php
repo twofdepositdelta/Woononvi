@@ -21,22 +21,21 @@
         </div>
 
         <!-- Trajet -->
-        {{-- <div class="row mb-3">
+        <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Lieu de Départ :</strong>
                 <p class="mb-0">
-                    Latitude: {{ $rideRequest->start_location->getLatitude() }} |
-                    Longitude: {{ $rideRequest->start_location->getLongitude() }}
+                   {{ $rideRequest->start_location_name }} 
+
                 </p>
             </div>
             <div class="col-md-6">
                 <strong>Lieu d'Arrivée :</strong>
                 <p class="mb-0">
-                    Latitude: {{ $rideRequest->end_location->getLatitude() }} |
-                    Longitude: {{ $rideRequest->end_location->getLongitude() }}
+                 {{ $rideRequest->end_location_name }}
                 </p>
             </div>
-        </div> --}}
+        </div>
 
         <!-- Places réservées -->
         <div class="row mb-3">

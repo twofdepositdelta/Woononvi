@@ -9,7 +9,9 @@ class RideRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'start_location_name',
         'start_location',
+        'end_location_name',
         'end_location',
         'seats',
         'preferred_time',

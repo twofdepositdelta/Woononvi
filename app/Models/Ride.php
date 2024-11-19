@@ -23,6 +23,7 @@ class Ride extends Model
         'return_time',
         'departure_time',
         'price_per_km',
+        'available_seats',
         'price_maintain',
         'is_nearby_ride',
         'vehicle_id',

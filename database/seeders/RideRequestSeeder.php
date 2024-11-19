@@ -21,6 +21,8 @@ class RideRequestSeeder extends Seeder
             [
                 'start_location' => DB::raw("ST_GeomFromText('POINT(2.3912 6.3703)')"), // Cotonou
                 'end_location' => DB::raw("ST_GeomFromText('POINT(2.6288 6.4969)')"),   // Porto-Novo
+                 'start_location_name'=> "Cotonou",
+                 'end_location_name'=> "Porto-Novo",
                 'seats' => 3,
                 'preferred_time' => Carbon::now()->addHours(2),
                 'preferred_amount' => 1500,
@@ -33,6 +35,8 @@ class RideRequestSeeder extends Seeder
             [
                 'start_location' => DB::raw("ST_GeomFromText('POINT(2.6099 9.3467)')"), // Parakou
                 'end_location' => DB::raw("ST_GeomFromText('POINT(1.3798 10.2964)')"), // Natitingou
+                'start_location_name'=> "Parakou",
+                'end_location_name'=> "Natitingou",
                 'seats' => 2,
                 'preferred_time' => Carbon::now()->addHours(1),
                 'preferred_amount' => 5000,
@@ -46,6 +50,8 @@ class RideRequestSeeder extends Seeder
             [
                 'start_location' => DB::raw("ST_GeomFromText('POINT(2.6288 6.4969)')"), // Porto-Novo
                 'end_location' => DB::raw("ST_GeomFromText('POINT(2.3912 6.3703)')"), // Cotonou
+                'start_location_name'=> "Porto-Novo",
+                'end_location_name'=> "Cotonou",
                 'seats' => 4,
                 'preferred_time' => Carbon::now()->addHours(3),
                 'preferred_amount' => 2000,

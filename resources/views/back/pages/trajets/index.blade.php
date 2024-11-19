@@ -15,8 +15,8 @@
                         <tr>
                             <th>Numéro</th>
                             <th>Heure de départ</th>
-                            {{-- <th>Départ</th>
-                            <th>Destination</th> --}}
+                            <th>Départ</th>
+                            <th>Destination</th>
                             <th>Prix/km</th>
                             <th>Conducteur</th>
                             <th>Statut</th>
@@ -35,8 +35,8 @@
 
                                     <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
 
-                                    {{-- <td>{{ $ride->start_city }}</td>
-                                    <td>{{ $ride->end_city }}</td> --}}
+                                    <td>{{ $ride->start_location_name }}</td>
+                                    <td>{{ $ride->end_location_name }}</td>
                                     <td>{{ $ride->price_per_km }} FCFA</td>
                                     <td>
                                         @if ($ride->driver)

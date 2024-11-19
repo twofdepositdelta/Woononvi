@@ -56,8 +56,8 @@
                                             </div>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($ride->departure_time)->format('H:i') }}</td>
-                                        <td>{{ $ride->departure }}</td>
-                                        <td>{{ $ride->destination }}</td>
+                                        <td>{{ $ride->start_location_name }}</td>
+                                        <td>{{ $ride->end_location_name }}</td>
                                         <td>{{ $ride->available_seats }}</td>
                                         <td class="text-center">
                                             @php
@@ -108,7 +108,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Passager</th>
-                                    {{-- <th scope="col">Trajet</th> --}}
+                                    <th scope="col">Trajet</th>
                                     <th scope="col">NPR</th>
                                     <th scope="col">Prix Total</th>
                                     <th scope="col">Date de Réservation</th>
@@ -120,7 +120,7 @@
                                     <tr>
                                         <td>{{ $booking->booking_number }}</td>
                                         <td>{{ $booking->passenger->firstname . ' ' . $booking->passenger->lastname }}</td>
-                                        {{-- {{ $booking->ride->start_location }} - {{ $booking->ride->end_location }} --}}
+                                        {{ $booking->ride->start_location_name }} - {{ $booking->ride->end_location_name }}
                                         <td>{{ $booking->seats_reserved }}</td>
                                         <td>{{ $booking->total_price }} FCFA</td>
                                         <td>{{ $booking->created_at->format('d/m/Y H:i') }}</td>

@@ -36,11 +36,11 @@
                                 <td>{{ \Carbon\Carbon::parse($booking->created_at)->locale('fr')->translatedFormat('D, d M Y') }}</td>
 
                                 <!-- Trajet (Départ et Destination) -->
-                                {{-- <td>
+                                <td>
                                     <a href="{{ route('rides.show', $booking->ride->id) }}">
-                                        {{ $booking->ride->start_location }} - {{ $booking->ride->end_location }}
+                                        {{ $booking->ride->start_location_name }} - {{ $booking->ride->end_location_name }}
                                     </a>
-                                </td> --}}
+                                </td>
 
                                 <!-- Passager -->
                                 <td>
@@ -89,7 +89,7 @@
                                             <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                                         </a>
 
-                                       
+
                                     </div>
                                 </td>
                             </tr>

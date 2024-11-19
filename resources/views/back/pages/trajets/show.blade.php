@@ -12,6 +12,24 @@
     <!-- Card Body -->
     <div class="card-body p-24">
 
+        <!-- Type de trajet (Régulier ou autre) -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Type de Trajet :</strong>
+                <p class="mb-0">
+                    <span class="badge {{ $ride->type == 'regular' ? 'bg-primary' : 'bg-secondary' }}">
+                        {{$ride->formatted_type }}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Nombre de sièges disponibles -->
+            <div class="col-md-6">
+                <strong>Sièges Disponibles :</strong>
+                <p class="mb-0">{{ $ride->available_seats }} Sièges</p>
+            </div>
+        </div>
+
         <!-- Jours de trajet (pour les trajets réguliers) -->
         @if($ride->type == 'regular' && $ride->days)
         <div class="row mb-3">
@@ -38,6 +56,18 @@
                 <p class="mb-0">{{ \Carbon\Carbon::parse($ride->return_time)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</p>
             </div>
             @endif
+        </div>
+
+        <!-- Localisation du trajet -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Lieu de Départ :</strong>
+                <p class="mb-0">{{ $ride->start_location_name }} </p>
+            </div>
+            <div class="col-md-6">
+                <strong>Lieu d'Arrivée :</strong>
+                <p class="mb-0">{{ $ride->end_location_name }} </p>
+            </div>
         </div>
 
         <!-- Prix par km et prix de maintien -->
@@ -88,26 +118,23 @@
                 </p>
             </div>
 
+            <!-- Véhicule -->
             <div class="col-md-6">
-                <strong>Type de Trajet :</strong>
+                <strong>Véhicule :</strong>
                 <p class="mb-0">
-                    <span class="badge {{ $ride->type == 'regular' ? 'bg-primary' : 'bg-secondary' }}">
-                        {{ $ride->formatted_type }} <!-- Appel du getter -->
-                    </span>
+                    {{ $ride->vehicle->vehicle_mark }} {{ $ride->vehicle->vehicle_mark }} ({{ $ride->vehicle->licence_plate }})
                 </p>
             </div>
         </div>
 
     </div>
 
-
-    <!-- /Card Body -->
-
     <!-- Card Footer -->
     <div class="card-footer text-end">
         <a href="{{ route('rides.index') }}" class="btn btn-secondary">Retour à la Liste</a>
     </div>
 </div>
+
 
 
 @endsection

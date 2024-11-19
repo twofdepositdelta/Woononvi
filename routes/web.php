@@ -151,7 +151,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rejeter/raison', [DocumentController::class, 'reason'])->name('documents.reason');
     //commission
     Route::get('/commission/statistique', [CommissionController::class, 'index'])->name('commissions.index');
-    Route::get('/commissions/report', [CommissionController::class, 'getCommissionReport'])->name('commissions.report');
+    Route::get('/commissions/report', [BookingController::class, 'getCommissionReport'])->name('bookingcomis.report');
 
     // trajet
     Route::get('/trajet/historique', [RideController::class, 'historique'])->name('rides.historique');

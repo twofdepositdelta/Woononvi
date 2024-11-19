@@ -14,8 +14,8 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Date</th>
-                    {{-- <th scope="col">Départ</th>
-                    <th scope="col">Destination</th> --}}
+                    <th scope="col">Départ</th>
+                    <th scope="col">Destination</th>
                     <th scope="col">Nbr places</th>
                     <th scope="col">Demandeur</th>
                     <th scope="col">Statut</th>
@@ -32,22 +32,22 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
-                            {{-- <td>
+                            <td>
                                 <div class="d-flex align-items-center">
                                     <span class="text-md mb-0 fw-normal text-secondary-light">
-                                        {{ $rideRequest->start_location['latitude'] ?? 'N/A' }},
-                                        {{ $rideRequest->start_location['longitude'] ?? 'N/A' }}
+                                        {{ $rideRequest->start_location_name }},
+
                                     </span>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span class="text-md mb-0 fw-normal text-secondary-light">
-                                        {{ $rideRequest->end_location['latitude'] ?? 'N/A' }},
-                                        {{ $rideRequest->end_location['longitude'] ?? 'N/A' }}
+                                        {{ $rideRequest->end_location_name }},
+
                                     </span>
                                 </div>
-                            </td> --}}
+                            </td>
                             <td>{{ $rideRequest->seats }}</td>
                             <td>
                                 @if ($rideRequest->passenger)
