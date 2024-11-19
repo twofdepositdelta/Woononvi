@@ -109,20 +109,15 @@ class RideController extends Controller
 
     private function isWithinBenin(float $latitude, float $longitude): bool
     {
-        $apiUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&key=AIzaSyDcA6TWg_F0YRmwkoiBLQNQEA9m69aLgQY";
-        
-        $response = file_get_contents($apiUrl);
-        $data = json_decode($response, true);
-
-        if (!empty($data['results'])) {
-            foreach ($data['results'] as $result) {
-                if (in_array('Benin', $result['formatted_address'])) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        $beninBounds = [
+            'min_lat' => 6.142,  // Latitude minimale approximative du Bénin
+            'max_lat' => 12.409, // Latitude maximale approximative du Bénin
+            'min_lng' => 0.774,  // Longitude minimale approximative du Bénin
+            'max_lng' => 3.844,  // Longitude maximale approximative du Bénin
+        ];
+    
+        return $latitude >= $beninBounds['min_lat'] && $latitude <= $beninBounds['max_lat']
+            && $longitude >= $beninBounds['min_lng'] && $longitude <= $beninBounds['max_lng'];
     }
 
     /**
