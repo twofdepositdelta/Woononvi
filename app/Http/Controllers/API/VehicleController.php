@@ -55,7 +55,7 @@ class VehicleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -137,7 +137,7 @@ class VehicleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -209,7 +209,7 @@ class VehicleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

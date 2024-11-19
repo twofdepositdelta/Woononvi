@@ -13,7 +13,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "pusher/pusher-php-server": "^7.2",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-permission": "^6.9",
+        "tarfin-labs/laravel-spatial": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

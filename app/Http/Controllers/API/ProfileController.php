@@ -76,7 +76,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

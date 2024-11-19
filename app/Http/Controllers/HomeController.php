@@ -13,7 +13,7 @@ class HomeController extends Controller
         return view('front.pages.index');
     }
 
-    
+
 
 public function functioning()
 {
@@ -21,6 +21,11 @@ public function functioning()
     return view('front.pages.documentation.fonctionnement');
 }
 
+public function joinUs()
+{
+
+    return view('front.pages.joinUs');
+}
 
 public function security()
 {

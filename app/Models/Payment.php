@@ -13,6 +13,7 @@ class Payment extends Model
         'reference',
         'payment_number',
         'payment_method',
+        'payment_number',
         'status',
         'booking_id',
         'user_id',

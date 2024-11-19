@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
                 'success' => false,
                 'reason' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

@@ -34,7 +34,7 @@ class PasswordResetLinkController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Quelque chose s\'est mal déroulée.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -94,7 +94,7 @@ class PasswordResetLinkController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Ride;
-use App\Models\Trip;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;

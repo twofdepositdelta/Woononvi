@@ -41,7 +41,7 @@
                             <li><a href="#"><i class="fas fa-caret-right"></i> Affiliation</a></li>
                             <li><a href="#"><i class="fas fa-caret-right"></i> Conseils de réservation</a></li>
                             <li><a href="#"><i class="fas fa-caret-right"></i> Réserver un trajet</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Contactez-nous</a></li>
+                            <li><a href="{{ route('contact') }}"><i class="fas fa-caret-right"></i> Contactez-nous</a></li>
                             <li><a href="#"><i class="fas fa-caret-right"></i> Plan du site</a></li>
                         </ul>
                     </div>
