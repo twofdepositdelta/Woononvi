@@ -8,6 +8,7 @@ use App\Http\Controllers\API\VehicleController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\DocumentController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\RideController;
 
 require __DIR__ . '/auth_api.php';
 
@@ -32,4 +33,6 @@ Route::middleware('auth:api')->group(function () {
     
     Route::post('payments/recharge-balance', [PaymentController::class, 'rechargeBalance'])->name('api.user.rechargeBalance');
     Route::get('payments/get-status/{reference}', [PaymentController::class, 'checkTransactionStatus'])->name('api.user.rechargeBalance');
+    
+    Route::post('rides/store', [RideController::class, 'store'])->name('api.ride.store');
 });

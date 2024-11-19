@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class TripController extends Controller
+class RideController extends Controller
 {
     /**
      * Store a newly created resource in storage.
