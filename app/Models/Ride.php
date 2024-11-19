@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use TarfinLabs\LaravelSpatial\Traits\HasSpatial;
 
 class Ride extends Model
 {
@@ -24,6 +25,11 @@ class Ride extends Model
         'status',
     ];
 
+    protected $casts = [
+        'days' => 'array',
+        'start_location' => LocationCast::class,
+        'end_location' => LocationCast::class
+    ];
 
     // Relation avec le conducteur (utilisateur)
     public function driver()
