@@ -28,6 +28,8 @@ class RideController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:regular,single',
             'start_lat' => 'required|numeric',
+            'start_location_name' => 'required|string',
+            'end_location_name' => 'required|string',
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
@@ -95,6 +97,8 @@ class RideController extends Controller
             'price_per_km' => 100,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
+            'start_location_name' => $request->start_location_name,  
+            'end_location_name' => $request->end_location_name,  
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
         ]);
