@@ -70,7 +70,7 @@ class PaymentController extends Controller
                             'reference' => $transactionRef,
                             'amount' => $amount,
                             'status' => 'SUCCESSFUL',
-                            'phone' => $phoneNumber,
+                            'payment_number' => $phoneNumber,
                             'payment_type_id' => 1,
                         ]);
 

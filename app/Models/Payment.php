@@ -12,6 +12,7 @@ class Payment extends Model
         'amount',
         'total_price',
         'payment_method',
+        'payment_number',
         'status',
         'booking_id', // Clé étrangère pour la réservation
         'user_id',
