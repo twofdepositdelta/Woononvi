@@ -96,7 +96,6 @@ class RideController extends Controller
             'start_location' => DB::raw("ST_GeomFromText(?)", [$startLocationWKT]),  // Coordonnées de départ
             'end_location' => DB::raw("ST_GeomFromText(?)", [$endLocationWKT]),      // Coordonnées d'arrivée
             'days' => $request->days ? json_encode($request->days) : null,
-            'return_trip' => $request->return_trip,
             'departure_time' => $request->departure_time,
             'arrival_time' => $request->arrival_time,
             'price_per_km' => $request->price_per_km,
