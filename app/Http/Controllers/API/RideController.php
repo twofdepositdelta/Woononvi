@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
@@ -83,13 +84,17 @@ class RideController extends Controller
         $startLocation = new Point($request->start_lat, $request->start_lng);
         $endLocation = new Point($request->end_lat, $request->end_lng);
 
+        // Conversion des coordonnées en format WKT (Well-Known Text)
+        $startLocationWKT = "POINT({$request->start_lng} {$request->start_lat})";
+        $endLocationWKT = "POINT({$request->end_lng} {$request->end_lat})";
+
         // Enregistrement du trajet dans la base de données
         $trip = Ride::create([
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
             'type' => $request->type,
-            'start_location' => $startLocation,  // Coordonnées de départ
-            'end_location' => $endLocation,      // Coordonnées d'arrivée
+            'start_location' => DB::raw("ST_GeomFromText(?)", [$startLocationWKT]),  // Coordonnées de départ
+            'end_location' => DB::raw("ST_GeomFromText(?)", [$endLocationWKT]),      // Coordonnées d'arrivée
             'days' => $request->days ? json_encode($request->days) : null,
             'return_trip' => $request->return_trip,
             'departure_time' => $request->departure_time,
