@@ -21,7 +21,7 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        $request;
+        dd($request); 
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:regular,single',
