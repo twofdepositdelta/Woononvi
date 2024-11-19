@@ -81,8 +81,11 @@ class RideController extends Controller
         }
 
         // Création des objets Point pour les coordonnées géographiques
-        $startLocation = DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})')");
-        $endLocation = DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})')");
+        // $startLocation = DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})')");
+        // $endLocation = DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})')");
+
+        $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
+        $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
 
         // Si les jours sont fournis, les convertir en chaîne JSON
         $daysJson = $request->days ? json_encode($request->days) : null;
@@ -101,19 +104,6 @@ class RideController extends Controller
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
         ]);
-
-        // Extraire la latitude et la longitude des objets de localisation
-        $startLat = $ride->start_location->getLat(); // Latitude du point de départ
-        $startLng = $ride->start_location->getLng(); // Longitude du point de départ
-
-        $endLat = $ride->end_location->getLat(); // Latitude du point d'arrivée
-        $endLng = $ride->end_location->getLng(); // Longitude du point d'arrivée
-
-        // Ajouter les coordonnées à la réponse
-        $ride->start_lat = $startLat;
-        $ride->start_lng = $startLng;
-        $ride->end_lat = $endLat;
-        $ride->end_lng = $endLng;
 
         // Retourner une réponse avec succès
         return response()->json([
