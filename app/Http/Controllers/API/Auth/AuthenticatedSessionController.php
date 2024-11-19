@@ -283,7 +283,7 @@ class AuthenticatedSessionController extends Controller
     {
         // Charger les relations profil et préférences de l'utilisateur
         $user->load(['profile', 'preferences', 'vehicles.rides']);
-
+        dd($user);
         $userArray = $user->toArray();
 
         unset($userArray['roles']);
