@@ -94,7 +94,7 @@ class RideController extends Controller
             'days' => $daysJson,
             'type' => $request->type,
             'departure_time' => $request->departure_time,
-            'return_time' => $request->arrival_time,
+            'return_time' => $request->return_time,
             'price_per_km' => $request->price_per_km,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
