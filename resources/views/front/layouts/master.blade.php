@@ -11,7 +11,7 @@
         @if (Route::currentRouteName() == 'index')
             @include('front.layouts.partials.includes.hero-section')
         @else
-            @include('front.layouts.partials.includes.breadcrumb')
+            {{-- @include('front.layouts.partials.includes.breadcrumb') --}}
         @endif
 
         @yield('content')

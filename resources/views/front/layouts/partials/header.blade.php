@@ -43,10 +43,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">À Propos</a>
                             <ul class="dropdown-menu fade-down">
-                                <li><a class="dropdown-item" href="#presentation">En savoir plus</a></li>
-                                <li><a class="dropdown-item" href="#vision">Notre Vision</a></li>
-                                <li><a class="dropdown-item" href="#communaute">Notre Communauté</a></li>
-                                <li><a class="dropdown-item" href="{{route('security.front')}}">Notre Sécurité</a></li>
+                                <li><a class="dropdown-item" href="{{ route('about') }}">En savoir plus</a></li>
+                                <li><a class="dropdown-item" href="{{ route('about') }}#communaute">Notre Communauté</a></li>
+                                <li><a class="dropdown-item" href="{{ route('about') }}#vision">Notre Vision</a></li>
+                                <li><a class="dropdown-item" href="{{ route('security.front') }}">Notre Sécurité</a></li>
                             </ul>
                         </li>
 
@@ -54,8 +54,8 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentation</a>
                             <ul class="dropdown-menu fade-down">
-                                <li><a class="dropdown-item" href="{{route('fonction.front')}}">Comment ça fonctionne ?</a></li>
-                                <li><a class="dropdown-item" href="{{route('faqs.front')}}">FAQ Technique</a></li>
+                                <li><a class="dropdown-item" href="{{ route('fonction.front') }}">Comment ça fonctionne ?</a></li>
+                                <li><a class="dropdown-item" href="{{ route('faqs.front') }}">FAQ Technique</a></li>
                             </ul>
                         </li>
 
@@ -63,8 +63,8 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Rejoignez-nous</a>
                             <ul class="dropdown-menu fade-down">
-                                <li><a class="dropdown-item" href="#devenir-conducteur">Devenir Conducteur</a></li>
-                                <li><a class="dropdown-item" href="#devenir-passager">Devenir Passager</a></li>
+                                <li><a class="dropdown-item" href="{{ route('joinUs') }}#devenir-conducteur">Devenir Conducteur</a></li>
+                                <li><a class="dropdown-item" href="{{ route('joinUs') }}#devenir-passager">Devenir Passager</a></li>
                             </ul>
                         </li>
 
