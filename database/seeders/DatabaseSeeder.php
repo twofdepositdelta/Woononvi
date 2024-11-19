@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
             EnvironmentSeeder::class,
             TypeVehicleSeeder::class,
             VehicleSeeder::class,          // Ajoutez le véhicule avant les trajets
-            RideSeeder::class,
-            BookingSeeder::class,          // Ajoutez les réservations après les trajets
+            // RideSeeder::class,
+            // BookingSeeder::class,          // Ajoutez les réservations après les trajets
             ReportTypeSeeder::class,       // Ajoutez les types de rapports avant les rapports
             ReportSeeder::class,           // Ajoutez les rapports après les réservations
             RideRequestSeeder::class,
