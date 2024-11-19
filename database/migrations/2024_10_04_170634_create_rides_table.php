@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('cascade');
             $table->enum('type', ['regular', 'single']); // Trajet régulier ou ponctuel
             $table->geography('start_location'); // Latitude et longitude de départ
             $table->geography('end_location'); // Latitude et longitude d’arrivée
