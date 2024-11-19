@@ -86,7 +86,7 @@ class ConversationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Veuillez fournir un message ou une image.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -225,7 +225,7 @@ class ConversationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

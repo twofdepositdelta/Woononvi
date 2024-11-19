@@ -24,7 +24,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Il y a un souci avec vos données.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

@@ -28,7 +28,7 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
