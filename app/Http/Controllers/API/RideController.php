@@ -21,6 +21,7 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
+        $request;
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:regular,single',
@@ -28,7 +29,8 @@ class RideController extends Controller
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            'days' => 'nullable|array',
+            'days' => 'required_if:type,regular|array',
+            'days.*' => 'string|in:Lu,Ma,Me,Je,Ve,Sa,Di',
             'departure_time' => 'required|date',
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
