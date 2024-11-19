@@ -31,8 +31,6 @@ class RideController extends Controller
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            // 'days' => 'required_if:type,regular|array',
-            // 'days.*' => 'string|in:Lu,Ma,Me,Je,Ve,Sa,Di',
             'departure_time' => 'required|date',
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
@@ -42,7 +40,7 @@ class RideController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Les données envoyées ne sont pas valides.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -80,10 +78,6 @@ class RideController extends Controller
             ], 422);
         }
 
-        // Création des objets Point pour les coordonnées géographiques
-        // $startLocation = DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})')");
-        // $endLocation = DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})')");
-
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
 
@@ -98,7 +92,7 @@ class RideController extends Controller
             'type' => $request->type,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
-            'price_per_km' => $request->price_per_km,
+            'price_per_km' => 100,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
             'start_location' => $startLocation,  // Coordonnées de départ
