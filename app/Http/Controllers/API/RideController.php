@@ -102,12 +102,12 @@ class RideController extends Controller
             'end_location' => $endLocation,      // Coordonnées d'arrivée
         ]);
 
-        // Extraire la latitude et la longitude des localisations
-        $startLat = DB::raw("ST_Y(start_location)"); // Récupère la latitude du point de départ
-        $startLng = DB::raw("ST_X(start_location)"); // Récupère la longitude du point de départ
+        // Extraire la latitude et la longitude des objets de localisation
+        $startLat = $ride->start_location->getLat(); // Latitude du point de départ
+        $startLng = $ride->start_location->getLng(); // Longitude du point de départ
 
-        $endLat = DB::raw("ST_Y(end_location)"); // Récupère la latitude du point d'arrivée
-        $endLng = DB::raw("ST_X(end_location)"); // Récupère la longitude du point d'arrivée
+        $endLat = $ride->end_location->getLat(); // Latitude du point d'arrivée
+        $endLng = $ride->end_location->getLng(); // Longitude du point d'arrivée
 
         // Ajouter les coordonnées à la réponse
         $ride->start_lat = $startLat;
