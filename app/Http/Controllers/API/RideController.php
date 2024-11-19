@@ -21,7 +21,6 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request); 
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:regular,single',
@@ -43,6 +42,14 @@ class RideController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+
+        $days = $request->input('days');
+        if (!$days) {
+            return response()->json(['message' => 'Les jours ne sont pas définis ou invalides.'], 422);
+        }
+
+        // Log or inspect the data
+        logger(json_encode($days));
 
         // Vérifier si le conducteur a un véhicule actif
         $driver = Auth::user();
