@@ -2,7 +2,7 @@
 @section('title', 'Statistique des commissions ')
 @section('content')
 
-    <!-- Crypto Home Widgets Start -->
+  <!-- Crypto Home Widgets Start -->
     <div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
 
         <div class="col">

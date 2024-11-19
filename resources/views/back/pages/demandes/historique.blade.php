@@ -12,64 +12,82 @@
         <table class="table bordered-table sm-table mb-0">
             <thead>
                 <tr>
-                    <th scope="col">
-                        <div class="d-flex align-items-center gap-10">
-                           #
-                        </div>
-                    </th>
+                    <th scope="col">#</th>
                     <th scope="col">Date</th>
                     <th scope="col">Départ</th>
                     <th scope="col">Destination</th>
-                    <th scope="col">NPD</th>
-                     <th scope="col">Demandeur</th>
+                    <th scope="col">Nbr places</th>
+                    <th scope="col">Demandeur</th>
                     <th scope="col">Statut</th>
-
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @if ($rideRequests->isEmpty())
                     <tr>
-                        <td colspan="7"  class="text-danger text-center">Aucune demande enregistré</td>
+                        <td colspan="7" class="text-danger text-center">Aucune demande enregistrée</td>
                     </tr>
                 @else
-                    @foreach($rideRequests as $key => $ride)
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center gap-10">
+                    @foreach ($rideRequests as $key => $rideRequest)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">
+                                        {{ $rideRequest->start_location_name }},
 
-                                {{ $key + 1 }}
-                            </div>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($ride->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">
+                                        {{ $rideRequest->end_location_name }},
 
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $ride->departure }}</span>
-                            </div>
-                        </td>
-                        <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $ride->destination }}</span></td>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>{{ $rideRequest->seats }}</td>
+                            <td>
+                                @if ($rideRequest->passenger)
+                                    <a href="{{ route('users.show', $rideRequest->passenger->email) }}">
+                                        {{ $rideRequest->passenger->firstname }} {{ $rideRequest->passenger->lastname }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">Non disponible</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span
+                                    class="badge
+                                        {{ $rideRequest->status == 'pending' ? 'bg-primary' :
+                                           ($rideRequest->status == 'accepted' ? 'bg-success' :
+                                           ($rideRequest->status == 'rejected' ? 'bg-danger' :
+                                           ($rideRequest->status == 'validated_by_passenger' || $rideRequest->status == 'validated_by_driver' ? 'bg-info' :
+                                           ($rideRequest->status == 'refunded' ? 'bg-warning' :
+                                           ($rideRequest->status == 'cancelled' ? 'bg-secondary' : 'bg-dark'))))) }}">
+                                    {{ $rideRequest->status == 'pending' ? 'En attente' :
+                                       ($rideRequest->status == 'accepted' ? 'Acceptée' :
+                                       ($rideRequest->status == 'rejected' ? 'Rejetée' :
+                                       ($rideRequest->status == 'validated_by_passenger' ? 'Validée par le passager' :
+                                       ($rideRequest->status == 'validated_by_driver' ? 'Validée par le conducteur' :
+                                       ($rideRequest->status == 'refunded' ? 'Remboursée' : 'Annulée'))))) }}
+                                </span>
+                            </td>
 
 
+                            <td class="text-center">
+                                <div class="d-flex align-items-center gap-10 justify-content-center">
+                                    <!-- Vue -->
+                                    <a href="{{ route('ride_requests.show', $rideRequest) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                        <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                    </a>
 
-                        <td>{{ $ride->preferred_amount }}</td>
-                        <td>
-                            <a href="{{route('users.show',$ride->passenger->email)}}">
-
-                            {{  $ride->passenger->firstname.' '.$ride->passenger->lastname ?? 'Non disponible' }}
-
-                            </a>
-                        </td>
-                        <td>
-                            <span class="badge
-                                {{ $ride->status == 'pending' ? 'bg-primary' : ($ride->status == 'responded' ? 'bg-success' : ($ride->status == 'completed' ? 'bg-info' : ($ride->status == 'refunded' ? 'bg-warning' : 'bg-danger'))) }}">
-                                {{ $ride->status == 'pending' ? 'En attente' : ($ride->status == 'responded' ? 'Répondu' : ($ride->status == 'completed' ? 'Complété' : ($ride->status == 'refunded' ? 'Remboursé' : 'Annulé'))) }}
-                            </span>
-                        </td>
-
-
-                    </tr>
+                                </div>
+                            </td>
+                        </tr>
                     @endforeach
-
                 @endif
             </tbody>
         </table>

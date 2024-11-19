@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Ride;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
+use Geocoder\Provider\Chain\ChainProvider;
+use Geocoder\Provider\Nominatim\Nominatim;
+use Geocoder\Provider\OpenCage\OpenCage;
+use Geocoder\Provider\LocationIQ\LocationIQ;
 
 class RideController extends Controller
 {
@@ -17,7 +23,12 @@ class RideController extends Controller
         //
         $rides=Ride::orderBy('created_at','desc')->paginate(10);
 
+
         return view('back.pages.trajets.index',compact('rides'));
+
+
+
+
     }
 
     /**
@@ -195,10 +206,10 @@ class RideController extends Controller
         $ridecount = Ride::count();
         $ridecountactive = Ride::where('status', 'active')->count();
         $ridecountcomplete=Ride::where('status', 'suspend')->count();
-         $rides = Ride::select('departure', 'destination', \DB::raw('count(*) as count'))
-                 ->groupBy('departure', 'destination')
-                 ->get();
-        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','rides','ridecountcomplete'));
+        //  $rides = Ride::select('start_location ', 'end_location', \DB::raw('count(*) as count'))
+        //          ->groupBy('start_location', 'end_location')
+        //          ->get();
+        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','ridecountcomplete'));
     }
 
 
@@ -274,6 +285,20 @@ class RideController extends Controller
             'total'=>$total
         ]);
     }
+
+
+    // private function getCityFromLocation($location)
+    // {
+    //     // Convertir la géographie en point
+    //     $point = json_decode($location);
+
+    //     // Utiliser un service de géocodage pour obtenir le nom de la ville
+    //     $geocoder = new \Geocoder\Provider\GoogleMaps\GoogleMaps($client, $adapter);
+
+    //     $result = $geocoder->reverse($point->coordinates[1], $point->coordinates[0])->first();
+
+    //     return $result ? $result->getLocality() : 'Inconnu';
+    // }
 
 
 

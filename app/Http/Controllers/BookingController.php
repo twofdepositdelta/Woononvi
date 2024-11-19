@@ -234,6 +234,58 @@ class BookingController extends Controller
 
         ]);
     }
+
+
+    public function getCommissionReport(Request $request)
+    {
+        $period = $request->get('period');
+         $query=Booking::query();
+
+        switch ($period) {
+            case 'yearly':
+                $data = $query->selectRaw('YEAR(created_at) as label, SUM(total_price * (commission_rate / 100)) as total')
+                               ->where('status','accepted')
+                              ->groupBy('label')
+                              ->get();
+                break;
+            case 'monthly':
+                $data = $query->selectRaw('MONTH(created_at) as label, SUM(total_price * (commission_rate / 100)) as total')
+                                ->where('status','accepted')
+                                ->groupBy('label')
+                                ->get();
+                break;
+            case 'weekly':
+                $data = $query->selectRaw('WEEK(created_at) as label, SUM(total_price * (commission_rate / 100)) as total')
+                            ->where('status','accepted')
+                            ->groupBy('label')
+                            ->get();
+                break;
+        }
+
+        if ($period === 'monthly') {
+            $monthNames = [
+                1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin',
+                7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
+            ];
+
+            // Remplacer les numéros de mois par les noms des mois
+            $labels = $data->pluck('label')->map(function ($month) use ($monthNames) {
+                return $monthNames[$month];
+            })->toArray();
+        } else {
+            // Pour les autres périodes, utiliser directement les labels (ex : années ou semaines)
+            $labels = $data->pluck('label')->toArray();
+        }
+
+        $amounts = $data->pluck('total')->toArray();
+        $total = array_sum($amounts);
+
+        return response()->json([
+            'labels' => $labels,
+            'amounts' => $amounts,
+            'total' => round($total, 2)
+        ]);
+    }
 }
 
 

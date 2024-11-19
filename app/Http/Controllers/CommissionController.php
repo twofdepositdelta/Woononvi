@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Commission;
 use Illuminate\Http\Request;
 
@@ -12,31 +13,29 @@ class CommissionController extends Controller
      */
     public function index()
     {
-        // Récupérer toutes les commissions
-        $commissions = Commission::all();
+        /// Récupérer toutes les commissions
+        $commissions = Booking::all();
 
         // Calcul du total des commissions (toutes)
-        $totalcommission = $commissions->sum('amount');
-
-        // Initialisation des variables pour les totaux des commissions "pending" et "active"
-        $totalpendingcomiss = 0;
-        $totalactifcomiss = 0;
+        $totalcommission = $commissions->sum(function ($booking) {
+            return $booking->total_price * ($booking->commission_rate / 100);
+        });
 
         // Récupérer les commissions associées aux trajets en attente et actifs
-        $commission_pending = Commission::whereHas('ride', function ($query) {
-            $query->where('status', 'pending');
-        })->get();
-
-        $commission_actif = Commission::whereHas('ride', function ($query) {
-            $query->where('status', 'active');
-        })->get();
+        $commission_pending = Booking::where('status', 'pending')->get();
+        $commission_actif = Booking::where('status', 'accepted')->get();
 
         // Calcul des totaux pour les commissions "pending" et "active"
-        $totalpendingcomiss = $commission_pending->sum('amount');
-        $totalactifcomiss = $commission_actif->sum('amount');
+        $totalpendingcomiss = $commission_pending->sum(function ($booking) {
+            return $booking->total_price * ($booking->commission_rate / 100);
+        });
 
-        // Retourner la vue avec les totaux calculés
-        return view('back.pages.commission.index', compact('totalcommission', 'totalpendingcomiss', 'totalactifcomiss'));
+        $totalactifcomiss = $commission_actif->sum(function ($booking) {
+            return $booking->total_price * ($booking->commission_rate / 100);
+        });
+
+
+        return view('back.pages.commission.index',compact('totalpendingcomiss','totalactifcomiss','totalcommission'));
     }
 
 
@@ -89,53 +88,7 @@ class CommissionController extends Controller
     }
 
 
-    public function getCommissionReport(Request $request)
-{
-    $period = $request->get('period');
-    $query = Commission::query();
+   
 
-    switch ($period) {
-        case 'yearly':
-            $data = $query->selectRaw('YEAR(created_at) as label, SUM(amount) as total')
-                          ->groupBy('label')
-                          ->get();
-            break;
-        case 'monthly':
-            $data = $query->selectRaw('MONTH(created_at) as label, SUM(amount) as total')
-                          ->groupBy('label')
-                          ->get();
-            break;
-        case 'weekly':
-            $data = $query->selectRaw('WEEK(created_at) as label, SUM(amount) as total')
-                          ->groupBy('label')
-                          ->get();
-            break;
-            
-    }
-
-    if ($period === 'monthly') {
-        $monthNames = [
-            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin',
-            7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
-        ];
-
-        // Remplacer les numéros de mois par les noms des mois
-        $labels = $data->pluck('label')->map(function ($month) use ($monthNames) {
-            return $monthNames[$month];
-        })->toArray();
-    } else {
-        // Pour les autres périodes, tu peux utiliser directement les labels (ex : années ou semaines)
-        $labels = $data->pluck('label')->toArray();
-    }
-
-    $amounts = $data->pluck('total')->toArray();
-    $total = array_sum($amounts);
-
-    return response()->json([
-        'labels' => $labels,
-        'amounts' => $amounts,
-        'total' => $total
-    ]);
-}
 
 }

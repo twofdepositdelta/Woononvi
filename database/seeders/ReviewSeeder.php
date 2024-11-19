@@ -19,14 +19,15 @@ class ReviewSeeder extends Seeder
          // Assurez-vous d'avoir des utilisateurs et des réservations dans la base de données
          $users = User::all();
          $bookings = Booking::all();
-
+         $review_type=['passenger', 'driver'];
          foreach ($bookings as $booking) {
              Review::create([
                  'rating' => rand(1, 5), // Évaluation entre 1 et 5
                  'comment' => $this->generateRandomComment(), // Générez un commentaire aléatoire
                  'booking_id' => $booking->id,
-                 'reviewer_id' => $users->random()->id, // Un utilisateur aléatoire comme reviewer
-             ]);
+                 'reviewer_id' => $users->random()->id,// Un utilisateur aléatoire comme reviewer
+                 'reviewer_type'=>$review_type[array_rand($review_type)]
+                ]);
          }
      }
 

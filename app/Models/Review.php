@@ -13,7 +13,7 @@ class Review extends Model
         'comment',
         'booking_id', // Clé étrangère pour le trajet
         'reviewer_id',// Clé étrangère pour l'utilisateur qui laisse le commentaire
-        
+        'reviewer_type'
     ];
 
     // Relation avec la reservation

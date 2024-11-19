@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('ride_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('start_location_name');
             $table->geography('start_location'); // Latitude et longitude de départ
+            $table->string('end_location_name');
             $table->geography('end_location'); // Latitude et longitude d’arrivée
             $table->integer('seats');
             $table->timestamp('preferred_time'); // Heure de départ prévue
