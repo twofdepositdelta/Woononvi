@@ -23,6 +23,20 @@
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/style.css') }}">
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        .testimonial-single {
+            min-height: 370px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .blog-item-img img {
+            width: 100%;
+            min-height: 200px;
+            object-fit: cover; /* pour que l'image garde ses proportions */
+        }
+    </style>
     @yield('customCSS')
 </head>
 <body class="{{Route::currentRouteName() == 'index' ? 'home-3':'' }}">
