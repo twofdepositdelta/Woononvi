@@ -162,7 +162,7 @@ class AuthenticatedSessionController extends Controller
         $rules = [
             'gender' => 'required|string|max:255',
             'npi' => 'required|string|size:9|unique:users',
-            'birth_of_date' => 'required|date|max:10',
+            'birth_of_date' => 'required|date',
             'city_id' => 'required|string|max:255',
             'npi_file' => 'required|mimes:pdf|max:1024',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
@@ -283,7 +283,6 @@ class AuthenticatedSessionController extends Controller
     {
         // Charger les relations profil et préférences de l'utilisateur
         $user->load(['profile', 'preferences', 'vehicles.rides']);
-        dd($user);
         $userArray = $user->toArray();
 
         unset($userArray['roles']);
