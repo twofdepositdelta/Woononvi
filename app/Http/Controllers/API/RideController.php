@@ -88,7 +88,7 @@ class RideController extends Controller
         $daysJson = $request->days ? json_encode($request->days) : null;
 
         // Enregistrement du trajet dans la base de données
-        $trip = Ride::create([
+        $ride = Ride::create([
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
             'days' => $daysJson,
@@ -102,11 +102,24 @@ class RideController extends Controller
             'end_location' => $endLocation,      // Coordonnées d'arrivée
         ]);
 
+        // Extraire la latitude et la longitude des localisations
+        $startLat = DB::raw("ST_Y(start_location)"); // Récupère la latitude du point de départ
+        $startLng = DB::raw("ST_X(start_location)"); // Récupère la longitude du point de départ
+
+        $endLat = DB::raw("ST_Y(end_location)"); // Récupère la latitude du point d'arrivée
+        $endLng = DB::raw("ST_X(end_location)"); // Récupère la longitude du point d'arrivée
+
+        // Ajouter les coordonnées à la réponse
+        $ride->start_lat = $startLat;
+        $ride->start_lng = $startLng;
+        $ride->end_lat = $endLat;
+        $ride->end_lng = $endLng;
+
         // Retourner une réponse avec succès
         return response()->json([
             'success' => true,
             'message' => 'Le trajet a été créé avec succès.',
-            'trip' => $trip,
+            'ride' => $ride,
         ], 201);
     }
 
