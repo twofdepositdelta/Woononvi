@@ -91,15 +91,15 @@ class RideController extends Controller
         $trip = Ride::create([
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
-            'type' => $request->type,
-            'start_location' => DB::raw("ST_GeomFromText(?)", [$startLocationWKT]),  // Coordonnées de départ
-            'end_location' => DB::raw("ST_GeomFromText(?)", [$endLocationWKT]),      // Coordonnées d'arrivée
             'days' => $daysJson,
+            'type' => $request->type,
             'departure_time' => $request->departure_time,
             'return_time' => $request->arrival_time,
             'price_per_km' => $request->price_per_km,
             'is_nearby_ride' => $request->is_nearby_ride,
-            'status' => 'active', // Statut initial du trajet
+            'status' => 'active', 
+            'start_location' => DB::raw("ST_GeomFromText(?)", [$startLocationWKT]),  // Coordonnées de départ
+            'end_location' => DB::raw("ST_GeomFromText(?)", [$endLocationWKT]),      // Coordonnées d'arrivée
         ]);
 
         // Retourner une réponse avec succès
