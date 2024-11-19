@@ -81,12 +81,11 @@ class RideController extends Controller
         }
 
         // Création des objets Point pour les coordonnées géographiques
-        $startLocation = new Point($request->start_lat, $request->start_lng);
-        $endLocation = new Point($request->end_lat, $request->end_lng);
-
-        // Conversion des coordonnées en format WKT (Well-Known Text)
         $startLocationWKT = "POINT({$request->start_lng} {$request->start_lat})";
         $endLocationWKT = "POINT({$request->end_lng} {$request->end_lat})";
+
+        // Si les jours sont fournis, les convertir en chaîne JSON
+        $daysJson = $request->days ? json_encode($request->days) : null;
 
         // Enregistrement du trajet dans la base de données
         $trip = Ride::create([
