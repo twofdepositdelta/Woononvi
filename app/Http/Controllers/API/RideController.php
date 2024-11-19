@@ -100,7 +100,6 @@ class RideController extends Controller
             'return_time' => $request->arrival_time,
             'price_per_km' => $request->price_per_km,
             'is_nearby_ride' => $request->is_nearby_ride,
-            'commission_rate' => $request->commission_rate,
             'status' => 'active', // Statut initial du trajet
         ]);
 
