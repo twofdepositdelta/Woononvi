@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/demande/create', [RideRequestController::class, 'create'])->name('ride_requests.create');
     Route::post('/demande/edit', [RideRequestController::class, 'store'])->name('ride_requests.store');
     Route::get('/demande/liste', [RideRequestController::class, 'index'])->name('ride_requests.index');
-    Route::get('/demande/detail', [RideRequestController::class, 'show'])->name('ride_requests.show');
+    Route::get('/demande/detail/{rideRequest}', [RideRequestController::class, 'show'])->name('ride_requests.show');
     Route::get('/demande/{rideRequest}/{status}', [RideRequestController::class, 'updatestatus'])->name('ride_requests.status');
     Route::get('/demande/historique', [RideRequestController::class, 'historique'])->name('ride_requests.historique');
 

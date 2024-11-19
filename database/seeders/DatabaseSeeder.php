@@ -34,15 +34,13 @@ class DatabaseSeeder extends Seeder
             TypeNewSeeder::class,
             ActualitySeeder::class,
             ReviewSeeder::class,
-            TransactionSeeder::class,
             FaqTypeSeeder::class,
             FaqSeeder::class,
             TypeDocumentSeeder::class,
             DocumentSeeder::class,
-            ComissionSeeder::class,
             ApiSeeder::class,
             PaymentTypeSeeder::class,
-            // PaymentSeeder::class
+             PaymentSeeder::class
         ]);
     }
 }

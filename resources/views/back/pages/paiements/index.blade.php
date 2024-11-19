@@ -12,7 +12,7 @@
                     @foreach ($typepayments as $typepayment)
                         <option value="{{ $typepayment->id }}"
                             {{ request('type_id') == $typepayment->id ? 'selected' : '' }}>
-                            {{ $typepayment->label }}
+                            {{ $typepayment->label_fr  }}
                         </option>
                     @endforeach
                 </select>

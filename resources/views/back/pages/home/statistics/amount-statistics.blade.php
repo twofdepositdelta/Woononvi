@@ -52,12 +52,12 @@
                     <iconify-icon icon="fa-solid:money-check-alt" class="text-white text-2xl mb-0"></iconify-icon>
                 </div>
             </div>
-            <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+            {{-- <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
                 <span class="d-inline-flex align-items-center gap-1 text-success-main">
                     <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +{{ BackHelper::getTotalComision() }} XOF
                 </span>
                 Total Commission Touchée
-            </p>
+            </p> --}}
         </div>
     </div><!-- card end -->
 </div>

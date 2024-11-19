@@ -75,7 +75,7 @@
                                                     'completed' => 'Terminé',
                                                     'cancelled' => 'Annulé',
                                                     'suspend' => 'Suspendu',
-                                                    'pending' => 'En enttente',
+                                                    'pending' => 'En attente',
                                                     default => ucfirst($ride->status)
                                                 };
                                             @endphp
@@ -108,7 +108,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Passager</th>
-                                    <th scope="col">Trajet</th>
+                                    {{-- <th scope="col">Trajet</th> --}}
                                     <th scope="col">NPR</th>
                                     <th scope="col">Prix Total</th>
                                     <th scope="col">Date de Réservation</th>
@@ -120,30 +120,36 @@
                                     <tr>
                                         <td>{{ $booking->booking_number }}</td>
                                         <td>{{ $booking->passenger->firstname . ' ' . $booking->passenger->lastname }}</td>
-                                        <td>{{ $booking->ride->departure }} - {{ $booking->ride->destination }}</td>
+                                        {{-- {{ $booking->ride->start_location }} - {{ $booking->ride->end_location }} --}}
                                         <td>{{ $booking->seats_reserved }}</td>
                                         <td>{{ $booking->total_price }} FCFA</td>
                                         <td>{{ $booking->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="text-center">
-                                            @php
-                                                $statusClass = match($booking->status) {
-                                                    'confirmed' => 'bg-success-600 text-success-100',
-                                                    'cancelled' => 'bg-danger-600',
-                                                    'refunded' => 'bg-warning-600',
-                                                    default => 'bg-lilac-600'
-                                                };
-
-                                                $statusLabel = match($booking->status) {
-                                                    'pending' => 'En attente',
-                                                    'confirmed' => 'Confirmée',
-                                                    'cancelled' => 'Annulée',
-                                                    'refunded' => 'Remboursée',
-                                                    default => ucfirst($booking->status)
-                                                };
-                                            @endphp
-                                            <span class="badge {{ $statusClass }} text-sm fw-semibold px-20 py-9 radius-4 text-white">
-                                                {{ $statusLabel }}
-                                            </span>
+                                            @switch($booking->status)
+                                            @case('accepted')
+                                                <span class="badge bg-success">Acceptée</span>
+                                                @break
+                                            @case('pending')
+                                                <span class="badge bg-warning">En attente</span>
+                                                @break
+                                            @case('rejected')
+                                                <span class="badge bg-danger">Rejetée</span>
+                                                @break
+                                            @case('validated_by_passenger')
+                                                <span class="badge bg-info">Confirmée  passager</span>
+                                                @break
+                                            @case('validated_by_driver')
+                                                <span class="badge bg-primary">Confirmée conducteur</span>
+                                                @break
+                                            @case('refunded')
+                                                <span class="badge bg-info">Remboursée</span>
+                                                @break
+                                            @case('cancelled')
+                                                <span class="badge bg-secondary">Annulée</span>
+                                                @break
+                                            @default
+                                                <span class="badge bg-secondary">Non défini</span>
+                                        @endswitch
                                         </td>
                                     </tr>
                                 @empty

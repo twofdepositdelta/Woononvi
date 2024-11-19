@@ -13,12 +13,11 @@
                 <table class="table bordered-table sm-table mb-0">
                     <thead>
                         <tr>
-                            <th>Numero</th>
+                            <th>Numéro</th>
                             <th>Heure de départ</th>
-                            <th> Départ</th>
-                            <th>Destination</th>
-                            {{-- <th>Prix par km</th> --}}
-                            <th>NPD</th>
+                            {{-- <th>Départ</th>
+                            <th>Destination</th> --}}
+                            <th>Prix/km</th>
                             <th>Conducteur</th>
                             <th>Statut</th>
                             <th>Actions</th>
@@ -26,56 +25,68 @@
                     </thead>
                     <tbody>
                         @if ($rides->isEmpty())
-                        <tr>
-                            <td colspan="7"  class="text-danger text-center">Aucun trajet enregistré</td>
-                         </tr>
+                            <tr>
+                                <td colspan="11" class="text-danger text-center">Aucun trajet enregistré</td>
+                            </tr>
                         @else
                             @foreach ($rides as $index => $ride)
                                 <tr>
                                     <td>#{{ $ride->numero_ride }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
-                                    <td>{{ $ride->departure }}</td>
-                                    <td>{{ $ride->destination }}</td>
-                                    {{-- <td>{{ $ride->price_per_km }} FCFA</td> --}}
-                                    <td>{{ $ride->available_seats }}</td>
-                                    <td> <a href="{{route('users.show',$ride->driver->email)}}">{{$ride->driver->firstname.' '.$ride->driver->lastname }}</a></td>
+
+                                    <td>{{ \Carbon\Carbon::parse($ride->departure_time)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
+
+                                    {{-- <td>{{ $ride->start_city }}</td>
+                                    <td>{{ $ride->end_city }}</td> --}}
+                                    <td>{{ $ride->price_per_km }} FCFA</td>
                                     <td>
-                                        @if ($ride->status == 'active')
-                                            <span class="badge bg-success">Actif</span>
-                                        @elseif ($ride->status == 'completed')
-                                            <span class="badge bg-info">Complété</span>
-                                        @elseif ($ride->status == 'cancelled')
-                                            <span class="badge bg-danger">Annulé</span>
-                                        @elseif ($ride->status == 'pending')
-                                            <span class="badge bg-warning">En attente</span>
-                                        @elseif ($ride->status == 'suspend')
-                                            <span class="badge bg-secondary">Suspendu</span>
+                                        @if ($ride->driver)
+                                            <a href="{{ route('users.show', $ride->driver->email) }}">
+                                                {{ $ride->driver->firstname }} {{ $ride->driver->lastname }}
+                                            </a>
+                                        @else
+                                            <span class="text-muted">Non disponible</span>
                                         @endif
+                                    </td>
+
+                                    <td>
+                                        @switch($ride->status)
+                                            @case('active')
+                                                <span class="badge bg-success">Active</span>
+                                                @break
+                                            @case('pending')
+                                                <span class="badge bg-warning">En attente</span>
+                                                @break
+                                            @case('completed')
+                                                <span class="badge bg-info">Terminé</span>
+                                                @break
+                                            @case('cancelled')
+                                                <span class="badge bg-secondary">Annulée</span>
+                                                @break
+                                            @default
+                                                <span class="badge bg-secondary">Non défini</span>
+                                        @endswitch
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex align-items-center gap-10 justify-content-center">
-                                            <!-- View -->
-
-                                            <a href="{{ route('rides.show',$ride) }}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <!-- Voir -->
+                                            <a href="{{ route('rides.show', $ride) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                                 <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                                             </a>
-
-
-                                                <form action="{{ route('rides.status',[$ride,'status'=> 'suspend']) }}" method="GET" onsubmit="return confirm('Êtes-vous sûr de vouloir suspendre ce trajet ?');">
-                                                    <button type="submit" class="btn btn-primary text-sm "
-                                                        {{ $ride->status != 'pending' ? 'disabled' : '' }}>
-                                                        Suspendre
-                                                    </button>
-                                                </form>
-
+                                            <!-- Suspendre -->
+                                            <form action="{{ route('rides.status', [$ride, 'status' => 'suspend']) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir suspendre ce trajet ?');">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary text-sm" {{ $ride->status != 'pending' ? 'disabled' : '' }}>
+                                                    Suspendre
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
-
                         @endif
                     </tbody>
                 </table>
+
                 @if (!$rides->isEmpty())
 
                 {{-- pagination --}}

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
+            $table->string('numero_ride')->unique();
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['regular', 'single']); // Trajet régulier ou ponctuel
             $table->geography('start_location'); // Latitude et longitude de départ
@@ -23,10 +24,11 @@ return new class extends Migration
             $table->datetime('return_time')->nullable();
             $table->datetime('departure_time');
             $table->double('price_per_km');
+             $table->double('price_maintain');
             $table->boolean('is_nearby_ride')->default(false);
             $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('pending');
+            $table->foreignIdFor(Vehicle::class);
             $table->timestamps();
-
             // Index
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');

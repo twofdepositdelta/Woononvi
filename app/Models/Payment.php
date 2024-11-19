@@ -10,12 +10,13 @@ class Payment extends Model
     use HasFactory;
     protected $fillable = [
         'amount',
-        'total_price',
+        'reference',
+        'payment_number',
         'payment_method',
         'status',
-        'booking_id', // Clé étrangère pour la réservation
+        'booking_id',
         'user_id',
-        'payment_type_id'
+        'payment_type_id',
     ];
 
     // Relation avec la réservation

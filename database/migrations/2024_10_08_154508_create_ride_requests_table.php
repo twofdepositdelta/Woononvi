@@ -22,12 +22,12 @@ return new class extends Migration
             $table->enum('status', ['pending', 'accepted', 'rejected', 'validated_by_passenger', 'validated_by_driver', 'refunded', 'cancelled'])->default('pending');
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
-            $table->timestamps('accepted_at')->nullable();
-            $table->timestamps('rejected_at')->nullable();
-            $table->timestamps('validated_by_passenger_at')->nullable();
-            $table->timestamps('validated_by_driver_at')->nullable();
-            $table->timestamps('refunded_at')->nullable();
-            $table->timestamps('cancelled_at')->nullable();
+            $table->timestamp('accepted_at')->nullable();
+            $table->timestamp('rejected_at')->nullable();
+            $table->timestamp('validated_by_passenger_at')->nullable();
+            $table->timestamp('validated_by_driver_at')->nullable();
+            $table->timestamp('refunded_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
 
             // Index

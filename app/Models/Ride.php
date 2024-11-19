@@ -9,18 +9,18 @@ class Ride extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'numero_ride',
         'driver_id',
         'type',
         'start_location',
         'end_location',
         'days',
-        'return_trip',
         'return_time',
         'departure_time',
-        'arrival_time',
         'price_per_km',
+        'price_maintain',
         'is_nearby_ride',
-        'commission_rate',
+        'vehicle_id',
         'status',
     ];
 
@@ -56,4 +56,10 @@ class Ride extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id'); // Assurez-vous d'importer le modèle User
     }
+
+    public function getFormattedTypeAttribute()
+{
+    // Retourne "Régulier" ou "Ponctuel" en fonction de la valeur du type
+    return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
+}
 }
