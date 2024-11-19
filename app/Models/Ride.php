@@ -12,17 +12,15 @@ class Ride extends Model
     use HasFactory;
     protected $fillable = [
         'driver_id',
+        'vehicule_id',
         'type',
         'start_location',
         'end_location',
         'days',
-        'return_trip',
         'return_time',
         'departure_time',
-        'arrival_time',
         'price_per_km',
         'is_nearby_ride',
-        'commission_rate',
         'status',
     ];
 
