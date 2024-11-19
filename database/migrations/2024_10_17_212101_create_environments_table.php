@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('environments', function (Blueprint $table) {
             $table->id();
-            $table->string('environment_type'); // Statut du trajet (pending, completed, canceled)
+            $table->string('environment_type'); 
             $table->timestamps();
         });
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Booking;
+use App\Models\RideRequest;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,9 +16,11 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->integer('rating');
-            $table->text('comment');
-            $table->foreignIdFor(Booking::class);
+            $table->text('comment')->nullable();
+            $table->foreignIdFor(Booking::class)->nullable();
+            $table->foreignIdFor(RideRequest::class)->nullable();
             $table->foreignId('reviewer_id')->constrained('users')->onDelete('cascade');
+            $table->enum('reviewer_type', ['passenger', 'driver']);
             $table->timestamps();
         });
     }
