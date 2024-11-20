@@ -282,7 +282,7 @@ class AuthenticatedSessionController extends Controller
     public function formatUserArray(User $user)
     {
         // Charger les relations profil et préférences de l'utilisateur
-        $user->load(['profile', 'preferences', 'vehicles', 'rides']);
+        $user->load(['preferences', 'vehicles.rides']);
         $userArray = $user->toArray();
         return $userArray;
 
