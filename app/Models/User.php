@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function rides()
     {
-        return $this->hasMany(Ride::class); // Assurez-vous d'importer le modèle Ride
+        return $this->hasMany(Ride::class, 'driver_id'); // Assurez-vous d'importer le modèle Ride
     }
 
     public function conversations()
