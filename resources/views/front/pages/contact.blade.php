@@ -14,65 +14,75 @@
             </div>
             @endif
 
-        <div class="row">
-            <div class="col-md-3">
-                <div class="contact-info">
-                    <div class="contact-info-icon">
-                        <i class="fal fa-map-location-dot"></i>
-                    </div>
-                    <div class="contact-info-content">
-                        <h5>Adresse du bureau</h5>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="contact-info">
-                    <div class="contact-info-icon">
-                        <i class="fal fa-phone-volume"></i>
-                    </div>
-                    <div class="contact-info-content">
-                        <h5>Appelez-nous</h5>
-                        <p>+229 </p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="contact-info">
+                        <div class="contact-info-icon">
+                            <i class="fal fa-map-location-dot"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h5>Adresse du bureau</h5>
+                            <p>{{ FrontHelper::getSettingAddress()->value }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="contact-info">
-                    <div class="contact-info-icon">
-                        <i class="fal fa-envelopes"></i>
-                    </div>
-                    <div class="contact-info-content">
-                        <h5>Envoyez-nous un email</h5>
-                        <p><a href="mailto:info@example.com">Wononvi@gmail.com</a></p>
+                <div class="col-md-3">
+                    <div class="contact-info">
+                        <div class="contact-info-icon">
+                            <i class="fal fa-phone-volume"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h5>Appelez-nous</h5>
+                            <p>
+                                <a href="tel:{{ str_replace(' ', '', FrontHelper::getSettingPhone()->value) }}">
+                                {{ FrontHelper::getSettingPhone()->value }}
+                                </a>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="contact-info">
-                    <div class="contact-info-icon">
-                        <i class="fal fa-alarm-clock"></i>
+                <div class="col-md-3">
+                    <div class="contact-info">
+                        <div class="contact-info-icon">
+                            <i class="fal fa-envelopes"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h5>Envoyez-nous un email</h5>
+                            <p>
+                                <a href="mailto:{{ FrontHelper::getSettingEmail()->value }}">
+                                    {{ FrontHelper::getSettingEmail()->value }}
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                    <div class="contact-info-content">
-                        <h5>Heures d'ouverture</h5>
-                        <p>Lun - Sam (10h00 - 17h30)</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="contact-info">
+                        <div class="contact-info-icon">
+                            <i class="fal fa-alarm-clock"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h5>Heures d'ouverture</h5>
+                            <p>Lun - Dim (06h00 - 20h00)</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="contact-wrapper">
-        <div class="row">
-            <div class="col-lg-6 align-self-center">
-                <div class="contact-img">
-                    <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/contact/01.jpg')}}" alt="Image de contact">
+        <div class="contact-wrapper">
+            <div class="row">
+                <div class="col-lg-6 align-self-center">
+                    <div class="contact-img">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/contact/01.jpg')}}"
+                            alt="Image de contact">
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-6 align-self-center">
-                <div class="contact-form">
-                    <div class="contact-form-header">
-                        <h2>Contactez-nous</h2>
-                        <p>Voyagez en toute sérénité en partageant votre trajet avec des personnes de confiance. Ensemble, rendons les déplacements plus conviviaux et abordables.</p>
+                <div class="col-lg-6 align-self-center">
+                    <div class="contact-form">
+                        <div class="contact-form-header">
+                            <h2>Contactez-nous</h2>
+                            <p>Voyagez en toute sérénité en partageant votre trajet avec des personnes de confiance.
+                                Ensemble, rendons les déplacements plus conviviaux et abordables.</p>
 
                         </div>
                         <form method="post" action="{{route('contact.send')}}" id="contact-form">
