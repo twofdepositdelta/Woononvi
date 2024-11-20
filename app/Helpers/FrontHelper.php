@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\Booking;
 use App\Models\Ride;
 use App\Models\Actuality;
+use App\Models\Faq;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,24 @@ class FrontHelper
         }
 
         return $folder;
+    }
+
+    public static function getSettingEmail()
+    {
+        $setting = Setting::where('key' ,'company_email')->first();
+        return $setting;
+    }
+
+    public static function getSettingPhone()
+    {
+        $setting = Setting::where('key' ,'company_phone')->first();
+        return $setting;
+    }
+
+    public static function getSettingAddress()
+    {
+        $setting = Setting::where('key' ,'company_address')->first();
+        return $setting;
     }
 
     public static function getFullname()
@@ -98,4 +117,23 @@ class FrontHelper
             ->get();
     }
 
+    public static function getDriverFaqs()
+    {
+        // Recherche des actualités dont le type est 'blog' (TypeNew->name = "blog")
+        return Faq::whereHas('faqType', function ($query) {
+            $query->where('name', 'Conducteur');
+        })->limit(10)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public static function getPassengerFaqs()
+    {
+        // Recherche des actualités dont le type est 'blog' (TypeNew->name = "blog")
+        return Faq::whereHas('faqType', function ($query) {
+            $query->where('name', 'Passager');
+        })->limit(10)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 }

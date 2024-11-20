@@ -2,7 +2,7 @@
 @section('title', 'Foire Aux Questions')
 @section('content')
 
-<div class="faq-area py-120">
+<div class="faq-area pt-70 mb-5">
     <div class="container">
         @foreach ($faqGroups as $index => $group)
             <div class="row mb-5">
@@ -17,7 +17,7 @@
                             </div>
                             <p class="about-text"> Voici les questions fréquemment posées pour ce type.</p>
                             <div class="faq-img mt-3">
-                                <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/faq/01.jpg') }}" alt="{{ $group->name }}" class="img-fluid rounded">
+                                <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/faqs-concept-illustration.avif') }}" alt="{{ $group->name }}" class="img-fluid rounded">
                             </div>
                         </div>
                     </div>
@@ -69,9 +69,9 @@
                                 <span class="site-title-tagline justify-content-start">FAQ</span>
                                 <h2 class="site-title my-3">{{ $group->name }}</h2>
                             </div>
-                            <p class="about-text"> 'Voici les questions fréquemment posées pour ce type.' </p>
+                            <p class="about-text"> Voici les questions fréquemment posées pour ce type. </p>
                             <div class="faq-img mt-3">
-                                <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/faq/01.jpg') }}" alt="{{ $group->name }}" class="img-fluid rounded">
+                                <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/faqs-concept-illustrationk.avif') }}" alt="{{ $group->name }}" class="img-fluid rounded">
                             </div>
                         </div>
                     </div>

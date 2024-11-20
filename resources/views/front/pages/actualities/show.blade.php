@@ -43,7 +43,7 @@
             <div class="col-lg-4">
                 <aside class="sidebar">
                     <div class="widget recent-post">
-                        <h5 class="widget-title">Recent Post</h5>
+                        <h5 class="widget-title">Récents Postes</h5>
                         @foreach($otherNews as $otherNew)
                             <div class="recent-post-single">
                                 <div class="recent-post-img">
