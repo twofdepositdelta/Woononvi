@@ -19,9 +19,10 @@ use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
 {
-    public function getRides()
+    public function getRides(Request $request)
     {
-        $data = Ride::orderBy('id', 'desc')->get();
+        $user = $request->user();
+        $data = Ride::where('driver_id', $user->id)->get();
         return response()->json([
             'success' => true,
             'data' => $data,
