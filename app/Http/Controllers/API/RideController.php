@@ -26,7 +26,7 @@ class RideController extends Controller
     {
         // Validation des données
         $validator = Validator::make($request->all(), [
-            'type' => 'required|in:regular,single',
+            'type' => 'required|in:Régulier,Ponctuel',
             'start_lat' => 'required|numeric',
             'start_location_name' => 'required|string',
             'end_location_name' => 'required|string',
@@ -53,7 +53,7 @@ class RideController extends Controller
         }
 
         // Log or inspect the data
-        logger(json_encode($days));
+        // logger(json_encode($days));
 
         // Vérifier si le conducteur a un véhicule actif
         $driver = Auth::user();
@@ -80,6 +80,8 @@ class RideController extends Controller
                 'message' => 'Les coordonnées d\'arrivée doivent être situées au Bénin.',
             ], 422);
         }
+
+        $request->type = ($request->type == "Régulier" ? 'regular' : 'ponctual');
 
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
