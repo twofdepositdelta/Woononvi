@@ -34,6 +34,9 @@ Route::get('/FAQ', [HomeController::class, 'faqs'])->name('faqs.front');
 Route::get('/securite', [HomeController::class, 'security'])->name('security.front');
 Route::get('/rejoignez-nous', [HomeController::class, 'joinUs'])->name('joinUs');
 Route::get('/fonctionnement', [HomeController::class, 'functioning'])->name('fonction.front');
+Route::get('/download', [HomeController::class, 'download'])->name('download');
+Route::get('/conditions-d-utilisation', [HomeController::class, 'condition'])->name('terms');
+Route::get('/politique-de-confidentialités', [HomeController::class, 'privacy'])->name('privacy');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

@@ -98,14 +98,15 @@
 
                     <!-- Répétez les étapes avec des images pour les conducteurs -->
                 </div>
-
-                <div class="text-center mt-5">
-                    <h3>Téléchargez l'application</h3>
-                    <p>Profitez de toutes les fonctionnalités de <strong>Wononvi</strong> en téléchargeant l'app sur votre mobile !</p>
-                    <div class="d-flex justify-content-center">
-                        <div class="nav-right">
-                            <div class="nav-right-btn mt-2">
-                                <a href="#telechargement" class="theme-btn"><span class="fas fa-download"></span> Télécharger App</a>
+                <div class="terms-content">
+                    <div class="text-center mt-5">
+                        <h3>Téléchargez l'application</h3>
+                        <p>Profitez de toutes les fonctionnalités de <strong>Wononvi</strong> en téléchargeant l'app sur votre mobile !</p>
+                        <div class="d-flex justify-content-center">
+                            <div class="nav-right">
+                                <div class="nav-right-btn mt-2">
+                                    <a href="#telechargement" class="theme-btn"><span class="fas fa-download"></span> Télécharger App</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -114,6 +115,5 @@
         </div>
     </div>
 </div>
-
 
  @endsection

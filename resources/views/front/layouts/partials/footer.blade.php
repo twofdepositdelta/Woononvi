@@ -1,51 +1,62 @@
-<footer class="footer-area">
-    <div class="footer-shape">
-        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/shape/shape-8.png') }}" alt>
-    </div>
+<footer class="footer-area mt-2">
+
     <div class="footer-widget">
         <div class="container">
-            <div class="row footer-widget-wrapper pt-100 pb-70">
+            <div class="row footer-widget-wrapper pt-120 pb-70">
+                <!-- About Us Section -->
                 <div class="col-md-6 col-lg-4">
                     <div class="footer-widget-box about-us">
                         <a href="#" class="footer-logo">
-                            <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo-light.png') }}" alt>
+                            <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo-light.png') }}" alt="Wononvi Logo">
                         </a>
                         <p class="mb-3">
                             Wononvi, la plateforme de covoiturage qui favorise la fraternité, la sécurité et l'accessibilité pour tous.
                         </p>
                         <ul class="footer-contact">
-                            <li><a href="tel:+22912345678"><i class="far fa-phone"></i>+229 12 34 56 78</a></li>
-                            <li><i class="far fa-map-marker-alt"></i>Cotonou, Bénin</li>
-                            <li><a href="mailto:contact@wononvi.com"><i class="far fa-envelope"></i> contact@wononvi.com</a></li>
+                            <li>
+                                <a href="tel:{{ str_replace(' ', '', FrontHelper::getSettingPhone()->value) }}">
+                                    <i class="far fa-phone"></i>
+                                    {{ FrontHelper::getSettingPhone()->value }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:{{ FrontHelper::getSettingEmail()->value }}">
+                                    <i class="far fa-envelope"></i>
+                                    {{ FrontHelper::getSettingEmail()->value }}
+                                </a>
+                            </li>
+                            <li><i class="far fa-map-marker-alt"></i>{{ FrontHelper::getSettingAddress()->value }}</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-2">
+
+                <!-- Quick Links Section -->
+                <div class="col-md-6 col-lg-3">
                     <div class="footer-widget-box list">
                         <h4 class="footer-widget-title">Liens Rapides</h4>
                         <ul class="footer-list">
-                            <li><a href="#"><i class="fas fa-caret-right"></i> À Propos de Nous</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Actualités</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Témoignages</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Conditions d'utilisation</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Politique de confidentialité</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Nos Conducteurs</a></li>
+                            <li><a href="{{ route('about') }}"><i class="fas fa-caret-right"></i> À Propos de Nous</a></li>
+                            <li><a href="{{ route('news') }}"><i class="fas fa-caret-right"></i> Actualités</a></li>
+                            <li><a href="{{ route('terms') }}"><i class="fas fa-caret-right"></i> Conditions d'utilisation</a></li>
+                            <li><a href="{{ route('privacy') }}"><i class="fas fa-caret-right"></i> Politique de confidentialités</a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
+
+                <!-- Support Section -->
+                <div class="col-md-6 col-lg-2">
                     <div class="footer-widget-box list">
                         <h4 class="footer-widget-title">Centre de Support</h4>
                         <ul class="footer-list">
-                            <li><a href="#"><i class="fas fa-caret-right"></i> FAQ</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Affiliation</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Conseils de réservation</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Réserver un trajet</a></li>
+                            <li><a href="{{ route('joinUs') }}#faq-conducteur"><i class="fas fa-caret-right"></i> FAQ Conducteur</a></li>
+                            <li><a href="{{ route('joinUs') }}#faq-passager"><i class="fas fa-caret-right"></i> FAQ Passager</a></li>
                             <li><a href="{{ route('contact') }}"><i class="fas fa-caret-right"></i> Contactez-nous</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Plan du site</a></li>
+                            <li><a href="{{ route('joinUs') }}#devenir-passager"><i class="fas fa-caret-right"></i> Rejoignez-nous</a></li>
                         </ul>
                     </div>
                 </div>
+
+                <!-- Newsletter Section -->
                 <div class="col-md-6 col-lg-3">
                     <div class="footer-widget-box list">
                         <h4 class="footer-widget-title">Newsletter</h4>
@@ -65,6 +76,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Copyright Section -->
     <div class="copyright">
         <div class="container">
             <div class="row">
@@ -76,10 +89,9 @@
                 </div>
                 <div class="col-md-6 align-self-center">
                     <ul class="footer-social">
-                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fab fa-x-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                 </div>
             </div>

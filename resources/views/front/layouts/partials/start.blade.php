@@ -9,7 +9,7 @@
     <meta name="description" content>
     <meta name="keywords" content>
 
-    <title>Citygo &bull; @yield('title')</title>
+    <title>WONONVI &bull; @yield('title')</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/favicon.png') }}">
 
@@ -35,6 +35,17 @@
             width: 100%;
             min-height: 200px;
             object-fit: cover; /* pour que l'image garde ses proportions */
+        }
+
+        /* Style pour l'élément actif du menu */
+        .navbar-nav .nav-item.active > a {
+            color: #FFB300; /* Couleur du texte pour l'élément actif */
+            font-weight: bold; /* Mettre en gras l'élément actif pour le distinguer */
+        }
+
+        /* Optionnel : survol des éléments */
+        .navbar-nav .nav-item > a:hover {
+            color: #FFB300; /* Appliquer la même couleur au survol */
         }
     </style>
     @yield('customCSS')

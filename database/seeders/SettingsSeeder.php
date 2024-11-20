@@ -27,17 +27,17 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'key' => 'company_phone',
-                'value' => '+229 12 34 56 78',
+                'value' => '+229 66 48 03 03',
                 'description' => 'Le numéro de téléphone de l\'entreprise',
             ],
             [
                 'key' => 'company_email',
-                'value' => 'contact@entreprise.com',
+                'value' => 'wononvi@gmail.com',
                 'description' => 'L\'adresse email de l\'entreprise',
             ],
             [
                 'key' => 'company_address',
-                'value' => '123 Rue de l\'Exemple, Cotonou, Bénin',
+                'value' => 'Cotonou, Bénin',
                 'description' => 'L\'adresse physique de l\'entreprise',
             ],
             [

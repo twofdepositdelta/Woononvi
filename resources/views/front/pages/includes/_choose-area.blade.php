@@ -13,7 +13,7 @@
                         </p>
                     </div>
                     <div class="choose-img wow fadeInUp" data-wow-delay=".25s">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/choose/01.png') }}" alt>
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/choose/02.png') }}" alt>
                     </div>
                 </div>
             </div>

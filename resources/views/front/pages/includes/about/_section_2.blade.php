@@ -4,7 +4,7 @@
             <div class="col-lg-6">
                 <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="about-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/illustration_2.png') }}" alt="Illustration de la Communauté Wononvi">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/07.png') }}" alt="Illustration de la Communauté Wononvi">
                     </div>
                 </div>
             </div>

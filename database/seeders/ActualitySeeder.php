@@ -20,46 +20,37 @@ class ActualitySeeder extends Seeder
 
         DB::table('actualities')->insert([
             [
-                'titre' => 'Nouvelle version disponible',
-                'slug' => Str::slug('Nouvelle version disponible'),
-                'description' => 'Découvrez la dernière mise à jour avec de nouvelles fonctionnalités.',
-                'image_url' => $imageBasePath . '01.jpg', // chemin simplifié avec '01.jp'
-                'type_new_id' => 3, // ID de "mise à jour"
+                'titre' => 'Wononvi, première plateforme de covoiturage au Bénin',
+                'slug' => Str::slug('Wononvi, première plateforme de covoiturage au Bénin'),
+                'description' => 'Découvrez comment Wononvi révolutionne la mobilité au Bénin avec sa plateforme innovante et accessible à tous.',
+                'image_url' => $imageBasePath . '01.jpg',
+                'type_new_id' => 3, // ID pour "Lancement"
                 'published' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'titre' => 'Code promo spécial week-end',
-                'slug' => Str::slug('Code promo spécial week-end'),
-                'description' => 'Utilisez le code WEEKEND20 pour obtenir 20% de réduction.',
-                'image_url' => $imageBasePath . '02.jpg', // chemin simplifié avec '02.jp'
-                'type_new_id' => 3, // ID de "promotion"
+                'titre' => 'Covoiturage en Afrique : Wononvi montre la voie',
+                'slug' => Str::slug('Covoiturage en Afrique : Wononvi montre la voie'),
+                'description' => 'Avec son approche centrée sur la communauté, Wononvi offre une solution pratique et économique pour les déplacements en Afrique.',
+                'image_url' => $imageBasePath . '02.jpg',
+                'type_new_id' => 3, // ID pour "Innovations"
                 'published' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'titre' => 'Conseils de sécurité',
-                'slug' => Str::slug('Conseils de sécurité'),
-                'description' => 'Pensez à partager votre trajet avec un proche pour plus de sécurité.',
-                'image_url' => $imageBasePath . '03.jpeg', // chemin simplifié avec '03.jp'
-                'type_new_id' => 3, // ID de "sécurité"
-                'published' => false,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'titre' => 'Les grandes tendances du covoiturage au Bénin',
-                'slug' => Str::slug('Les grandes tendances du covoiturage au Bénin'),
-                'description' => 'Découvrez les tendances du covoiturage et son adoption au Bénin.',
-                'image_url' => $imageBasePath . '04.jpg', // chemin simplifié avec '04.jp'
-                'type_new_id' => 3, // ID de "actualité"
+                'titre' => 'Pourquoi choisir Wononvi pour vos trajets quotidiens ?',
+                'slug' => Str::slug('Pourquoi choisir Wononvi pour vos trajets quotidiens ?'),
+                'description' => 'Découvrez les avantages uniques de Wononvi : sécurité, convivialité et économies pour vos déplacements.',
+                'image_url' => $imageBasePath . '03.jpg',
+                'type_new_id' => 3, // ID pour "Conseils"
                 'published' => true,
                 'created_at' => now(),
                 'updated_at' => now()
             ]
         ]);
+
 
     }
 }

@@ -9,7 +9,7 @@
                     </div>
                     <p class="about-text">Vous avez des questions sur nos services ? Découvrez les réponses aux questions les plus fréquemment posées par nos utilisateurs. Si vous avez besoin de plus d'informations, notre équipe est toujours prête à vous aider.</p>
                     <div class="faq-img mt-3">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/faq/01.jpg') }}" alt>
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/faq/02.png') }}" alt>
                     </div>
                 </div>
             </div>

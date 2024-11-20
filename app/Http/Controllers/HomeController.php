@@ -15,23 +15,23 @@ class HomeController extends Controller
 
 
 
-public function functioning()
-{
+    public function functioning()
+    {
 
-    return view('front.pages.documentation.fonctionnement');
-}
+        return view('front.pages.documentation.fonctionnement');
+    }
 
-public function joinUs()
-{
+    public function joinUs()
+    {
 
-    return view('front.pages.joinUs');
-}
+        return view('front.pages.joinUs');
+    }
 
-public function security()
-{
+    public function security()
+    {
 
-    return view('front.pages.about.security');
-}
+        return view('front.pages.about.security');
+    }
     public function about()
     {
         return view('front.pages.about');
@@ -58,5 +58,20 @@ public function security()
                         ->limit(10)
                         ->get();
         return view('front.pages.actualities.show', compact('actuality', 'otherNews'));
+    }
+
+    public function download(Actuality $actuality)
+    {
+        return view('front.pages.download');
+    }
+
+    public function condition()
+    {
+        return view('front.pages.rgpg.condition');
+    }
+
+    public function privacy()
+    {
+        return view('front.pages.rgpg.privacy');
     }
 }

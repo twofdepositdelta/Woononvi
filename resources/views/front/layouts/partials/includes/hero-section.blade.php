@@ -4,7 +4,7 @@
             <div class="col-lg-6">
                 <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="about-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/01.png') }}" alt>
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/illustration_2.png') }}" alt>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="#" class="theme-btn mt-4">En savoir plus<i class="fas fa-arrow-right"></i></a>
+                    <a href="{{ route('about') }}" class="theme-btn mt-4">En savoir plus<i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
