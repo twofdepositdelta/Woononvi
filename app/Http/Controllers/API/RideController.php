@@ -22,7 +22,6 @@ class RideController extends Controller
     public function getRides(Request $request)
     {
         $user = $request->user();
-        dd($user);
         $data = Ride::whereDriverId($user->id)->get();
         return response()->json([
             'success' => true,
