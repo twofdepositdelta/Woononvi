@@ -14,7 +14,7 @@
                 <div class="about-right wow fadeInRight" data-wow-delay=".25s">
                     <div class="site-heading mb-3">
                         <span class="site-title-tagline justify-content-start">
-                            <i class="flaticon-drive"></i> Rejoignez-nous en tant que Conducteur
+                            <i class="flaticon-drive"></i> Rejoignez-nous en tant que conducteur
                         </span>
                         <h2 class="site-title">
                             Devenez un conducteur sur <span>Wononvi</span> et commencez à gagner
@@ -61,7 +61,7 @@
                         <div class="faq-right">
                             <div class="site-heading mb-3">
                                 <span class="site-title-tagline justify-content-start">FAQ</span>
-                                <h2 class="site-title my-3">Devenir Conducteur <span>Questions fréquemment posées</span></h2>
+                                <h2 class="site-title my-3">Devenir conducteur <span>Questions fréquemment posées</span></h2>
                             </div>
                             <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir conducteur avec Wononvi.</p>
                             <div class="faq-img mt-3">
@@ -87,7 +87,7 @@
                 <div class="about-right wow fadeInRight" data-wow-delay=".25s">
                     <div class="site-heading mb-3">
                         <span class="site-title-tagline justify-content-start">
-                            <i class="flaticon-drive"></i> Rejoignez-nous en tant que Passager
+                            <i class="flaticon-drive"></i> Rejoignez-nous en tant que passager
                         </span>
                         <h2 class="site-title">
                             Profitez de trajets sûrs et abordables sur <span>Wononvi</span>
@@ -134,7 +134,7 @@
                         <div class="faq-right">
                             <div class="site-heading mb-3">
                                 <span class="site-title-tagline justify-content-start">FAQ</span>
-                                <h2 class="site-title my-3">Devenir Passager <span>Questions fréquemment posées</span></h2>
+                                <h2 class="site-title my-3">Devenir passager <span>Questions fréquemment posées</span></h2>
                             </div>
                             <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir passager avec Wononvi.</p>
                             <div class="faq-img mt-3">

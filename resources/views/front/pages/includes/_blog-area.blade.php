@@ -5,7 +5,7 @@
                 <div class="col-lg-6 mx-auto">
                     <div class="site-heading text-center">
                         <span class="site-title-tagline"><i class="flaticon-drive"></i> Notre Blog</span>
-                        <h2 class="site-title">Dernières Nouvelles & Blog</h2>
+                        <h2 class="site-title">dernières nouvelles & blogs</h2>
                         <div class="heading-divider"></div>
                     </div>
                 </div>

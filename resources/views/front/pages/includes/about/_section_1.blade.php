@@ -5,7 +5,7 @@
                 <div class="about-right wow fadeInRight" data-wow-delay=".25s">
                     <div class="site-heading mb-3">
                         <span class="site-title-tagline justify-content-start">
-                            <i class="flaticon-drive"></i> À Propos de Nous
+                            <i class="flaticon-drive"></i> À propos de Nous
                         </span>
                         <h2 class="site-title">
                             Un Service de <span>Covoiturage Fiable</span> et Solidaire

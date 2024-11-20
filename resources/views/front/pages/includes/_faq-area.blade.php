@@ -5,7 +5,7 @@
                 <div class="faq-right">
                     <div class="site-heading mb-3">
                         <span class="site-title-tagline justify-content-start">FAQ</span>
-                        <h2 class="site-title my-3">Questions <span>Fréquemment</span> Posées</h2>
+                        <h2 class="site-title my-3">Questions <span>fréquemment</span> posées</h2>
                     </div>
                     <p class="about-text">Vous avez des questions sur nos services ? Découvrez les réponses aux questions les plus fréquemment posées par nos utilisateurs. Si vous avez besoin de plus d'informations, notre équipe est toujours prête à vous aider.</p>
                     <div class="faq-img mt-3">

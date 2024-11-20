@@ -23,45 +23,45 @@ Table of contents
 11. Header top css
 12. Navbar css
 13. Multi level dropdown menu
-14. Search area css 
-15. sidebar popup css 
-16. Main section css 
-17. Hero css 
+14. Search area css
+15. sidebar popup css
+16. Main section css
+17. Hero css
 18. Play btn
 19. Nice select css
-20. Booking css 
-21. Date picker css 
-22. Time picker css 
-23. About css 
-24. Service css 
+20. Booking css
+21. Date picker css
+22. Time picker css
+23. About css
+24. Service css
 25. Service single
-26. Feature css 
-27. Video css 
-28. Choose css 
-29. Testimonial css 
-30. Counter css 
-31. Cta css 
-32. Blog css 
+26. Feature css
+27. Video css
+28. Choose css
+29. Testimonial css
+30. Counter css
+31. Cta css
+32. Blog css
 33. Blog single css
 34. Widget sidebar css
-35. Contact us css 
+35. Contact us css
 36. Team css
-37. Team single css 
-38. Book ride css 
-39. Taxi Rate css 
-40. Taxi css 
-41. Taxi single css 
-42. Download css 
-43. Faq css 
+37. Team single css
+38. Book ride css
+39. Taxi Rate css
+40. Taxi css
+41. Taxi single css
+42. Download css
+43. Faq css
 44. Breadcrumb css
 45. Pagination css
 46. Auth css
 47. User profile css
-48. Coming soon css 
-49. Error css 
-50. Partner css 
-51. Terms/privacy css 
-52. Footer css 
+48. Coming soon css
+49. Error css
+50. Partner css
+51. Terms/privacy css
+52. Footer css
 53. Home 2
 54. Home 3
 
@@ -622,7 +622,7 @@ label {
 
 .site-title {
   font-weight: 700;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   font-size: 45px;
   color:  var(--color-dark);
   margin-bottom: 0;
@@ -1311,7 +1311,7 @@ label {
 
 
 /*====================
-14. Search area css 
+14. Search area css
 ======================*/
 
 .search-area {
@@ -1363,7 +1363,7 @@ label {
 
 
 /*====================
-15. sidebar popup css 
+15. sidebar popup css
 ======================*/
 
 .sidebar-popup {
@@ -1499,7 +1499,7 @@ label {
 
 
 /*====================
-16. Main section css 
+16. Main section css
 ======================*/
 
 .main {
@@ -1509,7 +1509,7 @@ label {
 
 
 /*====================
-17. Hero css 
+17. Hero css
 ======================*/
 
 .hero-section {
@@ -1761,7 +1761,7 @@ label {
 
 
 /* ===================
-20. Booking css 
+20. Booking css
 ====================== */
 
 .booking-area{
@@ -1837,7 +1837,7 @@ label {
 
 
 /* ===================
-21. Date picker css 
+21. Date picker css
 ====================== */
 
 .ui-datepicker .ui-datepicker-header .ui-corner-all>span,
@@ -1923,7 +1923,7 @@ a.ui-button:active,
 
 
 /* ===================
-22. Time picker css 
+22. Time picker css
 ====================== */
 
 .ui-timepicker-standard{
@@ -1948,7 +1948,7 @@ a.ui-button:active,
 
 
 /*====================
-23. About css 
+23. About css
 ======================*/
 
 .about-left {
@@ -2033,7 +2033,7 @@ a.ui-button:active,
 
 
 /*====================
-24. Service css 
+24. Service css
 ======================*/
 
 .service-area {
@@ -2158,7 +2158,7 @@ a.ui-button:active,
 
 
 /*====================
-26. Feature css 
+26. Feature css
 ======================*/
 
 .feature-area {
@@ -2255,7 +2255,7 @@ a.ui-button:active,
 
 
 /*====================
-27. Video css 
+27. Video css
 ======================*/
 
 .video-content {
@@ -2312,7 +2312,7 @@ a.ui-button:active,
 
 
 /*====================
-28. Choose css 
+28. Choose css
 ======================*/
 
 .choose-area{
@@ -2402,7 +2402,7 @@ a.ui-button:active,
 
 
 /*====================
-29. Testimonial css 
+29. Testimonial css
 ======================*/
 
 .testimonial-area {
@@ -2531,7 +2531,7 @@ a.ui-button:active,
 
 
 /*====================
-30. Counter css 
+30. Counter css
 ======================*/
 
 .counter-area {
@@ -2605,7 +2605,7 @@ a.ui-button:active,
 
 
 /*====================
-31. Cta css 
+31. Cta css
 ======================*/
 
 .cta-area{
@@ -2704,7 +2704,7 @@ a.ui-button:active,
 
 
 /*====================
-32. Blog css 
+32. Blog css
 ======================*/
 
 .blog-area{
@@ -2731,7 +2731,7 @@ a.ui-button:active,
 
 .blog-item:hover .blog-item-img img{
   transform: scale(1.1);
-} 
+}
 
 .blog-item-info {
   padding: 15px 0 0 0;
@@ -3246,7 +3246,7 @@ a.ui-button:active,
 
 
 /*===================
-35. Contact us css 
+35. Contact us css
 =====================*/
 
 .contact-wrapper {
@@ -3390,7 +3390,7 @@ a.ui-button:active,
 
 
 /*===================
-36. Team css 
+36. Team css
 =====================*/
 
 .team-area {
@@ -3499,7 +3499,7 @@ a.ui-button:active,
 
 
 /* ===================
-37. Team single css 
+37. Team single css
 ====================== */
 
 .team-single-img img{
@@ -3578,7 +3578,7 @@ a.ui-button:active,
 
 
 /*===================
-38. Book ride css 
+38. Book ride css
 =====================*/
 
 .book-ride .booking-form{
@@ -3618,7 +3618,7 @@ a.ui-button:active,
 
 
 /*===================
-39. Taxi Rate css 
+39. Taxi Rate css
 =====================*/
 
 .rate-item{
@@ -3752,7 +3752,7 @@ a.ui-button:active,
 
 
 /*===================
-40. Taxi css 
+40. Taxi css
 =====================*/
 
 .taxi-area{
@@ -3858,7 +3858,7 @@ a.ui-button:active,
 
 
 /*===================
-41. Taxi single css 
+41. Taxi single css
 =====================*/
 
 .taxi-single-img{
@@ -3941,7 +3941,7 @@ a.ui-button:active,
   line-height: 35px;
   color: var(--color-white);
   background: var(--theme-color);
-  border-radius: 50px; 
+  border-radius: 50px;
   text-align: center;
   margin-top: 6px;
 }
@@ -4001,7 +4001,7 @@ a.ui-button:active,
 
 
 /*====================
-42. Download css 
+42. Download css
 ======================*/
 
 .download-area{
@@ -4095,7 +4095,7 @@ a.ui-button:active,
 
 
 /*====================
-43. Faq css 
+43. Faq css
 ======================*/
 
 .faq-area .accordion-item {
@@ -4257,7 +4257,7 @@ a.ui-button:active,
 
 
 /*====================
-45. Pagination css 
+45. Pagination css
 ======================*/
 
 .pagination {
@@ -4318,7 +4318,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-46. Auth css 
+46. Auth css
 ======================*/
 
 .login-form {
@@ -4495,7 +4495,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-47. User profile css 
+47. User profile css
 ======================*/
 
 .nav-right-account img {
@@ -4882,7 +4882,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-48. Coming soon css 
+48. Coming soon css
 ======================*/
 
 .coming-soon {
@@ -4999,7 +4999,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-49. Error css 
+49. Error css
 ======================*/
 
 .error-wrapper {
@@ -5040,7 +5040,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-50. Partner css 
+50. Partner css
 ====================== */
 
 .partner{
@@ -5066,7 +5066,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-51. Terms/privacy css 
+51. Terms/privacy css
 ====================== */
 
 .terms-content:not(:last-child) {
@@ -5098,7 +5098,7 @@ body.rtl-mode .price-wrapper {
 
 
 /*====================
-52. Footer css 
+52. Footer css
 ======================*/
 
 .footer-area {
