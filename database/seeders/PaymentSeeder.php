@@ -27,7 +27,8 @@ class PaymentSeeder extends Seeder
         // Création des paiements avec différents statuts et méthodes de paiement
         $payments = [
             [
-                'amount' => 1000,
+                'amount' => $bookings->random()->total_price, // Utilisation du prix de la réservation
+                'payment_number' => null,
                 'reference' => 'REF123456',
                 'payment_method' => 'CREDITCARD',
                 'status' => 'SUCCESSFUL',
@@ -36,7 +37,8 @@ class PaymentSeeder extends Seeder
                 'payment_type_id' => $paymentTypes->random()->id,
             ],
             [
-                'amount' => 2000,
+                'amount' => $bookings->random()->total_price, // Utilisation du prix de la réservation
+                'payment_number' => null,
                 'reference' => 'REF123457',
                 'payment_method' => 'PAYPAL',
                 'status' => 'PENDING',
@@ -45,7 +47,8 @@ class PaymentSeeder extends Seeder
                 'payment_type_id' => $paymentTypes->random()->id,
             ],
             [
-                'amount' => 500,
+                'amount' => $bookings->random()->total_price, // Utilisation du prix de la réservation
+                'payment_number' => null,
                 'reference' => 'REF123458',
                 'payment_method' => 'CASH',
                 'status' => 'FAILED',
@@ -54,7 +57,8 @@ class PaymentSeeder extends Seeder
                 'payment_type_id' => $paymentTypes->random()->id,
             ],
             [
-                'amount' => 800,
+                'amount' => $bookings->random()->total_price, // Utilisation du prix de la réservation
+                'payment_number' => null,
                 'reference' => 'REF123459',
                 'payment_method' => 'MOMO',
                 'status' => 'SUCCESSFUL',
@@ -69,4 +73,5 @@ class PaymentSeeder extends Seeder
             Payment::create($payment);
         }
     }
+
     }

@@ -72,6 +72,8 @@ class RideRequestController extends Controller
     public function show(RideRequest $rideRequest)
     {
         //
+        return view('back.pages.demandes.show',compact('rideRequest'));
+
     }
 
     /**

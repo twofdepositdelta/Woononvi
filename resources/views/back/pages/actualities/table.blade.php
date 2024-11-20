@@ -38,7 +38,7 @@
                     </td>
                     <td class="text-center">
                         <div class="d-flex align-items-center gap-10 justify-content-center">
-                            @if ($actuality->typeactualite->name=="Blog")
+                            @if ($actuality->typeNew->name=="Blog")
                             <!-- Edit -->
                             <a href="{{ route('actualities.edit', $actuality)}}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                 <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>

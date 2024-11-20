@@ -161,10 +161,10 @@
         }
 
         // Charger les données hebdomadaires par défaut
-        loadRideData('weekly');
+        loadRideData('weeklyride');
 
         // Mettre à jour les données lorsque l'utilisateur change la période
-        document.getElementById('periodSelect').addEventListener('change', function() {
+        document.getElementById('periodSelectride').addEventListener('change', function() {
             const period = this.value;
             loadRideData(period);
         });

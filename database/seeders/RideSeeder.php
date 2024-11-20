@@ -2,122 +2,232 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use App\Models\Ride;
+use App\Models\User;
 use App\Models\Vehicle;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        // Liste des conducteurs à vérifier
-        $drivers = [6, 7]; // Conducteurs 6 et 7
+        // Récupérer un conducteur existant et un véhicule
+        $vehicle = Vehicle::first(); // Assure-toi qu'il y a des véhicules dans la base de données
 
-        // Trajets disponibles avec des coordonnées différentes
-        $routes = [
-            [
-                'departure' => 'Cotonou',
-                'destination' => 'Porto-Novo',
-                'latitude' => 6.3656,
-                'longitude' => 2.4188,
-            ],
-            [
-                'departure' => 'Porto-Novo',
-                'destination' => 'Abomey',
-                'latitude' => 7.1833,
-                'longitude' => 2.2833,
-            ],
-            [
-                'departure' => 'Abomey',
-                'destination' => 'Ouidah',
-                'latitude' => 6.3611,
-                'longitude' => 2.0811,
-            ],
-            [
-                'departure' => 'Cotonou',
-                'destination' => 'Bohicon',
-                'latitude' => 6.4500,
-                'longitude' => 2.0800,
-            ],
-            [
-                'departure' => 'Bohicon',
-                'destination' => 'Ouidah',
-                'latitude' => 6.3633,
-                'longitude' => 2.0833,
-            ],
-            [
-                'departure' => 'Porto-Novo',
-                'destination' => 'Abomey-Calavi',
-                'latitude' => 6.5000,
-                'longitude' => 2.4200,
-            ],
-            [
-                'departure' => 'Ouidah',
-                'destination' => 'Cotonou',
-                'latitude' => 6.3511,
-                'longitude' => 2.0900,
-            ],
-            [
-                'departure' => 'Bohicon',
-                'destination' => 'Porto-Novo',
-                'latitude' => 6.4411,
-                'longitude' => 2.2056,
-            ],
-            [
-                'departure' => 'Abomey',
-                'destination' => 'Porto-Novo',
-                'latitude' => 7.1300,
-                'longitude' => 2.3356,
-            ],
-            [
-                'departure' => 'Ouidah',
-                'destination' => 'Abomey',
-                'latitude' => 6.3811,
-                'longitude' => 2.0733,
-            ],
-        ];
+        // Trajet 1: Cotonou -> Porto-Novo (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'regular',
+            'start_location_name' => 'Cotonou',
+            'start_location' => new Point(6.3574,2.4299), // Coordonnées géographiques pour Cotonou
+            'end_location_name' => 'Porto-Novo',
+            'end_location' => new Point(6.4463,2.6172), // Coordonnées géographiques pour Porto-Novo
+            'days' => json_encode(['Lundi', 'Mercredi', 'Vendredi']),
+            'return_trip' => true,
+            'return_time' => '16:00:00',
+            'available_seats' => 4,
+            'departure_time' => '08:00:00',
+            'arrival_time' => '09:00:00',
+            'price_per_km' => 2000, // Prix par km en FCFA
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
 
-        // Statuts possibles
-        $statuses = ['pending', 'active', 'completed'];
+        // Trajet 2: Parakou -> Natitingou (trajet ponctuel)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 7,
+            'type' => 'single',
+            'start_location_name' => 'Parakou',
+            'start_location' => new Point(9.3406,2.6217), // Coordonnées géographiques pour Parakou
+            'end_location_name' => 'Natitingou',
+            'end_location' => new Point(10.3034,1.3817), // Coordonnées géographiques pour Natitingou
+            'days' => null,
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 3,
+            'departure_time' => '07:30:00',
+            'arrival_time' => '12:00:00',
+            'price_per_km' => 2500,
+            'is_nearby_ride' => true,
+            'status' => 'pending',
+            'vehicle_id' => $vehicle->id,
+        ]);
 
-        // Boucle sur les conducteurs pour créer 10 trajets chacun
-        foreach ($drivers as $driver_id) {
-            // Vérifie si le conducteur a un véhicule associé
-            $vehicle = Vehicle::where('driver_id', $driver_id)->first();
+        // Trajet 3: Cotonou -> Parakou (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 7,
+            'type' => 'regular',
+            'start_location_name' => 'Cotonou',
+            'start_location' => new Point(6.3574, 2.4299),
+            'end_location_name' => 'Parakou',
+            'end_location' => new Point(9.3406, 2.6217),
+            'days' => json_encode(['Lundi', 'Jeudi']),
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 5,
+            'departure_time' => '06:30:00',
+            'arrival_time' => '12:00:00',
+            'price_per_km' => 2200,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
 
-            if ($vehicle) {
-                for ($i = 0; $i < 10; $i++) {
-                    // Sélection aléatoire d'un trajet
-                    $route = $routes[$i]; // Utilisation des 10 trajets définis
-                    // Sélection aléatoire d'un statut
-                    $status = $statuses[array_rand($statuses)];
+        // Trajet 4: Porto-Novo -> Cotonou (trajet ponctuel)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'single',
+            'start_location_name' => 'Porto-Novo',
+            'start_location' => new Point(6.4463 ,2.6172),
+            'end_location_name' => 'Cotonou',
+            'end_location' => new Point(6.3574 ,2.4299),
+            'days' => null,
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 2,
+            'departure_time' => '10:00:00',
+            'arrival_time' => '11:00:00',
+            'price_per_km' => 1800,
+            'is_nearby_ride' => true,
+            'status' => 'pending',
+            'vehicle_id' => $vehicle->id,
+        ]);
 
-                    DB::table('rides')->insert([
-                        'numero_ride' => random_int(100000, 999999),
-                        'departure' => $route['departure'],
-                        'destination' => $route['destination'],
-                        // 'departure_time' => Carbon::now()->addDays(rand(1, 30)),
-                        'departure_time' => Carbon::now(),
-                        'available_seats' => rand(1, 5),
-                        'price_per_km' => 1000,
-                        'latitude' => $route['latitude'],
-                        'longitude' => $route['longitude'],
-                        'distance_travelled' => rand(0, 1000),
-                        'passenger_count' => rand(0, 3),
-                        'is_nearby_ride' => rand(0, 1) === 1,
-                        'status' => $status,
-                        'driver_id' => $driver_id,
-                        'vehicle_id' => $vehicle->id,
-                        'commission_rate' => 10,
-                        'created_at' => Carbon::now()->subDays(rand(1, 365)),
-                        'updated_at' => now(),
-                    ]);
-                }
-            } else {
-                echo "Aucun véhicule trouvé pour le conducteur ID: {$driver_id}.";
-            }
-        }
+        // Trajet 5: Parakou -> Cotonou (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 7,
+            'type' => 'regular',
+            'start_location_name' => 'Parakou',
+            'start_location' => new Point(9.3406, 2.6217),
+            'end_location_name' => 'Cotonou',
+            'end_location' => new Point(6.3574, 2.4299),
+            'days' => json_encode(['Mardi', 'Mercredi']),
+            'return_trip' => true,
+            'return_time' => '18:00:00',
+            'available_seats' => 6,
+            'departure_time' => '09:00:00',
+            'arrival_time' => '15:00:00',
+            'price_per_km' => 2100,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
+
+        // Trajet 6: Cotonou -> Porto-Novo (trajet ponctuel)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'single',
+            'start_location_name' => 'Cotonou',
+            'start_location' => new Point(6.3574, 2.4299),
+            'end_location_name' => 'Porto-Novo',
+            'end_location' => new Point(6.4463,2.6172),
+            'days' => null,
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 4,
+            'departure_time' => '14:00:00',
+            'arrival_time' => '15:00:00',
+            'price_per_km' => 1900,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
+
+        // Trajet 7: Natitingou -> Parakou (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 7,
+            'type' => 'regular',
+            'start_location_name' => 'Natitingou',
+            'start_location' => new Point(10.3034,1.3817),
+            'end_location_name' => 'Parakou',
+            'end_location' => new Point(9.3406,2.6217),
+            'days' => json_encode(['Lundi', 'Mercredi']),
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 4,
+            'departure_time' => '06:00:00',
+            'arrival_time' => '08:30:00',
+            'price_per_km' => 2300,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
+
+        // Trajet 8: Cotonou -> Porto-Novo (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'regular',
+            'start_location_name' => 'Cotonou',
+            'start_location' => new Point(6.3574,2.4299),
+            'end_location_name' => 'Porto-Novo',
+            'end_location' => new Point(6.4463,2.6172),
+            'days' => json_encode(['Lundi', 'Vendredi']),
+            'return_trip' => true,
+            'return_time' => '17:00:00',
+            'available_seats' => 4,
+            'departure_time' => '09:00:00',
+            'arrival_time' => '10:00:00',
+            'price_per_km' => 1800,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
+
+        // Trajet 9: Porto-Novo -> Parakou (trajet ponctuel)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'single',
+            'start_location_name' => 'Porto-Novo',
+            'start_location' => new Point(6.4463, 2.6172),
+            'end_location_name' => 'Parakou',
+            'end_location' => new Point(9.3406,2.6217),
+            'days' => null,
+            'return_trip' => false,
+            'return_time' => null,
+            'available_seats' => 3,
+            'departure_time' => '13:00:00',
+            'arrival_time' => '17:30:00',
+            'price_per_km' => 2400,
+            'is_nearby_ride' => false,
+            'status' => 'pending',
+            'vehicle_id' => $vehicle->id,
+        ]);
+
+        // Trajet 10: Parakou -> Porto-Novo (trajet régulier)
+        Ride::create([
+            'numero_ride' => rand(1000, 9999),
+            'driver_id' => 6,
+            'type' => 'regular',
+            'start_location_name' => 'Parakou',
+            'start_location' => new Point(9.3406,2.6217),
+            'end_location_name' => 'Porto-Novo',
+            'end_location' => new Point(6.4463, 2.6172),
+            'days' => json_encode(['Mardi', 'Jeudi']),
+            'return_trip' => true,
+            'return_time' => '18:00:00',
+            'available_seats' => 5,
+            'departure_time' => '08:00:00',
+            'arrival_time' => '13:00:00',
+            'price_per_km' => 2300,
+            'is_nearby_ride' => false,
+            'status' => 'active',
+            'vehicle_id' => $vehicle->id,
+        ]);
     }
+
+
 
 }

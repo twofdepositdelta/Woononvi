@@ -28,7 +28,7 @@
                     @else
                         @foreach ($payments as $index => $payment)
                             <tr>
-                                
+
                                 <td>{{ $payment->reference }}</td>
                                 <td>{{ $payment->payment_method }}</td>
                                 <td>{{ number_format($payment->amount, 0, ',', ' ') }} Fcfa</td>
@@ -56,7 +56,6 @@
                     @endif
                 </tbody>
             </table>
-
             @if (!$payments->isEmpty())
                 {{-- pagination --}}
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">

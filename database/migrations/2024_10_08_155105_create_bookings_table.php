@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('booking_number')->unique();
             $table->integer('seats_reserved');
             $table->double('total_price');
+            $table->double('price_maintain');
             $table->integer('commission_rate');
             $table->foreignIdFor(Ride::class);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'validated_by_passenger', 'validated_by_driver', 'refunded', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed', 'refunded', 'cancelled'])->default('pending');
+            $table->boolean('is_by_passenger')->default(false);
+            $table->boolean('is_by_driver')->default(false);
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();

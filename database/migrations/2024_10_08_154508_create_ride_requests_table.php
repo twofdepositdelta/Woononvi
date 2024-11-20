@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('ride_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('start_location_name');
             $table->geography('start_location'); // Latitude et longitude de départ
+            $table->string('end_location_name');
             $table->geography('end_location'); // Latitude et longitude d’arrivée
             $table->integer('seats');
             $table->timestamp('preferred_time'); // Heure de départ prévue
             $table->double('preferred_amount'); // Nombre de places disponibles
             $table->integer('commission_rate');
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'validated_by_passenger', 'validated_by_driver', 'refunded', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected','completed', 'refunded', 'cancelled'])->default('pending');
+            $table->boolean('is_by_passenger')->default(false);
+            $table->boolean('is_by_driver')->default(false);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->timestamp('accepted_at')->nullable();

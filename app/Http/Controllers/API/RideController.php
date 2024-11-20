@@ -19,6 +19,15 @@ use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
 {
+    public function getRides()
+    {
+        $data = Ride::orderBy('id', 'desc')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -26,23 +35,24 @@ class RideController extends Controller
     {
         // Validation des données
         $validator = Validator::make($request->all(), [
-            'type' => 'required|in:regular,single',
+            'type' => 'required|in:Régulier,Ponctuel',
             'start_lat' => 'required|numeric',
+            'start_location_name' => 'required|string',
+            'end_location_name' => 'required|string',
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            // 'days' => 'required_if:type,regular|array',
-            // 'days.*' => 'string|in:Lu,Ma,Me,Je,Ve,Sa,Di',
             'departure_time' => 'required|date',
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
+            'total_price' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Les données envoyées ne sont pas valides.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -52,7 +62,7 @@ class RideController extends Controller
         }
 
         // Log or inspect the data
-        logger(json_encode($days));
+        // logger(json_encode($days));
 
         // Vérifier si le conducteur a un véhicule actif
         $driver = Auth::user();
@@ -80,9 +90,7 @@ class RideController extends Controller
             ], 422);
         }
 
-        // Création des objets Point pour les coordonnées géographiques
-        // $startLocation = DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})')");
-        // $endLocation = DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})')");
+        $request->type = ($request->type == "Régulier" ? 'regular' : 'ponctual');
 
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
@@ -90,19 +98,26 @@ class RideController extends Controller
         // Si les jours sont fournis, les convertir en chaîne JSON
         $daysJson = $request->days ? json_encode($request->days) : null;
 
+        $numeroRide = $this->generateUniqueRideNumber();
+
         // Enregistrement du trajet dans la base de données
         $ride = Ride::create([
+            'numero_ride' => $numeroRide,
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
             'days' => $daysJson,
             'type' => $request->type,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
-            'price_per_km' => $request->price_per_km,
+            'price_per_km' => 100,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
+            'start_location_name' => $request->start_location_name,  
+            'end_location_name' => $request->end_location_name,  
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
+            'total_price' => $request->total_price,  
+            'status' => 'active'
         ]);
 
         // Retourner une réponse avec succès
@@ -111,6 +126,16 @@ class RideController extends Controller
             'message' => 'Le trajet a été créé avec succès.',
             'ride' => $ride,
         ], 201);
+    }
+
+    private function generateUniqueRideNumber()
+    {
+        do {
+            // Générer un numéro aléatoire de 8 caractères
+            $numeroRide = Str::random(8);
+        } while (Ride::where('numero_ride', $numeroRide)->exists()); // Vérifier son unicité
+
+        return $numeroRide;
     }
 
     private function isWithinBenin(float $latitude, float $longitude): bool

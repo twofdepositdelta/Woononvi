@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
+use Intervention\Image\Geometry\Point;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RideRequestSeeder extends Seeder
@@ -17,36 +19,48 @@ class RideRequestSeeder extends Seeder
         //
         DB::table('ride_requests')->insert([
             [
-                'departure' => 'Cotonou',
-                'destination' => 'Porto-Novo',
-                'preferred_time' => Carbon::now()->addHours(2), // 2 heures à partir de maintenant
-                'preferred_amount' => 3,
-                'status' => 'pending',
-                'passenger_id' => 1, // Assurez-vous que l'utilisateur avec l'ID 1 existe
+                'start_location' => DB::raw("ST_GeomFromText('POINT(2.3912 6.3703)')"), // Cotonou
+                'end_location' => DB::raw("ST_GeomFromText('POINT(2.6288 6.4969)')"),   // Porto-Novo
+                 'start_location_name'=> "Cotonou",
+                 'end_location_name'=> "Porto-Novo",
+                'seats' => 3,
+                'preferred_time' => Carbon::now()->addHours(2),
+                'preferred_amount' => 1500,
+                'commission_rate' => 10,
+                'passenger_id' => 1,
+                'driver_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'departure' => 'Parakou',
-                'destination' => 'Natitingou',
-                'preferred_time' => Carbon::now()->addHours(1), // 1 heure à partir de maintenant
-                'preferred_amount' => 2,
-                'status' => 'responded',
-                'passenger_id' => 2, // Assurez-vous que l'utilisateur avec l'ID 2 existe
+                'start_location' => DB::raw("ST_GeomFromText('POINT(2.6099 9.3467)')"), // Parakou
+                'end_location' => DB::raw("ST_GeomFromText('POINT(1.3798 10.2964)')"), // Natitingou
+                'start_location_name'=> "Parakou",
+                'end_location_name'=> "Natitingou",
+                'seats' => 2,
+                'preferred_time' => Carbon::now()->addHours(1),
+                'preferred_amount' => 5000,
+                'commission_rate' => 15,
+
+                'passenger_id' => 2,
+                'driver_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'departure' => 'Porto-Novo',
-                'destination' => 'Cotonou',
-                'preferred_time' => Carbon::now()->addHours(3), // 3 heures à partir de maintenant
-                'preferred_amount' => 4,
-                'status' => 'completed',
-                'passenger_id' => 1, // Assurez-vous que l'utilisateur avec l'ID 1 existe
+                'start_location' => DB::raw("ST_GeomFromText('POINT(2.6288 6.4969)')"), // Porto-Novo
+                'end_location' => DB::raw("ST_GeomFromText('POINT(2.3912 6.3703)')"), // Cotonou
+                'start_location_name'=> "Porto-Novo",
+                'end_location_name'=> "Cotonou",
+                'seats' => 4,
+                'preferred_time' => Carbon::now()->addHours(3),
+                'preferred_amount' => 2000,
+                'commission_rate' => 10,
+                'passenger_id' => 1,
+                'driver_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // Ajoutez d'autres données si nécessaire
         ]);
     }
 }

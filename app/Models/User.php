@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function rides()
     {
-        return $this->hasMany(Ride::class, 'driver_id'); // Assurez-vous d'importer le modèle Booking
+        return $this->hasMany(Ride::class, 'driver_id'); // Assurez-vous d'importer le modèle Ride
     }
 
     public function conversations()
@@ -136,11 +136,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function preferences()
     {
         return $this->hasMany(Preference::class); // Assurez-vous d'importer le modèle Booking
-    }
-
-    public function trips()
-    {
-        return $this->hasMany(Trip::class, 'driver_id');
     }
 
     // public function sendPasswordResetNotification($token)

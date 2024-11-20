@@ -8,17 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $fillable = [
+       'booking_number',
         'seats_reserved',
         'total_price',
+        'commission_rate',
+        'ride_id',
+        'passenger_id',
         'status',
-        'trip_id', // Clé étrangère pour le trajet
-        'passenger_id', // Clé étrangère pour le passager
-        'booking_number'
+        'accepted_at',
+        'rejected_at',
+        'validated_by_passenger_at',
+        'validated_by_driver_at',
+        'refunded_at',
+        'cancelled_at',
+        'is_by_passenger',
+        'is_by_driver'
     ];
 
-    public function trip()
+    public function ride()
     {
-        return $this->belongsTo(Trip::class);
+        return $this->belongsTo(ride::class);
     }
 
     public function passenger()
