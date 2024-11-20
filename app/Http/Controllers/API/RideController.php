@@ -36,6 +36,7 @@ class RideController extends Controller
             'departure_time' => 'required|date',
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
+            'total_price' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -101,6 +102,7 @@ class RideController extends Controller
             'end_location_name' => $request->end_location_name,  
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
+            'total_price' => $request->total_price,  
         ]);
 
         // Retourner une réponse avec succès
