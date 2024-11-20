@@ -281,40 +281,33 @@ class AuthenticatedSessionController extends Controller
 
     public function formatUserArray(User $user)
     {
-        // Charger les relations profil et préférences de l'utilisateur
-        $user->load(['preferences', 'vehicles.rides']);
-        $userArray = $user->toArray();
-        return $userArray;
+        $user->load(['profile', 'preferences', 'vehicles.rides']);
 
-        unset($userArray['roles']);
+        $userArray = $user->toArray();
+
+        unset($userArray['roles']); // Assurez-vous que ceci est avant le return
 
         $userArray['username'] = $userArray['username'] ?? '';
         $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-        
+
         $userArray['country_name'] = $user->country_name;
         $userArray['city_name'] = $user->city_name;
         $userArray['indicatif'] = $user->country_code;
         $userArray['phone_number'] = $user->phone_number;
 
-        // Ajouter le profil et les préférences au tableau de réponse
         $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
         $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
 
-        // Charger les véhicules avec le nombre de trajets
         $vehicles = $user->vehicles()->withCount('rides')->get();
 
-        // Nombre de véhicules
         $userArray['vehicles_count'] = $vehicles->count();
-
-        // Nombre total de trajets pour l'utilisateur
         $userArray['total_rides_count'] = $vehicles->sum('rides_count');
 
-        // Inclure les informations de chaque véhicule avec leur nombre de trajets
         $userArray['vehicles'] = $vehicles->map(function ($vehicle) {
             return [
                 'id' => $vehicle->id,
                 'model' => $vehicle->model,
-                'rides_count' => $vehicle->trips_count,
+                'rides_count' => $vehicle->rides_count, // Correction ici
             ];
         });
 

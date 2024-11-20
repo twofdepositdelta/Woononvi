@@ -98,8 +98,11 @@ class RideController extends Controller
         // Si les jours sont fournis, les convertir en chaîne JSON
         $daysJson = $request->days ? json_encode($request->days) : null;
 
+        $numeroRide = $this->generateUniqueRideNumber();
+
         // Enregistrement du trajet dans la base de données
         $ride = Ride::create([
+            'numero_ride' => $numeroRide,
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
             'days' => $daysJson,
@@ -114,6 +117,7 @@ class RideController extends Controller
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
             'total_price' => $request->total_price,  
+            'status' => 'active'
         ]);
 
         // Retourner une réponse avec succès
@@ -122,6 +126,16 @@ class RideController extends Controller
             'message' => 'Le trajet a été créé avec succès.',
             'ride' => $ride,
         ], 201);
+    }
+
+    private function generateUniqueRideNumber()
+    {
+        do {
+            // Générer un numéro aléatoire de 8 caractères
+            $numeroRide = Str::random(8);
+        } while (Ride::where('numero_ride', $numeroRide)->exists()); // Vérifier son unicité
+
+        return $numeroRide;
     }
 
     private function isWithinBenin(float $latitude, float $longitude): bool
