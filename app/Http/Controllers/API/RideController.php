@@ -19,6 +19,15 @@ use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
 {
+    public function getRides()
+    {
+        $data = Ride::orderBy('id', 'desc')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
