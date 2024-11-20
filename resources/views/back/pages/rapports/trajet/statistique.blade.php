@@ -96,10 +96,10 @@
 
                                 <select id="periodSelect"
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                                    <option value="yearly">Annuel</option>
-                                    <option value="monthly">Mensuel</option>
-                                    <option value="weekly" selected>Hebdomadaire</option>
-                                    <option value="today">Aujourd'hui</option>
+                                    <option value="yearlyride">Annuel</option>
+                                    <option value="monthlyride">Mensuel</option>
+                                    <option value="weeklyride" selected>Hebdomadaire</option>
+                                    <option value="todayride">Aujourd'hui</option>
                                 </select>
 
 
@@ -176,7 +176,7 @@
             }
 
             // Charger les données hebdomadaires par défaut
-            loadRideData('weekly');
+            loadRideData('weeklyride');
 
             // Mettre à jour les données lorsque l'utilisateur change la période
             document.getElementById('periodSelect').addEventListener('change', function() {

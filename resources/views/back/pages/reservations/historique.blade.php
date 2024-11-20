@@ -14,11 +14,12 @@
                     <tr>
                         <th>Numéro</th>
                         <th>Date de réservation</th>
-                        {{-- <th>Trajet</th> --}}
+                        <th>Trajet</th>
                         <th>Passager</th>
                         <th>Prix total</th>
                         <th>Statut</th>
-                        <th>Actions</th>
+                        <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -54,31 +55,22 @@
 
                                 <!-- Statut -->
                                 <td>
-                                    @switch($booking->status)
-                                        @case('accepted')
-                                            <span class="badge bg-success">Acceptée</span>
-                                            @break
-                                        @case('pending')
-                                            <span class="badge bg-warning">En attente</span>
-                                            @break
-                                        @case('rejected')
-                                            <span class="badge bg-danger">Rejetée</span>
-                                            @break
-                                        @case('validated_by_passenger')
-                                            <span class="badge bg-info">Confirmée  passager</span>
-                                            @break
-                                        @case('validated_by_driver')
-                                            <span class="badge bg-primary">Confirmée conducteur</span>
-                                            @break
-                                        @case('refunded')
-                                            <span class="badge bg-info">Remboursée</span>
-                                            @break
-                                        @case('cancelled')
-                                            <span class="badge bg-secondary">Annulée</span>
-                                            @break
-                                        @default
-                                            <span class="badge bg-secondary">Non défini</span>
-                                    @endswitch
+                                    @if ($booking->status === 'accepted')
+                                    <span class="badge bg-success">Acceptée</span>
+                                @elseif ($booking->status === 'pending')
+                                    <span class="badge bg-warning">En attente</span>
+                                @elseif ($booking->status === 'rejected')
+                                    <span class="badge bg-danger">Rejetée</span>
+                                @elseif ($booking->status === 'completed' && $booking->is_by_driver && $booking->is_by_passenger)
+                                    <span class="badge bg-info">Terminé</span>
+                                @elseif ($booking->status === 'refunded')
+                                    <span class="badge bg-info">Remboursée</span>
+                                @elseif ($booking->status === 'cancelled')
+                                    <span class="badge bg-secondary">Annulée</span>
+                                @else
+                                <span class="badge bg-success">Acceptée</span>
+                                @endif
+
                                 </td>
 
                                 <!-- Actions -->

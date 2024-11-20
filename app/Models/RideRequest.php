@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use TarfinLabs\LaravelSpatial\Casts\LocationCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RideRequest extends Model
 {
@@ -22,12 +23,17 @@ class RideRequest extends Model
         'driver_id',
         'accepted_at',
         'rejected_at',
-        'validated_by_passenger_at',
-        'validated_by_driver_at',
+        'is_by_passenger_at',
+        'is_by_driver_at',
         'refunded_at',
         'cancelled_at',
     ];
 
+    protected $casts = [
+
+        'start_location' => LocationCast::class,
+        'end_location' => LocationCast::class
+    ];
     // Relation avec le passager (utilisateur)
     public function passenger()
     {

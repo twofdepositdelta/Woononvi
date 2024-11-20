@@ -47,6 +47,7 @@
                                             <span class="text-muted">Non disponible</span>
                                         @endif
                                     </td>
+                                    {{-- <td>{{$ride->start_location->getLat()}}  {{$ride->start_location->getLng()}}</td> --}}
 
                                     <td>
                                         @switch($ride->status)

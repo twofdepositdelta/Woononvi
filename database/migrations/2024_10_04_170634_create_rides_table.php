@@ -29,7 +29,6 @@ return new class extends Migration
             $table->time('departure_time');
             $table->time('arrival_time')->nullable();
             $table->double('price_per_km');
-             $table->double('price_maintain');
             $table->boolean('is_nearby_ride')->default(false);
             $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('pending');
             $table->foreignIdFor(Vehicle::class);

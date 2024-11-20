@@ -40,16 +40,16 @@
 
                 <select id="periodSelectride"
                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
-                    <option value="yearly">Annuel</option>
-                    <option value="monthly">Mensuel</option>
-                    <option value="weekly" selected>Hebdomadaire</option>
-                    <option value="today">Aujourd'hui</option>
+                    <option value="yearlyride">Annuel</option>
+                    <option value="monthlyride">Mensuel</option>
+                    <option value="weeklyride" selected>Hebdomadaire</option>
+                    <option value="todayride">Aujourd'hui</option>
                 </select>
 
 
             </div>
 
-            <div id="commission-summary" class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2">
                 <h6 class="fw-semibold mb-0" id="total-ride">O </h6>
                 <p class="text-sm mb-0 d-flex align-items-center gap-1">
                     Total des trajets

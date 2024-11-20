@@ -21,6 +21,8 @@ class Booking extends Model
         'validated_by_driver_at',
         'refunded_at',
         'cancelled_at',
+        'is_by_passenger',
+        'is_by_driver'
     ];
 
     public function ride()
