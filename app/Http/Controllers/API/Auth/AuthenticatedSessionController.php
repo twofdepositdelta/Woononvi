@@ -281,11 +281,11 @@ class AuthenticatedSessionController extends Controller
 
     public function formatUserArray(User $user)
     {
-        $user->load(['profile', 'preferences', 'vehicles.rides']);
+        $user->load(['profile', 'preferences', 'vehicles']);
 
         $userArray = $user->toArray();
 
-        //unset($userArray['roles']); // Assurez-vous que ceci est avant le return
+        unset($userArray['roles']); // Assurez-vous que ceci est avant le return
 
         $userArray['username'] = $userArray['username'] ?? '';
         $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
