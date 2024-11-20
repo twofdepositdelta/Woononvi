@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/jquery.timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/preload.css') }}">
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
         .testimonial-single {
@@ -53,9 +54,9 @@
 <body class="{{Route::currentRouteName() == 'index' ? 'home-3':'' }}">
 
     <div class="preloader">
-        <div class="loader-ripple">
-            <div></div>
-            <div></div>
+        <div class="loader-wononvi">
+            <div class="circle"></div>
+            <div class="circle"></div>
         </div>
     </div>
 

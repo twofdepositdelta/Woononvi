@@ -10,7 +10,7 @@
                                 <i class="flaticon-drive"></i> L'Application Incontournable
                             </span>
                             <h2 class="site-title mb-10">
-                                <span>Wononvi</span>, Votre Compagnon de Covoiturage
+                                <span>Wononvi</span>, votre Compagnon de Covoiturage
                             </h2>
                             <p>
                                 Avec l'application Wononvi, rien ne vous échappe ! Proposez ou réservez des trajets en toute simplicité. Téléchargez dès maintenant pour profiter d'une expérience de covoiturage fluide et rapide.
