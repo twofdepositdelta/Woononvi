@@ -31,11 +31,12 @@
                     @foreach ($rideRequests as $key => $rideRequest)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}
+                            </td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span class="text-md mb-0 fw-normal text-secondary-light">
-                                        {{ $rideRequest->start_location_name }},
+                                        {{ $rideRequest->start_location_name }}
 
                                     </span>
                                 </div>
@@ -43,7 +44,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span class="text-md mb-0 fw-normal text-secondary-light">
-                                        {{ $rideRequest->end_location_name }},
+                                        {{ $rideRequest->end_location_name }}
 
                                     </span>
                                 </div>
@@ -52,36 +53,41 @@
                             <td>
                                 @if ($rideRequest->passenger)
                                     <a href="{{ route('users.show', $rideRequest->passenger->email) }}">
-                                        {{ $rideRequest->passenger->firstname }} {{ $rideRequest->passenger->lastname }}
+                                        {{ $rideRequest->passenger->firstname }}
+                                        {{ $rideRequest->passenger->lastname }}
                                     </a>
                                 @else
                                     <span class="text-muted">Non disponible</span>
                                 @endif
                             </td>
                             <td>
-                                <span
-                                    class="badge
-                                        {{ $rideRequest->status == 'pending' ? 'bg-primary' :
-                                           ($rideRequest->status == 'accepted' ? 'bg-success' :
-                                           ($rideRequest->status == 'rejected' ? 'bg-danger' :
-                                           ($rideRequest->status == 'validated_by_passenger' || $rideRequest->status == 'validated_by_driver' ? 'bg-info' :
-                                           ($rideRequest->status == 'refunded' ? 'bg-warning' :
-                                           ($rideRequest->status == 'cancelled' ? 'bg-secondary' : 'bg-dark'))))) }}">
-                                    {{ $rideRequest->status == 'pending' ? 'En attente' :
-                                       ($rideRequest->status == 'accepted' ? 'Acceptée' :
-                                       ($rideRequest->status == 'rejected' ? 'Rejetée' :
-                                       ($rideRequest->status == 'validated_by_passenger' ? 'Validée par le passager' :
-                                       ($rideRequest->status == 'validated_by_driver' ? 'Validée par le conducteur' :
-                                       ($rideRequest->status == 'refunded' ? 'Remboursée' : 'Annulée'))))) }}
-                                </span>
+
+                                @if ($rideRequest->status === 'accepted')
+                                    <span class="badge bg-success">Acceptée</span>
+                                @elseif ($rideRequest->status === 'pending')
+                                    <span class="badge bg-warning">En attente</span>
+                                @elseif ($rideRequest->status === 'rejected')
+                                    <span class="badge bg-danger">Rejetée</span>
+                                @elseif ($rideRequest->status === 'completed' && $rideRequest->is_by_driver && $rideRequest->is_by_passenger)
+                                    <span class="badge bg-info">Terminé</span>
+                                @elseif ($rideRequest->status === 'refunded')
+                                    <span class="badge bg-info">Remboursée</span>
+                                @elseif ($rideRequest->status === 'cancelled')
+                                    <span class="badge bg-secondary">Annulée</span>
+                                @else
+                                    <span class="badge bg-success">Acceptée</span>
+                                @endif
+
                             </td>
 
 
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <!-- Vue -->
-                                    <a href="{{ route('ride_requests.show', $rideRequest) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                    <a href="{{ route('ride_requests.show', $rideRequest) }}"
+                                        class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                        <iconify-icon icon="majesticons:eye-line"
+                                            class="icon text-xl"></iconify-icon>
                                     </a>
 
                                 </div>

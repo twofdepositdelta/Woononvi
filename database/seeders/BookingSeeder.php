@@ -34,7 +34,8 @@ public function run()
             Booking::create([
                 'seats_reserved' => rand(1, 4), // Réservations entre 1 et 4 sièges
                 'total_price' => rand(1000, 20000), // Prix entre 1000 et 20000
-                'status' => ['pending', 'accepted', 'rejected', 'validated_by_passenger', 'validated_by_driver', 'refunded', 'cancelled'][rand(0, 6)], // Statut aléatoire
+                'price_maintain' => rand(1000, 20000), // Prix d'entretien en FCFA
+                'status' => ['pending', 'accepted', 'rejected','completed', 'refunded', 'cancelled'][rand(0, 5)], // Statut aléatoire
                 'ride_id' => $ride->id,
                 'passenger_id' => $user->id,
                 'booking_number' => $uniqueNumber,
@@ -45,7 +46,6 @@ public function run()
                 'validated_by_passenger_at' => $validatedByPassengerAt,
                 'validated_by_driver_at' => $validatedByDriverAt,
                 'refunded_at' => $refundedAt,
-
                 'cancelled_at' => $cancelledAt,
                 'commission_rate'=>10
             ]);

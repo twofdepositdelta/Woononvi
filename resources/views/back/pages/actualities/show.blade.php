@@ -24,7 +24,7 @@
 
                     <div class="mb-3">
                         <strong>Type d'Actualité :</strong>
-                        <p>{{ $actuality->typeactualite->name }}</p> <!-- Assurez-vous que le modèle a une relation avec TypeNew -->
+                        <p>{{ $actuality->typeNew->name }}</p> <!-- Assurez-vous que le modèle a une relation avec TypeNew -->
                     </div>
 
                     <div class="mb-3">

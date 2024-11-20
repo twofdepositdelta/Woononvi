@@ -7,7 +7,8 @@
             <div class="card shadow-none border bg-gradient-end-3">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:question-circle" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -29,7 +30,8 @@
             <div class="card shadow-none border bg-gradient-end-1">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:question-circle" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
 
@@ -53,7 +55,8 @@
             <div class="card shadow-none border bg-gradient-end-5">
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
+                        <div
+                            class="w-50-px h-50-px bg-orange rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:question-circle" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
@@ -103,7 +106,8 @@
                             @foreach ($rideRequests as $key => $rideRequest)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($rideRequest->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}
+                                    </td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <span class="text-md mb-0 fw-normal text-secondary-light">
@@ -124,36 +128,41 @@
                                     <td>
                                         @if ($rideRequest->passenger)
                                             <a href="{{ route('users.show', $rideRequest->passenger->email) }}">
-                                                {{ $rideRequest->passenger->firstname }} {{ $rideRequest->passenger->lastname }}
+                                                {{ $rideRequest->passenger->firstname }}
+                                                {{ $rideRequest->passenger->lastname }}
                                             </a>
                                         @else
                                             <span class="text-muted">Non disponible</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <span
-                                            class="badge
-                                                {{ $rideRequest->status == 'pending' ? 'bg-primary' :
-                                                   ($rideRequest->status == 'accepted' ? 'bg-success' :
-                                                   ($rideRequest->status == 'rejected' ? 'bg-danger' :
-                                                   ($rideRequest->status == 'validated_by_passenger' || $rideRequest->status == 'validated_by_driver' ? 'bg-info' :
-                                                   ($rideRequest->status == 'refunded' ? 'bg-warning' :
-                                                   ($rideRequest->status == 'cancelled' ? 'bg-secondary' : 'bg-dark'))))) }}">
-                                            {{ $rideRequest->status == 'pending' ? 'En attente' :
-                                               ($rideRequest->status == 'accepted' ? 'Acceptée' :
-                                               ($rideRequest->status == 'rejected' ? 'Rejetée' :
-                                               ($rideRequest->status == 'validated_by_passenger' ? 'Validée par le passager' :
-                                               ($rideRequest->status == 'validated_by_driver' ? 'Validée par le conducteur' :
-                                               ($rideRequest->status == 'refunded' ? 'Remboursée' : 'Annulée'))))) }}
-                                        </span>
+
+                                        @if ($rideRequest->status === 'accepted')
+                                            <span class="badge bg-success">Acceptée</span>
+                                        @elseif ($rideRequest->status === 'pending')
+                                            <span class="badge bg-warning">En attente</span>
+                                        @elseif ($rideRequest->status === 'rejected')
+                                            <span class="badge bg-danger">Rejetée</span>
+                                        @elseif ($rideRequest->status === 'completed' && $rideRequest->is_by_driver && $rideRequest->is_by_passenger)
+                                            <span class="badge bg-info">Terminé</span>
+                                        @elseif ($rideRequest->status === 'refunded')
+                                            <span class="badge bg-info">Remboursée</span>
+                                        @elseif ($rideRequest->status === 'cancelled')
+                                            <span class="badge bg-secondary">Annulée</span>
+                                        @else
+                                            <span class="badge bg-success">Acceptée</span>
+                                        @endif
+
                                     </td>
 
 
                                     <td class="text-center">
                                         <div class="d-flex align-items-center gap-10 justify-content-center">
                                             <!-- Vue -->
-                                            <a href="{{ route('ride_requests.show', $rideRequest) }}" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                            <a href="{{ route('ride_requests.show', $rideRequest) }}"
+                                                class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                                <iconify-icon icon="majesticons:eye-line"
+                                                    class="icon text-xl"></iconify-icon>
                                             </a>
 
                                         </div>

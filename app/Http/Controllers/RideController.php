@@ -219,7 +219,7 @@ class RideController extends Controller
         $query = Ride::query();
 
         switch ($period) {
-            case 'weekly':
+            case 'weeklyride':
                 // Définir les 4 dernières semaines
                 $startDate = Carbon::now()->subWeeks(4)->startOfWeek();
                 $endDate = Carbon::now()->endOfWeek();
@@ -237,7 +237,7 @@ class RideController extends Controller
                 })->toArray();
                 break;
 
-            case 'monthly':
+            case 'monthlyride':
                 // Réservations par mois
                 $data = $query->selectRaw('MONTH(created_at) as label, COUNT(id) as total')
                               ->groupBy('label')
@@ -253,7 +253,7 @@ class RideController extends Controller
                 })->toArray();
                 break;
 
-            case 'yearly':
+            case 'yearlyride':
                 // Réservations par année
                 $data = $query->selectRaw('YEAR(created_at) as label, COUNT(id) as total')
                               ->groupBy('label')
@@ -262,7 +262,7 @@ class RideController extends Controller
                 $labels = $data->pluck('label')->toArray();
                 break;
 
-            case 'today':
+            case 'todayride':
                 // Réservations pour aujourd'hui
                 $data = $query->whereDate('created_at', today())
                               ->selectRaw('COUNT(id) as total')
