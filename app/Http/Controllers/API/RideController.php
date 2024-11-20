@@ -23,7 +23,7 @@ class RideController extends Controller
     {
         $user = $request->user();
         $data = $user->rides;
-        return 1;
+        return $user->rides;
         // return response()->json([
         //     'success' => true,
         //     'data' => $data,
