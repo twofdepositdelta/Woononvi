@@ -75,16 +75,41 @@ class Ride extends Model
         return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
     }
 
-    public function scopeAddDistance(Builder $query, array $coordinates): void
+    public static function haversine($lat1, $lon1, $lat2, $lon2)
     {
-        $query
-            ->when(is_null($query->getQuery()->columns), static fn (Builder $query) => $query->select('*'))
-            ->selectRaw('
-                ST_Distance(
-                    ST_SRID(start_location, 4326),
-                    ST_SRID(Point(?, ?), 4326)
-                ) AS distance
-            ', $coordinates);
+        $earthRadius = 6371000; // Rayon de la Terre en mètres.
+
+        // Convertir les degrés en radians
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        // Calculer la différence des coordonnées
+        $dLat = $lat2 - $lat1;
+        $dLon = $lon2 - $lon1;
+
+        // Appliquer la formule de Haversine
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos($lat1) * cos($lat2) *
+            sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        // Calculer la distance
+        $distance = $earthRadius * $c; // en mètres
+
+        return $distance;
+    }
+
+    public static function filterRidesByDistance($rides, $lat, $lng, $radius = 500)
+    {
+        return $rides->filter(function ($ride) use ($lat, $lng, $radius) {
+            // Calculer la distance entre le point de départ et le trajet
+            $distance = self::haversine($lat, $lng, $ride->start_location->getLat(), $ride->start_location->getLng());
+
+            // Conserver le trajet si la distance est inférieure ou égale au rayon
+            return $distance <= $radius;
+        });
     }
 
 }

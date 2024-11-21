@@ -204,19 +204,10 @@ class RideController extends Controller
             $request->start_lng,
         ];
 
-        $rides = Ride::query()
-                    ->addDistance($coordinates)
-                    ->latest()
-                    ->get();
+        $rides = Ride::query()->all();
 
-            // $rides = Ride::query()
-            // ->select('*')
-            // ->selectRaw("ST_Distance(start_location, ST_GeomFromText('POINT(? ?)')) AS distance", [
-            //     $request->start_lng,
-            //     $request->start_lat,
-            // ])
-            // ->havingRaw('distance <= ?', [1000])
-            // ->get();
+        // Filtrer les trajets en fonction de la distance (500m par défaut)
+        $filteredRides = Ride::filterRidesByDistance($rides, $request->start_lat, $request->start_lng, 500);
 
         // Retourner les trajets qui correspondent
         return response()->json([
