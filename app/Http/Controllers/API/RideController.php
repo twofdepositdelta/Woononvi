@@ -181,13 +181,13 @@ class RideController extends Controller
                     start_location,
                     POINT(?, ?)
                 ) < ?
-            ", [$request->start_location_lng, $request->start_location_lat, $tolerance])
+            ", [$request->start_lng, $request->start_lat, $tolerance])
             ->whereRaw("
                 ST_Distance_Sphere(
                     end_location,
                     POINT(?, ?)
                 ) < ?
-            ", [$request->end_location_lng, $request->end_location_lat, $tolerance])
+            ", [$request->end_lng, $request->end_lat, $tolerance])
             // ->whereRaw("
             //     ABS(TIMESTAMPDIFF(MINUTE, ?, departure_time)) <= ?
             // ", [$request->departure_time, $timeRange])
