@@ -102,8 +102,8 @@ class RideController extends Controller
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
 
         // Si les jours sont fournis, les convertir en chaîne JSON
-        // $daysJson = $request->days ? json_encode($request->days) : null;
-        $daysJson = json_encode($request->input('days', []));
+        $daysJson = $request->days ? json_encode($request->days) : null;
+        //$daysJson = json_encode($request->input('days', []));
 
         $numeroRide = $this->generateUniqueRideNumber();
 
@@ -112,8 +112,8 @@ class RideController extends Controller
             'numero_ride' => $numeroRide,
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
-            'days' => $daysJson,
             'type' => $request->type,
+            'days' => $daysJson,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
             'price_per_km' => 100,
