@@ -199,21 +199,15 @@ class RideController extends Controller
             ], 422);
         }
 
-        $coordinates = [
-            $request->start_lat,
-            $request->start_lng,
-        ];
-
-        $rides = Ride::query()->get();
-
-        // Filtrer les trajets en fonction de la distance (500m par défaut)
-        $filteredRides = Ride::filterRidesByDistance($rides, $request->start_lat, $request->start_lng, 500);
+        $rides = Ride::query()
+       ->withinDistanceTo('start_location', new Point(lat: 25.45634, lng: 35.54331), 10000)
+       ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
-            'rides' => $filteredRides,
-            'message' => count($filteredRides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'rides' => $rides,
+            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
 
