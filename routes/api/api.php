@@ -35,5 +35,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('payments/get-status/{reference}', [PaymentController::class, 'checkTransactionStatus'])->name('api.user.rechargeBalance');
     
     Route::post('rides/store', [RideController::class, 'store'])->name('api.ride.store');
-    Route::get('rides/get', [RideController::class, 'getRides'])->name('api.ride.index');
+    Route::post('rides/get', [RideController::class, 'getRides'])->name('api.ride.index');
 });
