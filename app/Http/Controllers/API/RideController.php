@@ -173,7 +173,7 @@ class RideController extends Controller
         $tolerance = $request->input('tolerance', 500); // 500 mètres par défaut
         $timeRange = 30; // 30 minutes de tolérance pour l'heure de départ
 
-        return $request;
+        return $tolerance;
 
         // Requête géospatiale avec conditions
         $rides = DB::table('rides')
