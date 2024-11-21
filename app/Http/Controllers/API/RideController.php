@@ -200,8 +200,8 @@ class RideController extends Controller
         }
 
         $rides = Ride::query()
-       ->selectDistanceTo('start_location', new Point(lat: $request->start_lat, lng: $request->start_lng, srid: 4326))
-       ->get();
+                    ->latest()
+                    ->get();
 
             // $rides = Ride::query()
             // ->select('*')
