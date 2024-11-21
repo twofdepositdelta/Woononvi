@@ -154,10 +154,10 @@ class RideController extends Controller
     {
         // Valider les entrées utilisateur
         $request->validate([
-            'start_location_lat' => 'required|numeric',
-            'start_location_lng' => 'required|numeric',
-            'end_location_lat' => 'required|numeric',
-            'end_location_lng' => 'required|numeric',
+            'start_lat' => 'required|numeric',
+            'start_lng' => 'required|numeric',
+            'end_lat' => 'required|numeric',
+            'end_lng' => 'required|numeric',
             'departure_time' => 'required|datetime',
             'tolerance' => 'nullable|integer|min:100|max:5000', // Tolérance en mètres
         ]);
