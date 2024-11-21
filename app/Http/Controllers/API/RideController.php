@@ -209,7 +209,7 @@ class RideController extends Controller
                 $request->start_lng,
                 $request->start_lat,
             ])
-            ->havingRaw('distance <= ?', [1000])
+            ->havingRaw('distance <= ?', 1000)
             ->get();
 
         // Retourner les trajets qui correspondent
