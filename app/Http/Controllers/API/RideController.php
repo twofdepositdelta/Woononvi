@@ -157,7 +157,7 @@ class RideController extends Controller
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            'departure_time' => 'required|datetime',
+            'departure_time' => 'required|date',
             'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
 
