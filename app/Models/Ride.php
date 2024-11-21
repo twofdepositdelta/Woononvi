@@ -10,7 +10,7 @@ use TarfinLabs\LaravelSpatial\Casts\LocationCast;
 class Ride extends Model
 {
     use HasFactory, HasSpatial;
-    
+
     protected $fillable = [
         'numero_ride',
         'driver_id',
@@ -72,5 +72,20 @@ class Ride extends Model
     {
         // Retourne "Régulier" ou "Ponctuel" en fonction de la valeur du type
         return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
+    }
+
+    public function scopeAddDistance(
+        Builder $query,
+        array $coordinates,
+    ): void {
+        $query
+            ->when(is_null($query->getQuery()->columns), static fn (Builder $query) => $query->select('*'))
+            ->selectRaw(
+                expression: 'ST_Distance(
+                    ST_SRID(Point(longitude, latitude), 4326),
+                    ST_SRID(Point(?, ?), 4326)
+                ) AS distance', 
+            bindings: $coordinates,
+        );
     }
 }

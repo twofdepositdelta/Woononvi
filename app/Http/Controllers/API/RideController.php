@@ -199,7 +199,13 @@ class RideController extends Controller
             ], 422);
         }
 
+        $coordinates = [
+            $request->start_lat,
+            $request->start_lng,
+        ];
+
         $rides = Ride::query()
+                    ->addDistance($coordinates)
                     ->latest()
                     ->get();
 
