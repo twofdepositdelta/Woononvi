@@ -181,13 +181,13 @@ class RideController extends Controller
             $radius
         )
         // Rechercher les trajets proches du point d'arrivée
-        ->withinDistance(
-            $request->end_lat,
-            $request->end_lng,
-            'end_latitude',   // Colonne latitude pour end_location
-            'end_longitude',  // Colonne longitude pour end_location
-            $radius
-        )
+        // ->withinDistance(
+        //     $request->end_lat,
+        //     $request->end_lng,
+        //     'end_latitude',   // Colonne latitude pour end_location
+        //     'end_longitude',  // Colonne longitude pour end_location
+        //     $radius
+        // )
         // ->where('departure_time', '>=', $validated['departure_time']) // Filtrer par horaire
         ->where('status', 'active') // Trajets actifs uniquement
         ->get();
