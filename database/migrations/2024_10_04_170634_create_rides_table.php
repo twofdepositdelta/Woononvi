@@ -5,6 +5,7 @@ use App\Models\Vehicle;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -33,31 +34,22 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
+        });
+
+        // In the second go, set 0,0 values, make the column not null and finally add the spatial index
+        Schema::table('rides', function (Blueprint $table) {
+            DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+
+            DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
+
+            DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+
+            DB::statement("ALTER TABLE `table` CHANGE `end_location` `end_location` POINT NOT NULL;");
+
             // Index
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
         });
-
-        // Schema::create('rides', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('numero_ride')->unique();
-        //     $table->string('departure');
-        //     $table->string('destination');
-        //     $table->timestamp('departure_time'); // Heure de départ prévue
-        //     $table->integer('available_seats'); // Nombre de places disponibles
-        //     $table->integer('price_per_km');
-        //     $table->decimal('latitude', 10, 8)->nullable(); // Latitude en temps réel
-        //     $table->decimal('longitude', 11, 8)->nullable(); // Longitude en temps réel
-        //     $table->integer('distance_travelled')->nullable(); // Distance parcourue en mètres
-        //     $table->integer('passenger_count')->default(0); // Nombre de passagers dans le trajet
-        //     $table->boolean('is_nearby_ride')->default(false);
-        //     $table->decimal('commission_rate')->default(10);
-        //     $table->timestamp('arrival_time')->nullable(); // Heure d'arrivée estimée
-        //     $table->enum('status', ['active','pending', 'completed', 'cancelled','suspend'])->default('pending'); // Statut du trajet (pending, completed, canceled)
-        //     $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
-        //     $table->foreignIdFor(Vehicle::class);
-        //     $table->timestamps();
-        // });
     }
 
     /**
