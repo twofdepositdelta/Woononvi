@@ -19,10 +19,10 @@ use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
 {
-    public function getRides()
+    public function getRides(Request $request)
     {
         $user = Auth::user();
-        $data = $user->rides;
+        $data = $user->vehicles;
         return $data;
         // return response()->json([
         //     'success' => true,
