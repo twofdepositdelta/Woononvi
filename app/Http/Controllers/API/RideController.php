@@ -41,7 +41,7 @@ class RideController extends Controller
             'created_at',
             'updated_at'
         ])->get();
-        
+
         return response()->json([
             'success' => true,
             'data' => $data,
@@ -66,6 +66,7 @@ class RideController extends Controller
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
+            'seats' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -138,7 +139,7 @@ class RideController extends Controller
             'end_location' => $endLocation,      // Coordonnées d'arrivée
             'total_price' => $request->total_price,  
             'status' => 'active',
-            'available_seats' => 4
+            'available_seats' => $request->seats
         ]);
 
         // Retourner une réponse avec succès
@@ -147,6 +148,51 @@ class RideController extends Controller
             'message' => 'Le trajet a été créé avec succès.',
             'ride' => $ride,
         ], 201);
+    }
+
+    public function searchRides(Request $request)
+    {
+        // Valider les entrées utilisateur
+        $request->validate([
+            'start_location_lat' => 'required|numeric',
+            'start_location_lng' => 'required|numeric',
+            'end_location_lat' => 'required|numeric',
+            'end_location_lng' => 'required|numeric',
+            'departure_time' => 'required|date',
+            'tolerance' => 'nullable|integer|min:100|max:5000', // Tolérance en mètres
+        ]);
+
+        // Tolérance par défaut si non spécifiée
+        $tolerance = $request->input('tolerance', 500); // 500 mètres par défaut
+        $timeRange = 30; // 30 minutes de tolérance pour l'heure de départ
+
+        // Requête géospatiale avec conditions
+        $rides = DB::table('rides')
+            ->select('*')
+            ->whereRaw("
+                ST_Distance_Sphere(
+                    start_location,
+                    POINT(?, ?)
+                ) < ?
+            ", [$request->start_location_lng, $request->start_location_lat, $tolerance])
+            ->whereRaw("
+                ST_Distance_Sphere(
+                    end_location,
+                    POINT(?, ?)
+                ) < ?
+            ", [$request->end_location_lng, $request->end_location_lat, $tolerance])
+            ->whereRaw("
+                ABS(TIMESTAMPDIFF(MINUTE, ?, departure_time)) <= ?
+            ", [$request->departure_time, $timeRange])
+            ->where('available_seats', '>', 0) // Vérifier qu'il reste des places disponibles
+            ->where('status', 'active') // Trajets actifs uniquement
+            ->get();
+
+        // Retourner les résultats
+        return response()->json([
+            'success' => true,
+            'rides' => $rides,
+        ], 200);
     }
 
     private function generateUniqueRideNumber()
