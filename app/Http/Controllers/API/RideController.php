@@ -182,10 +182,10 @@ class RideController extends Controller
             $passengerStartLocation->toWkt(),
             $toleranceInKm * 1000, // Convertir en mètres
         ])
-        ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
-            $passengerEndLocation->toWkt(),
-            $toleranceInKm * 1000,
-        ])
+        // ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
+        //     $passengerEndLocation->toWkt(),
+        //     $toleranceInKm * 1000,
+        // ])
         // ->where(function ($query) use ($request) {
         //     $query->where('departure_time', '>=', $request->departure_time)
         //           ->orWhereNull('departure_time'); // Si les trajets réguliers n'ont pas d'heure exacte
