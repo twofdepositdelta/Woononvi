@@ -38,7 +38,7 @@ return new class extends Migration
             
         });
 
-        Schema::table('table', function (Blueprint $table) {
+        Schema::table('rides', function (Blueprint $table) {
             DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
             DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
