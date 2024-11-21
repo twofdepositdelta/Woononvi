@@ -224,21 +224,11 @@ class RideController extends Controller
             'updated_at'
         ])
         ->selectRaw('
-                ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS distance',
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
                 ["POINT($request->start_lng $request->start_lat)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT($request->start_lng $request->start_lat)", 1000])->get();
-        // Ride::query()
-        //     ->select('*')  // Sélectionne tous les attributs du modèle Ride
-        //     ->selectRaw('
-        //         ST_Distance(ST_GeomFromText(?, 4326), start_location) AS distance',
-        //         ["POINT($request->start_lng $request->start_lat)"]
-        //     )
-        //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        //         ["POINT($request->start_lng $request->start_lat)", 1]
-        //     )
-        //     ->get();
+        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
