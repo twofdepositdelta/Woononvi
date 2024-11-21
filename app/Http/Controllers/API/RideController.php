@@ -22,7 +22,7 @@ class RideController extends Controller
     public function getRides(Request $request)
     {
         $user = Auth::user();
-        $data = $user->rides;
+        $data = DB::table('rides')->get();
         return $data;
         // return response()->json([
         //     'success' => true,
