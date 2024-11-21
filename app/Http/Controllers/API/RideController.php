@@ -119,7 +119,8 @@ class RideController extends Controller
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
             'total_price' => $request->total_price,  
-            'status' => 'active'
+            'status' => 'active',
+            'available_seats' => 4
         ]);
 
         // Retourner une réponse avec succès
