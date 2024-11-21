@@ -195,7 +195,7 @@ class RideController extends Controller
             ->where('status', 'active') // Trajets actifs uniquement
             ->get();
 
-        if($rides) {
+        if(count($rides) > 0) {
             return response()->json([
                 'success' => true,
                 'rides' => $rides,
