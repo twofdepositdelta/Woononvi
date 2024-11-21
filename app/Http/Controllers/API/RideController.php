@@ -215,9 +215,9 @@ class RideController extends Controller
     ->select('id', 'start_location', DB::raw("
         ST_Distance_Sphere(start_location, ST_GeomFromText('POINT(" . $request->start_lng . " " . $request->start_lat . ")', 4326)) AS distance
     "))
-    ->having('distance', '<=', $radius)
+    // ->having('distance', '<=', $radius)
     ->get();
-
+return $rides;
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
