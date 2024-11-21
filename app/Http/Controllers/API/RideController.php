@@ -22,7 +22,7 @@ class RideController extends Controller
     public function getRides(Request $request)
     {
         $user = Auth::user();
-        $data = DB::table('rides')->select([
+        $data = DB::table('rides')->whereDriverId($user->id)->select([
             'id',
             'driver_id',
             'vehicle_id',
