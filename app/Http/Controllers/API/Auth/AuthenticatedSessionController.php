@@ -302,6 +302,7 @@ class AuthenticatedSessionController extends Controller
         $vehicles = $user->vehicles()->withCount('rides')->get();
 
         $userArray['vehicles_count'] = $vehicles->count();
+        $userArray['vehicles'] = $user->vehicles;
         $userArray['total_rides_count'] = $vehicles->sum('rides_count');
 
         $rides = Ride::query()->whereDriverId($user->id)->get();
