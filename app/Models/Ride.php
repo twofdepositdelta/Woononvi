@@ -73,15 +73,15 @@ class Ride extends Model
         return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
     }
 
-    public function scopeWithinDistance($query, $latitude, $longitude, $columnLat, $columnLng, $radius = 1)
+    public function scopeWithinDistance($query, $latitude, $longitude, $column, $radius = 10)
     {
         return $query
-            ->select('*') // Vous pouvez ajuster selon les colonnes nécessaires
+            ->select('*') // Sélectionner les colonnes nécessaires
             ->selectRaw(
-                "(6371 * acos(cos(radians(?)) * cos(radians($columnLat)) * cos(radians($columnLng) - radians(?)) + sin(radians(?)) * sin(radians($columnLat)))) AS distance",
-                [$latitude, $longitude, $latitude]
+                "ST_Distance_Sphere($column, POINT(?, ?)) AS distance",
+                [$longitude, $latitude]
             )
-            ->having('distance', '<=', $radius)
+            ->having('distance', '<=', $radius * 1000) // Convertir le rayon en mètres
             ->orderBy('distance');
     }
 }
