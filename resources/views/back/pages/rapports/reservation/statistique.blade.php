@@ -13,7 +13,8 @@
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale</h6>
+                            <h6 class="text-xl mb-1">Total
+                            </h6>
                             <p class="fw-medium text-secondary-light mb-0">Réservations</p>
                         </div>
                     </div>
@@ -33,11 +34,11 @@
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
 
                         <div
-                            class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                            class="w-50-px h-50-px bg-primary rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale </h6>
+                            <h6 class="text-xl mb-1">Total </h6>
                             <p class="fw-medium text-secondary-light mb-0">Réservation en attente
 
                             </p>
@@ -58,11 +59,12 @@
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                         <div
-                            class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                            class="w-50-px h-50-px bg-info rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa6-solid:calendar-check" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale</h6>
+                            <h6 class="text-xl mb-1">Total
+                            </h6>
                             <p class="fw-medium text-secondary-light mb-0">Réservations remboursées</p>
                         </div>
                     </div>
@@ -93,7 +95,7 @@
 
 
 
-                                <select id="periodSelect"
+                                <select id="periodSelectbooking"
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
                                     <option value="yearly">Annuel</option>
                                     <option value="monthly">Mensuel</option>
@@ -176,7 +178,7 @@
             loadBookingsData('weekly');
 
             // Ajouter un listener pour changer la période
-            document.getElementById('periodSelect').addEventListener('change', function () {
+            document.getElementById('periodSelectbooking').addEventListener('change', function () {
                 const period = this.value; // Récupère la période choisie
                 loadBookingsData(period); // Charge les données pour la période sélectionnée
             });

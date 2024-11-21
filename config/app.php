@@ -138,7 +138,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         'FrontHelper' => App\Helpers\FrontHelper::class,
         'BackHelper' => App\Helpers\BackHelper::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+         'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 
 ];

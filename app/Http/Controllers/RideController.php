@@ -225,7 +225,7 @@ class RideController extends Controller
 
                 // Réservations des 4 dernières semaines
                 $data = $query->whereBetween('created_at', [$startDate, $endDate])
-                              ->selectRaw('WEEK(created_at) as label, COUNT(id) as total')
+                              ->selectRaw('WEEK(created_at) as label, COUNT(*) as total')
                               ->groupBy('label')
                               ->orderBy('label', 'asc')
                               ->get();
@@ -238,23 +238,23 @@ class RideController extends Controller
 
             case 'monthlyride':
                 // Réservations par mois
-                $data = $query->selectRaw('MONTH(created_at) as label, COUNT(id) as total')
+                $data = $query->selectRaw('MONTH(created_at) as label, COUNT(*) as total')
                               ->groupBy('label')
                               ->get();
 
-                $labels = $data->pluck('label')->map(function ($month) {
+                 $labels = $data->pluck('label')->map(function ($month) {
                     $monthNames = [
                         1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
                         5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
                         9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
                     ];
                     return $monthNames[$month];
-                })->toArray();
+                 })->toArray();
                 break;
 
             case 'yearlyride':
                 // Réservations par année
-                $data = $query->selectRaw('YEAR(created_at) as label, COUNT(id) as total')
+                $data = $query->selectRaw('YEAR(created_at) as label, COUNT(*) as total')
                               ->groupBy('label')
                               ->get();
 

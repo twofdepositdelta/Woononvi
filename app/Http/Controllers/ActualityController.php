@@ -59,7 +59,7 @@ class ActualityController extends Controller
         'slug' => Str::slug($request->titre),
         'description' => strip_tags($request->description),
         'image_url' => FrontHelper::getEnvFolder() . $imagePath,
-        'published' => $request->has('published'),
+        'published' => $request->published,
         'type_new_id' => $request->type_new_id,
     ]);
 
