@@ -212,11 +212,11 @@ class RideController extends Controller
         $radius = 500; // Rayon de tolérance en mètres pour vérifier la conformité du départ
 
         $rides = DB::table('rides')
-        ->select('id', 'start_location', DB::raw("
-            ST_Distance_Sphere(start_location, ST_GeomFromText('POINT(? ?)', 4326)) AS distance
-        "), [$request->start_lat, $request->start_lng])
-        ->having('distance', '<=', $radius)
-        ->get();
+    ->select('id', 'start_location', DB::raw("
+        ST_Distance_Sphere(start_location, ST_GeomFromText('POINT( ? ? )', 4326)) AS distance
+    "), [$request->start_lng, $request->start_lat]) // Remarquez l'ordre ici (longitude, latitude)
+    ->having('distance', '<=', $radius)
+    ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
