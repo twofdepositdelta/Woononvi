@@ -188,9 +188,9 @@ class RideController extends Controller
                     POINT(?, ?)
                 ) < ?
             ", [$request->end_location_lng, $request->end_location_lat, $tolerance])
-            ->whereRaw("
-                ABS(TIMESTAMPDIFF(MINUTE, ?, departure_time)) <= ?
-            ", [$request->departure_time, $timeRange])
+            // ->whereRaw("
+            //     ABS(TIMESTAMPDIFF(MINUTE, ?, departure_time)) <= ?
+            // ", [$request->departure_time, $timeRange])
             ->where('available_seats', '>', 0) // Vérifier qu'il reste des places disponibles
             ->where('status', 'active') // Trajets actifs uniquement
             ->get();
