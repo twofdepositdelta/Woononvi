@@ -92,13 +92,18 @@ class RideController extends Controller
             ], 422);
         }
 
-        $request->type = ($request->type == "Régulier" ? 'regular' : 'ponctual');
+        $request->merge([
+            'type' => $request->type === "Régulier" ? 'regular' : 'ponctual',
+        ]);
+
+        //$request->type = ($request->type == "Régulier" ? 'regular' : 'ponctual');
 
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
 
         // Si les jours sont fournis, les convertir en chaîne JSON
-        $daysJson = $request->days ? json_encode($request->days) : null;
+        // $daysJson = $request->days ? json_encode($request->days) : null;
+        $daysJson = json_encode($request->input('days', []));
 
         $numeroRide = $this->generateUniqueRideNumber();
 
