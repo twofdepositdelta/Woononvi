@@ -45,7 +45,7 @@ return new class extends Migration
 
             DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `rides` CHANGE `end_location` `start_location` POINT NOT NULL;");
+            DB::statement("ALTER TABLE `rides` CHANGE `end_location` `end_location` POINT NOT NULL;");
     
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
