@@ -204,7 +204,7 @@ class RideController extends Controller
             $request->start_lng,
         ];
 
-        $rides = Ride::query()->all();
+        $rides = Ride::query()->get();
 
         // Filtrer les trajets en fonction de la distance (500m par défaut)
         $filteredRides = Ride::filterRidesByDistance($rides, $request->start_lat, $request->start_lng, 500);
