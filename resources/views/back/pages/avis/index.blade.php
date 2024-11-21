@@ -39,7 +39,7 @@
                                </div>
                            </td>
                            <td><a href="{{route('users.show',$review->reviewer->email)}}"> {{ $review->reviewer->firstname.' '.$review->reviewer->lastname}}</a></td> <!-- Affiche le nom de l'utilisateur -->
-                           <td> <a href="{{ route('rides.show',$review->booking->ride->id) }}">{{ $review->booking->ride->departure }} - {{ $review->booking->ride->destination }}</a></td> <!-- Affiche le trajet -->
+                           <td> <a href="{{ route('rides.show',$review->booking->ride->id) }}">{{ $review->booking->ride->start_location_name }} - {{ $review->booking->ride->end_location_name }}</a></td> <!-- Affiche le trajet -->
                            <td>{{ $review->rating }}</td> <!-- Affiche la note -->
                            <td>{{ \Carbon\Carbon::parse($review->created_at)->locale('fr')->translatedFormat('D, d M Y,H:i')  }}</td>
                            <td class="text-center">

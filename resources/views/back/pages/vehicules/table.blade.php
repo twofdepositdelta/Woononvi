@@ -23,7 +23,7 @@
 
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{{ asset($vehicle->main_image ?? 'path/to/default/avatar.jpg') }}"
+                            <img src="{{ $vehicle->main_image ?? 'path/to/default/avatar.jpg' }}"
                                 alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden"
                                 style="width: 40px; height: 40px; object-fit: cover;">
                             <h6 class="text-md mb-0 fw-medium flex-grow-1">{{ $vehicle->vehicle_model }}</h6>
@@ -48,15 +48,15 @@
                                     <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                 </button>
                             </form>
-                             
+
                                     <form action="{{ route('vehicles.validated', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir valider ce véhicule ?');">
                                         @csrf
                                         <button type="submit" class="btn btn-primary"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
                                             Finaliser
                                         </button>
                                     </form>
-                                    
-                                
+
+
                         </div>
                     </td>
                 </tr>

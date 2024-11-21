@@ -88,10 +88,10 @@
                         <a href="{{route('rides.create')}}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Creer un trajet</a>
                     </li> --}}
-                    <li>
+                    {{-- <li>
                         <a href="{{route('ridesearches.index')}}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i> Recherche</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{route('rides.historique')}}"><i
                                 class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Historiques</a>

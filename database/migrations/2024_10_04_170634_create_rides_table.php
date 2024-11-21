@@ -36,20 +36,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // In the second go, set 0,0 values, make the column not null and finally add the spatial index
-        Schema::table('rides', function (Blueprint $table) {
-            DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+        // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
+        // Schema::table('rides', function (Blueprint $table) {
+        //     DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
+        //     DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
 
-            DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+        //     DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `table` CHANGE `end_location` `end_location` POINT NOT NULL;");
+        //     DB::statement("ALTER TABLE `table` CHANGE `end_location` `end_location` POINT NOT NULL;");
 
-            // Index
-            $table->spatialIndex('start_location');
-            $table->spatialIndex('end_location');
-        });
+        //     // Index
+        //     $table->spatialIndex('start_location');
+        //     $table->spatialIndex('end_location');
+        // });
     }
 
     /**

@@ -97,7 +97,7 @@ class DocumentController extends Controller
                         TypeDocument::where('label', 'Permis de conduire')->first()->id,
                         TypeDocument::where('label', 'Cip')->first()->id
                     ])->where('is_validated', true)->count();
-                    
+
                     // Si les deux documents sont validés, on active le compte
                     if ($permits == 2) {
                         $user->status = true; // Le compte devient activé
@@ -111,12 +111,12 @@ class DocumentController extends Controller
                     $user->save();
                 }
             }
-        
+
             $document->save();
         } else {
             // Si le document n'est pas validé
             $document->is_validated = false;
-        
+
             if ($document->user->hasRole('driver')) {
                 // Si le document est un "Permis de conduire" ou "Cip", on désactive le compte de l'utilisateur
                 if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
@@ -130,10 +130,10 @@ class DocumentController extends Controller
                     $user->save();
                 }
             }
-        
+
             $document->save();
         }
-        
+
         // Vérifier si tous les documents de l'utilisateur sont validés
         $allDocumentsValidated = $user->documents->every(function($doc) {
             return $doc->is_validated;
@@ -167,11 +167,11 @@ class DocumentController extends Controller
         ]);
 
         $user=$document->user;
-        if ($document->typeDocument->label == "Permis de conduire") {
+        if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
             $user->status=false;
                 $user->save();
             }
--
+
         Mail::to($document->user->email)->send(new DocumentRejetStatus($document));
         // Rediriger avec un message de succès
 

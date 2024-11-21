@@ -12,7 +12,7 @@
                 <div class="row">
                     <!-- Image du véhicule -->
                     <div class="col-md-5 text-center mb-3">
-                        <img src="{{ asset($vehicle->main_image) }}" alt="Image du véhicule" class="img-fluid rounded" style="max-height: 300px;">
+                        <img src="{{ $vehicle->main_image }}" alt="Image du véhicule" class="img-fluid rounded" style="max-height: 300px;">
                     </div>
 
                     <!-- Informations du véhicule -->
@@ -190,3 +190,17 @@
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var exampleModal = document.getElementById('exampleModal');
+        exampleModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;  // Bouton qui a déclenché le modal
+            var docId = button.getAttribute('data-document-id');  // Récupérer l'ID du devis
+
+
+            // Assigner les valeurs aux champs cachés
+            var inputDocumentId = document.getElementById('inputDocumentId');
+            inputDocumentId.value = docId;
+        });
+    });
+</script>

@@ -33,8 +33,8 @@ class ActualityController extends Controller
         $typenews = TypeNew::orderBy('created_at','desc')->paginate(20);
         $allowedTypes = ['driver', 'passenger','support','sales'];
         $roles = Role::whereIn('name', $allowedTypes)
+                       ->where('guard_name','web')
                      ->get();
-
         return view('back.pages.actualities.create', compact('typenews','roles'));
     }
 
@@ -47,7 +47,7 @@ class ActualityController extends Controller
         'image_url' => 'required|image',
         'published' => 'boolean',
         'type_new_id' => 'required|exists:type_news,id',
-        'roles' => 'required|array',
+        'roles' => 'array',
         'roles.*' => 'exists:roles,id',
     ]);
 
@@ -63,16 +63,18 @@ class ActualityController extends Controller
         'type_new_id' => $request->type_new_id,
     ]);
 
-    foreach ($request->roles as $roleId) {
-        DB::table('actuality_role')->insert([
-            'actuality_id' => $actualitie->id,
-            'role_id' => $roleId,
-        ]);
-    }
-
     $typeNew = TypeNew::find($request->type_new_id);
 
-    // Notification
+    if ($typeNew->name == 'Notification'|| $typeNew->name == 'Message email') {
+
+        foreach ($request->roles as $roleId) {
+            DB::table('actuality_role')->insert([
+                'actuality_id' => $actualitie->id,
+                'role_id' => $roleId,
+            ]);
+        }
+
+        // Notification
     foreach ($request->roles as $roleId) {
         $role = Role::findById($roleId);
         $users = User::role($role->name)->get();
@@ -91,6 +93,9 @@ class ActualityController extends Controller
             }
         }
     }
+    }
+
+
 
     return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
 }
@@ -208,3 +213,4 @@ class ActualityController extends Controller
         return view('back.pages.actualities.table', compact('actualities'));
     }
 }
+
