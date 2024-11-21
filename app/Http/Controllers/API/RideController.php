@@ -170,7 +170,7 @@ class RideController extends Controller
         }
 
         $rides = Ride::query()
-       ->withinDistanceTo('start_location', new Point(lat: $request->start_lat, lng: $request->start_lng, 4326), 1000)
+       ->withinDistanceTo('start_location', new Point(lat: $request->start_lat, lng: $request->start_lng, srid: 4326), 1000)
        ->get();
 
         return response()->json([
