@@ -199,8 +199,9 @@ class RideController extends Controller
             ], 422);
         }
 
-        $rides = Ride::query()
-            ->withinDistanceTo('start_location', new Point(lat: 25.45634, lng: 35.54331), 10000)
+        $rides = DB::table('rides')
+            ->select('*')
+            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 10000])
             ->get();
 
         // Retourner les trajets qui correspondent
