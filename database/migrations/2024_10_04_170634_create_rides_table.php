@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('numero_ride')->unique();
             $table->enum('type', ['regular', 'single']); // Trajet régulier ou ponctuel
             $table->string('start_location_name');
-            $table->geography('start_location'); // Latitude et longitude de départ
+            $table->geography('start_location', 'point'); // Latitude et longitude de départ
             $table->string('end_location_name');
-            $table->geography('end_location'); // Latitude et longitude d’arrivée
+            $table->geography('end_location', 'point'); // Latitude et longitude d’arrivée
             $table->json('days')->nullable(); // Jours pour les trajets réguliers
             $table->boolean('return_trip')->default(false); // S’il y a un retour
             $table->time('return_time')->nullable();
@@ -35,15 +35,27 @@ return new class extends Migration
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
 
+            
+        });
+
+        Schema::table('table', function (Blueprint $table) {
+            DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+
+            DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
+
+            DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+
+            DB::statement("ALTER TABLE `table` CHANGE `end_location` `start_location` POINT NOT NULL;");
+    
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
         });
 
         // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         // Schema::table('rides', function (Blueprint $table) {
-        //     DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+            // DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-        //     DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
+            // DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
 
         //     DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
