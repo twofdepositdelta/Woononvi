@@ -169,26 +169,10 @@ class RideController extends Controller
             ], 422);
         }
 
-        $radius = $validated['radius'] ?? 10;
-
         $rides = Ride::query()
-        // Rechercher les trajets proches du point de départ
-        ->withinDistance(
-            $request->start_lat,
-            $request->start_lng,
-            'start_location', // Colonne géographique pour start_location
-            $radius
-        )
-        // Filtrer par distance du point d'arrivée
-        ->withinDistance(
-            $request->end_lat,
-            $request->end_lng,
-            'end_location', // Colonne géographique pour end_location
-            $radius
-        )
-        // ->where('departure_time', '>=', $validated['departure_time']) // Filtrer par horaire
-        ->where('status', 'active') // Trajets actifs uniquement
-        ->get();
+    ->withinDistance($startLat, $startLng, 'start_location', $radius = 10)
+    // ->withinDistance($endLat, $endLng, 'end_location', $radius)
+    ->get();
 
         return response()->json([
             'success' => true,

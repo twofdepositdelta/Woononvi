@@ -75,13 +75,9 @@ class Ride extends Model
 
     public function scopeWithinDistance($query, $latitude, $longitude, $column, $radius = 10)
     {
-        return $query
-            ->select('*') // Sélectionner les colonnes nécessaires
-            ->selectRaw(
-                "ST_Distance_Sphere($column, POINT(?, ?)) AS distance",
-                [$longitude, $latitude]
-            )
-            ->having('distance', '<=', $radius * 1000) // Convertir le rayon en mètres
-            ->orderBy('distance');
+        return $query->selectRaw(
+            "ST_Distance_Sphere($column, ST_GeomFromText(?)) AS distance",
+            ["POINT($longitude $latitude)"]
+        )->having('distance', '<=', $radius * 1000);
     }
 }
