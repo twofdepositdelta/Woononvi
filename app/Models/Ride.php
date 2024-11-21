@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use TarfinLabs\LaravelSpatial\Traits\HasSpatial;
 use TarfinLabs\LaravelSpatial\Casts\LocationCast;
+use Illuminate\Database\Eloquent\Builder;
 
 class Ride extends Model
 {
@@ -80,12 +81,11 @@ class Ride extends Model
     ): void {
         $query
             ->when(is_null($query->getQuery()->columns), static fn (Builder $query) => $query->select('*'))
-            ->selectRaw(
-                expression: 'ST_Distance(
-                    ST_SRID(Point(longitude, latitude), 4326),
-                    ST_SRID(Point(?, ?), 4326)
-                ) AS distance', 
-            bindings: $coordinates,
-        );
+            ->selectRaw('
+                ST_Distance(
+                    start_location
+                    ST_SRID(ST_GeomFromText("POINT(? ?)"), 4326)
+                ) AS distance
+            ', $coordinates);
     }
 }
