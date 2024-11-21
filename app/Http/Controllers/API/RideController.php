@@ -41,11 +41,11 @@ class RideController extends Controller
             'created_at',
             'updated_at'
         ])->get();
-        return $data;
-        // return response()->json([
-        //     'success' => true,
-        //     'data' => $data,
-        // ], 200);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
     }
 
     /**
