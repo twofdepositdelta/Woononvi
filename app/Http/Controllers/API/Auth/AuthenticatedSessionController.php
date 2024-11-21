@@ -308,13 +308,13 @@ class AuthenticatedSessionController extends Controller
         $rides = Ride::query()->whereDriverId($user->id)->get();
         $userArray['rides'] = $rides;
 
-        $userArray['vehicles'] = $vehicles->map(function ($vehicle) {
-            return [
-                'id' => $vehicle->id,
-                'model' => $vehicle->model,
-                'rides_count' => $vehicle->rides_count, // Correction ici
-            ];
-        });
+        // $userArray['vehicles'] = $vehicles->map(function ($vehicle) {
+        //     return [
+        //         'id' => $vehicle->id,
+        //         'model' => $vehicle->model,
+        //         'rides_count' => $vehicle->rides_count, // Correction ici
+        //     ];
+        // });
 
         return $userArray;
     }
