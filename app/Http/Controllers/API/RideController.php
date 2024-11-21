@@ -200,14 +200,14 @@ class RideController extends Controller
         }
 
         $rides = Ride::query()
-       ->withinDistanceTo('start_location', new Point(lat: 25.45634, lng: 35.54331), 10000)
-       ->get();
+            ->withinDistanceTo('start_location', new Point(lat: 25.45634, lng: 35.54331), 10000)
+            ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
             'rides' => $rides,
-            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'message' => $rides ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
 
