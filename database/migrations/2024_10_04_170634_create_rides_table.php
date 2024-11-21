@@ -34,9 +34,14 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-        });
 
         // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
+
+            $table->spatialIndex('start_location');
+            $table->spatialIndex('end_location');
+        });
+
+        // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         // Schema::table('rides', function (Blueprint $table) {
         //     DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
@@ -49,6 +54,8 @@ return new class extends Migration
         //     // Index
         //     $table->spatialIndex('start_location');
         //     $table->spatialIndex('end_location');
+
+
         // });
     }
 

@@ -69,7 +69,6 @@ class RideController extends Controller
         return redirect()->route('rides.index')->with('success', 'Trajet créé avec succès !');
     }
 
-
     /**
      * Display the specified resource.
      */

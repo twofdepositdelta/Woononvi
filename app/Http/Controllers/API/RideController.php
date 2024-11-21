@@ -41,7 +41,7 @@ class RideController extends Controller
             'created_at',
             'updated_at'
         ])->get();
-        
+
         return response()->json([
             'success' => true,
             'data' => $data,
@@ -66,6 +66,7 @@ class RideController extends Controller
             'return_time' => 'required|date',
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
+            'seats' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -138,7 +139,7 @@ class RideController extends Controller
             'end_location' => $endLocation,      // Coordonnées d'arrivée
             'total_price' => $request->total_price,  
             'status' => 'active',
-            'available_seats' => 4
+            'available_seats' => $request->seats
         ]);
 
         // Retourner une réponse avec succès
@@ -147,6 +148,73 @@ class RideController extends Controller
             'message' => 'Le trajet a été créé avec succès.',
             'ride' => $ride,
         ], 201);
+    }
+
+    public function searchRides2(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_lat' => 'required|numeric',
+            'start_lng' => 'required|numeric',
+            'end_lat' => 'required|numeric',
+            'end_lng' => 'required|numeric',
+            'departure_time' => 'required|date',
+            // 'tolerance' => 'nullable|integer|min:100|max:5000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $rides = Ride::query()
+       ->withinDistanceTo('start_location', new Point(lat: $request->start_lat, lng: $request->start_lng, srid: 4326), 1000)
+       ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'rides' => $rides,
+        ], 200);
+    }
+
+    public function searchRides(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_lat' => 'required|numeric',
+            'start_lng' => 'required|numeric',
+            'end_lat' => 'required|numeric',
+            'end_lng' => 'required|numeric',
+            'departure_time' => 'required|date',
+            // 'tolerance' => 'nullable|integer|min:100|max:5000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $coordinates = [
+            $request->start_lat,
+            $request->start_lng,
+        ];
+
+        $rides = Ride::query()->get();
+
+        // Filtrer les trajets en fonction de la distance (500m par défaut)
+        $filteredRides = Ride::filterRidesByDistance($rides, $request->start_lat, $request->start_lng, 500);
+
+        // Retourner les trajets qui correspondent
+        return response()->json([
+            'success' => true,
+            'rides' => $filteredRides,
+            'message' => count($filteredRides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+        ]);
     }
 
     private function generateUniqueRideNumber()
