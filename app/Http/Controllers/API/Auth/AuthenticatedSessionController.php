@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Ride;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Preference;
@@ -302,6 +303,9 @@ class AuthenticatedSessionController extends Controller
 
         $userArray['vehicles_count'] = $vehicles->count();
         $userArray['total_rides_count'] = $vehicles->sum('rides_count');
+
+        $rides = Ride::query()->whereDriverId($user->id);
+        $userArray['rides'] = $rides;
 
         $userArray['vehicles'] = $vehicles->map(function ($vehicle) {
             return [
