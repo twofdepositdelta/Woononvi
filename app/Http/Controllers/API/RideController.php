@@ -177,20 +177,24 @@ class RideController extends Controller
     $toleranceInKm = 0;
 
     // Recherche des trajets
-    $rides = Ride::where('status', 'active')
-        ->whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
-            $passengerStartLocation->toWkt(),
-            $toleranceInKm * 1000, // Convertir en mètres
-        ])
-        // ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
-        //     $passengerEndLocation->toWkt(),
-        //     $toleranceInKm * 1000,
-        // ])
-        // ->where(function ($query) use ($request) {
-        //     $query->where('departure_time', '>=', $request->departure_time)
-        //           ->orWhereNull('departure_time'); // Si les trajets réguliers n'ont pas d'heure exacte
-        // })
-        ->get();
+    $rides = Ride::whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
+        $startPoint->toWkt(),
+        10000, // Distance en mètres (10 km)
+    ])->get();
+    // $rides = Ride::where('status', 'active')
+    //     ->whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
+    //         $passengerStartLocation->toWkt(),
+    //         $toleranceInKm * 1000, // Convertir en mètres
+    //     ])
+    //     // ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
+    //     //     $passengerEndLocation->toWkt(),
+    //     //     $toleranceInKm * 1000,
+    //     // ])
+    //     // ->where(function ($query) use ($request) {
+    //     //     $query->where('departure_time', '>=', $request->departure_time)
+    //     //           ->orWhereNull('departure_time'); // Si les trajets réguliers n'ont pas d'heure exacte
+    //     // })
+    //     ->get();
 
         return response()->json([
             'success' => true,
