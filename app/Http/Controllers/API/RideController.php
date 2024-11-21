@@ -174,7 +174,7 @@ class RideController extends Controller
     $passengerEndLocation = new Point($request->end_lat, $request->end_lng);
 
     // Définir une tolérance (rayon en km) pour les trajets proches
-    $toleranceInKm = 5;
+    $toleranceInKm = 0;
 
     // Recherche des trajets
     $rides = Ride::where('status', 'active')
