@@ -174,16 +174,16 @@ class RideController extends Controller
         $rides = Ride::query()
         // Rechercher les trajets proches du point de départ
         ->withinDistance(
-            $validated['start_lat'],
-            $validated['start_lng'],
+            $validator['start_lat'],
+            $validator['start_lng'],
             'start_latitude',  // Colonne latitude pour start_location
             'start_longitude', // Colonne longitude pour start_location
             $radius
         )
         // Rechercher les trajets proches du point d'arrivée
         ->withinDistance(
-            $validated['end_lat'],
-            $validated['end_lng'],
+            $validator['end_lat'],
+            $validator['end_lng'],
             'end_latitude',   // Colonne latitude pour end_location
             'end_longitude',  // Colonne longitude pour end_location
             $radius
