@@ -222,7 +222,12 @@ class RideController extends Controller
             'available_seats',
             'created_at',
             'updated_at'
-        ])->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        ])
+        ->selectRaw('
+                ST_Distance(ST_GeomFromText(?, 4326), start_location) AS distance',
+                ["POINT($request->start_lng $request->start_lat)"]
+            )
+        ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
         ["POINT($request->start_lng $request->start_lat)", 1])->get();
         // Ride::query()
         //     ->select('*')  // Sélectionne tous les attributs du modèle Ride
