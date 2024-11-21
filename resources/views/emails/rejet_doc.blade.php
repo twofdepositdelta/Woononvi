@@ -34,10 +34,11 @@
 <body>
 
 <div class="container">
-    <h1>Bonjour,</h1>
-    <p> Le document : {{$document->paper}} a été rejeté voici la raison:</p>
-    <p>{{ $document->reason }}</p>
-    <p>Merci de vérifier vos documents et de nous contacter en cas de besoin.</p>
+    <p>Bonjour {{ $document->user->firstname }},</p>
+    <p>Votre document intitulé "{{ $document->typeDocument->label }}" a été rejeté pour la raison suivante :</p>
+    <p><strong>{{ $document->reason }}</strong></p>
+    <p>Merci de corriger ou fournir un document valide.</p>
+
     <p>Wononvi</p>
 </div>
 

@@ -45,10 +45,10 @@
         </div>
 
         <div class="row mb-3">
-            {{-- <div class="col-md-6">
+            <div class="col-md-6">
                 <strong>Trajet :</strong>
-                <p>{{ $payment->booking->ride->start_location.'-'. $payment->booking->ride->end_location ?? 'N/A' }} </p>
-            </div> --}}
+                <p>{{ $payment->booking->ride->start_location_name.'-'. $payment->booking->ride->end_location_name ?? 'N/A' }} </p>
+            </div>
             <div class="col-md-6">
                 <strong>Frais de Plateforme :</strong>
                 <p>{{ number_format(($payment->amount * $payment->booking->commission_rate) / 100, 0, ',', ' ') }} FCFA</p>

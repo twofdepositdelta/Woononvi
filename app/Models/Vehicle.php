@@ -36,18 +36,18 @@ class Vehicle extends Model
     // Relation avec le type de véhicule
     public function typeVehicle()
     {
-        return $this->belongsTo(TypeVehicle::class); 
+        return $this->belongsTo(TypeVehicle::class);
     }
 
 
     public function images()
     {
-        return $this->hasMany(Image::class); 
+        return $this->hasMany(Image::class);
     }
 
     public function rides()
     {
-        return $this->hasMany(Ride::class); 
+        return $this->hasMany(Ride::class);
     }
 
     public function documents()
@@ -57,7 +57,7 @@ class Vehicle extends Model
 
     public function getMainImageAttribute($value)
     {
-        return asset('storage/' . $value);
+        return asset($value);
     }
 
     public function getLogbookAttribute($value)

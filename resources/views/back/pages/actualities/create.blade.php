@@ -43,7 +43,7 @@
                         <!-- Image URL -->
                         <div class="col-12">
                             <label class="form-label" for="image_url">Image</label>
-                            <input type="file" class="form-control @error('image_url') is-invalid @enderror" id="image_url" name="image_url" accept="image/*" required>
+                            <input type="file" class="form-control @error('image_url') is-invalid @enderror" id="image_url" name="image_url" accept="image/*">
                             @error('image_url')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -67,9 +67,9 @@
                          <!-- Sélection des Rôles -->
                          <div class="col-12" id="role">
                             <label class="form-label">Sélectionnez un Rôle</label>
-                            <select class="form-select @error('roles') is-invalid @enderror"   name="roles[]" id="roles" multiple required style="width: 100%; height: 150px;">
+                            <select class="form-select @error('roles') is-invalid @enderror"   name="roles[]" id="roles" multiple  style="width: 100%; height: 150px;">
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                                    <option value="{{ $role->id }}">{{ $role->role }}</option>
                                 @endforeach
                             </select>
                             @error('roles')
