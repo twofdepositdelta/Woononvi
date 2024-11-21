@@ -214,7 +214,7 @@ class RideController extends Controller
         $rides = DB::table('rides')
         ->select('id', 'start_location', DB::raw("
             ST_Distance_Sphere(start_location, ST_GeomFromText('POINT(? ?)', 4326)) AS distance
-        "), [$passengerStart['start_lat'], $passengerStart['start_lng']])
+        "), [$passengerStart['lat'], $passengerStart['lng']])
         ->having('distance', '<=', $radius)
         ->get();
 
