@@ -228,7 +228,7 @@ class RideController extends Controller
                 ["POINT($request->start_lng $request->start_lat)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT($request->start_lng $request->start_lat)", 1])->get();
+        ["POINT($request->start_lng $request->start_lat)", 1000])->get();
         // Ride::query()
         //     ->select('*')  // Sélectionne tous les attributs du modèle Ride
         //     ->selectRaw('
