@@ -152,14 +152,13 @@ class RideController extends Controller
 
     public function searchRides(Request $request)
     {
-        // Valider les entrées utilisateur
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'start_lat' => 'required|numeric',
             'start_lng' => 'required|numeric',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
             'departure_time' => 'required|datetime',
-            'tolerance' => 'nullable|integer|min:100|max:5000', // Tolérance en mètres
+            'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
 
         if ($validator->fails()) {
