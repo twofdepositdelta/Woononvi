@@ -204,16 +204,36 @@ class RideController extends Controller
         //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 0])
         //     ->get();
 
-        $rides = Ride::query()
-            ->select('*')  // Sélectionne tous les attributs du modèle Ride
-            ->selectRaw('
-                ST_Distance(ST_GeomFromText(?, 4326), start_location) AS distance',
-                ["POINT($request->start_lng $request->start_lat)"]
-            )
-            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
-                ["POINT($request->start_lng $request->start_lat)", 1]
-            )
-            ->get();
+        $rides = DB::table('rides')->select([
+            'id',
+            'driver_id',
+            'vehicle_id',
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'is_nearby_ride',
+            'status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'created_at',
+            'updated_at'
+        ])->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        ["POINT($request->start_lng $request->start_lat)", 1])->get();
+        // Ride::query()
+        //     ->select('*')  // Sélectionne tous les attributs du modèle Ride
+        //     ->selectRaw('
+        //         ST_Distance(ST_GeomFromText(?, 4326), start_location) AS distance',
+        //         ["POINT($request->start_lng $request->start_lat)"]
+        //     )
+        //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        //         ["POINT($request->start_lng $request->start_lat)", 1]
+        //     )
+        //     ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
