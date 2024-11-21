@@ -45,12 +45,11 @@ return new class extends Migration
         Schema::table('rides', function (Blueprint $table) {
             DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `table` CHANGE `start_location` `start_location` POINT NOT NULL;");
+            DB::statement("ALTER TABLE `rides` CHANGE `start_location` `start_location` POINT NOT NULL;");
 
             DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
             DB::statement("ALTER TABLE `table` CHANGE `end_location` `start_location` POINT NOT NULL;");
-
 
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
@@ -67,9 +66,6 @@ return new class extends Migration
         //     DB::statement("ALTER TABLE `table` CHANGE `end_location` `end_location` POINT NOT NULL;");
 
         //     // Index
-        //     $table->spatialIndex('start_location');
-        //     $table->spatialIndex('end_location');
-
 
         // });
     }
