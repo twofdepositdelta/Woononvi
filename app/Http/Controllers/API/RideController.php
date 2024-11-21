@@ -162,6 +162,14 @@ class RideController extends Controller
             'tolerance' => 'nullable|integer|min:100|max:5000', // Tolérance en mètres
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
         // Tolérance par défaut si non spécifiée
         $tolerance = $request->input('tolerance', 500); // 500 mètres par défaut
         $timeRange = 30; // 30 minutes de tolérance pour l'heure de départ
