@@ -211,20 +211,12 @@ class RideController extends Controller
         $rides = Ride::all(); // Vous pouvez ajouter des filtres si nécessaire
         $radius = 500; // Rayon de tolérance en mètres pour vérifier la conformité du départ
 
-        $matchingRides = [];
-        foreach ($rides as $ride) {
-            // Points de départ du conducteur
-            $driverStart = [
-                'lat' => $ride->start_location->getLat(),
-                'lng' => $ride->start_location->getLng(),
-            ];
-
-            // Vérifier si le point de départ du passager est dans le rayon du conducteur
-            if (isDepartureMatching($passengerStart, $driverStart, $radius)) {
-                // Ajoutez le trajet à la liste des trajets correspondants
-                $matchingRides[] = $ride;
-            }
-        }
+        $rides = DB::table('rides')
+        ->select('id', 'start_location', DB::raw("
+            ST_Distance_Sphere(start_location, ST_GeomFromText('POINT(? ?)', 4326)) AS distance
+        "), [$passengerStart['start_lat'], $passengerStart['start_lng']])
+        ->having('distance', '<=', $radius)
+        ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
