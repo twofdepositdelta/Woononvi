@@ -34,6 +34,9 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
+
+            $table->spatialIndex('start_location');
+            $table->spatialIndex('end_location');
         });
 
         // In the second go, set 0,0 values, make the column not null and finally add the spatial index
@@ -47,8 +50,7 @@ return new class extends Migration
         //     DB::statement("ALTER TABLE `table` CHANGE `end_location` `end_location` POINT NOT NULL;");
 
         //     // Index
-             $table->spatialIndex('start_location');
-             $table->spatialIndex('end_location');
+             
         // });
     }
 

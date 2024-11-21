@@ -158,7 +158,7 @@ class RideController extends Controller
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
             'departure_time' => 'required|date',
-            'tolerance' => 'nullable|integer|min:100|max:5000',
+            // 'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
 
         if ($validator->fails()) {
@@ -169,43 +169,33 @@ class RideController extends Controller
             ], 422);
         }
 
-        // Tolérance par défaut si non spécifiée
-        $tolerance = $request->input('tolerance', 500); // 500 mètres par défaut
-        $timeRange = 30; // 30 minutes de tolérance pour l'heure de départ
+        // Définir les coordonnées des points de départ et d'arrivée
+    $passengerStartLocation = new Point($request->start_lat, $request->start_lng);
+    $passengerEndLocation = new Point($request->end_lat, $request->end_lng);
 
-        // Requête géospatiale avec conditions
-        $rides = DB::table('rides')
-            ->select('*')
-            ->whereRaw("
-                ST_Distance_Sphere(
-                    start_location,
-                    POINT(?, ?)
-                ) < ?
-            ", [$request->start_lng, $request->start_lat, $tolerance])
-            ->whereRaw("
-                ST_Distance_Sphere(
-                    end_location,
-                    POINT(?, ?)
-                ) < ?
-            ", [$request->end_lng, $request->end_lat, $tolerance])
-            // ->whereRaw("
-            //     ABS(TIMESTAMPDIFF(MINUTE, ?, departure_time)) <= ?
-            // ", [$request->departure_time, $timeRange])
-            ->where('available_seats', '>', 0) // Vérifier qu'il reste des places disponibles
-            ->where('status', 'active') // Trajets actifs uniquement
-            ->get();
+    // Définir une tolérance (rayon en km) pour les trajets proches
+    $toleranceInKm = 5;
 
-        if(count($rides) > 0) {
-            return response()->json([
-                'success' => true,
-                'rides' => $rides,
-                'message' => 'Covoit\' trouvés'
-            ], 200);
-        }
-        // Retourner les résultats
+    // Recherche des trajets
+    $rides = Ride::where('status', 'active')
+        ->whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
+            $passengerStartLocation->toWkt(),
+            $toleranceInKm * 1000, // Convertir en mètres
+        ])
+        ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
+            $passengerEndLocation->toWkt(),
+            $toleranceInKm * 1000,
+        ])
+        // ->where(function ($query) use ($request) {
+        //     $query->where('departure_time', '>=', $request->departure_time)
+        //           ->orWhereNull('departure_time'); // Si les trajets réguliers n'ont pas d'heure exacte
+        // })
+        ->get();
+
         return response()->json([
-            'success' => false,
-            'message' => 'Nous n\avons pas trouvé de trajets correspondant à votre recherche.'
+            'success' => true,
+            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'rides' => $rides,
         ], 200);
     }
 
