@@ -199,24 +199,10 @@ class RideController extends Controller
             ], 422);
         }
 
-        // Points de départ du passager
-        $passengerStart = [
-            'lat' => $request->input('start_lat'),
-            'lng' => $request->input('start_lng'),
-        ];
-
-        // Récupérer les trajets des conducteurs depuis la base de données
-        $rides = Ride::all(); // Vous pouvez ajouter des filtres si nécessaire
-        $radius = 500; // Rayon de tolérance en mètres pour vérifier la conformité du départ
-
-        $rides = DB::table('rides')
-    ->select('id', 'start_location', DB::raw("
-        ST_Distance_Sphere(start_location, ST_GeomFromText('POINT(? ?)')) AS distance
-    "), $request->start_lng, $request->start_lat) // Paramètres liés
-    // ->having('distance', '<=', $radius) // Vous pouvez ajouter cette condition si nécessaire
-    ->get();
-
-return $rides;
+        $rides = Ride::query()
+       ->withinDistanceTo('start_location', new Point(lat: $request->start_lat, lng: $request->start_lng), 1000)
+       ->get();
+       
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
