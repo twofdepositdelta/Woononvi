@@ -75,17 +75,16 @@ class Ride extends Model
         return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
     }
 
-    public function scopeAddDistance(
-        Builder $query,
-        array $coordinates,
-    ): void {
+    public function scopeAddDistance(Builder $query, array $coordinates): void
+    {
         $query
             ->when(is_null($query->getQuery()->columns), static fn (Builder $query) => $query->select('*'))
             ->selectRaw('
                 ST_Distance(
-                    start_location
-                    ST_SRID(ST_GeomFromText("POINT(? ?)"), 4326)
+                    ST_SRID(start_location, 4326),
+                    ST_SRID(Point(?, ?), 4326)
                 ) AS distance
             ', $coordinates);
     }
+
 }
