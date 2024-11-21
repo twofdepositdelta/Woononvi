@@ -68,8 +68,20 @@ class Ride extends Model
     }
 
     public function getFormattedTypeAttribute()
-{
-    // Retourne "Régulier" ou "Ponctuel" en fonction de la valeur du type
-    return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
-}
+    {
+        // Retourne "Régulier" ou "Ponctuel" en fonction de la valeur du type
+        return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
+    }
+
+    public function scopeWithinDistance($query, $latitude, $longitude, $columnLat, $columnLng, $radius = 1)
+    {
+        return $query
+            ->select('*') // Vous pouvez ajuster selon les colonnes nécessaires
+            ->selectRaw(
+                "(6371 * acos(cos(radians(?)) * cos(radians($columnLat)) * cos(radians($columnLng) - radians(?)) + sin(radians(?)) * sin(radians($columnLat)))) AS distance",
+                [$latitude, $longitude, $latitude]
+            )
+            ->having('distance', '<=', $radius)
+            ->orderBy('distance');
+    }
 }

@@ -169,32 +169,28 @@ class RideController extends Controller
             ], 422);
         }
 
-        // Définir les coordonnées des points de départ et d'arrivée
-    $passengerStartLocation = new Point($request->start_lat, $request->start_lng);
-    $passengerEndLocation = new Point($request->end_lat, $request->end_lng);
+        $radius = $validated['radius'] ?? 10;
 
-    // Définir une tolérance (rayon en km) pour les trajets proches
-    $toleranceInKm = 0;
-
-    // Recherche des trajets
-    $rides = Ride::whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
-        $startPoint->toWkt(),
-        10000, // Distance en mètres (10 km)
-    ])->get();
-    // $rides = Ride::where('status', 'active')
-    //     ->whereRaw("ST_Distance_Sphere(start_location, ST_GeomFromText(?)) <= ?", [
-    //         $passengerStartLocation->toWkt(),
-    //         $toleranceInKm * 1000, // Convertir en mètres
-    //     ])
-    //     // ->whereRaw("ST_Distance_Sphere(end_location, ST_GeomFromText(?)) <= ?", [
-    //     //     $passengerEndLocation->toWkt(),
-    //     //     $toleranceInKm * 1000,
-    //     // ])
-    //     // ->where(function ($query) use ($request) {
-    //     //     $query->where('departure_time', '>=', $request->departure_time)
-    //     //           ->orWhereNull('departure_time'); // Si les trajets réguliers n'ont pas d'heure exacte
-    //     // })
-    //     ->get();
+        $rides = Ride::query()
+        // Rechercher les trajets proches du point de départ
+        ->withinDistance(
+            $validated['start_lat'],
+            $validated['start_lng'],
+            'start_latitude',  // Colonne latitude pour start_location
+            'start_longitude', // Colonne longitude pour start_location
+            $radius
+        )
+        // Rechercher les trajets proches du point d'arrivée
+        ->withinDistance(
+            $validated['end_lat'],
+            $validated['end_lng'],
+            'end_latitude',   // Colonne latitude pour end_location
+            'end_longitude',  // Colonne longitude pour end_location
+            $radius
+        )
+        // ->where('departure_time', '>=', $validated['departure_time']) // Filtrer par horaire
+        ->where('status', 'active') // Trajets actifs uniquement
+        ->get();
 
         return response()->json([
             'success' => true,
