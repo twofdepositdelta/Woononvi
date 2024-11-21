@@ -150,7 +150,7 @@ class RideController extends Controller
         ], 201);
     }
 
-    public function searchRides(Request $request)
+    public function searchRides2(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'start_lat' => 'required|numeric',
@@ -180,6 +180,58 @@ class RideController extends Controller
             'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
             'rides' => $rides,
         ], 200);
+    }
+
+    public function searchRides(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_lat' => 'required|numeric',
+            'start_lng' => 'required|numeric',
+            'end_lat' => 'required|numeric',
+            'end_lng' => 'required|numeric',
+            'departure_time' => 'required|date',
+            // 'tolerance' => 'nullable|integer|min:100|max:5000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        // Points de départ du passager
+        $passengerStart = [
+            'lat' => $request->input('start_lat'),
+            'lng' => $request->input('start_lng'),
+        ];
+
+        // Récupérer les trajets des conducteurs depuis la base de données
+        $rides = Ride::all(); // Vous pouvez ajouter des filtres si nécessaire
+        $radius = 500; // Rayon de tolérance en mètres pour vérifier la conformité du départ
+
+        $matchingRides = [];
+        foreach ($rides as $ride) {
+            // Points de départ du conducteur
+            $driverStart = [
+                'lat' => $ride->start_location->getLat(),
+                'lng' => $ride->start_location->getLng(),
+            ];
+
+            // Vérifier si le point de départ du passager est dans le rayon du conducteur
+            if (isDepartureMatching($passengerStart, $driverStart, $radius)) {
+                // Ajoutez le trajet à la liste des trajets correspondants
+                $matchingRides[] = $ride;
+            }
+        }
+
+        // Retourner les trajets qui correspondent
+        return response()->json([
+            'success' => true,
+            'rides' => $matchingRides,
+            'message' => count($matchingRides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+        ]);
     }
 
     private function generateUniqueRideNumber()

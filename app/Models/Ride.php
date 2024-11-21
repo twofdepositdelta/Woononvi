@@ -73,11 +73,33 @@ class Ride extends Model
         return $this->type == 'regular' ? 'Régulier' : 'Ponctuel';
     }
 
-    public function scopeWithinDistance($query, $latitude, $longitude, $column, $radius = 10)
+    function isDepartureMatching($passengerStart, $driverStart, $radius = 500)
     {
-        return $query->selectRaw(
-            "ST_Distance_Sphere($column, ST_GeomFromText(?)) AS distance",
-            ["POINT($longitude $latitude)"]
-        )->having('distance', '<=', $radius * 1000);
+        // Calculez la distance entre le point de départ du passager et celui du conducteur
+        $startDistance = calculateDistance("$passengerStart[lat],$passengerStart[lng]", "$driverStart[lat],$driverStart[lng]");
+
+        // Vérifiez si la distance est dans le rayon acceptable
+        return $startDistance <= $radius;
+    }
+
+    function calculateDistance($origin, $destination)
+    {
+        $apiKey = 'AIzaSyDcA6TWg_F0YRmwkoiBLQNQEA9m69aLgQY';
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json";
+
+        $response = Http::get($url, [
+            'origins' => $origin,
+            'destinations' => $destination,
+            'key' => $apiKey,
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            if (!empty($data['rows'][0]['elements'][0]['distance'])) {
+                return $data['rows'][0]['elements'][0]['distance']['value']; // Distance en mètres
+            }
+        }
+
+        return null; // Erreur ou absence de données
     }
 }
