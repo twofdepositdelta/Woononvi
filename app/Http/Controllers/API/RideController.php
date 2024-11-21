@@ -188,10 +188,17 @@ class RideController extends Controller
             ->where('status', 'active') // Trajets actifs uniquement
             ->get();
 
+        if($rides) {
+            return response()->json([
+                'success' => true,
+                'rides' => $rides,
+                'message' => 'Covoit\' trouvés'
+            ], 200);
+        }
         // Retourner les résultats
         return response()->json([
-            'success' => true,
-            'rides' => $rides,
+            'success' => false,
+            'message' => 'Nous n\avons pas trouvé de trajets correspondant à votre recherche.'
         ], 200);
     }
 
