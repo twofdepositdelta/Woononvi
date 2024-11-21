@@ -199,9 +199,20 @@ class RideController extends Controller
             ], 422);
         }
 
+        // $rides = Ride::query()
+        //     ->select('id')
+        //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 0])
+        //     ->get();
+
         $rides = Ride::query()
-            ->select('id')
-            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 0])
+            ->select('*')  // Sélectionne tous les attributs du modèle Ride
+            ->selectRaw('
+                ST_Distance(ST_GeomFromText(?, 4326), start_location) AS distance',
+                ["POINT($request->start_lng $request->start_lat)"]
+            )
+            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', 
+                ["POINT($request->start_lng $request->start_lat)", 1]
+            )
             ->get();
 
         // Retourner les trajets qui correspondent
