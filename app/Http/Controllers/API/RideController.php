@@ -22,7 +22,25 @@ class RideController extends Controller
     public function getRides(Request $request)
     {
         $user = Auth::user();
-        $data = DB::table('rides')->get();
+        $data = DB::table('rides')->select([
+            'id',
+            'driver_id',
+            'vehicle_id',
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'is_nearby_ride',
+            'status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'created_at',
+            'updated_at'
+        ])->get();
         return $data;
         // return response()->json([
         //     'success' => true,
