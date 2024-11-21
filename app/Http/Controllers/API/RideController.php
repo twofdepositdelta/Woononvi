@@ -221,8 +221,8 @@ class RideController extends Controller
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
-            'rides' => $matchingRides,
-            'message' => count($matchingRides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'rides' => $rides,
+            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
 
