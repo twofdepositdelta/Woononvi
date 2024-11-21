@@ -201,7 +201,7 @@ class RideController extends Controller
 
         $rides = Ride::query()
             ->select('id')
-            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 10000])
+            ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 1000])
             ->get();
 
         // Retourner les trajets qui correspondent
