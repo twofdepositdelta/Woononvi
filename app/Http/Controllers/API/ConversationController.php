@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
-use App\Events\MessageSent;
+use App\Events\NewMessage;
 
 class ConversationController extends Controller
 {
@@ -266,7 +266,7 @@ class ConversationController extends Controller
             'senderId' => $message->sender_id,
         ];
 
-        event(new MessageSent($message));
+        broadCast(new NewMessage($message))->toOthers();
 
         return response()->json([
             'success' => true,
