@@ -16,7 +16,7 @@ return [
                 'useTLS' => true,
                 'port' => env('PUSHER_PORT', 6001),
                 'scheme' => env('PUSHER_SCHEME', 'http'),
-                'encrypted' => env('PUSHER_ENCRYPTED', true),
+                // 'encrypted' => env('PUSHER_ENCRYPTED', true),
             ],
         ],
 
