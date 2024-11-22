@@ -199,15 +199,42 @@ class RideController extends Controller
             ], 422);
         }
 
-        $rides = Ride::query()
-       ->withinDistanceTo('start_location', new Point(lat: 25.45634, lng: 35.54331), 10000)
-       ->get();
+        // $rides = Ride::query()
+        //     ->select('id')
+        //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 0])
+        //     ->get();
+
+        $rides = DB::table('rides')->select([
+            'id',
+            'driver_id',
+            'vehicle_id',
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'is_nearby_ride',
+            'status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'created_at',
+            'updated_at'
+        ])
+        ->selectRaw('
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+                ["POINT($request->start_lng $request->start_lat)"]
+            )
+        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
             'rides' => $rides,
-            'message' => count($rides) ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'message' => $rides ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
 

@@ -14,7 +14,7 @@
                             <iconify-icon icon="fa-solid:route" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale</h6>
+                            <h6 class="text-xl mb-1">Total</h6>
                             <p class="fw-medium text-secondary-light mb-0">Trajets</p>
                         </div>
                     </div>
@@ -34,11 +34,11 @@
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
 
                         <div
-                            class="w-50-px h-50-px bg-info-main rounded-circle d-flex justify-content-center align-items-center">
+                            class="w-50-px h-50-px bg-success-main rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:route" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale </h6>
+                            <h6 class="text-xl mb-1">Total </h6>
                             <p class="fw-medium text-secondary-light mb-0">Trajets actifs actuellemnt
 
                             </p>
@@ -59,11 +59,11 @@
                 <div class="card-body p-20">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                         <div
-                            class="w-50-px h-50-px bg-info-main rounded-circle d-flex justify-content-center align-items-center">
+                            class="w-50-px h-50-px bg-danger-main rounded-circle d-flex justify-content-center align-items-center">
                             <iconify-icon icon="fa-solid:route" class="text-white text-2xl mb-0"></iconify-icon>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="text-xl mb-1">Totale</h6>
+                            <h6 class="text-xl mb-1">Total</h6>
                             <p class="fw-medium text-secondary-light mb-0">Trajets suspendus</p>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
 
 
 
-                                <select id="periodSelect"
+                                <select id="periodSelectrajet"
                                     class="form-select form-select-sm w-auto bg-base border text-secondary-light">
                                     <option value="yearlyride">Annuel</option>
                                     <option value="monthlyride">Mensuel</option>
@@ -105,7 +105,7 @@
 
                             </div>
 
-                            <div id="commission-summary" class="d-flex align-items-center gap-2">
+                            <div  class="d-flex align-items-center gap-2">
                                 <h6 class="fw-semibold mb-0" id="total-ride">O </h6>
                                 <p class="text-sm mb-0 d-flex align-items-center gap-1">
                                     Total des trajets
@@ -133,7 +133,7 @@
             let rideChart; // Variable pour stocker le graphique
 
             // Fonction pour initialiser ou réinitialiser le graphique
-            function initBookingsChart(data) {
+            function initRidesChart(data) {
                 if (rideChart) {
                     rideChart.destroy(); // Détruit l'ancien graphique
                 }
@@ -167,7 +167,7 @@
                 fetch(`/ride-report?period=${period}`)
                     .then(response => response.json())
                     .then(data => {
-                        initBookingsChart(data); // Initialise ou met à jour le graphique
+                        initRidesChart(data); // Initialise ou met à jour le graphique
                         document.getElementById('total-ride').innerText = `${data.total}`;
                     })
                     .catch(error => {
@@ -179,7 +179,7 @@
             loadRideData('weeklyride');
 
             // Mettre à jour les données lorsque l'utilisateur change la période
-            document.getElementById('periodSelect').addEventListener('change', function() {
+            document.getElementById('periodSelectrajet').addEventListener('change', function() {
                 const period = this.value;
                 loadRideData(period);
             });
