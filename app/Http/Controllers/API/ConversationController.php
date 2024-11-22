@@ -132,7 +132,7 @@ class ConversationController extends Controller
 
             $conversation = Conversation::create([
                 'user_id' => $user->id,
-                // 'support_id' => $support->id,
+                'support_id' => 5,
                 'status' => 'open',
             ]);
 
