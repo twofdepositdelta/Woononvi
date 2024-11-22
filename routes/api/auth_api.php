@@ -28,5 +28,5 @@ Route::middleware('auth:api')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('api.password.update');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('api.logout');
 
-    Route::post('wishes', [ProfileController::class, 'updateWishes'])->name('api.wishes.update');
+    Route::post('users/wishes', [ProfileController::class, 'updateWishes'])->name('api.wishes.update');
 });
