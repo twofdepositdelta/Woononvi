@@ -266,7 +266,7 @@ class ConversationController extends Controller
             'senderId' => $message->sender_id,
         ];
 
-        broadCast(new NewMessage($message))->toOthers();
+        event(new NewMessage($message))->toOthers();
 
         return response()->json([
             'success' => true,
