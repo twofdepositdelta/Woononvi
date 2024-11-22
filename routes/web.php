@@ -1,30 +1,31 @@
 <?php
 
-use App\Http\Controllers\ActualityController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\CommissionController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RideController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\RideController;
-use App\Http\Controllers\RideRequestController;
-use App\Http\Controllers\RideSearchController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeNewController;
-use App\Http\Controllers\TypeVehicleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ActualityController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CommissionController;
+use App\Http\Controllers\RideSearchController;
+use App\Http\Controllers\RideRequestController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TypeVehicleController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/a-propos-de-wononvi', [HomeController::class, 'about'])->name('about');
@@ -188,6 +189,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/messages/{id}/delete', [MessageController::class, 'deleteMessage']);
     // Route::put('/chat/messages/{id}/update', [MessageController::class, 'updateMessage']);
 
+
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::prefix('api')->group(base_path('routes/api.php'));
 
     Route::get('/conversation/closed/{conversation}', [ConversationController::class, 'close'])->name('conversation.down');
