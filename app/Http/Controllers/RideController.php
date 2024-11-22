@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Ride;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Geocoder\Provider\GoogleMaps\GoogleMaps;
-use Geocoder\Provider\Chain\ChainProvider;
-use Geocoder\Provider\Nominatim\Nominatim;
-use Geocoder\Provider\OpenCage\OpenCage;
-use Geocoder\Provider\LocationIQ\LocationIQ;
 
 class RideController extends Controller
 {
@@ -21,13 +15,9 @@ class RideController extends Controller
     public function index()
     {
         //
-        $rides=Ride::orderBy('created_at','desc')->paginate(10);
+        $rides = Ride::orderBy('created_at', 'desc')->paginate(10);
 
-
-        return view('back.pages.trajets.index',compact('rides'));
-
-
-
+        return view('back.pages.trajets.index', compact('rides'));
 
     }
 
@@ -39,7 +29,6 @@ class RideController extends Controller
         //
         return view('back.pages.trajets.create');
     }
-
 
     public function store(Request $request)
     {
@@ -64,7 +53,6 @@ class RideController extends Controller
             'driver_id' => auth()->id(), // Assuming the driver is the currently authenticated user
         ]);
 
-
         // Redirect back to a suitable route with a success message
         return redirect()->route('rides.index')->with('success', 'Trajet créé avec succès !');
     }
@@ -74,7 +62,7 @@ class RideController extends Controller
      */
     public function show(Ride $ride)
     {
-        return view('back.pages.trajets.show',compact('ride'));
+        return view('back.pages.trajets.show', compact('ride'));
     }
 
     /**
@@ -104,18 +92,17 @@ class RideController extends Controller
     public function historique()
     {
         //
-        $user=Auth::user();
+        $user = Auth::user();
 
-        $rides=Ride::where('driver_id',$user->id)->paginate(10);
+        $rides = Ride::where('driver_id', $user->id)->paginate(10);
 
-        return view('back.pages.trajets.historique',compact('rides'));
+        return view('back.pages.trajets.historique', compact('rides'));
     }
-
 
     public function updatestatus(Ride $ride, $status)
     {
         // Vérifier si le statut est valide
-        if (!($status=='suspend')) {
+        if (! ($status == 'suspend')) {
             return redirect()->back()->with('error', 'Statut invalide.');
         }
         // Mettre à jour le statut
@@ -129,32 +116,36 @@ class RideController extends Controller
 
     public function getActiveRides()
     {
-        // Récupère les trajets actifs avec les informations du conducteur
+        // Récupère les trajets actifs avec les informations nécessaires
         $rides = Ride::where('status', 'active')
-                    ->with('driver')  // Inclut les informations du conducteur via la relation
-                    ->get(['id', 'latitude', 'longitude', 'driver_id', 'numero_ride']);
+            ->with(['driver:id,firstname,lastname,phone']) // Charger uniquement les champs nécessaires du conducteur
+            ->get(['id', 'start_location', 'end_location', 'driver_id', 'numero_ride']); // Inclure 'end_location'
 
         // Vérifiez que des trajets sont bien renvoyés
         if ($rides->isEmpty()) {
             return response()->json(['rides' => []]); // Renvoie un tableau vide si aucun trajet actif
         }
 
-        // Transforme les trajets pour inclure le nom du conducteur
+        // Transforme les trajets pour inclure les informations du conducteur et les coordonnées d'arrivée
         $ridesWithDriver = $rides->map(function ($ride) {
             return [
                 'id' => $ride->id,
-                'latitude' => $ride->latitude,
-                'longitude' => $ride->longitude,
-                'driver_id' => $ride->driver_id,
+                'start_latitude' => $ride->start_location->getLat(),  // Extraire la latitude du point de départ
+                'start_longitude' => $ride->start_location->getLng(), // Extraire la longitude du point de départ
+                'end_latitude' => $ride->end_location->getLat(),  // Extraire la latitude du point d'arrivée
+                'end_longitude' => $ride->end_location->getLng(), // Extraire la longitude du point d'arrivée
+                'start_location_name' => $ride->start_location_name,
+                'end_location_name' => $ride->end_location_name,
                 'numero' => $ride->numero_ride,
-                'phone' => $ride->driver->phone,
-                'driver_name' => $ride->driver->firstname.' '.$ride->driver->lastname,  // Accède au nom du conducteur via la relation
+                'phone' => $ride->driver->phone ?? 'Non défini', // Vérifie si le téléphone existe
+                'driver_name' => $ride->driver
+                    ? $ride->driver->firstname . ' ' . $ride->driver->lastname
+                    : 'Non défini', // Vérifie si le conducteur existe
             ];
         });
 
         return response()->json(['rides' => $ridesWithDriver]);
     }
-
 
     // Fonction pour mettre à jour la localisation d'un trajet
     public function updateLocation(Request $request, $rideId)
@@ -196,21 +187,19 @@ class RideController extends Controller
         }
     }
 
-
     public function statistique()
     {
         //
 
-
         $ridecount = Ride::count();
         $ridecountactive = Ride::where('status', 'active')->count();
-        $ridecountcomplete=Ride::where('status', 'suspend')->count();
+        $ridecountcomplete = Ride::where('status', 'suspend')->count();
+
         //  $rides = Ride::select('start_location ', 'end_location', \DB::raw('count(*) as count'))
         //          ->groupBy('start_location', 'end_location')
         //          ->get();
-        return view('back.pages.rapports.trajet.statistique',compact('ridecount','ridecountactive','ridecountcomplete'));
+        return view('back.pages.rapports.trajet.statistique', compact('ridecount', 'ridecountactive', 'ridecountcomplete'));
     }
-
 
     public function getRidesReport(Request $request)
     {
@@ -225,38 +214,39 @@ class RideController extends Controller
 
                 // Réservations des 4 dernières semaines
                 $data = $query->whereBetween('created_at', [$startDate, $endDate])
-                              ->selectRaw('WEEK(created_at) as label, COUNT(*) as total')
-                              ->groupBy('label')
-                              ->orderBy('label', 'asc')
-                              ->get();
+                    ->selectRaw('WEEK(created_at) as label, COUNT(id) as total')
+                    ->groupBy('label')
+                    ->orderBy('label', 'asc')
+                    ->get();
 
                 // Générer les labels "Semaine X"
                 $labels = $data->pluck('label')->map(function ($weekNumber) {
-                    return 'Semaine ' . $weekNumber;
+                    return 'Semaine '.$weekNumber;
                 })->toArray();
                 break;
 
             case 'monthlyride':
                 // Réservations par mois
-                $data = $query->selectRaw('MONTH(created_at) as label, COUNT(*) as total')
-                              ->groupBy('label')
-                              ->get();
+                $data = $query->selectRaw('MONTH(created_at) as label, COUNT(id) as total')
+                    ->groupBy('label')
+                    ->get();
 
-                 $labels = $data->pluck('label')->map(function ($month) {
+                $labels = $data->pluck('label')->map(function ($month) {
                     $monthNames = [
                         1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
                         5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
-                        9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
+                        9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre',
                     ];
+
                     return $monthNames[$month];
-                 })->toArray();
+                })->toArray();
                 break;
 
             case 'yearlyride':
                 // Réservations par année
-                $data = $query->selectRaw('YEAR(created_at) as label, COUNT(*) as total')
-                              ->groupBy('label')
-                              ->get();
+                $data = $query->selectRaw('YEAR(created_at) as label, COUNT(id) as total')
+                    ->groupBy('label')
+                    ->get();
 
                 $labels = $data->pluck('label')->toArray();
                 break;
@@ -264,8 +254,8 @@ class RideController extends Controller
             case 'todayride':
                 // Réservations pour aujourd'hui
                 $data = $query->whereDate('created_at', today())
-                              ->selectRaw('COUNT(id) as total')
-                              ->get();
+                    ->selectRaw('COUNT(id) as total')
+                    ->get();
 
                 $labels = ['Aujourd\'hui'];
                 break;
@@ -281,10 +271,9 @@ class RideController extends Controller
         return response()->json([
             'labels' => $labels,
             'amounts' => $amounts,
-            'total'=>$total
+            'total' => $total,
         ]);
     }
-
 
     // private function getCityFromLocation($location)
     // {
@@ -298,7 +287,5 @@ class RideController extends Controller
 
     //     return $result ? $result->getLocality() : 'Inconnu';
     // }
-
-
 
 }

@@ -28,10 +28,6 @@ body {
 
 @section('customJS')
 <script>
-let infoWindow = null; // Variable pour garder une référence de l'infoWindow ouvert
-let markers = []; // Tableau pour stocker les marqueurs
-let polylines = []; // Tableau pour stocker les polylignes
-
 // Fonction pour ajuster la vue de la carte et inclure tous les trajets
 function adjustMapViewToMarkers(map, rides) {
     const bounds = new google.maps.LatLngBounds();
@@ -55,27 +51,20 @@ function adjustMapViewToMarkers(map, rides) {
     }
 }
 
-// Fonction pour nettoyer la carte
-function clearMap() {
-    markers.forEach(marker => marker.setMap(null));
-    polylines.forEach(polyline => polyline.setMap(null));
-    markers = [];
-    polylines = [];
-}
-
 // Fonction pour récupérer les trajets actifs
 async function fetchActiveRides() {
     try {
-        const response = await fetch(`/api/active-rides?timestamp=${Date.now()}`);
+        const response = await fetch("/api/active-rides"); // Remplacez par votre endpoint
         const data = await response.json();
-        console.log("Trajets récupérés :", data.rides); // Inspecte les données renvoyées par l'API
+
+        // Vérifie si les données sont correctement structurées
+        console.log("Données des trajets récupérées :", data);
+
         return data.rides.map(ride => ({
             start_latitude: ride.start_latitude,
             start_longitude: ride.start_longitude,
             end_latitude: ride.end_latitude,
             end_longitude: ride.end_longitude,
-            start_location_name: ride.start_location_name,
-            end_location_name: ride.end_location_name,
             numero: ride.numero,
         }));
     } catch (error) {
@@ -90,38 +79,40 @@ window.initMap = async function() {
         center: {
             lat: 9.5,
             lng: 2.6
-        },
-        zoom: 7,
+        }, // Latitude et longitude du centre du Bénin
+        zoom: 7, // Zoom pour afficher le Bénin (ajustez si nécessaire)
         restriction: {
             latLngBounds: {
-                north: 11.5,
-                south: 6,
-                east: 3.5,
-                west: 1,
+                north: 11.5, // Limite nord du Bénin
+                south: 6, // Limite sud du Bénin
+                east: 3.5, // Limite est du Bénin
+                west: 1, // Limite ouest du Bénin
             },
-            strictBounds: false,
+            strictBounds: false, // Permet à la carte de sortir un peu des limites définies
         },
     });
+
+    // Optionnel: ajouter une ligne de frontières pour illustrer le pays (facultatif)
+    const bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(6, 1), // Point SW
+        new google.maps.LatLng(11.5, 3.5) // Point NE
+    );
+
+    // Définir la limite géographique sur la carte
+    map.fitBounds(bounds);
 
     // Récupération des trajets actifs via l'API
     const rides = await fetchActiveRides();
 
     if (rides.length === 0) {
-        document.getElementById("errorMessage").textContent = "Aucun trajet actif disponible.";
         document.getElementById("errorMessage").style.display = "block";
         return;
     }
 
-    // Nettoie la carte avant d'ajouter les nouveaux trajets
-    clearMap();
-
     adjustMapViewToMarkers(map, rides);
 
     // Ajout des marqueurs et tracé des trajets pour chaque trajet
-    const colors = ["#FF0000", "#00FF00", "#0000FF",
-    "#FFA500"]; // Couleurs variées pour différencier les trajets
-
-    rides.forEach((ride, index) => {
+    rides.forEach(ride => {
         const startLatLng = new google.maps.LatLng(ride.start_latitude, ride.start_longitude);
         const endLatLng = new google.maps.LatLng(ride.end_latitude, ride.end_longitude);
 
@@ -130,62 +121,53 @@ window.initMap = async function() {
             const startMarker = new google.maps.Marker({
                 position: startLatLng,
                 map: map,
-                title: `Départ : ${ride.start_location_name} (${ride.numero})`,
+                title: `Départ : ${ride.numero}`,
                 icon: {
-                    url: "{{ asset('taxi-solid.svg') }}",
+                    url: "{{ asset('taxi-solid.svg') }}", // Icône pour le départ
                     scaledSize: new google.maps.Size(30, 30),
                     anchor: new google.maps.Point(15, 15),
                 },
             });
 
-            // Affichage de l'infobulle
-            google.maps.event.addListener(startMarker, "click", function() {
+            // Affichage de la distance lorsque le marqueur de départ est survolé
+            google.maps.event.addListener(startMarker, "mouseover", function() {
                 const distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(
                     startLatLng, endLatLng);
-                const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+                const distanceInKm = (distanceInMeters / 1000).toFixed(
+                2); // Convertir en km et formater à 2 décimales
 
-                const content = `
-                        <div>
-                            <strong>Départ:</strong> ${ride.start_location_name} <br>
-                            <strong>Arrivée:</strong> ${ride.end_location_name} <br>
-                            <strong>Numéro:</strong> ${ride.numero} <br>
-                            <strong>Distance:</strong> ${distanceInKm} km
-                        </div>
-                    `;
-                if (infoWindow) {
-                    infoWindow.close();
-                }
-
-                infoWindow = new google.maps.InfoWindow({
-                    content: content
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<div><strong>Distance:</strong> ${distanceInKm} km</div>`,
                 });
+
                 infoWindow.open(map, startMarker);
             });
 
-            markers.push(startMarker);
+            // Fermer l'infobulle lorsque le survol est terminé
+            google.maps.event.addListener(startMarker, "mouseout", function() {
+                google.maps.InfoWindow.prototype.close();
+            });
         }
 
         // Marqueur pour le point d'arrivée
         if (ride.end_latitude && ride.end_longitude) {
-            const endMarker = new google.maps.Marker({
+            new google.maps.Marker({
                 position: endLatLng,
                 map: map,
-                title: `Arrivée : ${ride.end_location_name} (${ride.numero})`,
+                title: `Arrivée : ${ride.numero}`,
             });
-            markers.push(endMarker);
         }
 
-        // Tracer le trajet
+        // Tracer le trajet entre le point de départ et d'arrivée
         if (ride.start_latitude && ride.start_longitude && ride.end_latitude && ride.end_longitude) {
-            const polyline = new google.maps.Polyline({
-                path: [startLatLng, endLatLng],
-                geodesic: true,
-                strokeColor: colors[index % colors.length],
-                strokeOpacity: 1.0,
-                strokeWeight: 2,
+            new google.maps.Polyline({
+                path: [startLatLng, endLatLng], // Tracer entre départ et arrivée
+                geodesic: true, // Utiliser une courbe géodésique pour tracer
+                strokeColor: "#FF0000", // Couleur de la ligne (rouge)
+                strokeOpacity: 1.0, // Opacité de la ligne
+                strokeWeight: 2, // Épaisseur de la ligne
                 map: map,
             });
-            polylines.push(polyline);
         }
     });
 };
@@ -200,4 +182,5 @@ document.addEventListener("DOMContentLoaded", function() {
     document.body.appendChild(script);
 });
 </script>
+
 @endsection
