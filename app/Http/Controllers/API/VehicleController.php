@@ -119,6 +119,7 @@ class VehicleController extends Controller
      */
     public function update(Request $request)
     {
+        return $request;
         $rules = [
             'licence_plate' => 'required|max:255|string|unique:vehicles,licence_plate,' . $request->vehicle_id,
             'mark' => 'required|max:255|string',
