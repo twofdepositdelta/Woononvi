@@ -34,26 +34,20 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-
-
-        // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
-
-
-
         });
 
-        Schema::table('rides', function (Blueprint $table) {
-            DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+        // Schema::table('rides', function (Blueprint $table) {
+        //     DB::statement("UPDATE `rides` SET `start_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `rides` CHANGE `start_location` `start_location` POINT NOT NULL;");
+        //     DB::statement("ALTER TABLE `rides` CHANGE `start_location` `start_location` POINT NOT NULL;");
 
-            DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
+        //     DB::statement("UPDATE `rides` SET `end_location` = ST_GeomFromText('POINT(0 0)', 4326);");
 
-            DB::statement("ALTER TABLE `table` CHANGE `end_location` `start_location` POINT NOT NULL;");
+        //     DB::statement("ALTER TABLE `table` CHANGE `end_location` `start_location` POINT NOT NULL;");
 
-            $table->spatialIndex('start_location');
-            $table->spatialIndex('end_location');
-        });
+        //     $table->spatialIndex('start_location');
+        //     $table->spatialIndex('end_location');
+        // });
 
         // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         // Schema::table('rides', function (Blueprint $table) {
