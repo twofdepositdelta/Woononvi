@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // L'utilisateur qui initie la conversation
-            $table->foreignId('support_id')->constrained('users')->onDelete('cascade')->nullable(); // Le support qui répond
+            $table->foreignId('support_id')->nullable()->constrained('users')->onDelete('cascade'); // Le support qui répond
             $table->boolean('is_taken')->default(false);
             $table->enum('status', ['open', 'resolved', 'closed'])->default('open'); // Statut de la conversation
             $table->timestamps();
