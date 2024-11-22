@@ -119,7 +119,6 @@ class VehicleController extends Controller
      */
     public function update(Request $request)
     {
-        return $request;
         $rules = [
             'licence_plate' => 'required|max:255|string|unique:vehicles,licence_plate,' . $request->vehicle_id,
             'mark' => 'required|max:255|string',
@@ -131,7 +130,7 @@ class VehicleController extends Controller
             'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
-            'is_active' => 'string|in:0,1'
+            // 'is_active' => 'string|in:0,1'
         ];
 
         $validator = Validator::make($request->all(), $rules);
