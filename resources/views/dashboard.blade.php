@@ -2,7 +2,11 @@
 @section('title', 'Tableau de bord')
 @section('content')
 <div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
-    @include('back.pages.home.statistics.amount-statistics')
+    
+    @hasrole('super admin')
+        @include('back.pages.home.statistics.amount-statistics')
+    @endrole
+
     @include('back.pages.home.statistics.rides-statistics')
     @include('back.pages.home.statistics.users-statistics')
 </div>

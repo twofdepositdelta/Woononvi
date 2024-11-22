@@ -41,6 +41,7 @@
                             <a href="{{ route('vehicles.show', $vehicle)}}"  type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                 <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                             </a>
+                            @hasanyrole(['super admin', 'manager' ,'dev'])
                             <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');">
                                 @csrf
                                 @method('DELETE')
@@ -49,14 +50,14 @@
                                 </button>
                             </form>
 
-                                    <form action="{{ route('vehicles.validated', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir valider ce véhicule ?');">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
-                                            Finaliser
-                                        </button>
-                                    </form>
 
-
+                                <form action="{{ route('vehicles.validated', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir valider ce véhicule ?');">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
+                                        Finaliser
+                                    </button>
+                                </form>
+                            @endhasanyrole
                         </div>
                     </td>
                 </tr>

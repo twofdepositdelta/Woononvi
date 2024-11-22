@@ -65,25 +65,14 @@ class NotificationController extends Controller
 
 
 
-    public function getNotifications()
-    {
-        $notifications = auth()->user()
-            ->notifications()
-            ->orderBy('created_at', 'desc')
-            ->get();
 
-        return response()->json([
-            'notifications' => $notifications,
-            'unread_count' => auth()->user()->unreadNotifications->count(),
-        ]);
-    }
 
 
     public function markAllAsRead()
   {
     auth()->user()->unreadNotifications->markAsRead();
 
-    return response()->json(['message' => 'All notifications marked as read']);
+    return response()->json(['message' => 'Toutes les notifications ont été marquées comme lues.']);
   }
 
 

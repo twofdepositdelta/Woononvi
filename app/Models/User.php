@@ -128,10 +128,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(RideMatch::class, 'passenger_id'); // Assurez-vous d'importer le modèle Booking
     }
 
-    public function notifications()
-    {
-        return $this->hasMany(AppNotification::class); // Assurez-vous d'importer le modèle Booking
-    }
+    // public function notifications()
+    // {
+    //     return $this->hasMany(AppNotification::class); // Assurez-vous d'importer le modèle Booking
+    // }
 
     public function preferences()
     {

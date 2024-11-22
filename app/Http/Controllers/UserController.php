@@ -20,267 +20,258 @@ use App\Mail\UserCreated;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        // Récupérer tous les rôles
-        $roles = Role::all();
 
-        // Récupérer tous les utilisateurs ou filtrer par rôle et statut
-        $users = User::when($request->role, function ($query) use ($request) {
-                return $query->whereHas('roles', function ($query) use ($request) {
+    public function __construct() {
+
+        if (!auth()->user()->hasAnyRole(['super admin', 'dev'])) {
+            // Si l'utilisateur n'a pas le rôle requis, lancer une exception ou une erreur
+            abort(401);
+        }
+
+        $this->var = 'valeur'; // Exemple de variable à initialiser
+
+     }
+        public function index(Request $request)
+        {
+            // Récupérer tous les rôles
+            $roles = Role::all();
+
+            // Récupérer tous les utilisateurs ou filtrer par rôle et statut
+            $users = User::when($request->role, function ($query) use ($request) {
+                    return $query->whereHas('roles', function ($query) use ($request) {
+                        $query->where('name', $request->role);
+                    });
+                })
+                ->when($request->status !== null, function ($query) use ($request) {
+                    return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
+                })
+                ->paginate(20);
+
+            return view('back.pages.users.index', compact('users', 'roles'));
+        }
+
+        public function filter(Request $request)
+        {
+            $request->validate([
+                'role' => 'nullable|string',
+                'status' => 'nullable|boolean',
+            ]);
+
+            // Commencez par la requête de base
+            $query = User::query();
+
+            // Appliquez le filtre par rôle si un rôle est sélectionné
+            if ($request->role) {
+                $query->whereHas('roles', function ($query) use ($request) {
                     $query->where('name', $request->role);
                 });
-            })
-            ->when($request->status !== null, function ($query) use ($request) {
-                return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
-            })
-            ->paginate(20);
+            }
+            // dd($request->status);
+            // Appliquez le filtre par statut si un statut est sélectionné
+            if ($request->status != null) {
+                $query->where('status', $request->status);
+            }
 
-        return view('back.pages.users.index', compact('users', 'roles'));
-    }
+            // Récupérer les utilisateurs avec les filtres appliqués
+            $users = $query->get();
 
-    public function filter(Request $request)
-    {
-        $request->validate([
-            'role' => 'nullable|string',
-            'status' => 'nullable|boolean',
-        ]);
+            // Vérifiez si des utilisateurs ont été trouvés
+            if ($users->isEmpty()) {
+                return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
+            }
 
-        // Commencez par la requête de base
-        $query = User::query();
-
-        // Appliquez le filtre par rôle si un rôle est sélectionné
-        if ($request->role) {
-            $query->whereHas('roles', function ($query) use ($request) {
-                $query->where('name', $request->role);
-            });
-        }
-        // dd($request->status);
-        // Appliquez le filtre par statut si un statut est sélectionné
-        if ($request->status != null) {
-            $query->where('status', $request->status);
+            // Retourner la vue partielle avec les utilisateurs
+            return response()->json([
+                'html' => view('back.pages.users.table', compact('users'))->render(),
+            ]);
         }
 
-        // Récupérer les utilisateurs avec les filtres appliqués
-        $users = $query->get();
-
-        // Vérifiez si des utilisateurs ont été trouvés
-        if ($users->isEmpty()) {
-            return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
+        public function create()
+        {
+            $roles = Role::whereNotIn('name', ['developer', 'driver', 'passenger'])->get();
+            $cities = City::all();
+            return view('back.pages.users.create', compact('roles', 'cities'));
         }
 
-        // Retourner la vue partielle avec les utilisateurs
-        return response()->json([
-            'html' => view('back.pages.users.table', compact('users'))->render(),
-        ]);
-    }
+        public function store(StoreUserRequest $request)
+        {
+            $password = Str::random(10);
 
+            $user = User::create([
+                'firstname' => $request->firstname,
+                'lastname'  => $request->lastname,
+                'email'     => $request->email.'@wononvi.com',
+                'phone'     => $request->phone,
+                'gender'    => $request->gender,
+                'city_id'    => $request->city,
+                'npi'       => $request->npi,
+                'is_verified' => true,
+                'email_verified_at' => now(),
+                'password'  => Hash::make($password),
+            ]);
 
+            $roleName = Role::where('name', $request->role)->first()->role;
 
+            Profile::create([
+                'avatar' => BackHelper::getEnvFolder() . 'storage/back/assets/images/users/person.png',
+                'bio' => 'Travaille à Wononvi en tant que ' . $roleName,
+                'address' => $user->city->name,
+                'user_id' => $user->id,
+            ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $roles = Role::whereNotIn('name', ['developer', 'driver', 'passenger'])->get();
-        $cities = City::all();
-        return view('back.pages.users.create', compact('roles', 'cities'));
-    }
+            // $user->roles()->attach($request->role);
+            $user->assignRole($request->role);
 
-    /**
-     * Store a newly created resource in storage.
-     */
+            Mail::to($user->email)->send(new UserCreated($user, $password));
 
-
-    public function store(StoreUserRequest $request)
-    {
-        $password = Str::random(10);
-
-        $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname'  => $request->lastname,
-            'email'     => $request->email.'@wononvi.com',
-            'phone'     => $request->phone,
-            'gender'    => $request->gender,
-            'city_id'    => $request->city,
-            'npi'       => $request->npi,
-            'is_verified' => true,
-            'email_verified_at' => now(),
-            'password'  => Hash::make($password),
-        ]);
-
-        $roleName = Role::where('name', $request->role)->first()->role;
-
-        Profile::create([
-            'avatar' => BackHelper::getEnvFolder() . 'storage/back/assets/images/users/person.png',
-            'bio' => 'Travaille à Wononvi en tant que ' . $roleName,
-            'address' => $user->city->name,
-            'user_id' => $user->id,
-        ]);
-
-        // $user->roles()->attach($request->role);
-        $user->assignRole($request->role);
-
-        Mail::to($user->email)->send(new UserCreated($user, $password));
-
-        // Rediriger avec un message de succès
-        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès. Un email lui a été envoyé.');
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        $receivedReviewsCount = Review::whereHas('booking.ride', function ($query) use ($user) {
-            $query->where('driver_id', $user->id); // Avis reçus en tant que conducteur
-        })->orWhereHas('booking', function ($subQuery) use ($user) {
-            $subQuery->where('passenger_id', $user->id); // Avis reçus en tant que passager
-        })->count();
-
-        $averageRating = $user->averageRatingOutOfFive();
-
-        // Si aucun avis n'a été donné
-        if (is_null($averageRating)) {
-            $averageRating = 0;
+            // Rediriger avec un message de succès
+            return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès. Un email lui a été envoyé.');
         }
 
-        return view('back.pages.users.show', [
-            'receivedReviewsCount' => $receivedReviewsCount,
-            'averageRating' => $averageRating,
-            'totalTrips' => $user->totalTrips(),
-            'totalRideRequests' => $user->totalRideRequests(),
-            'user' => $user,
-        ]);
-    }
+        public function show(User $user)
+        {
+            $receivedReviewsCount = Review::whereHas('booking.ride', function ($query) use ($user) {
+                $query->where('driver_id', $user->id); // Avis reçus en tant que conducteur
+            })->orWhereHas('booking', function ($subQuery) use ($user) {
+                $subQuery->where('passenger_id', $user->id); // Avis reçus en tant que passager
+            })->count();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
+            $averageRating = $user->averageRatingOutOfFive();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
+            // Si aucun avis n'a été donné
+            if (is_null($averageRating)) {
+                $averageRating = 0;
+            }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        // Vérifier s'il a créé des trajets en tant que conducteur
-        $hasCreatedRides = $user->rides()->exists();
-
-        // Vérifier s'il a réservé des trajets (en tant que passager)
-        $hasBookings = $user->bookings()->exists();
-
-        // Vérifier s'il a des demandes de trajets (RideRequest ou RideMatch)
-        $hasRideRequests = $user->ride_requests()->exists();
-        $hasRideMatches = $user->ride_matches()->exists();
-
-        // Si l'utilisateur n'a ni créé, ni réservé de trajets, ni fait de demandes
-        if (!$hasCreatedRides && !$hasBookings && !$hasRideRequests && !$hasRideMatches) {
-            // Supprimer l'utilisateur
-            $user->delete();
-
-            // Message de succès
-            return redirect()->route('users.index')->with('success', 'L\'utilisateur a été supprimé avec succès.');
-        } else {
-            // Message d'erreur si l'utilisateur a des trajets ou réservations
-            return redirect()->route('users.index')->with('danger', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
+            return view('back.pages.users.show', [
+                'receivedReviewsCount' => $receivedReviewsCount,
+                'averageRating' => $averageRating,
+                'totalTrips' => $user->totalTrips(),
+                'totalRideRequests' => $user->totalRideRequests(),
+                'user' => $user,
+            ]);
         }
-    }
 
 
-    public function updateStatus(User $user)
-    {
+        public function edit(User $user)
+        {
+            //
+        }
 
-        // Changer le statut de l'utilisateur
-        $user->status = !$user->status;
-        $user->save();
+        /**
+         * Update the specified resource in storage.
+         */
+        public function update(Request $request, User $user)
+        {
+            //
+        }
 
-        // Redirection avec un message de succès
-        return back()->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
-    }
+        /**
+         * Remove the specified resource from storage.
+         */
+        public function destroy(User $user)
+        {
+            // Vérifier s'il a créé des trajets en tant que conducteur
+            $hasCreatedRides = $user->rides()->exists();
 
-    public function updateIsCertified(User $user)
-    {
-        if (!$user->is_certified) {
+            // Vérifier s'il a réservé des trajets (en tant que passager)
+            $hasBookings = $user->bookings()->exists();
+
+            // Vérifier s'il a des demandes de trajets (RideRequest ou RideMatch)
+            $hasRideRequests = $user->ride_requests()->exists();
+            $hasRideMatches = $user->ride_matches()->exists();
+
+            // Si l'utilisateur n'a ni créé, ni réservé de trajets, ni fait de demandes
+            if (!$hasCreatedRides && !$hasBookings && !$hasRideRequests && !$hasRideMatches) {
+                // Supprimer l'utilisateur
+                $user->delete();
+
+                // Message de succès
+                return redirect()->route('users.index')->with('success', 'L\'utilisateur a été supprimé avec succès.');
+            } else {
+                // Message d'erreur si l'utilisateur a des trajets ou réservations
+                return redirect()->route('users.index')->with('danger', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
+            }
+        }
+
+
+        public function updateStatus(User $user)
+        {
+
             // Changer le statut de l'utilisateur
-            $user->is_certified = !$user->is_certified;
+            $user->status = !$user->status;
             $user->save();
 
             // Redirection avec un message de succès
-            return back()->with('success', 'L\'utilisateur a été certifié avec succès.');
+            return back()->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
         }
-        else
+
+        public function updateIsCertified(User $user)
         {
-            return back()->with('warning', 'L\'utilisateur a été déjà certifié donc ne peut  pas être dé-certifié à nouveau.');
+            if (!$user->is_certified) {
+                // Changer le statut de l'utilisateur
+                $user->is_certified = !$user->is_certified;
+                $user->save();
+
+                // Redirection avec un message de succès
+                return back()->with('success', 'L\'utilisateur a été certifié avec succès.');
+            }
+            else
+            {
+                return back()->with('warning', 'L\'utilisateur a été déjà certifié donc ne peut  pas être dé-certifié à nouveau.');
+            }
+
         }
+
+
+        public function checkUsername(Request $request)
+        {
+            $username = $request->query('username');
+            $isUnique = !User::where('username', $username)->exists();
+
+            return response()->json(['isUnique' => $isUnique]);
 
     }
 
+    public function Indexrole(){
 
-    public function checkUsername(Request $request)
-    {
-        $username = $request->query('username');
-        $isUnique = !User::where('username', $username)->exists();
+        $roles = Role::whereNotIn('role', ['conducteur', 'passager','Développeur'])->get();  // Exclure 'conducteur' et 'passager'
 
-        return response()->json(['isUnique' => $isUnique]);
-
-   }
-
-   public function Indexrole(){
-
-    $roles = Role::whereNotIn('role', ['conducteur', 'passager','Développeur'])->get();  // Exclure 'conducteur' et 'passager'
-
-    // Récupérer les utilisateurs qui ont l'un des rôles dans la variable $roles
-    $users = User::whereHas('roles', function($query) use ($roles) {
-        $query->whereIn('role_id', $roles->pluck('id'));
-    })->paginate(10);
-
-    return view('back.pages.users.role', compact('users', 'roles'));
-   }
-
-   public function assignRole(Request $request, User $user)
-{
-    // Validation du rôle choisi
-    $request->validate([
-        'role_id' => 'required|exists:roles,id',
-    ]);
-
-    // Ajout du rôle à l'utilisateur
-    $role = Role::find($request->role_id);
-    $user->roles()->syncWithoutDetaching([$role->id]);
-
-    return redirect()->back()->with('success', 'Rôle assigné avec succès.');
-}
-
-    public function doc(){
-        //    $documents = Document::orderBy('created_at', 'desc')->paginate(10);
-        $users = User::whereHas('roles', function($query) {
-            $query->whereIn('name', ['driver','passenger']);
+        // Récupérer les utilisateurs qui ont l'un des rôles dans la variable $roles
+        $users = User::whereHas('roles', function($query) use ($roles) {
+            $query->whereIn('role_id', $roles->pluck('id'));
         })->paginate(10);
 
-     return view('back.pages.documents.index',compact('users'));
-
+        return view('back.pages.users.role', compact('users', 'roles'));
     }
 
-    public function Showdoc(User $user){
+    public function assignRole(Request $request, User $user)
+    {
+        // Validation du rôle choisi
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+        ]);
 
-        return view('back.pages.documents.show', compact('user'));
+        // Ajout du rôle à l'utilisateur
+        $role = Role::find($request->role_id);
+        $user->roles()->syncWithoutDetaching([$role->id]);
 
+        return redirect()->back()->with('success', 'Rôle assigné avec succès.');
     }
+
+        public function doc(){
+            //    $documents = Document::orderBy('created_at', 'desc')->paginate(10);
+            $users = User::whereHas('roles', function($query) {
+                $query->whereIn('name', ['driver','passenger']);
+            })->paginate(10);
+
+        return view('back.pages.documents.index',compact('users'));
+
+        }
+
+        public function Showdoc(User $user){
+
+            return view('back.pages.documents.show', compact('user'));
+
+        }
 }

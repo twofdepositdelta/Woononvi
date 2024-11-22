@@ -55,129 +55,134 @@
                 </div>
 
 
-
-                <div class="col-md-12 mb-5">
-                    <!-- Table responsive pour adapter la taille de la table -->
-                    <div class="table-responsive">
-                        <table class="table bordered-table sm-table mb-0" style="max-width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>Numero</th>
-                                    <th>Document</th>
-                                    <th>Date d'expiration</th>
-                                    <th>Raison</th>
-                                    <th>Validation</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($vehicle->documents->isEmpty())
+                @hasanyrole(['super admin', 'manager' ,'dev'])
+                    <div class="col-md-12 mb-5">
+                        <!-- Table responsive pour adapter la taille de la table -->
+                        <div class="table-responsive">
+                            <table class="table bordered-table sm-table mb-0" style="max-width: 100%;">
+                                <thead>
                                     <tr>
-                                        <td colspan="7" class="text-danger text-center">Aucun document enregistré</td>
+                                        <th>Numero</th>
+                                        <th>Document</th>
+                                        <th>Date d'expiration</th>
+                                        <th>Raison</th>
+                                        <th>Validation</th>
+                                        <th>Actions</th>
                                     </tr>
-                                @else
-                                    @foreach ($vehicle->documents as $index => $document)
-                                    @if ($document->vehicle_id != null)
+                                </thead>
+                                <tbody>
+                                    @if ($vehicle->documents->isEmpty())
                                         <tr>
-                                            <td>#{{ $document->number ?? 'Non disponible' }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
+                                            <td colspan="7" class="text-danger text-center">Aucun document enregistré</td>
+                                        </tr>
+                                    @else
+                                        @foreach ($vehicle->documents as $index => $document)
+                                        @if ($document->vehicle_id != null)
+                                            <tr>
+                                                <td>#{{ $document->number ?? 'Non disponible' }}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
 
-                                                    <iconify-icon icon="ic:baseline-description" class="menu-icon" style="font-size: 24px; color: red;"></iconify-icon>
-                                                    <a href="{{ asset($document->paper) }}" target="_blank" class="text-md mb-0 fw-medium flex-grow-1">{{ $document->typeDocument->label ?? 'Non défini' }}</a>
+                                                        <iconify-icon icon="ic:baseline-description" class="menu-icon" style="font-size: 24px; color: red;"></iconify-icon>
+                                                        <a href="{{ asset($document->paper) }}" target="_blank" class="text-md mb-0 fw-medium flex-grow-1">{{ $document->typeDocument->label ?? 'Non défini' }}</a>
 
-                                                </div>
-                                            </td>
-                                            <td>{{ \Carbon\Carbon::parse($document->expiry_date)->locale('fr')->translatedFormat('D, d M Y') }}</td>
-                                            <td class="{{$document->reason ?'':'text-center'}}" >{{ $document->reason ?$document->reason :'-' }}</td>
-                                            <td>
+                                                    </div>
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($document->expiry_date)->locale('fr')->translatedFormat('D, d M Y') }}</td>
+                                                <td class="{{$document->reason ?'':'text-center'}}" >{{ $document->reason ?$document->reason :'-' }}</td>
+                                                <td>
 
-                                                @if($document->is_rejected)
-                                                    <span class="badge bg-danger">Rejeté</span>
-                                                @elseif($document->is_validated)
-                                                    <span class="badge bg-success">Validé</span>
-                                                @else
-                                                    <span class="badge bg-warning">En attente</span>
-                                                @endif
-                                            </td>
+                                                    @if($document->is_rejected)
+                                                        <span class="badge bg-danger">Rejeté</span>
+                                                    @elseif($document->is_validated)
+                                                        <span class="badge bg-success">Validé</span>
+                                                    @else
+                                                        <span class="badge bg-warning">En attente</span>
+                                                    @endif
+                                                </td>
 
 
-                                            <td class="text-center">
-                                                <div class="d-flex align-items-center gap-10 justify-content-center">
-                                                    <!-- Formulaire de validation -->
-                                                    <form action="{{ route('documents.validated', $document) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir {{$document->is_validated ? 'annuler':'valider'}} ce document ?');">
-                                                        @csrf
+                                                <td class="text-center">
+                                                    <div class="d-flex align-items-center gap-10 justify-content-center">
+                                                        <!-- Formulaire de validation -->
+                                                        <form action="{{ route('documents.validated', $document) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir {{$document->is_validated ? 'annuler':'valider'}} ce document ?');">
+                                                            @csrf
 
-                                                             <button type="submit"
-                                                                    class="btn text-sm {{ $document->is_validated ? 'btn-secondary text-muted' : 'btn-primary' }}"
-                                                                    {{ $document->is_validated || $document->is_rejected ? 'disabled' : '' }} >
-                                                                {{ $document->is_validated ? 'Déjà validé' : 'Valider' }}
-                                                            </button>
+                                                                <button type="submit"
+                                                                        class="btn text-sm {{ $document->is_validated ? 'btn-secondary text-muted' : 'btn-primary' }}"
+                                                                        {{ $document->is_validated || $document->is_rejected ? 'disabled' : '' }} >
+                                                                    {{ $document->is_validated ? 'Déjà validé' : 'Valider' }}
+                                                                </button>
 
-                                                @if($document->is_validated)
-                                                    <button id="statusButton"  type="submit" class="btn btn-danger text-sm">
-                                                        Annuler
-                                                    </button>
-                                                @endif
-                                                    </form>
-                                                    @if ($document->is_validated == false)
-                                                        <button class="btn btn-danger text-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                            data-document-id="{{ $document->id }}" {{ $document->is_rejected == true ? 'disabled' : '' }}>
-                                                            Rejeter
+                                                    @if($document->is_validated)
+                                                        <button id="statusButton"  type="submit" class="btn btn-danger text-sm">
+                                                            Annuler
                                                         </button>
                                                     @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endif
-
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                  <div class="modal-content">
-                                                    <div class="modal-header">
-                                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Raison</h1>
-                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </form>
+                                                        @if ($document->is_validated == false)
+                                                            <button class="btn btn-danger text-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                                data-document-id="{{ $document->id }}" {{ $document->is_rejected == true ? 'disabled' : '' }}>
+                                                                Rejeter
+                                                            </button>
+                                                        @endif
                                                     </div>
-                                                    <div class="modal-body">
-                                                     <form action="{{route('documents.reason',['id' => ''])}}" method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="document_id" id="inputDocumentId">
-                                                        <div class="input-block mb-3">
-                                                            <label class="col-form-label">Raison:</label>
-                                                            <textarea rows="5" cols="5" name="reason" required class="form-control" maxlength="50"
-                                                                placeholder="Description de la raison">{{ old('reason') }}</textarea>
-                                                            @error('reason')
-                                                                <span class="text-danger">
-                                                                    {{$message}}
-                                                                </span>
-                                                            @enderror
-                                                        </div>
+                                                </td>
+                                            </tr>
+                                        @endif
 
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Valider</button>
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Raison</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                </form>
-                                                  </div>
+                                                        <div class="modal-body">
+                                                        <form action="{{route('documents.reason',['id' => ''])}}" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="document_id" id="inputDocumentId">
+                                                            <div class="input-block mb-3">
+                                                                <label class="col-form-label">Raison:</label>
+                                                                <textarea rows="5" cols="5" name="reason" required class="form-control" maxlength="50"
+                                                                    placeholder="Description de la raison">{{ old('reason') }}</textarea>
+                                                                @error('reason')
+                                                                    <span class="text-danger">
+                                                                        {{$message}}
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Valider</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            </div>
+                                                    </form>
+                                                    </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div> <!-- End of table responsive -->
-                </div>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div> <!-- End of table responsive -->
+                    </div>
+                @endhasanyrole
 
                   <!-- Boutons d'action -->
                   <div class="text-end mt-4">
-                    <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                    </form>
+                    @hasanyrole(['super admin', 'manager' ,'dev'])
+                        <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    @endhasanyrole
+
                     <a href="{{ route('vehicles.index') }}" class="btn btn-secondary ms-2">Retour à la liste</a>
+
                 </div>
             </div>
         </div>

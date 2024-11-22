@@ -224,4 +224,22 @@ class BackHelper
 
         return $users;
     }
+
+
+    public static function getNotifications()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return [
+                'notifications' => [],
+                'unread_count' => 0,
+            ];
+        }
+
+        return [
+            'notifications' => $user->notifications()->orderBy('created_at', 'desc')->get(),
+            'unread_count' => $user->unreadNotifications()->count(),
+        ];
+    }
 }

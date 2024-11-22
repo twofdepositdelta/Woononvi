@@ -190,7 +190,6 @@ Route::middleware('auth')->group(function () {
     // Route::put('/chat/messages/{id}/update', [MessageController::class, 'updateMessage']);
 
 
-    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.index');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::prefix('api')->group(base_path('routes/api.php'));
 

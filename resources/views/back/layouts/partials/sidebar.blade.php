@@ -30,18 +30,7 @@
                         <a href="{{ route('tarjets.cartograpie') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Vue
                             d'ensemble</a>
                     </li>
-                    {{-- <li>
-                        <a href="index-3.php"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
-                            eCommerce</a>
-                    </li>
-                    <li>
-                        <a href="index-4.php"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
-                            Cryptocurrency</a>
-                    </li>
-                    <li>
-                        <a href="index-5.php"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>
-                            Investment</a>
-                    </li> --}}
+
                 </ul>
             </li>
 
@@ -190,74 +179,82 @@
             </li>
 
             {{-- support --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
-                    <span>SUPPORT</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('chat.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
-                    </li>
-                    <li>
-                        <a href="{{route('faqs.index')}}"><i
-                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
-                    </li>
-                    <li>
-                        <a href="{{route('contact.index')}}"><i
-                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
-                    </li>
-                </ul>
-            </li>
+            @hasanyrole(['super admin', 'manager', 'support' ,'dev'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
+                        <span>SUPPORT</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('chat.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
+                        </li>
+                        <li>
+                            <a href="{{route('faqs.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
+                        </li>
+                        <li>
+                            <a href="{{route('contact.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
+                        </li>
+                    </ul>
+                </li>
+            @endhasanyrole
 
-
+            @hasanyrole(['super admin', 'manager' ,'dev'])
             {{-- rapport --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
-                    <span>RAPPORTS</span>
-                </a>
-                <ul class="sidebar-submenu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
+                        <span>RAPPORTS</span>
+                    </a>
+                    <ul class="sidebar-submenu">
 
-                    <li>
-                        <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Trajet</a>
-                    </li>
+                        <li>
+                            <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                                Trajet</a>
+                        </li>
 
-                    <li>
-                        <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                            Réservation</a>
-                    </li>
+                        <li>
+                            <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                                Réservation</a>
+                        </li>
 
-                    <li>
-                        <a href="{{route('commissions.index')}}"><i
-                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
-                    </li>
-                </ul>
-            </li>
+                        <li>
+                            <a href="{{route('commissions.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
+                        </li>
+                    </ul>
+                </li>
+            @endhasanyrole
+
 
             {{-- actualité --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:rss" class="menu-icon"></iconify-icon>
-                    <span>ACTUALITES</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{route('actualities.index')}}"><i
-                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
-                    </li>
-                    <li>
-                        <a href="{{route('actualities.create')}}"><i
-                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
-                    </li>
-                    <li>
-                        <a href="{{route('typenews.index')}}"><i
-                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
-                    </li>
-                </ul>
-            </li>
+            @hasanyrole(['super admin', 'manager' ,'dev'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:rss" class="menu-icon"></iconify-icon>
+                        <span>ACTUALITES</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{route('actualities.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        </li>
+                        <li>
+                            <a href="{{route('actualities.create')}}"><i
+                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                        </li>
+                        <li>
+                            <a href="{{route('typenews.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
+                        </li>
+                    </ul>
+                </li>
+            @endhasanyrole
+
+
 
             {{-- vehicule --}}
             <li class="dropdown">
@@ -281,74 +278,80 @@
             </li>
 
             {{-- document --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="ic:baseline-insert-drive-file" class="menu-icon"></iconify-icon>
-                    <span>DOCUMENTS</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{route('users.doc')}}"><i
-                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
-                    </li>
-                    {{-- <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
-                    </li> --}}
-                    {{-- <li>
-                        <a href="{{route('typevehicles.index')}}"><i
-                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
-                    </li> --}}
-                </ul>
-            </li>
+            @hasanyrole(['super admin', 'manager','dev'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ic:baseline-insert-drive-file" class="menu-icon"></iconify-icon>
+                        <span>DOCUMENTS</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{route('users.doc')}}"><i
+                                    class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Liste</a>
+                        </li>
+                        {{-- <li>
+                            <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
+                        </li> --}}
+                        {{-- <li>
+                            <a href="{{route('typevehicles.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
+                        </li> --}}
+                    </ul>
+                </li>
+            @endhasanyrole
 
             {{-- utilisateur --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>UTILISATEURS</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('users.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('users.create') }}"><i
-                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
-                    </li>
-                    <li>
-                        <a href="{{route('users.Role')}}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
-                    </li>
+            @hasanyrole(['super admin','dev'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <span>UTILISATEURS</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('users.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>Liste</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('users.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Nouveau</a>
+                        </li>
+                        <li>
+                            <a href="{{route('users.Role')}}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i>Roles & Permission</a>
+                        </li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            @endhasanyrole
 
 
+            @hasanyrole(['super admin','dev'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="icon-park-outline:setting-two" class="menu-icon"></iconify-icon>
+                        <span>Paramètres</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{route('settings')}}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
+                        </li>
+                        @hasrole('developer')
+                        <li>
+                            <a href="{{route('setting.city')}}"><i
+                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
+                        </li>
+                        @endhasrole
+                        <li>
+                            <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                                API</a>
+                        </li>
 
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="icon-park-outline:setting-two" class="menu-icon"></iconify-icon>
-                    <span>Paramètres</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{route('settings')}}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
-                    </li>
-                    @hasrole('developer')
-                    <li>
-                        <a href="{{route('setting.city')}}"><i
-                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Gestion des villes</a>
-                    </li>
-                    @endhasrole
-                    <li>
-                        <a href="{{route('apis')}}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
-                            API</a>
-                    </li>
+                    </ul>
+                </li>
+            @endhasanyrole
 
-                </ul>
-            </li>
 
             <li>
                 <a href="{{route('profile.edit')}}">

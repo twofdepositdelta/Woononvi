@@ -93,14 +93,19 @@ class VehicleController extends Controller
     return view('back.pages.vehicules.table', compact('vehicles'));
 }
 
-    public function status($slug){
-        $vehicle=Vehicle::where('slug',$slug)->first();
-        $vehicle->is_active=!$vehicle->is_active;
-        $vehicle->save();
-        Mail::to($vehicle->driver->email)->send(new VehicleStatus($vehicle));
+    public function status($slug)
+    {
+        if (auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])){
+            $vehicle=Vehicle::where('slug',$slug)->first();
+            $vehicle->is_active=!$vehicle->is_active;
+            $vehicle->save();
+            Mail::to($vehicle->driver->email)->send(new VehicleStatus($vehicle));
 
-        return redirect()->route('vehicles.index')->with('success', 'vehicule a été validé avec succès !');
-        
+            return redirect()->route('vehicles.index')->with('success', 'vehicule a été validé avec succès !');
+        }else{
+            abort(401);
+
+    }
     }
 
 }
