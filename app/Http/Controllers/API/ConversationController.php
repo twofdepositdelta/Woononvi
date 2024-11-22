@@ -120,19 +120,19 @@ class ConversationController extends Controller
             ]);
         } else {
             // Assigner un support
-            // $support = $this->assignSupportToConversation();
+            $support = $this->assignSupportToConversation();
     
-            // if (!$support) {
-            //     // Si aucun support disponible, annuler la création de la conversation
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => 'Aucun support disponible actuellement.'
-            //     ], 400);
-            // }
+            if (!$support) {
+                // Si aucun support disponible, annuler la création de la conversation
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucun support disponible actuellement.'
+                ], 400);
+            }
 
             $conversation = Conversation::create([
                 'user_id' => $user->id,
-                // 'support_id' => $support->id,
+                'support_id' => $support->id,
                 'status' => 'open',
             ]);
 
