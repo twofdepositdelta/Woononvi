@@ -20,7 +20,7 @@
 
 @section('content')
     <!-- Div où la carte sera affichée -->
-    <div id="myMap"></div>
+    <div id="myMap" style="width: 100%;"></div>
     <div id="errorMessage" style="display:none; color: red; text-align: center; padding: 20px;">
         Aucun trajet actif à afficher.
     </div>
@@ -88,7 +88,7 @@
     window.initMap = async function() {
         const map = new google.maps.Map(document.getElementById("myMap"), {
             center: { lat: 9.5, lng: 2.6 },  // Centré sur le Bénin
-            zoom: 7,  // Zoom ajusté pour couvrir le Bénin de manière plus confortable
+            zoom: 10,  // Zoom ajusté pour couvrir le Bénin de manière plus confortable
             restriction: {
                 latLngBounds: {
                     north: 11.5,  // Limite nord du Bénin
