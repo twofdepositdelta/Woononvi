@@ -140,6 +140,7 @@ class ProfileController extends Controller
     }
 
     public function updateWishes(Request $request) {
+        return $request;
         $rules = [
             'smoking_allowed' => 'boolean',
             'music_preference' => 'in:none,soft,loud,all',
