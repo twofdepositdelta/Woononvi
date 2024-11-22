@@ -15,6 +15,17 @@ class DocumentController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+      public function __construct() {
+
+        if (!auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])) {
+            // Si l'utilisateur n'a pas le rôle requis, lancer une exception ou une erreur
+            abort(401);
+        }
+
+        $this->var = 'valeur'; // Exemple de variable à initialiser
+
+     }
     public function index()
     {
         //
@@ -72,7 +83,7 @@ class DocumentController extends Controller
 
     public function validated( Document $document)
     {
-        //
+      if (auth()->user()->hasAnyRole(['super admin', 'manager'])){
 
         // Si le document est validé, retirer le rejet
 
@@ -148,35 +159,48 @@ class DocumentController extends Controller
         }
 
       return redirect()->back()->with('success', 'Le statut de validation du  a été mis à jour.');
+
+      }
+      else
+      {
+        abort(401);
+      }
+
+
     }
 
 
     public function reason(Request $request)
     {
-        //
+      if (auth()->user()->hasAnyRole(['super admin', 'manager']))
+      {
+
          // Récupérer l'ID du document depuis le champ caché
-        $docId = $request->document_id;
+            $docId = $request->document_id;
 
-        // Trouver le document dans la base de données
-        $document = Document::find($docId);
+            // Trouver le document dans la base de données
+            $document = Document::find($docId);
 
 
-        $document->update([
-            'is_rejected'=>true,
-            'reason'=>$request->reason
-        ]);
+            $document->update([
+                'is_rejected'=>true,
+                'reason'=>$request->reason
+            ]);
 
-        $user=$document->user;
-        if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
-            $user->status=false;
-                $user->save();
-            }
+            $user=$document->user;
+            if ($document->typeDocument->label == "Permis de conduire" || $document->typeDocument->label == "Cip") {
+                $user->status=false;
+                    $user->save();
+                }
 
-        Mail::to($document->user->email)->send(new DocumentRejetStatus($document));
-        // Rediriger avec un message de succès
+            Mail::to($document->user->email)->send(new DocumentRejetStatus($document));
+            // Rediriger avec un message de succès
 
-        return redirect()->back()->with('success', 'Le statut de validation du document a été rejeté.');
+            return redirect()->back()->with('success', 'Le statut de validation du document a été rejeté.');
 
+        }else{
+            abort(401);
+        }
     }
 
 }

@@ -116,9 +116,13 @@ class DashboardController extends Controller
 
     public function setting()
     {
-        //
-        $settings=Setting::all();
-        return view('back.pages.settings.index',compact('settings'));
+        if (auth()->user()->hasAnyRole(['super admin' ,'dev'])) {
+            $settings=Setting::all();
+            return view('back.pages.settings.index',compact('settings'));
+        }else{
+            
+            abort(401);
+        }
     }
 
     public function city()

@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function __construct()
+    {
+        // Vérifier si l'utilisateur a l'un des rôles 'super admin' ou 'manager'
+        if (!auth()->user()->hasAnyRole(['super admin','dev'])) {
+            // Si l'utilisateur n'a pas le rôle requis, lancer une exception ou une erreur
+            abort(401);
+        }
+
+        // Autres initialisations
+        $this->var = 'valeur'; // Exemple de variable à initialiser
+    }
     public function index()
     {
         //

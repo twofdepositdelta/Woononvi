@@ -87,15 +87,18 @@
                                             </a>
 
                                             <!-- Remboursement (si le statut est 'cancelled') -->
-                                            <form
-                                                action="{{ route('bookings.status', [$booking, 'status' => 'refunded']) }}"
-                                                method="get" class="ms-2">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary text-sm"
-                                                    {{ $booking->status != 'cancelled' ? 'disabled' : '' }}>
-                                                    Remboursé
-                                                </button>
-                                            </form>
+                                            @hasanyrole(['super admin','manager','dev'])
+                                                <form
+                                                    action="{{ route('bookings.status', [$booking, 'status' => 'refunded']) }}"
+                                                    method="get" class="ms-2">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary text-sm"
+                                                        {{ $booking->status != 'cancelled' ? 'disabled' : '' }}>
+                                                        Rembourser
+                                                    </button>
+                                                </form>
+
+                                            @endrole
                                         </div>
                                     </td>
                                 </tr>

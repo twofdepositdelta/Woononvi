@@ -103,64 +103,43 @@ class BookingController extends Controller
 
 
     public function updatestatus(Booking $booking, $status)
-{
-    // Vérifier si le statut est valide
-    if (!($status=='refunded')) {
-        return redirect()->back()->with('error', 'Statut invalide.');
+    {
+        if (auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])) {
+
+            // Vérifier si le statut est valide
+            if (!($status=='refunded')) {
+                return redirect()->back()->with('error', 'Statut invalide.');
+            }
+            // Mettre à jour le statut
+            $booking->status = $status;
+            $booking->save();
+
+            //  Mail::to($booking->passenger->email)->send(new UpdateStatusMail($booking));
+            // Rediriger avec un message de succès
+            return redirect()->back()->with('success', 'La reservation a été mis à jour.');
+        }
+        else
+        {
+            abort(401);
+        }
+
     }
-    // Mettre à jour le statut
-    $booking->status = $status;
-    $booking->save();
-
-    //  Mail::to($booking->passenger->email)->send(new UpdateStatusMail($booking));
-    // Rediriger avec un message de succès
-    return redirect()->back()->with('success', 'La reservation a été mis à jour.');
-}
-
-
-// public function filterRides(Request $request)
-// {
-//     // Construire la requête avec des conditions "ou" pour les villes de départ et d'arrivée
-//     $query = Ride::query();
-
-//     // Ajouter une condition pour que l'une des villes corresponde
-//     $query->where(function ($query) use ($request) {
-//         $query->where('departure', $request->departure_city)
-//               ->orWhere('destination', $request->destination_city);
-//     });
-
-//     // Appliquer le filtre sur l'heure de départ si renseignée
-//     if ($request->filled('time_departure')) {
-//         $query->whereTime('departure_time', '>=', $request->departure_time);
-//     }
-
-//     // Appliquer le filtre sur l'heure d'arrivée si renseignée
-//     if ($request->filled('arrival_time')) {
-//         $query->whereTime('arrival_time', '<=', $request->arrival_time);
-//     }
-
-//     // Récupérer les trajets filtrés
-//     $rides = $query->get();
-
-//     return response()->json(['rides' => $rides]);
-// }
-
 
      public function statistique()
     {
         //
+        if (auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])){
+            $bookingcount = Booking::count();
+            $bookingcountrefunded = Booking::where('status', 'refunded')->count();
+            $bookingcountpending = Booking::where('status', 'pending')->count();
 
-        $bookingcount = Booking::count();
-        $bookingcountrefunded = Booking::where('status', 'refunded')->count();
-        $bookingcountpending = Booking::where('status', 'pending')->count();
 
+            return view('back.pages.rapports.reservation.statistique',compact('bookingcount','bookingcountpending','bookingcountrefunded'));
+        }else{
 
-        return view('back.pages.rapports.reservation.statistique',compact('bookingcount','bookingcountpending','bookingcountrefunded'));
+          abort(401);
+        }
     }
-
-
-
-
 
     public function getBookingsReport(Request $request)
     {
@@ -234,7 +213,6 @@ class BookingController extends Controller
 
         ]);
     }
-
 
     public function getCommissionReport(Request $request)
     {
