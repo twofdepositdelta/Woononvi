@@ -140,11 +140,20 @@ class ProfileController extends Controller
     }
 
     public function updateWishes(Request $request) {
-        return $request;
+        // Convertir les valeurs string en booléens pour les champs boolean
+        $smokingAllowed = filter_var($request->input('smoking_allowed'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $petAllowed = filter_var($request->input('pet_allowed'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        // Vérifier si les conversions sont valides
+        if (is_null($smokingAllowed) || is_null($petAllowed)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid boolean values for smoking_allowed or pet_allowed.',
+            ], 422);
+        }
+
         $rules = [
-            'smoking_allowed' => 'boolean',
             'music_preference' => 'in:none,soft,loud,all',
-            'pet_allowed' => 'boolean',
             'other_preferences' => 'nullable|string',
             'prefered_amount' => 'numeric|min:0',
         ];
@@ -159,10 +168,18 @@ class ProfileController extends Controller
             ], 422);
         }
 
+        // Ajouter les champs boolean convertis
+        $validatedData = $validator->validated();
+        $validatedData['smoking_allowed'] = $smokingAllowed;
+        $validatedData['pet_allowed'] = $petAllowed;
+
         $user = $request->user(); 
 
         // Récupérer ou créer les préférences pour l'utilisateur
         $preferences = Preference::firstOrCreate(['user_id' => $user->id]);
+        
+        // Mettre à jour les préférences avec les données validées
+        $preferences->update($validatedData);
 
         // Mettre à jour les préférences avec les données validées
         $preferences->update($validatedData);
