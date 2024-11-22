@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class AppNotification extends Model
 {
     use HasFactory;
+    protected $table = 'notifications'; 
     protected $fillable = [
+        'id',
+        'type',
+        'notifiable_type',
+        'notifiable_id',
         'data',
-        'user_id', // Clé étrangère pour l'utilisateur qui reçoit la notification
-        'ride_id', // Clé étrangère pour le trajet associé
+        'read_at',
+        'ride_id',
         'notification_type',
-        'is_read', // Indicateur si la notification a été lue
     ];
 
     // Relation avec l'utilisateur

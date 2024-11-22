@@ -118,7 +118,7 @@
         let rideChart; // Variable pour stocker le graphique
 
         // Fonction pour initialiser ou réinitialiser le graphique
-        function initBookingsChart(data) {
+        function initRidesChart(data) {
             if (rideChart) {
                 rideChart.destroy(); // Détruit l'ancien graphique
             }
@@ -152,7 +152,7 @@
             fetch(`/ride-report?period=${period}`)
                 .then(response => response.json())
                 .then(data => {
-                    initBookingsChart(data); // Initialise ou met à jour le graphique
+                    initRidesChart(data); // Initialise ou met à jour le graphique
                     document.getElementById('total-ride').innerText = `${data.total}`;
                 })
                 .catch(error => {

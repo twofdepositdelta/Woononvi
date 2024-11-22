@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             ApiSeeder::class,
             PaymentTypeSeeder::class,
-             PaymentSeeder::class
+             PaymentSeeder::class,
+             NotificationSeeder::class
         ]);
     }
 }
