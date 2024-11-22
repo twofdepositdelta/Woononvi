@@ -130,7 +130,7 @@ class VehicleController extends Controller
             'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
-            'is_active' => 'required|string|in:0,1'
+            'is_active' => 'string|in:0,1'
         ];
 
         $validator = Validator::make($request->all(), $rules);
