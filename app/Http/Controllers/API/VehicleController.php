@@ -130,6 +130,7 @@ class VehicleController extends Controller
             'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
+            'is_active' => 'required|string|in:0,1'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -149,6 +150,31 @@ class VehicleController extends Controller
                 'success' => false,
                 'message' => 'Véhicule non trouvé.',
             ], 404);
+        }
+
+        // Gérer le champ is_active
+        if ($request->is_active == '1') {
+            // Désactiver tous les autres véhicules du conducteur
+            Vehicle::where('driver_id', $user->id)
+                ->where('id', '!=', $vehicle->id)
+                ->update(['is_active' => false]);
+
+            $vehicle->is_active = true;
+        } elseif ($request->is_active == '0') {
+            // Vérifier s'il existe d'autres véhicules actifs
+            $activeVehicleCount = Vehicle::where('driver_id', $user->id)
+                ->where('id', '!=', $vehicle->id)
+                ->where('is_active', true)
+                ->count();
+
+            if ($activeVehicleCount == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Impossible de désactiver ce véhicule car aucun autre véhicule actif n\'est disponible.',
+                ], 422);
+            }
+
+            $vehicle->is_active = false;
         }
 
         $vehiculeType = TypeVehicle::whereLabel($request->vehicle_type)->first();
@@ -179,6 +205,7 @@ class VehicleController extends Controller
                 'color' => $request->color,
                 'slug' => Str::slug($request->licence_plate),
                 'type_vehicle_id' => $vehiculeType->id,
+                'is_active' => $vehicle->is_active,
             ]);
 
             return response()->json([
