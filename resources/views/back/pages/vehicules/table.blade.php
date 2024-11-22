@@ -53,8 +53,9 @@
 
                                 <form action="{{ route('vehicles.validated', $vehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir valider ce véhicule ?');">
                                     @csrf
-                                    <button type="submit" class="btn btn-primary"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
-                                        Finaliser
+                                    <button type="submit" class="bg-success-focus bg-hover-info-200 text-success-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"  {{ $vehicle->is_active || $vehicle->documents->where('is_validated', true)->count() == 0 ? 'disabled' : '' }}>
+                                        <iconify-icon icon="fluent:checkmark-24-regular" class="menu-icon"></iconify-icon>
+
                                     </button>
                                 </form>
                             @endhasanyrole

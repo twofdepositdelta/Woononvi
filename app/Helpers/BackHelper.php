@@ -238,7 +238,7 @@ class BackHelper
         }
 
         return [
-            'notifications' => $user->notifications()->orderBy('created_at', 'desc')->get(),
+            'notifications' => $user->notifications()->latest()->get(),
             'unread_count' => $user->unreadNotifications()->count(),
         ];
     }

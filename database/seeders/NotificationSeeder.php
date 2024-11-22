@@ -34,9 +34,9 @@ class NotificationSeeder extends Seeder
                 'id' => Str::uuid(),
                 'type' => 'App\\Notifications\\NewRideAvailable',
                 'notifiable_type' => 'App\\Models\\User',
-                'notifiable_id' => 2, // Remplacez par un autre ID utilisateur valide
+                'notifiable_id' => 1, // Remplacez par un autre ID utilisateur valide
                 'data' => json_encode(['message' => 'Un nouveau trajet est disponible.']),
-                'read_at' => now(),
+                'read_at' => null,
                 'ride_id' => Ride::inRandomOrder()->first()?->id, // Trajet aléatoire
                 'notification_type' => 'new_ride_available',
                 'created_at' => now(),
@@ -46,7 +46,7 @@ class NotificationSeeder extends Seeder
                 'id' => Str::uuid(),
                 'type' => 'App\\Notifications\\DemandRideResponse',
                 'notifiable_type' => 'App\\Models\\User',
-                'notifiable_id' => 3, // Remplacez par un autre ID utilisateur valide
+                'notifiable_id' => 1, // Remplacez par un autre ID utilisateur valide
                 'data' => json_encode(['message' => 'Votre demande de trajet a reçu une réponse.']),
                 'read_at' => null,
                 'ride_id' => Ride::inRandomOrder()->first()?->id, // Trajet aléatoire
