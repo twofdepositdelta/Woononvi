@@ -27,4 +27,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])->name('api.password.confirm');
     Route::put('password', [PasswordController::class, 'update'])->name('api.password.update');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('api.logout');
+
+    Route::post('wishes', [ProfileController::class, 'updateWishes'])->name('api.wishes.update');
 });

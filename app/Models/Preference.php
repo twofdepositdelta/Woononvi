@@ -13,6 +13,7 @@ class Preference extends Model
         'smoking_allowed',
         'music_preference',
         'pet_allowed',
+        'prefered_amount',
         'other_preferences'
     ];
 

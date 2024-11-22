@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\City;
+use App\Models\Preference;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -138,10 +139,45 @@ class ProfileController extends Controller
         }
     }
 
+    public function updateWishes(Request $request) {
+        $rules = [
+            'smoking_allowed' => 'boolean',
+            'music_preference' => 'in:none,soft,loud,all',
+            'pet_allowed' => 'boolean',
+            'other_preferences' => 'nullable|string',
+            'prefered_amount' => 'numeric|min:0',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $user = $request->user(); 
+
+        // Récupérer ou créer les préférences pour l'utilisateur
+        $preferences = Preference::firstOrCreate(['user_id' => $user->id]);
+
+        // Mettre à jour les préférences avec les données validées
+        $preferences->update($validatedData);
+
+        // Retourner une réponse JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Preférences modifiées avec succès.',
+            'data' => $preferences,
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Country $country)
+    public function destroy()
     {
         //
     }
