@@ -63,7 +63,7 @@ class RideController extends Controller
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
             'departure_time' => 'required|date',
-            'return_time' => 'required|date',
+            'return_time' => 'required',
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
             'seats' => 'required',
