@@ -185,9 +185,11 @@ class RideController extends Controller
         $validator = Validator::make($request->all(), [
             'start_lat' => 'required|numeric',
             'start_lng' => 'required|numeric',
+            'start_location_name' => 'required|string',
+            'end_location_name' => 'required|string',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            'departure_time' => 'required|date',
+            // 'departure_time' => 'required|date',
             // 'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
 
