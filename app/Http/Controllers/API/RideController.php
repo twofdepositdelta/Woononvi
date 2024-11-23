@@ -236,6 +236,52 @@ class RideController extends Controller
         ]);
     }
 
+    public function getDriverPendingBookings(Request $request)
+    {
+        // Validation des données d'entrée
+        // $validator = Validator::make($request->all(), [
+        //     'driver_id' => 'required|exists:users,id', // Vérifie que l'ID du conducteur existe
+        // ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all(),
+            ], 422);
+        }
+
+        // Récupération des réservations liées au conducteur
+        $pendingBookings = DB::table('bookings')
+            ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
+            ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
+            ->where('bookings.status', 'pending') // Filtrer par statut 'pending'
+            ->select([
+                'bookings.id',
+                'bookings.booking_number',
+                'bookings.seats_reserved',
+                'bookings.total_price',
+                'bookings.price_maintain',
+                'bookings.commission_rate',
+                'bookings.status',
+                'bookings.created_at',
+                'bookings.updated_at',
+                DB::raw('ST_AsText(rides.start_location) as start_location'),
+                DB::raw('ST_AsText(rides.end_location) as end_location'),
+                'rides.departure_time',
+                'rides.return_time',
+                'rides.type',
+                'rides.price_per_km',
+            ])
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($pendingBookings) > 0 ? 'Réservations trouvées.' : 'Aucune réservation en attente trouvée.',
+            'bookings' => $pendingBookings,
+        ]);
+    }
+
 
     public function searchRides(Request $request)
     {
