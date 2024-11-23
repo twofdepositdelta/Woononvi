@@ -202,7 +202,7 @@ class RideController extends Controller
         }
 
         $rides = DB::table('rides')->select([
-            'id',
+            'rides.id',
             'driver_id',
             'vehicle_id',
             'days',
@@ -211,7 +211,7 @@ class RideController extends Controller
             'return_time',
             'price_per_km',
             'is_nearby_ride',
-            'status',
+            'rides.status',
             'start_location_name',
             'end_location_name',
             DB::raw('ST_AsText(start_location) as start_location'),
