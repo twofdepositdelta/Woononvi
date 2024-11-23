@@ -210,6 +210,7 @@ class RideController extends Controller
             'vehicles.licence_plate',
             'vehicles.vehicle_mark',
             'vehicles.vehicle_model',
+            'profiles.avatar',
             'days',
             'type',
             'departure_time',
