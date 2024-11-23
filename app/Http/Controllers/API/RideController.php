@@ -243,13 +243,13 @@ class RideController extends Controller
         //     'driver_id' => 'required|exists:users,id', // Vérifie que l'ID du conducteur existe
         // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
-                'errors' => $validator->errors()->all(),
-            ], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Les données envoyées ne sont pas valides.',
+        //         'errors' => $validator->errors()->all(),
+        //     ], 422);
+        // }
 
         // Récupération des réservations liées au conducteur
         $pendingBookings = DB::table('bookings')
