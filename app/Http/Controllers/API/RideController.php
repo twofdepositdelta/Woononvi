@@ -7,6 +7,7 @@ use App\Models\RideRequest;
 use App\Models\Review;
 use App\Models\RideMessage;
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
