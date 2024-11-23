@@ -201,36 +201,37 @@ class RideController extends Controller
             ], 422);
         }
 
-        // $rides = Ride::query()
-        //     ->select('id')
-        //     ->whereRaw('ST_Distance(ST_GeomFromText(?, 4326), start_location) <= ?', ["POINT($request->start_lng $request->start_lat)", 0])
-        //     ->get();
-
-        $rides = DB::table('rides')->select([
-            'id',
-            'driver_id',
-            'vehicle_id',
-            'days',
-            'type',
-            'departure_time',
-            'return_time',
-            'price_per_km',
-            'is_nearby_ride',
-            'status',
-            'start_location_name',
-            'end_location_name',
-            DB::raw('ST_AsText(start_location) as start_location'),
-            DB::raw('ST_AsText(end_location) as end_location'),
-            'available_seats',
-            'created_at',
-            'updated_at'
+        $rides = DB::table('rides')
+        ->select([
+            'rides.id',
+            'rides.driver_id',
+            'rides.vehicle_id',
+            'rides.days',
+            'rides.type',
+            'rides.departure_time',
+            'rides.return_time',
+            'rides.price_per_km',
+            'rides.is_nearby_ride',
+            'rides.status',
+            'rides.start_location_name',
+            'rides.end_location_name',
+            DB::raw('ST_AsText(rides.start_location) as start_location'),
+            DB::raw('ST_AsText(rides.end_location) as end_location'),
+            'rides.available_seats',
+            'rides.created_at',
+            'rides.updated_at',
+            DB::raw('CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), rides.start_location) AS SIGNED) AS distance'),
+            'drivers.name as driver_name',
+            'drivers.phone as driver_phone',
+            'vehicles.model as vehicle_model',
+            'vehicles.license_plate as vehicle_license_plate'
         ])
-        ->selectRaw('
-                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
-                ["POINT($request->start_lng $request->start_lat)"]
-            )
-        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
+        ->join('drivers', 'rides.driver_id', '=', 'drivers.id') // Jointure avec la table des conducteurs
+        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table des véhicules
+        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), rides.start_location) <= ?', [
+            "POINT($request->start_lng $request->start_lat)", 2000
+        ])
+        ->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
