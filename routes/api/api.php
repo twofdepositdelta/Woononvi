@@ -39,4 +39,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('rides/search', [RideController::class, 'searchRides'])->name('api.ride.search');
     Route::post('rides/booking', [RideController::class, 'bookRide'])->name('api.ride.book');
     Route::post('rides/bookings', [RideController::class, 'getDriverPendingBookings'])->name('api.ride.getDriverPendingBookings');
+    Route::post('rides/bookings/updateBookingStatus', [RideController::class, 'updateBookingStatus'])->name('api.ride.updateBookingStatus');
 });
