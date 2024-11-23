@@ -210,7 +210,7 @@ class RideController extends Controller
             'vehicles.licence_plate',
             'vehicles.vehicle_mark',
             'vehicles.vehicle_model',
-            DB::raw("CONCAT('" . asset() . "/', profiles.avatar) as avatar"),
+            DB::raw("CONCAT('" . asset('storage/avatars') . "/', profiles.avatar) as avatar"),
             'days',
             'type',
             'departure_time',
