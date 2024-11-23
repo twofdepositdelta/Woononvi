@@ -220,7 +220,7 @@ class RideController extends Controller
             'price_maintain' => $total_price, // Ajoutez une logique ici si nécessaire
             'commission_rate' => 10, // Exemple de taux de commission, ajustez en fonction de votre application
             'ride_id' => $request->ride_id,
-            'passenger_id' => $request->passenger_id,
+            'passenger_id' => $request->user()->id,
             'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
