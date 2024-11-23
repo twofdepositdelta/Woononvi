@@ -217,8 +217,8 @@ class RideController extends Controller
             DB::raw('ST_AsText(start_location) as start_location'),
             DB::raw('ST_AsText(end_location) as end_location'),
             'available_seats',
-            'created_at',
-            'updated_at'
+            'rides.created_at',
+            'rides.updated_at'
         ])->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
         ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
         ->selectRaw('
