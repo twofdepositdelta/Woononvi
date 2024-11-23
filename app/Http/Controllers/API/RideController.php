@@ -203,8 +203,8 @@ class RideController extends Controller
 
         $rides = DB::table('rides')->select([
             'rides.id',
-            'driver_id',
-            'vehicle_id',
+            'rides.driver_id',
+            'rides.vehicle_id',
             'days',
             'type',
             'departure_time',
