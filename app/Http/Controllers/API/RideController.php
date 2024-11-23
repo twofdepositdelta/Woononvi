@@ -216,6 +216,7 @@ class RideController extends Controller
             'departure_time',
             'return_time',
             'price_per_km',
+            'total_price',
             'is_nearby_ride',
             'rides.status',
             'start_location_name',
