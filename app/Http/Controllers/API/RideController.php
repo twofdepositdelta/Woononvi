@@ -236,7 +236,7 @@ class RideController extends Controller
         return response()->json([
             'success' => true,
             'rides' => $rides,
-            'message' => $rides ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+            'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
 
