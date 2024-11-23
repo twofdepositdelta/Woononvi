@@ -392,4 +392,57 @@ class RideController extends Controller
     {
         
     }
+
+    public function updateBookingStatus(Request $request)
+    {
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
+            'status' => 'required|in:accepted,rejected', // Statut accepté uniquement : 'accepted' ou 'rejected'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all(),
+            ], 422);
+        }
+
+        // Récupérer la réservation
+        $booking = Booking::find($request->booking_id);
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Réservation introuvable.',
+            ], 404);
+        }
+
+        // Vérification du statut actuel
+        if ($booking->status !== 'pending') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Seules les réservations en attente peuvent être modifiées.',
+            ], 400);
+        }
+
+        // Mise à jour du statut
+        $booking->status = $request->status;
+
+        if ($request->status === 'accepted') {
+            $booking->accepted_at = now();
+        } elseif ($request->status === 'rejected') {
+            $booking->rejected_at = now();
+        }
+
+        $booking->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Le statut de la réservation a été mis à jour avec succès.',
+            'booking' => $booking,
+        ]);
+    }
+
 }
