@@ -60,6 +60,30 @@ class SettingsSeeder extends Seeder
                 'value' => 'FCFA', // La monnaie utilisée
                 'description' => 'La monnaie utilisée dans l\'entreprise',
             ],
+
+            [
+                'key' => 'Suggested_Price',
+                'value' => '50', // La monnaie utilisée
+                'description' => 'Prix recommandé pour les trajets.',
+            ],
+
+            [
+                'key' => 'Booking_Percentage',
+                'value' => '40', // La monnaie utilisée
+                'description' => 'Commission sur chaque réservation.',
+            ],
+
+            [
+                'key' => 'Mini_Price_Kilomete',
+                'value' => '40', // La monnaie utilisée
+                'description' => 'Prix minimal par kilomètre.',
+            ],
+
+            [
+                'key' => 'Max_Price_Kilomete',
+                'value' => '200', // La monnaie utilisée
+                'description' => 'Prix maximal par kilomètre.',
+            ],
         ]);
     }
 }

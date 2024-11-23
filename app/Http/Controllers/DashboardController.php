@@ -88,6 +88,13 @@ class DashboardController extends Controller
         'settings.commission_rate' => 'nullable|numeric|min:0',
         'settings.currency' => 'nullable|string|max:10',
         'settings.company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'settings.Suggested_Price' => 'nullable|numeric|min:0',
+        'settings.Booking_Percentage' => 'nullable|numeric|min:0',
+        'settings.Mini_Price_Kilomete' => 'nullable|numeric|min:0',
+        'settings.Max_Price_Kilomete' => 'nullable|numeric|min:0',
+
+
+
     ]);
 
     foreach ($validatedData['settings'] as $key => $value) {
@@ -120,7 +127,7 @@ class DashboardController extends Controller
             $settings=Setting::all();
             return view('back.pages.settings.index',compact('settings'));
         }else{
-            
+
             abort(401);
         }
     }

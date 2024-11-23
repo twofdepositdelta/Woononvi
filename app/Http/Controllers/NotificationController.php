@@ -75,5 +75,18 @@ class NotificationController extends Controller
     return response()->json(['message' => 'Toutes les notifications ont été marquées comme lues.']);
   }
 
+  public function markAsRead($id)
+{
+    $notification = auth()->user()->notifications()->find($id);
+
+    if ($notification && !$notification->read_at) {
+        $notification->markAsRead();
+        return response()->json(['message' => 'Notification marquée comme lue.'], 200);
+    }
+
+    return response()->json(['message' => 'Notification introuvable ou déjà lue.'], 404);
+}
+
+
 
 }

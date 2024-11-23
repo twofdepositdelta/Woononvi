@@ -92,9 +92,11 @@
                                                     action="{{ route('bookings.status', [$booking, 'status' => 'refunded']) }}"
                                                     method="get" class="ms-2">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-primary text-sm"
+                                                    <button type="submit" class="bg-danger-focus bg-hover-info-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                                                         {{ $booking->status != 'cancelled' ? 'disabled' : '' }}>
-                                                        Rembourser
+                                                        <iconify-icon icon="fluent:arrow-sync-24-regular" class="menu-icon"></iconify-icon>
+
+
                                                     </button>
                                                 </form>
 

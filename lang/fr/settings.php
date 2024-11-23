@@ -10,6 +10,10 @@ return [
     'timezone' => 'Fuseau horaire',
     'commission_rate' => 'Taux de commission',
     'currency' => 'Devise',
+    'Suggested_Price'=> ' Prix suggéré',
+    'Booking_Percentage'=> 'Pourcentage de réservation',
+    'Mini_Price_Kilomete'=>'Prix minimum par kilomètre',
+    'Max_Price_Kilomete'=> 'Prix maximum par kilomètre'
 ];
 
 

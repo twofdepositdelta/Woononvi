@@ -82,53 +82,61 @@
                         type="button" data-bs-toggle="dropdown">
                         <iconify-icon icon="iconoir:bell" class="text-primary-light text-xl"></iconify-icon>
                         @if (BackHelper::getNotifications()['unread_count'] > 0)
-                            <span class="badge bg-danger">{{ BackHelper::getNotifications()['unread_count'] }}</span>
-                        @endif
-                    </button>
+                          <span
+                            class="position-absolute top-0 start-50 translate-middle-y badge rounded-pill bg-danger-600 border-0">{{ BackHelper::getNotifications()['unread_count'] }}</span>
+                         @endif
+                        </button>
                     <div class="dropdown-menu to-top dropdown-menu-lg p-0">
                         <div
                             class="m-16 py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
                             <div>
                                 <h6 class="text-lg text-primary-light fw-semibold mb-0">Notifications</h6>
                             </div>
-                            <span
-                                class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">
+                            {{-- <span class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">
                                 {{ BackHelper::getNotifications()['unread_count'] }}
-                            </span>
+                            </span> --}}
                         </div>
 
                         <div class="max-h-400-px overflow-y-auto scroll-sm pe-4">
-                            @forelse (BackHelper::getNotifications()['notifications'] as $notification)
-                                <a href="javascript:void(0)"
-                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between {{ $notification->read_at ? '' : 'bg-neutral-50' }}">
-                                    <div
-                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                        <span
-                                            class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                            <iconify-icon icon="bitcoin-icons:verify-outline"
-                                                class="icon text-xxl"></iconify-icon>
-                                        </span>
-                                        <div>
-                                            <h6 class="text-md fw-semibold mb-4">
-                                                {{ $notification->data['title'] ?? 'Notification' }}</h6>
-                                            <p class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                {{ $notification->data['message'] ?? '' }}</p>
-                                        </div>
-                                    </div>
-                                    <span
-                                        class="text-sm text-secondary-light flex-shrink-0">{{ $notification->created_at->diffForHumans() }}</span>
-                                </a>
-                            @empty
-                                <p class="text-center py-12 px-16">Aucune notification</p>
-                            @endforelse
-                        </div>
+                            @if (BackHelper::getNotifications()['unread_count'] > 0)
+                                @foreach (BackHelper::getNotifications()['notifications'] as $notification)
+                                    @if (!$notification->read_at)
+                                        <a href="javascript:void(0)" data-id="{{ $notification->id }}"
+                                            class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between notification-link {{ $notification->read_at ? '' : 'bg-neutral-50' }}">
+                                            <div
+                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                <span
+                                                    class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                    <iconify-icon icon="bitcoin-icons:verify-outline"
+                                                        class="icon text-xxl"></iconify-icon>
+                                                </span>
+                                                <div>
+                                                    <h6 class="text-md fw-semibold mb-4">
+                                                        {{ $notification->data['title'] ?? 'Notification' }}</h6>
+                                                    <p class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                        {{ $notification->data['message'] ?? '' }}</p>
+                                                </div>
+                                            </div>
+                                            <span
+                                                class="text-sm text-secondary-light flex-shrink-0">{{ $notification->created_at->diffForHumans() }}</span>
+                                        </a>
+                                    @endif
+                                @endforeach
 
-                        <div class="text-center py-12 px-16">
-                            <button id="mark-all-read" class="btn btn-link text-primary-600 fw-semibold text-md">Tout
-                                marquer comme lu</button>
+                                <!-- Afficher le bouton si des notifications non lues existent -->
+                                <div class="text-center py-12 px-16">
+                                    <button id="mark-all-read"
+                                        class="btn btn-link text-primary-600 fw-semibold text-md">Tout marquer comme
+                                        lu</button>
+                                </div>
+                            @else
+                                <!-- Si aucune notification non lue -->
+                                <p class="text-center py-12 px-16">Aucune notification</p>
+                            @endif
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- Notification dropdown end -->
@@ -195,7 +203,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
         // Sélectionner les boutons radio pour chaque pays
         const benin = document.getElementById('benin');
         const france = document.getElementById('france');
@@ -207,10 +214,10 @@
         function handleEnvironmentChange() {
             if (benin.checked) {
                 img_default.setAttribute('src', img_benin
-                .src); // Met à jour l'image par défaut avec l'image du Benin
+                    .src); // Met à jour l'image par défaut avec l'image du Benin
             } else if (france.checked) {
                 img_default.setAttribute('src', img_france
-                .src); // Met à jour l'image par défaut avec l'image de la France
+                    .src); // Met à jour l'image par défaut avec l'image de la France
             }
         }
 
@@ -225,7 +232,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Bouton "Tout marquer comme lu"
         document.getElementById('mark-all-read').addEventListener('click', function() {
+            // Envoi de la requête pour marquer toutes les notifications comme lues
             fetch('{{ route('notifications.markAllRead') }}', {
                     method: 'POST',
                     headers: {
@@ -236,12 +245,83 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data.message);
-                    // Mettre à jour l'interface (par exemple, supprimer le badge)
-                    document.querySelectorAll('.bg-neutral-50').forEach(el => el.classList.remove(
-                        'bg-neutral-50'));
-                    document.querySelector('.badge').remove();
+
+                    // Supprimer toutes les notifications de la liste (après la réponse du serveur)
+                    const notificationsContainer = document.querySelector('.max-h-400-px');
+
+                    notificationsContainer.innerHTML =
+                        `<p class="text-center py-12 px-16">Aucune notification</p>`;
+
+                    // Supprimer le badge des notifications non lues
+                    const badge = document.querySelector('.badge');
+                    if (badge) {
+                        badge.remove(); // On supprime le badge
+                    }
+
+                    // Mettre à jour le compteur global dans la dropdown
+                    const counter = document.querySelector('.dropdown .text-primary-600');
+
+                    if (counter) {
+                        counter.textContent =
+                        '0'; // Met à jour à 0 car toutes les notifications sont lues
+                    }
                 })
                 .catch(error => console.error('Erreur:', error));
+        });
+
+        // Marquer une notification spécifique comme lue
+        document.querySelectorAll('.notification-link').forEach(function(notification) {
+            notification.addEventListener('click', function() {
+                const notificationId = this.dataset.id;
+                const clickedElement = this; // Référence sauvegardée
+
+                fetch(`/notifications/${notificationId}/mark-read`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+
+                        // Supprimer la notification cliquée
+                        clickedElement.remove();
+
+                        // Décrémenter le badge si nécessaire
+                        const badge = document.querySelector('.badge');
+                        if (badge) {
+                            let unreadCount = parseInt(badge.textContent, 10) || 0;
+                            unreadCount = Math.max(0, unreadCount -
+                            1); // Empêcher un compteur négatif
+                            if (unreadCount > 0) {
+                                badge.textContent = unreadCount;
+                            } else {
+                                badge
+                            .remove(); // Si aucune notification non lue, supprimer le badge
+                            }
+                        }
+
+                        // Mettre à jour le compteur global dans la dropdown
+                        const counter = document.querySelector(
+                            '.dropdown .text-primary-600');
+                        if (counter) {
+                            let unreadCount = parseInt(counter.textContent, 10) || 0;
+                            unreadCount = Math.max(0, unreadCount - 1);
+                            counter.textContent = unreadCount;
+                        }
+
+                        // Vérifier si toutes les notifications ont été lues
+                        const notificationsContainer = document.querySelector(
+                            '.max-h-400-px');
+                        if (!notificationsContainer.querySelector('.notification-link')) {
+                            notificationsContainer.innerHTML =
+                                `<p class="text-center py-12 px-16">Aucune notification</p>`;
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            });
         });
     });
 </script>
