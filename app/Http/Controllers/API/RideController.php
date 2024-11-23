@@ -225,6 +225,7 @@ class RideController extends Controller
             'rides.created_at',
             'rides.updated_at'
         ])->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+        ->join('profiles', 'profiles.user_id', '=', 'users.id')
         ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
         ->selectRaw('
                 CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
