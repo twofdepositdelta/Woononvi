@@ -221,13 +221,16 @@ class RideController extends Controller
             'rides.created_at',
             'rides.updated_at',
             DB::raw('CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), rides.start_location) AS SIGNED) AS distance'),
-            'drivers.name as driver_name',
-            'drivers.phone as driver_phone',
-            'vehicles.model as vehicle_model',
-            'vehicles.license_plate as vehicle_license_plate'
+            'users.firstname as driver_firstname',
+            'users.lastname as driver_lastname',
+            'users.phone as driver_phone',
+            'vehicles.vehicle_mark as vehicle_mark',
+            'vehicles.vehicle_model as vehicle_model',
+            'vehicles.licence_plate as vehicle_licence_plate',
+            'vehicles.color as vehicle_color'
         ])
-        ->join('drivers', 'rides.driver_id', '=', 'drivers.id') // Jointure avec la table des conducteurs
-        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table des véhicules
+        ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), rides.start_location) <= ?', [
             "POINT($request->start_lng $request->start_lat)", 2000
         ])
