@@ -268,6 +268,8 @@ class RideController extends Controller
                 'bookings.updated_at',
                 DB::raw('ST_AsText(rides.start_location) as start_location'),
                 DB::raw('ST_AsText(rides.end_location) as end_location'),
+                'rides.start_location',
+                'rides.end_location',
                 'rides.departure_time',
                 'rides.return_time',
                 'rides.type',
