@@ -29,6 +29,7 @@ class Ride extends Model
         'is_nearby_ride',
         'vehicle_id',
         'status',
+        'total_price',
     ];
 
     protected $casts = [
