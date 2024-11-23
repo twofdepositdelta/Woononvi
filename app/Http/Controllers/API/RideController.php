@@ -254,12 +254,17 @@ class RideController extends Controller
         // Récupération des réservations liées au conducteur
         $pendingBookings = DB::table('bookings')
             ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
+            ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+            ->join('profiles', 'profiles.user_id', '=', 'users.id')
             ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
             ->where('bookings.status', 'pending') // Filtrer par statut 'pending'
             ->select([
                 'bookings.id',
                 'bookings.booking_number',
                 'bookings.seats_reserved',
+                'users.firstname',
+                'users.lastname',
+                DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
                 'bookings.total_price',
                 'bookings.price_maintain',
                 'bookings.commission_rate',
