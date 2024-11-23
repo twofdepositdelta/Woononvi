@@ -37,4 +37,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('rides/store', [RideController::class, 'store'])->name('api.ride.store');
     Route::post('rides/get', [RideController::class, 'getRides'])->name('api.ride.index');
     Route::post('rides/search', [RideController::class, 'searchRides'])->name('api.ride.search');
+    Route::post('rides/booking', [RideController::class, 'bookRide'])->name('api.ride.book');
 });

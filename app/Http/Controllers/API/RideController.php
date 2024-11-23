@@ -180,6 +180,63 @@ class RideController extends Controller
         ], 200);
     }
 
+    public function bookRide(Request $request)
+    {
+        // Validation des données envoyées
+        $validator = Validator::make($request->all(), [
+            'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
+            'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all(),
+            ], 422);
+        }
+
+        // Récupérer le trajet
+        $ride = DB::table('rides')->where('id', $request->ride_id)->first();
+
+        if (!$ride || $ride->available_seats < $request->seats_reserved) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le trajet sélectionné n\'a pas assez de places disponibles.',
+            ], 400);
+        }
+
+        // Calcul du prix total
+        $total_price = $ride->price_per_km * $request->seats_reserved;
+
+        // Génération d'un numéro unique de réservation
+        $booking_number = 'BOOK-' . strtoupper(Str::random(10));
+
+        // Création de la réservation
+        $booking = DB::table('bookings')->insert([
+            'booking_number' => $booking_number,
+            'seats_reserved' => $request->seats_reserved,
+            'total_price' => $total_price,
+            'price_maintain' => $total_price, // Ajoutez une logique ici si nécessaire
+            'commission_rate' => 10, // Exemple de taux de commission, ajustez en fonction de votre application
+            'ride_id' => $request->ride_id,
+            'passenger_id' => $request->passenger_id,
+            'status' => 'pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Mise à jour des places disponibles pour le trajet
+        DB::table('rides')->where('id', $request->ride_id)->decrement('available_seats', $request->seats_reserved);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Réservation effectuée avec succès.',
+            'booking' => $booking,
+        ]);
+    }
+
+
     public function searchRides(Request $request)
     {
         $validator = Validator::make($request->all(), [
