@@ -51,6 +51,64 @@ class RideController extends Controller
         ], 200);
     }
 
+    public function getReservations(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_lat' => 'required|numeric',
+            'start_lng' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $rides = DB::table('rides')->select([
+            'rides.id',
+            'rides.driver_id',
+            'rides.vehicle_id',
+            'users.firstname',
+            'users.lastname',
+            'vehicles.licence_plate',
+            'vehicles.vehicle_mark',
+            'vehicles.vehicle_model',
+            DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'total_price',
+            'is_nearby_ride',
+            'rides.status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'rides.created_at',
+            'rides.updated_at'
+        ])->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+        ->join('profiles', 'profiles.user_id', '=', 'users.id')
+        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
+        ->selectRaw('
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+                ["POINT($request->start_lng $request->start_lat)"]
+            )
+        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
+
+        // Retourner les trajets qui correspondent
+        return response()->json([
+            'success' => true,
+            'rides' => $rides,
+            'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
