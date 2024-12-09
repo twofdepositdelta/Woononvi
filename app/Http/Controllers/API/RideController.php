@@ -20,67 +20,29 @@ use TarfinLabs\LaravelSpatial\Types\Point;
 
 class RideController extends Controller
 {
-    // public function getRides(Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $data = DB::table('rides')->whereDriverId($user->id)->select([
-    //         'id',
-    //         'driver_id',
-    //         'vehicle_id',
-    //         'days',
-    //         'type',
-    //         'departure_time',
-    //         'return_time',
-    //         'price_per_km',
-    //         'is_nearby_ride',
-    //         'status',
-    //         'start_location_name',
-    //         'end_location_name',
-    //         DB::raw('ST_AsText(start_location) as start_location'),
-    //         DB::raw('ST_AsText(end_location) as end_location'),
-    //         'available_seats',
-    //         'created_at',
-    //         'updated_at'
-    //     ])->get();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $data,
-    //     ], 200);
-    // }
-
     public function getRides(Request $request)
     {
         $user = Auth::user();
-
-        $data = DB::table('rides')
-            ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table des véhicules
-            ->where('rides.driver_id', $user->id)
-            ->select([
-                'rides.id',
-                'rides.driver_id',
-                'rides.vehicle_id',
-                'rides.days',
-                'rides.type',
-                'rides.departure_time',
-                'rides.return_time',
-                'rides.price_per_km',
-                'rides.is_nearby_ride',
-                'rides.status',
-                'rides.start_location_name',
-                'rides.end_location_name',
-                DB::raw('ST_AsText(rides.start_location) as start_location'),
-                DB::raw('ST_AsText(rides.end_location) as end_location'),
-                'rides.available_seats',
-                'rides.created_at',
-                'rides.updated_at',
-                // 'vehicles.make', 
-                'model',
-                'year',
-                'license_plate',
-                'color'
-            ])
-            ->get();
+        $data = DB::table('rides')->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
+            ->whereDriverId($user->id)->select([
+            'id',
+            'driver_id',
+            'vehicle_id',
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'is_nearby_ride',
+            'status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'created_at',
+            'updated_at'
+        ])->get();
 
         return response()->json([
             'success' => true,
