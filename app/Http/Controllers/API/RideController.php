@@ -52,83 +52,83 @@ class RideController extends Controller
     }
 
     public function getReservations(Request $request)
-{
-    // Validation des données
-    $validator = Validator::make($request->all(), [
-        'start_lat' => 'required|numeric', // Latitude de la position actuelle du passager
-        'start_lng' => 'required|numeric', // Longitude de la position actuelle du passager
-        'radius' => 'nullable|integer|min:1', // Rayon de recherche en mètres (optionnel)
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Les données envoyées ne sont pas valides.',
-            'errors' => $validator->errors()->all()
-        ], 422);
-    }
-
-    // Récupérer les coordonnées du passager
-    $startLat = $request->start_lat;
-    $startLng = $request->start_lng;
-    $radius = $request->radius ?? 2000; // Par défaut, recherche dans un rayon de 2000 mètres
-
-    // Requête pour récupérer les trajets disponibles
-    $rides = DB::table('rides')
-        ->join('users', 'rides.driver_id', '=', 'users.id') // Associer avec les conducteurs
-        ->join('profiles', 'profiles.user_id', '=', 'users.id') // Associer avec les profils
-        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Associer avec les véhicules
-        ->select([
-            'rides.id',
-            'rides.driver_id',
-            'rides.vehicle_id',
-            'users.firstname',
-            'users.lastname',
-            'vehicles.licence_plate',
-            'vehicles.vehicle_mark',
-            'vehicles.vehicle_model',
-            DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
-            'rides.days',
-            'rides.type',
-            'rides.departure_time',
-            'rides.return_time',
-            'rides.price_per_km',
-            'rides.total_price',
-            'rides.is_nearby_ride',
-            'rides.status',
-            'rides.start_location_name',
-            'rides.end_location_name',
-            DB::raw('ST_AsText(rides.start_location) as start_location'),
-            DB::raw('ST_AsText(rides.end_location) as end_location'),
-            'rides.available_seats',
-            'rides.created_at',
-            'rides.updated_at',
-            DB::raw('
-                CAST(ST_Distance_Sphere(
+    {
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'start_lat' => 'required|numeric', // Latitude de la position actuelle du passager
+            'start_lng' => 'required|numeric', // Longitude de la position actuelle du passager
+            'radius' => 'nullable|integer|min:1', // Rayon de recherche en mètres (optionnel)
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les données envoyées ne sont pas valides.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+    
+        // Récupérer les coordonnées du passager
+        $startLat = $request->start_lat;
+        $startLng = $request->start_lng;
+        $radius = $request->radius ?? 2000; // Par défaut, recherche dans un rayon de 2000 mètres
+    
+        // Requête pour récupérer les trajets disponibles
+        $rides = DB::table('rides')
+            ->join('users', 'rides.driver_id', '=', 'users.id') // Associer avec les conducteurs
+            ->join('profiles', 'profiles.user_id', '=', 'users.id') // Associer avec les profils
+            ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Associer avec les véhicules
+            ->select([
+                'rides.id',
+                'rides.driver_id',
+                'rides.vehicle_id',
+                'users.firstname',
+                'users.lastname',
+                'vehicles.licence_plate',
+                'vehicles.vehicle_mark',
+                'vehicles.vehicle_model',
+                DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
+                'rides.days',
+                'rides.type',
+                'rides.departure_time',
+                'rides.return_time',
+                'rides.price_per_km',
+                'rides.total_price',
+                'rides.is_nearby_ride',
+                'rides.status',
+                'rides.start_location_name',
+                'rides.end_location_name',
+                DB::raw('ST_AsText(rides.start_location) as start_location'),
+                DB::raw('ST_AsText(rides.end_location) as end_location'),
+                'rides.available_seats',
+                'rides.created_at',
+                'rides.updated_at',
+                DB::raw('
+                    CAST(ST_Distance_Sphere(
+                        ST_GeomFromText(CONCAT("POINT(", ?, " ", ?, ")"), 4326), 
+                        rides.start_location
+                    ) AS SIGNED) AS distance
+                '),
+            ])
+            ->whereRaw(
+                'ST_Distance_Sphere(
                     ST_GeomFromText(CONCAT("POINT(", ?, " ", ?, ")"), 4326), 
                     rides.start_location
-                ) AS SIGNED) AS distance
-            '),
-        ])
-        ->setBindings([$startLng, $startLat, $startLng, $startLat, $radius]) // Assigner les valeurs dynamiques
-        ->whereRaw('
-            ST_Distance_Sphere(
-                ST_GeomFromText(CONCAT("POINT(", ?, " ", ?, ")"), 4326), 
-                rides.start_location
-            ) <= ?', 
-            [$startLng, $startLat, $radius]
-        ) // Filtrer par distance
-        ->where('rides.status', 'active') // Filtrer les trajets actifs
-        ->where('rides.available_seats', '>', 0) // Filtrer les trajets avec des places disponibles
-        ->get();
-
-    // Retourner les trajets qui correspondent
-    return response()->json([
-        'success' => true,
-        'rides' => $rides,
-        'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
-    ]);
-}
+                ) <= ?', 
+                [$startLng, $startLat, $radius]
+            ) // Filtrer par distance
+            ->where('rides.status', 'active') // Filtrer les trajets actifs
+            ->where('rides.available_seats', '>', 0) // Filtrer les trajets avec des places disponibles
+            ->get();
+    
+        // Retourner les trajets qui correspondent
+        return response()->json([
+            'success' => true,
+            'rides' => $rides,
+            'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+        ]);
+    }
+    
 
 
     /**
