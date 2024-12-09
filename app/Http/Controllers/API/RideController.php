@@ -69,8 +69,8 @@ class RideController extends Controller
     }
 
     // Récupérer les coordonnées du passager
-    $startLat = 9.3405; //$request->start_lat;
-    $startLng = 2.6217; //$request->start_lng;
+    $startLat = '9.3405'; //$request->start_lat;
+    $startLng = '2.6217'; //$request->start_lng;
     $radius = $request->radius ?? 2000; // Par défaut, recherche dans un rayon de 2000 mètres
 
     // Requête pour récupérer les trajets disponibles
