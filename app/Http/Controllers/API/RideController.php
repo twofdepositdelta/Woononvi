@@ -397,7 +397,7 @@ class RideController extends Controller
         ];  
 
         // Transformation des données pour traduire les statuts
-        $ridesTransformed = $rides->map(function ($ride) use ($statusMap) {
+        $ridesTransformed = $passengerBookings->map(function ($ride) use ($statusMap) {
             $ride->bookings = $ride->bookings->map(function ($booking) use ($statusMap) {
                 $booking->status_translated = $statusMap[$booking->status] ?? $booking->status; // Traduction ou valeur originale
                 return $booking;
