@@ -26,7 +26,7 @@ class RideController extends Controller
         $data = DB::table('rides')->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
             ->whereDriverId($user->id)->select([
             'rides.id',
-            'rides.driver_id',
+            // 'rides.driver_id',
             'vehicle_id',
             'days',
             'type',
