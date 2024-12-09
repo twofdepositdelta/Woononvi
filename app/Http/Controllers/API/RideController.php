@@ -96,10 +96,10 @@ class RideController extends Controller
         ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
         ->selectRaw('
                 CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
-                ["POINT($request->start_lng $request->start_lat)"]
+                ["POINT(2.6217 9.3405)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
+        ["POINT(2.6217 9.3405)", 2000])->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
