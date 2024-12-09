@@ -268,10 +268,15 @@ class RideController extends Controller
         }
 
         // Calcul du prix total
-        $total_price = $ride->price_per_km * $request->seats_reserved;
+        $total_price = $ride->total_price;
 
         // Génération d'un numéro unique de réservation
         $booking_number = 'BOOK-' . strtoupper(Str::random(10));
+
+        $commissionRate = DB::table('settings')
+            ->where('key', 'commission_rate')
+            ->value('value'); // Récupère uniquement la colonne "value" pour `commission_rate`
+
 
         // Création de la réservation
         $booking = DB::table('bookings')->insert([
@@ -279,7 +284,7 @@ class RideController extends Controller
             'seats_reserved' => $request->seats_reserved,
             'total_price' => $total_price,
             'price_maintain' => $total_price, // Ajoutez une logique ici si nécessaire
-            'commission_rate' => 10, // Exemple de taux de commission, ajustez en fonction de votre application
+            'commission_rate' => $commissionRate,
             'ride_id' => $request->ride_id,
             'passenger_id' => $request->user()->id,
             'status' => 'pending',
@@ -350,6 +355,44 @@ class RideController extends Controller
         ]);
     }
 
+    public function getPassengerBookings(Request $request)
+    {
+        // Récupération des réservations liées au passager
+        $passengerBookings = DB::table('bookings')
+            ->select([
+                'bookings.id',
+                'bookings.booking_number',
+                'bookings.seats_reserved',
+                DB::raw("CONCAT(users.firstname, ' ', users.lastname) as driver_name"),
+                DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as driver_avatar"),
+                'bookings.total_price',
+                'bookings.price_maintain',
+                'bookings.commission_rate',
+                'bookings.status',
+                'bookings.created_at',
+                'bookings.updated_at',
+                DB::raw('ST_AsText(rides.start_location) as start_location'),
+                DB::raw('ST_AsText(rides.end_location) as end_location'),
+                'rides.start_location_name',
+                'rides.end_location_name',
+                'rides.departure_time',
+                'rides.return_time',
+                'rides.type',
+                'rides.price_per_km',
+            ])
+            ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
+            ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+            ->join('profiles', 'profiles.user_id', '=', 'users.id') // Jointure avec les profils des conducteurs
+            ->where('bookings.passenger_id', $request->user()->id) // Filtrer par passager connecté
+            ->get();
+
+        // Retourner les données au client
+        return response()->json([
+            'success' => true,
+            'message' => count($passengerBookings) > 0 ? 'Réservations trouvées.' : 'Aucune réservation trouvée.',
+            'bookings' => $passengerBookings,
+        ]);
+    }
 
     public function searchRides(Request $request)
     {
