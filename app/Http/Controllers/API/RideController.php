@@ -386,30 +386,11 @@ class RideController extends Controller
             ->where('bookings.passenger_id', $request->user()->id) // Filtrer par passager connecté
             ->get();
 
-        // Mappage des statuts de réservation
-        $statusMap = [
-            'pending' => 'En cours',
-            'accepted' => 'Accepté',
-            'rejected' => 'Rejeté',
-            'completed' => 'Terminé',
-            'refunded' => 'Remboursé',
-            'cancelled' => 'Annulé',
-        ];  
-
-        // Transformation des données pour traduire les statuts
-        $ridesTransformed = $passengerBookings->map(function ($ride) use ($statusMap) {
-            $ride->bookings = $ride->bookings->map(function ($booking) use ($statusMap) {
-                $booking->status_translated = $statusMap[$booking->status] ?? $booking->status; // Traduction ou valeur originale
-                return $booking;
-            });
-            return $ride;
-        });
-
         // Retourner les données au client
         return response()->json([
             'success' => true,
-            'message' => count($ridesTransformed) > 0 ? 'Réservations trouvées.' : 'Aucune réservation trouvée.',
-            'bookings' => $ridesTransformed,
+            'message' => count($passengerBookings) > 0 ? 'Réservations trouvées.' : 'Aucune réservation trouvée.',
+            'bookings' => $passengerBookings,
         ]);
     }
 
