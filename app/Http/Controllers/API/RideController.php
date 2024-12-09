@@ -28,6 +28,7 @@ class RideController extends Controller
             'rides.id',
             'rides.driver_id',
             'vehicle_id',
+            'licence_plate',
             'days',
             'type',
             'departure_time',
