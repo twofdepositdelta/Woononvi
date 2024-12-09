@@ -75,10 +75,10 @@ class RideController extends Controller
                 'rides.created_at',
                 'rides.updated_at',
                 // 'vehicles.make', 
-                'vehicles.model',
-                'vehicles.year',
-                'vehicles.license_plate',
-                'vehicles.color'
+                'model',
+                'year',
+                'license_plate',
+                'color'
             ])
             ->get();
 
