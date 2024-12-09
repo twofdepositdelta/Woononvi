@@ -74,7 +74,7 @@ class RideController extends Controller
                 'rides.available_seats',
                 'rides.created_at',
                 'rides.updated_at',
-                'vehicles.make', // Exemple de colonnes des véhicules
+                // 'vehicles.make', 
                 'vehicles.model',
                 'vehicles.year',
                 'vehicles.license_plate',
