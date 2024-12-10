@@ -357,6 +357,15 @@ class RideController extends Controller
 
     public function getPassengerBookings(Request $request)
     {
+        $statusNames = [
+            'pending' => 'En cours',
+            'accepted' => 'Acceptée',
+            'rejected' => 'Rejetée',
+            'completed' => 'Terminée',
+            'refunded' => 'Remboursée',
+            'cancelled' => 'Annulée',
+        ];
+        
         // Récupération des réservations liées au passager
         $passengerBookings = DB::table('bookings')
             ->select([
@@ -384,7 +393,12 @@ class RideController extends Controller
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
             ->join('profiles', 'profiles.user_id', '=', 'users.id') // Jointure avec les profils des conducteurs
             ->where('bookings.passenger_id', $request->user()->id) // Filtrer par passager connecté
-            ->get();
+            ->get()
+            ->map(function ($booking) use ($statusNames) {
+                // Ajouter le nom du statut à chaque réservation
+                $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
+                return $booking;
+            });
 
         // Retourner les données au client
         return response()->json([
