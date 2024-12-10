@@ -373,7 +373,7 @@ class RideController extends Controller
                 'bookings.booking_number',
                 'bookings.seats_reserved',
                 DB::raw("CONCAT(users.firstname, ' ', users.lastname) as driver_name"),
-                DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as driver_avatar"),
+                DB::raw("CONCAT('" . asset() . "/', profiles.avatar) as driver_avatar"),
                 'bookings.total_price',
                 'bookings.price_maintain',
                 'bookings.commission_rate',
@@ -388,7 +388,6 @@ class RideController extends Controller
                 'rides.return_time',
                 'rides.type',
                 'rides.price_per_km',
-                'rides.created_at'
             ])
             ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
