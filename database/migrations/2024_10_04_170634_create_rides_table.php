@@ -31,7 +31,7 @@ return new class extends Migration
             $table->double('price_per_km');
             $table->double('total_price');
             $table->boolean('is_nearby_ride')->default(false);
-            $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('pending');
+            $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend', 'in progress'])->default('pending');
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

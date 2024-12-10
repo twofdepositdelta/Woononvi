@@ -294,7 +294,7 @@ class RideController extends Controller
         ]);
 
         // Mise à jour des places disponibles pour le trajet
-        DB::table('rides')->where('id', $request->ride_id)->decrement('available_seats', $request->seats_reserved);
+        // DB::table('rides')->where('id', $request->ride_id)->decrement('available_seats', $request->seats_reserved);
 
         return response()->json([
             'success' => true,
@@ -303,7 +303,7 @@ class RideController extends Controller
         ]);
     }
 
-    public function getDriverPendingBookings(Request $request)
+    public function getDriverBookings(Request $request)
     {
         //Validation des données d'entrée
         $validator = Validator::make($request->all(), [
@@ -346,7 +346,7 @@ class RideController extends Controller
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
             ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
-            ->where('bookings.status', 'pending') // Filtrer par statut 'pending'
+            ->where('bookings.status', $request->status) // Filtrer par statut 'pending'
             ->get();
 
         return response()->json([
@@ -359,7 +359,8 @@ class RideController extends Controller
     public function getPassengerBookings(Request $request)
     {
         $statusNames = [
-            'pending' => 'En cours',
+            'pending' => 'En attente',
+            'in progress' => 'En cours',
             'accepted' => 'Acceptée',
             'rejected' => 'Rejetée',
             'completed' => 'Terminée',
