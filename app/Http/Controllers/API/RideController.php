@@ -555,7 +555,6 @@ class RideController extends Controller
         //     ], 400);
         // }
 
-        // Mise à jour du statut
         $booking->status = $request->status;
 
         if ($request->status === 'accepted') {
@@ -565,7 +564,7 @@ class RideController extends Controller
         } elseif ($request->status === 'in progress') {
             $booking->in_progress_at = now();
         } elseif ($request->status === 'cancelled') {
-            $booking->in_cancelled_at = now();
+            $booking->cancelled_at = now();
         }
 
         $booking->save();
