@@ -526,7 +526,7 @@ class RideController extends Controller
         // Validation des données
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
-            'status' => 'required|in:accepted,rejected,completed,suspended', // Statut accepté uniquement : 'accepted' ou 'rejected'
+            'status' => 'required|in:accepted,rejected,completed,suspended,in progress', // Statut accepté uniquement : 'accepted' ou 'rejected'
         ]);
 
         if ($validator->fails()) {
@@ -548,12 +548,12 @@ class RideController extends Controller
         }
 
         // Vérification du statut actuel
-        if ($booking->status !== 'pending') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Seules les réservations en attente peuvent être modifiées.',
-            ], 400);
-        }
+        // if ($booking->status !== 'pending') {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Seules les réservations en attente peuvent être modifiées.',
+        //     ], 400);
+        // }
 
         // Mise à jour du statut
         $booking->status = $request->status;
@@ -563,7 +563,7 @@ class RideController extends Controller
         } elseif ($request->status === 'rejected') {
             $booking->rejected_at = now();
         } elseif ($request->status === 'in progress') {
-            $booking->rejected_at = now();
+            $booking->in_progress_at = now();
         }
 
         $booking->save();
