@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TarfinLabs\LaravelSpatial\Types\Point;
+use Carbon\Carbon;
 
 class RideController extends Controller
 {
@@ -397,6 +398,15 @@ class RideController extends Controller
             ->map(function ($booking) use ($statusNames) {
                 // Ajouter le nom du statut à chaque réservation
                 $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
+
+                // Formater departure_time et return_time
+                $booking->departure_time = $booking->departure_time 
+                    ? Carbon::parse($booking->departure_time)->format('H:i') 
+                    : null;
+                $booking->return_time = $booking->return_time 
+                    ? Carbon::parse($booking->return_time)->format('H:i') 
+                    : null;
+
                 return $booking;
             });
 
