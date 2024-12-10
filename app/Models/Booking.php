@@ -22,7 +22,8 @@ class Booking extends Model
         'refunded_at',
         'cancelled_at',
         'is_by_passenger',
-        'is_by_driver'
+        'is_by_driver',
+        'in_progress_at'
     ];
 
     public function ride()

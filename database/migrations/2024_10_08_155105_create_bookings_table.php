@@ -21,11 +21,12 @@ return new class extends Migration
             $table->integer('commission_rate');
             $table->foreignIdFor(Ride::class);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed', 'refunded', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'in progress', 'accepted', 'rejected', 'completed', 'refunded', 'cancelled'])->default('pending');
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
+            $table->timestamp('in_progress_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();
             $table->timestamp('validated_by_driver_at')->nullable();
             $table->timestamp('refunded_at')->nullable();
