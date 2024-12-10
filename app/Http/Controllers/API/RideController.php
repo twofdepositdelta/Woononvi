@@ -388,6 +388,7 @@ class RideController extends Controller
                 'rides.return_time',
                 'rides.type',
                 'rides.price_per_km',
+                'rides.created_at'
             ])
             ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
@@ -400,7 +401,6 @@ class RideController extends Controller
                 return $booking;
             });
 
-        // Retourner les données au client
         return response()->json([
             'success' => true,
             'message' => count($passengerBookings) > 0 ? 'Réservations trouvées.' : 'Aucune réservation trouvée.',
