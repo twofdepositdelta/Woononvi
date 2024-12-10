@@ -526,7 +526,7 @@ class RideController extends Controller
         // Validation des données
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
-            'status' => 'required|in:accepted,rejected,completed,suspended,in progress', // Statut accepté uniquement : 'accepted' ou 'rejected'
+            'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled', // Statut accepté uniquement : 'accepted' ou 'rejected'
         ]);
 
         if ($validator->fails()) {
@@ -564,6 +564,8 @@ class RideController extends Controller
             $booking->rejected_at = now();
         } elseif ($request->status === 'in progress') {
             $booking->in_progress_at = now();
+        } elseif ($request->status === 'cancelled') {
+            $booking->in_cancelled_at = now();
         }
 
         $booking->save();
