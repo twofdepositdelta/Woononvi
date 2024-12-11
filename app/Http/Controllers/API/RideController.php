@@ -480,50 +480,8 @@ class RideController extends Controller
     /**
      * Cherche des trajets disponibles basés sur la recherche.
      */
-    private function findAvailableRides(Request $request)
-    {
-        return DB::table('rides')->select([
-            'rides.id',
-            'rides.driver_id',
-            'rides.vehicle_id',
-            'users.firstname',
-            'users.lastname',
-            'vehicles.licence_plate',
-            'vehicles.vehicle_mark',
-            'vehicles.vehicle_model',
-            DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
-            'days',
-            'type',
-            'departure_time',
-            'return_time',
-            'price_per_km',
-            'total_price',
-            'is_nearby_ride',
-            'rides.status',
-            'start_location_name',
-            'end_location_name',
-            DB::raw('ST_AsText(start_location) as start_location'),
-            DB::raw('ST_AsText(end_location) as end_location'),
-            'available_seats',
-            'rides.created_at',
-            'rides.updated_at',
-        ])
-        ->join('users', 'rides.driver_id', '=', 'users.id')
-        ->join('profiles', 'profiles.user_id', '=', 'users.id')
-        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
-        ->selectRaw('
-                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
-                ["POINT($request->start_lng $request->start_lat)"]
-            )
-        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-            ["POINT($request->start_lng $request->start_lat)", 2000])
-        ->get();
-    }
     // private function findAvailableRides(Request $request)
     // {
-    //     Carbon::setLocale('fr'); // Configure la locale de Carbon en français
-    //     $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
-
     //     return DB::table('rides')->select([
     //         'rides.id',
     //         'rides.driver_id',
@@ -559,19 +517,62 @@ class RideController extends Controller
     //         )
     //     ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
     //         ["POINT($request->start_lng $request->start_lat)", 2000])
-    //     ->where(function ($query) use ($currentDay) {
-    //         $query->where(function ($subQuery) {
-    //             $subQuery->where('type', 'single')
-    //                     ->where('rides.status', 'active');
-    //         })
-    //         ->orWhere(function ($subQuery) use ($currentDay) {
-    //             $subQuery->where('type', 'regular')
-    //                     ->where('rides.status', 'active')
-    //                     ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
-    //         });
-    //     })
     //     ->get();
     // }
+    private function findAvailableRides(Request $request)
+    {
+        Carbon::setLocale('fr'); // Configure la locale de Carbon en français
+        $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
+        return $currentDay;
+
+        return DB::table('rides')->select([
+            'rides.id',
+            'rides.driver_id',
+            'rides.vehicle_id',
+            'users.firstname',
+            'users.lastname',
+            'vehicles.licence_plate',
+            'vehicles.vehicle_mark',
+            'vehicles.vehicle_model',
+            DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
+            'days',
+            'type',
+            'departure_time',
+            'return_time',
+            'price_per_km',
+            'total_price',
+            'is_nearby_ride',
+            'rides.status',
+            'start_location_name',
+            'end_location_name',
+            DB::raw('ST_AsText(start_location) as start_location'),
+            DB::raw('ST_AsText(end_location) as end_location'),
+            'available_seats',
+            'rides.created_at',
+            'rides.updated_at',
+        ])
+        ->join('users', 'rides.driver_id', '=', 'users.id')
+        ->join('profiles', 'profiles.user_id', '=', 'users.id')
+        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
+        ->selectRaw('
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+                ["POINT($request->start_lng $request->start_lat)"]
+            )
+        ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
+            ["POINT($request->start_lng $request->start_lat)", 2000])
+        ->where(function ($query) use ($currentDay) {
+            $query->where(function ($subQuery) {
+                $subQuery->where('type', 'single')
+                        ->where('rides.status', 'active');
+            })
+            ->orWhere(function ($subQuery) use ($currentDay) {
+                $subQuery->where('type', 'regular')
+                        ->where('rides.status', 'active')
+                        ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
+            });
+        })
+        ->get();
+    }
 
 
     /**
