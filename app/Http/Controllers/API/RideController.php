@@ -522,7 +522,7 @@ class RideController extends Controller
     private function findAvailableRides(Request $request)
     {
         Carbon::setLocale('fr'); // Configure la locale de Carbon en français
-        $currentDay = now()->translatedFormat('l'); // Obtenir le jour actuel en français
+        $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
 
         return DB::table('rides')->select([
             'rides.id',
