@@ -439,7 +439,93 @@ class RideController extends Controller
             ], 422);
         }
 
-        $rides = DB::table('rides')->select([
+        // Enregistrer la recherche
+        $this->storeRideSearch($request);
+
+        // Chercher des trajets
+        $rides = $this->findAvailableRides($request);
+
+        if ($rides->isEmpty()) {
+            // Créer une demande si aucun trajet n'est trouvé
+            $this->createRideRequest($request);
+    
+            return response()->json([
+                'success' => false,
+                'rides' => [],
+                'message' => 'Aucun trajet disponible trouvé. Une demande a été créée.',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'rides' => $rides,
+            'message' => 'Trajets disponibles trouvés.',
+        ]);
+
+
+        // $rides = DB::table('rides')->select([
+        //     'rides.id',
+        //     'rides.driver_id',
+        //     'rides.vehicle_id',
+        //     'users.firstname',
+        //     'users.lastname',
+        //     'vehicles.licence_plate',
+        //     'vehicles.vehicle_mark',
+        //     'vehicles.vehicle_model',
+        //     DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
+        //     'days',
+        //     'type',
+        //     'departure_time',
+        //     'return_time',
+        //     'price_per_km',
+        //     'total_price',
+        //     'is_nearby_ride',
+        //     'rides.status',
+        //     'start_location_name',
+        //     'end_location_name',
+        //     DB::raw('ST_AsText(start_location) as start_location'),
+        //     DB::raw('ST_AsText(end_location) as end_location'),
+        //     'available_seats',
+        //     'rides.created_at',
+        //     'rides.updated_at'
+        // ])->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+        // ->join('profiles', 'profiles.user_id', '=', 'users.id')
+        // ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
+        // ->selectRaw('
+        //         CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+        //         ["POINT($request->start_lng $request->start_lat)"]
+        //     )
+        // ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
+        // ["POINT($request->start_lng $request->start_lat)", 2000])->get();
+
+        // // Retourner les trajets qui correspondent
+        // return response()->json([
+        //     'success' => true,
+        //     'rides' => $rides,
+        //     'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+        // ]);
+    }
+
+    /**
+     * Enregistre les données de la recherche dans la table ride_searches.
+     */
+    private function storeRideSearch(Request $request)
+    {
+        DB::table('ride_searches')->insert([
+            'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})', 4326)"),
+            'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})', 4326)"),
+            'passenger_id' => $request->user()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    /**
+     * Cherche des trajets disponibles basés sur la recherche.
+     */
+    private function findAvailableRides(Request $request)
+    {
+        return DB::table('rides')->select([
             'rides.id',
             'rides.driver_id',
             'rides.vehicle_id',
@@ -463,22 +549,39 @@ class RideController extends Controller
             DB::raw('ST_AsText(end_location) as end_location'),
             'available_seats',
             'rides.created_at',
-            'rides.updated_at'
-        ])->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+            'rides.updated_at',
+        ])
+        ->join('users', 'rides.driver_id', '=', 'users.id')
         ->join('profiles', 'profiles.user_id', '=', 'users.id')
-        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id') // Jointure avec la table `vehicles`
+        ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
         ->selectRaw('
                 CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
                 ["POINT($request->start_lng $request->start_lat)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT($request->start_lng $request->start_lat)", 2000])->get();
+            ["POINT($request->start_lng $request->start_lat)", 2000])
+        ->get();
+    }
 
-        // Retourner les trajets qui correspondent
-        return response()->json([
-            'success' => true,
-            'rides' => $rides,
-            'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
+    /**
+     * Crée une demande dans la table ride_requests si aucun trajet n'est trouvé.
+     */
+    private function createRideRequest(Request $request)
+    {
+        DB::table('ride_requests')->insert([
+            'start_location_name' => $request->start_location_name,
+            'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})', 4326)"),
+            'end_location_name' => $request->end_location_name,
+            'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})', 4326)"),
+            'seats' => $request->seats ?? 1,
+            'preferred_time' => now(),
+            'preferred_amount' => $request->preferred_amount ?? 0,
+            'commission_rate' => 10, // Exemple de taux de commission par défaut
+            'status' => 'pending',
+            'is_by_passenger' => true,
+            'passenger_id' => $request->user()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
