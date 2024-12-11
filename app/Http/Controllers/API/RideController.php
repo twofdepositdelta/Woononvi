@@ -238,6 +238,27 @@ class RideController extends Controller
             ], 422);
         }
 
+        $countryId = Auth::user()->country_id;
+        if (!$countryId) {
+            // Loguer l'erreur
+            logger()->error('Le conducteur n\'a pas de pays associé.', ['user_id' => $user->id]);
+            return response()->json(['message' => 'Pays non valide pour ce conducteur.'], 422);
+        }
+
+        if (!$this->isWithinCountry($request->start_lat, $request->start_lng, $countryId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les coordonnées de départ ne sont pas dans le pays du conducteur.',
+            ], 422);
+        }
+
+        if (!$this->isWithinCountry($request->end_lat, $request->end_lng, $countryId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Les coordonnées d\'arrivée ne sont pas dans le pays du conducteur.',
+            ], 422);
+        }
+
         // Récupérer la valeur du paramètre 'suggested_price_per_km' dans la table settings
         $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
 
@@ -305,21 +326,6 @@ class RideController extends Controller
                 'success' => false,
                 'message' => 'Vous devez avoir un véhicule actif pour créer un trajet.',
             ], 403);
-        }
-
-        // Vérifier si les localisations se trouvent au Bénin
-        if (!$this->isWithinBenin($request->start_lat, $request->start_lng)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Les coordonnées de départ doivent être situées au Bénin.',
-            ], 422);
-        }
-
-        if (!$this->isWithinBenin($request->end_lat, $request->end_lng)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Les coordonnées d\'arrivée doivent être situées au Bénin.',
-            ], 422);
         }
 
         $type = ($request->type == "Régulier" ? 'regular' : 'single');
@@ -752,6 +758,30 @@ class RideController extends Controller
         return $numeroRide;
     }
 
+    public function isWithinCountry(float $latitude, float $longitude, int $countryId): bool
+    {
+        // Récupérer le pays du conducteur
+        $country = Country::find($countryId);
+
+        // Vérifier si le pays existe
+        if (!$country) {
+            return false; // Retourner false si le pays n'est pas trouvé
+        }
+
+        // Si le pays est le Bénin
+        if ($country->name === 'Bénin') {
+            return $this->isWithinBenin($latitude, $longitude);
+        }
+
+        // Si le pays est le Togo
+        if ($country->name === 'Togo') {
+            return $this->isWithinTogo($latitude, $longitude);
+        }
+
+        // Retourner false si le pays n'est ni Bénin ni Togo
+        return false;
+    }
+
     private function isWithinBenin(float $latitude, float $longitude): bool
     {
         $beninBounds = [
@@ -763,6 +793,19 @@ class RideController extends Controller
     
         return $latitude >= $beninBounds['min_lat'] && $latitude <= $beninBounds['max_lat']
             && $longitude >= $beninBounds['min_lng'] && $longitude <= $beninBounds['max_lng'];
+    }
+
+    private function isWithinTogo(float $latitude, float $longitude): bool
+    {
+        $togoBounds = [
+            'min_lat' => 6.122,  // Latitude minimale approximative du Togo
+            'max_lat' => 11.130, // Latitude maximale approximative du Togo
+            'min_lng' => 0.748,  // Longitude minimale approximative du Togo
+            'max_lng' => 1.673,  // Longitude maximale approximative du Togo
+        ];
+
+        return $latitude >= $togoBounds['min_lat'] && $latitude <= $togoBounds['max_lat']
+            && $longitude >= $togoBounds['min_lng'] && $longitude <= $togoBounds['max_lng'];
     }
 
     /**
