@@ -62,8 +62,8 @@ class SettingsSeeder extends Seeder
             ],
 
             [
-                'key' => 'suggested_price',
-                'value' => '50', // La monnaie utilisée
+                'key' => 'suggested_price_per_km',
+                'value' => '50',
                 'description' => 'Prix recommandé pour les trajets.',
             ],
 
