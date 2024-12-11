@@ -113,6 +113,104 @@ class RideController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     // Validation des données
+    //     $validator = Validator::make($request->all(), [
+    //         'type' => 'required|in:Régulier,Ponctuel',
+    //         'start_lat' => 'required|numeric',
+    //         'start_location_name' => 'required|string',
+    //         'end_location_name' => 'required|string',
+    //         'start_lng' => 'required|numeric',
+    //         'end_lat' => 'required|numeric',
+    //         'end_lng' => 'required|numeric',
+    //         'departure_time' => 'required|date',
+    //         'return_time' => 'required',
+    //         'is_nearby_ride' => 'required|boolean',
+    //         'total_price' => 'required',
+    //         'seats' => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Les données envoyées ne sont pas valides.',
+    //             'errors' => $validator->errors()->all()
+    //         ], 422);
+    //     }
+
+    //     $days = $request->input('days');
+    //     if (!$days) {
+    //         return response()->json(['message' => 'Les jours ne sont pas définis ou invalides.'], 422);
+    //     }
+
+    //     // Log or inspect the data
+    //     // logger(json_encode($days));
+
+    //     // Vérifier si le conducteur a un véhicule actif
+    //     $driver = Auth::user();
+    //     $activeVehicle = $driver->vehicles()->where('is_active', true)->first();
+
+    //     if (!$activeVehicle) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Vous devez avoir un véhicule actif pour créer un trajet.',
+    //         ], 403);
+    //     }
+
+    //     // Vérifier si les localisations se trouvent au Bénin
+    //     if (!$this->isWithinBenin($request->start_lat, $request->start_lng)) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Les coordonnées de départ doivent être situées au Bénin.',
+    //         ], 422);
+    //     }
+
+    //     if (!$this->isWithinBenin($request->end_lat, $request->end_lng)) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Les coordonnées d\'arrivée doivent être situées au Bénin.',
+    //         ], 422);
+    //     }
+
+    //     $request->type = ($request->type == "Régulier" ? 'regular' : 'single');
+
+    //     $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
+    //     $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
+
+    //     // Si les jours sont fournis, les convertir en chaîne JSON
+    //     $daysJson = $request->days ? json_encode($request->days) : null;
+
+    //     $numeroRide = $this->generateUniqueRideNumber();
+
+    //     // Enregistrement du trajet dans la base de données
+    //     $ride = Ride::create([
+    //         'numero_ride' => $numeroRide,
+    //         'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
+    //         'vehicle_id' => $activeVehicle->id, 
+    //         'type' => $request->type,
+    //         'days' => $daysJson,
+    //         'departure_time' => $request->departure_time,
+    //         'return_time' => $request->return_time,
+    //         'price_per_km' => 100,
+    //         'is_nearby_ride' => $request->is_nearby_ride,
+    //         'status' => 'active', 
+    //         'start_location_name' => $request->start_location_name,  
+    //         'end_location_name' => $request->end_location_name,  
+    //         'start_location' => $startLocation,  // Coordonnées de départ
+    //         'end_location' => $endLocation,      // Coordonnées d'arrivée
+    //         'total_price' => $request->total_price,  
+    //         'status' => 'active',
+    //         'available_seats' => $request->seats
+    //     ]);
+
+    //     // Retourner une réponse avec succès
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Le trajet a été créé avec succès.',
+    //         'ride' => $ride,
+    //     ], 201);
+    // }
     public function store(Request $request)
     {
         // Validation des données
@@ -129,6 +227,7 @@ class RideController extends Controller
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
             'seats' => 'required',
+            'days' => 'nullable|array', // Ajout de la validation pour les jours
         ]);
 
         if ($validator->fails()) {
@@ -140,12 +239,45 @@ class RideController extends Controller
         }
 
         $days = $request->input('days');
-        if (!$days) {
-            return response()->json(['message' => 'Les jours ne sont pas définis ou invalides.'], 422);
-        }
+        if ($request->type === 'Régulier') {
+            // Vérifier que les jours sont fournis
+            if (!$days || !is_array($days)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Les jours doivent être définis pour un trajet régulier.',
+                ], 422);
+            }
 
-        // Log or inspect the data
-        // logger(json_encode($days));
+            // Correspondance des abréviations des jours avec les jours complets
+            $dayMapping = [
+                'Lun' => 'Lundi',
+                'Mar' => 'Mardi',
+                'Mer' => 'Mercredi',
+                'Jeu' => 'Jeudi',
+                'Ven' => 'Vendredi',
+                'Sam' => 'Samedi',
+                'Dim' => 'Dimanche'
+            ];
+
+            $convertedDays = [];
+            foreach ($days as $day) {
+                $day = ucfirst(strtolower($day)); // Normaliser la casse
+                if (array_key_exists($day, $dayMapping)) {
+                    $convertedDays[] = $dayMapping[$day];
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Le jour fourni '{$day}' n'est pas valide.",
+                    ], 422);
+                }
+            }
+
+            // Convertir les jours en JSON
+            $daysJson = json_encode($convertedDays);
+        } else {
+            // Si le trajet est ponctuel, ne pas enregistrer les jours
+            $daysJson = null;
+        }
 
         // Vérifier si le conducteur a un véhicule actif
         $driver = Auth::user();
@@ -173,14 +305,9 @@ class RideController extends Controller
             ], 422);
         }
 
-        $request->type = ($request->type == "Régulier" ? 'regular' : 'single');
-
+        $type = ($request->type == "Régulier" ? 'regular' : 'single');
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
-
-        // Si les jours sont fournis, les convertir en chaîne JSON
-        $daysJson = $request->days ? json_encode($request->days) : null;
-
         $numeroRide = $this->generateUniqueRideNumber();
 
         // Enregistrement du trajet dans la base de données
@@ -188,7 +315,7 @@ class RideController extends Controller
             'numero_ride' => $numeroRide,
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
             'vehicle_id' => $activeVehicle->id, 
-            'type' => $request->type,
+            'type' => $type,
             'days' => $daysJson,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
@@ -200,7 +327,6 @@ class RideController extends Controller
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
             'total_price' => $request->total_price,  
-            'status' => 'active',
             'available_seats' => $request->seats
         ]);
 
@@ -211,6 +337,7 @@ class RideController extends Controller
             'ride' => $ride,
         ], 201);
     }
+
 
     public function searchRides2(Request $request)
     {

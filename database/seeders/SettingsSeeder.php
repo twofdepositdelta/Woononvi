@@ -62,7 +62,7 @@ class SettingsSeeder extends Seeder
             ],
 
             [
-                'key' => 'Suggested_Price',
+                'key' => 'suggested_price',
                 'value' => '50', // La monnaie utilisée
                 'description' => 'Prix recommandé pour les trajets.',
             ],
