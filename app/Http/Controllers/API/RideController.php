@@ -238,6 +238,20 @@ class RideController extends Controller
             ], 422);
         }
 
+        // Récupérer la valeur du paramètre 'suggested_price_per_km' dans la table settings
+        $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
+
+        // Si la clé n'existe pas, retourner une erreur
+        if (!$setting) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le paramètre suggested_price_per_km est manquant.',
+            ], 422);
+        }
+
+        // Affecter la valeur de 'value' à 'price_per_km'
+        $pricePerKm = $setting->value;
+
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
             // Vérifier que les jours sont fournis
@@ -319,7 +333,7 @@ class RideController extends Controller
             'days' => $daysJson,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
-            'price_per_km' => 100,
+            'price_per_km' => $pricePerKm,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
             'start_location_name' => $request->start_location_name,  
