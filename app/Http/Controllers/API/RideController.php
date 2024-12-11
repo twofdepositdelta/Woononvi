@@ -242,7 +242,7 @@ class RideController extends Controller
         if (!$countryId) {
             // Loguer l'erreur
             logger()->error('Le conducteur n\'a pas de pays associé.', ['user_id' => $user->id]);
-            return response()->json(['message' => 'Pays non valide pour ce conducteur.'], 422);
+            return response()->json(['message' => 'Vous n\'avez pas de pays associé.'], 422);
         }
 
         if (!$this->isWithinCountry($request->start_lat, $request->start_lng, $countryId)) {
@@ -360,7 +360,6 @@ class RideController extends Controller
             'ride' => $ride,
         ], 201);
     }
-
 
     public function searchRides2(Request $request)
     {
@@ -731,6 +730,23 @@ class RideController extends Controller
      */
     private function createRideRequest(Request $request)
     {
+        // Récupérer le taux de commission à partir de la table 'settings'
+        $commissionRateSetting = DB::table('settings')
+            ->where('key', 'commission_rate')
+            ->first();
+
+        if (!$commissionRateSetting) {
+            // Loguer l'erreur si le paramètre n'existe pas
+            logger()->error('Le paramètre commission_rate est introuvable dans la table settings.', [
+                'user_id' => $request->user()->id,
+            ]);
+            return response()->json(['message' => 'Le paramètre de commission est manquant.'], 422);
+        }
+
+        // Extraire la valeur du commission_rate depuis la table settings
+        $commissionRate = $commissionRateSetting->value;
+
+        // Insérer la demande de trajet dans la table 'ride_requests'
         DB::table('ride_requests')->insert([
             'start_location_name' => $request->start_location_name,
             'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})', 4326)"),
@@ -739,9 +755,8 @@ class RideController extends Controller
             'seats' => $request->seats ?? 1,
             'preferred_time' => now(),
             'preferred_amount' => $request->preferred_amount ?? 0,
-            'commission_rate' => 10, // Exemple de taux de commission par défaut
+            'commission_rate' => $commissionRate, // Utilisation du taux de commission récupéré
             'status' => 'pending',
-            'is_by_passenger' => true,
             'passenger_id' => $request->user()->id,
             'created_at' => now(),
             'updated_at' => now(),
