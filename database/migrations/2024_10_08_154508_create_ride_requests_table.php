@@ -25,7 +25,7 @@ return new class extends Migration
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            // $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();
