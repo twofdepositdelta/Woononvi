@@ -523,7 +523,7 @@ class RideController extends Controller
     {
         Carbon::setLocale('fr'); // Configure la locale de Carbon en français
         $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
-        return $currentDay;
+        dd($currentDay);
 
         return DB::table('rides')->select([
             'rides.id',
