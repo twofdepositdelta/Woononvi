@@ -523,7 +523,6 @@ class RideController extends Controller
     {
         Carbon::setLocale('fr'); // Configure la locale de Carbon en français
         $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
-        dd($currentDay);
 
         return DB::table('rides')->select([
             'rides.id',
@@ -567,8 +566,8 @@ class RideController extends Controller
             })
             ->orWhere(function ($subQuery) use ($currentDay) {
                 $subQuery->where('type', 'regular')
-                        ->where('rides.status', 'active')
-                        ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
+                        ->where('rides.status', 'active');
+                        // ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
             });
         })
         ->get();
