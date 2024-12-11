@@ -243,9 +243,12 @@ class RideController extends Controller
 
         // Si la clé n'existe pas, retourner une erreur
         if (!$setting) {
+            // Loguer l'incident
+            logger()->error("Paramètre 'suggested_price_per_km' non trouvé dans la table settings.");
+
             return response()->json([
                 'success' => false,
-                'message' => 'Le paramètre suggested_price_per_km est manquant.',
+                'message' => 'Une erreur est survenue, veuillez réessayer plus tard.',
             ], 422);
         }
 
