@@ -561,11 +561,11 @@ class RideController extends Controller
             ["POINT($request->start_lng $request->start_lat)", 2000])
         ->where(function ($query) use ($currentDay) {
             $query->where(function ($subQuery) {
-                $subQuery->where('type', 'ponctuel')
+                $subQuery->where('type', 'single')
                         ->where('rides.status', 'active');
             })
             ->orWhere(function ($subQuery) use ($currentDay) {
-                $subQuery->where('type', 'regulier')
+                $subQuery->where('type', 'regular')
                         ->where('rides.status', 'active')
                         ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
             });
