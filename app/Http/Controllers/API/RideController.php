@@ -705,7 +705,7 @@ class RideController extends Controller
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
             ["POINT($request->start_lng $request->start_lat)", 2000])
         ->where(function ($query) use ($currentDay, $currentDate) {
-            $query->where(function ($subQuery) {
+            $query->where(function ($subQuery) use ($currentDate) {
                 $subQuery->where('type', 'single')
                         ->where('rides.status', 'active')
                         ->whereDate('rides.created_at', $currentDate);
