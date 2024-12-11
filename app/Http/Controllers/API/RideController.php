@@ -566,8 +566,8 @@ class RideController extends Controller
             })
             ->orWhere(function ($subQuery) use ($currentDay) {
                 $subQuery->where('type', 'regular')
-                        ->where('rides.status', 'active')
-                        ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
+                        ->where('rides.status', 'active');
+                        // ->whereJsonContains('days', $currentDay); // Vérifie si le jour actuel est dans "days"
             });
         })
         ->get();
