@@ -916,4 +916,47 @@ class RideController extends Controller
         ]);
     }
 
+    public function getInProgressBookingForDriver(Request $request)
+    {
+        // // Validation de l'ID du conducteur
+        // $validator = Validator::make($request->all(), [
+        //     'driver_id' => 'required|exists:drivers,id', // L'ID du conducteur doit exister
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'L\'ID du conducteur est invalide ou manquant.',
+        //         'errors' => $validator->errors()->all(),
+        //     ], 422);
+        // }
+
+        // Récupérer la première réservation en cours pour ce conducteur
+        $booking = Booking::with(['ride', 'ride.driver']) // Charger les relations 'ride' et 'driver'
+            ->where('status', 'in progress')  // Filtrer sur le statut 'in progress'
+            ->whereHas('ride', function ($query) use ($request) {
+                $query->where('driver_id', $request->driver_id); // Filtrer sur le conducteur
+            })
+            ->first(); // Trouver la première réservation
+
+        // Vérifier si une réservation a été trouvée
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune réservation en cours !',
+            ], 404);
+        }
+
+        // Récupérer les informations de la réservation, du trajet et du conducteur
+        $ride = $booking->ride;
+        $driver = $ride ? $ride->driver : null; // Vérifier si un conducteur est associé au trajet
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Réservation en cours trouvée pour ce conducteur.',
+            'booking' => $booking,
+            'ride' => $ride,
+            'driver' => $driver,
+        ]);
+    }
 }
