@@ -844,7 +844,7 @@ class RideController extends Controller
         // Validation des données
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
-            'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled', // Statut accepté uniquement : 'accepted' ou 'rejected'
+            'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled',
         ]);
 
         if ($validator->fails()) {
@@ -874,6 +874,28 @@ class RideController extends Controller
         // }
 
         $booking->status = $request->status;
+
+        if ($request->status === 'in progress') {
+            // Trouver toutes les autres réservations du même trajet (même ride_id) qui ne sont pas encore annulées
+            $otherBookings = Booking::where('ride_id', $booking->ride_id)
+                ->where('id', '!=', $booking->id) // Ne pas inclure la réservation courante
+                ->whereIn('status', ['pending', 'accepted', 'in progress']) // Réservations en attente ou acceptées ou en cours
+                ->get();
+    
+            // Mettre leur statut à "cancelled"
+            foreach ($otherBookings as $otherBooking) {
+                $otherBooking->status = 'cancelled';
+                $otherBooking->cancelled_at = now(); // Marquer la date d'annulation
+                $otherBooking->save();
+            }
+    
+            // Modifier le statut du trajet à 'pending'
+            $ride = Ride::find($booking->ride_id);
+            if ($ride) {
+                $ride->status = 'pending'; // Passer le statut du trajet à 'pending'
+                $ride->save();
+            }
+        }
 
         if ($request->status === 'accepted') {
             $booking->accepted_at = now();
