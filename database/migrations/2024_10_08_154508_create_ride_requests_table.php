@@ -18,14 +18,14 @@ return new class extends Migration
             $table->string('end_location_name');
             $table->geography('end_location'); // Latitude et longitude d’arrivée
             $table->integer('seats');
-            $table->timestamp('preferred_time'); // Heure de départ prévue
-            $table->double('preferred_amount'); // Nombre de places disponibles
+            $table->timestamp('preferred_time')->nullable(); // Heure de départ prévue
+            $table->double('preferred_amount')->nullable(); // Nombre de places disponibles
             $table->integer('commission_rate');
-            $table->enum('status', ['pending', 'accepted', 'rejected','completed', 'refunded', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed', 'refunded', 'cancelled'])->default('pending');
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
+            // $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();
