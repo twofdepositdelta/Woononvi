@@ -564,6 +564,7 @@ class RideController extends Controller
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
             ->join('profiles', 'profiles.user_id', '=', 'users.id') // Jointure avec les profils des conducteurs
             ->where('bookings.passenger_id', $request->user()->id) // Filtrer par passager connecté
+            ->orderBy('bookings.id', 'desc')
             ->get()
             ->map(function ($booking) use ($statusNames) {
                 // Ajouter le nom du statut à chaque réservation
