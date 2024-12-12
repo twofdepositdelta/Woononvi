@@ -495,6 +495,7 @@ class RideController extends Controller
                 'bookings.status',
                 'bookings.created_at',
                 'bookings.updated_at',
+                'bookings.arrived_at',
                 DB::raw('ST_AsText(rides.start_location) as start_location'),
                 DB::raw('ST_AsText(rides.end_location) as end_location'),
                 DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
@@ -884,7 +885,7 @@ class RideController extends Controller
         // Validation des données
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
-            'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled',
+            'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled,arrived',
         ]);
 
         if ($validator->fails()) {
@@ -945,6 +946,8 @@ class RideController extends Controller
             $booking->in_progress_at = now();
         } elseif ($request->status === 'cancelled') {
             $booking->cancelled_at = now();
+        } elseif ($request->status === 'arrived') {
+            $booking->arrived_at = now();
         }
 
         $booking->save();
