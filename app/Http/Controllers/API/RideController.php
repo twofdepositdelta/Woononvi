@@ -475,6 +475,7 @@ class RideController extends Controller
                 'bookings.seats_reserved',
                 'users.firstname',
                 'users.lastname',
+                'users.phone',
                 DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
                 'bookings.total_price',
                 'bookings.price_maintain',
