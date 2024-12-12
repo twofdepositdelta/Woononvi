@@ -397,6 +397,12 @@ class RideController extends Controller
         $validator = Validator::make($request->all(), [
             'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
             'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
+            'start_lat' => 'required',
+            'start_lng' => 'required',
+            'end_lat' => 'required',
+            'end_lng' => 'required',
+            'start_location_name' => 'required',
+            'end_location_name' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -427,6 +433,8 @@ class RideController extends Controller
             ->where('key', 'commission_rate')
             ->value('value'); // Récupère uniquement la colonne "value" pour `commission_rate`
 
+        $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
+        $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
 
         // Création de la réservation
         $booking = DB::table('bookings')->insert([
@@ -436,6 +444,10 @@ class RideController extends Controller
             'price_maintain' => $total_price, // Ajoutez une logique ici si nécessaire
             'commission_rate' => $commissionRate,
             'ride_id' => $request->ride_id,
+            'start_location_name' => $request->start_location_name,  
+            'end_location_name' => $request->end_location_name,  
+            'start_location' => $startLocation,  
+            'end_location' => $endLocation, 
             'passenger_id' => $request->user()->id,
             'status' => 'pending',
             'created_at' => now(),
