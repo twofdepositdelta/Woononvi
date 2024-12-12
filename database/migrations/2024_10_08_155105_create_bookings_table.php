@@ -31,6 +31,7 @@ return new class extends Migration
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('in_progress_at')->nullable();
+            $table->timestamp('arrived_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();
             $table->timestamp('validated_by_driver_at')->nullable();
             $table->timestamp('refunded_at')->nullable();

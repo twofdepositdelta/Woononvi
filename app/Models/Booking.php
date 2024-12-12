@@ -20,6 +20,8 @@ class Booking extends Model
         'passenger_end_location',
         'passenger_end_location_name',
         'accepted_at',
+        'cancelled_at',
+        'arrived_at',
         'rejected_at',
         'validated_by_passenger_at',
         'validated_by_driver_at',
