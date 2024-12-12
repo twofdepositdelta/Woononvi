@@ -435,6 +435,7 @@ class RideController extends Controller
 
         $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
         $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
+        dd($startLocation);
 
         // Création de la réservation
         $booking = DB::table('bookings')->insert([
