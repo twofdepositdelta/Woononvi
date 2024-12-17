@@ -571,10 +571,12 @@ class RideController extends Controller
                 'bookings.updated_at',
                 DB::raw('ST_AsText(rides.start_location) as start_location'),
                 DB::raw('ST_AsText(rides.end_location) as end_location'),
+                DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
+                DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
                 'rides.start_location_name',
                 'rides.end_location_name',
-                'bookings.start_location_name as b_start',
-                'bookings.end_location_name as b_end',
+                'bookings.passenger_start_location_name',
+                'bookings.passenger_end_location_name',
                 'rides.departure_time',
                 'rides.return_time',
                 'rides.type',
@@ -886,6 +888,8 @@ class RideController extends Controller
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
             'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled,arrived,validated_by_passenger,validated_by_driver',
+            'rating' => 'required_if:status,validated_by_passenger,validated_by_driver|integer|between:1,5', // Note obligatoire pour ces statuts
+            'comment' => 'nullable|string|max:1000', // Le commentaire est facultatif mais doit respecter les contraintes s'il est présent
         ]);
 
         if ($validator->fails()) {
@@ -916,6 +920,21 @@ class RideController extends Controller
             }
             $booking->status = 'validated_by_passenger';
             $booking->validated_by_passenger_at = now();
+
+            // Créer l'avis
+            try {
+                $this->createReview(
+                    $booking->id,
+                    $request->input('rating'), // Note donnée par le passager
+                    $request->input('comment'), // Commentaire facultatif
+                    'passenger'
+                );
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+                ], 500);
+            }
         } elseif ($request->status === 'validated_by_driver') {
             if ($booking->status !== 'validated_by_passenger') {
                 return response()->json([
@@ -925,6 +944,21 @@ class RideController extends Controller
             }
             $booking->status = 'validated_by_driver';
             $booking->validated_by_driver_at = now();
+
+            // Créer l'avis
+            try {
+                $this->createReview(
+                    $booking->id,
+                    $request->input('rating'), // Note donnée par le passager
+                    $request->input('comment'), // Commentaire facultatif
+                    'driver'
+                );
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+                ], 500);
+            }
         } else {
             // Mise à jour des autres statuts
             if ($booking->status != 'arrived') {
@@ -972,4 +1006,29 @@ class RideController extends Controller
         ]);
     }
 
+    private function createReview($bookingId, $rating, $comment, $role)
+    {
+        // Récupérer la réservation
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            throw new \Exception('Réservation introuvable.');
+        }
+
+        // Vérifier si la réservation est liée à un passager et un conducteur
+        if (!$booking->passenger_id || !$booking->driver_id) {
+            throw new \Exception('Impossible de créer un avis, le passager ou le conducteur est manquant.');
+        }
+
+        // Créer l'évaluation
+        $review = new Review();
+        $review->rating = $rating;
+        $review->comment = $comment;
+        $review->booking_id = $booking->id;
+        $review->reviewer_id = $booking->passenger_id;
+        $review->reviewer_type = $role;
+        $review->save();
+
+        return $review;
+    }
 }
