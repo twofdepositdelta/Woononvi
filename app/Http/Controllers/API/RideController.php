@@ -1024,8 +1024,8 @@ class RideController extends Controller
         $review = new Review();
         $review->rating = $rating;
         $review->comment = $comment;
-        $review->booking_id = Auth::id();
-        $review->reviewer_id = $booking->passenger_id;
+        $review->booking_id = $bookingId;
+        $review->reviewer_id = Auth::id();
         $review->reviewer_type = $role;
         $review->save();
 
