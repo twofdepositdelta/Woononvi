@@ -13,7 +13,8 @@ class Profile extends Model
         'bio',
         'identy_card',
         'address',
-        'user_id', // Clé étrangère pour l'utilisateur
+        'user_id',
+        'driver_licence_card'
     ];
 
     protected $appends = ['avatar_full', 'identity_full'];

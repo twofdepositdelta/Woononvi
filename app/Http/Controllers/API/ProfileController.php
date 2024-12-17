@@ -48,31 +48,18 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'npi' => [
-                'required',
-                'string',
-                'size:9',
-                Rule::unique('users')->ignore($request->user()->id)
-            ],
-            'lastname' => 'required|min:2|max:255|string',
-            'firstname' => 'required|min:2|max:255|string',
-            'gender' => 'required|max:255|string',
-            'email' => 'required|max:255|email',
-            'username' => 'max:255',
-            'city_id' => 'required|max:255|string',
-            'country_id' => 'required|max:255|string',
-            'phone' => [
-                'required',
-                'max:13',
-                'string',
-                Rule::unique('users')->ignore($request->user()->id)
-            ],
-            'date_of_birth' => 'required|max:12|string',
-        ]);
-
+    public function finalise(Request $request) {
+        $rules = [
+            'gender' => 'required|string|max:255',
+            'npi' => 'required|string|size:9|unique:users',
+            'birth_of_date' => 'required|date',
+            'city_id' => 'required|string|max:255',
+            'npi_file' => 'required|mimes:pdf|max:1024',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+        ];
+    
+        $validator = Validator::make($request->all(), $rules);
+    
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -80,63 +67,73 @@ class ProfileController extends Controller
                 'errors' => $validator->errors()->all()
             ], 422);
         }
-
+    
+        $user = $request->user();
+    
+        $npiPath = null;
+        if ($request->hasFile('npi_file')) {
+            $npiPath = $request->file('npi_file')->store("api/users/$user->id/documents", 'public'); 
+        }
+    
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store("api/users/$user->id/documents", 'public'); 
+        }
+    
         // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-        $birthDate = new \DateTime($request->date_of_birth);
+        $birthDate = new \DateTime($request->birth_of_date);
         $today = new \DateTime();
         $age = $today->diff($birthDate)->y;
-
+    
         if ($age < 18) {
             return response()->json([
                 'success' => false,
-                'message' => "L'âge doit être supérieur ou égal à 18 ans.",
+                'message' => "Vous devez avoir au moins 18 ans pour continuer.",
                 'age' => $age
             ], 401); // Statut 401 pour indiquer que l'inscription est refusée
         }
-
-        $user = User::whereEmail($request->email)->first();
-
-        $country = Country::whereIndicatif($request->country_id)->first();
+    
         $city = City::whereName($request->city_id)->first();
-
-        if($user && $country && $city) {
-            $user->update([
-                'date_of_birth' => $request->date_of_birth,
-                'npi' => $request->npi,
-                'username' => $request->username,
-                'lastname' => $request->lastname,
-                'firstname' => $request->firstname,
-                'country_id' => $country->id,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'city_id' => $city->id,
+    
+        // Mise à jour en fonction du rôle de l'utilisateur
+        $userUpdateData = [
+            'date_of_birth' => $request->birth_of_date,
+            'gender' => $request->gender,
+            'city_id' => $city->id,
+        ];
+    
+        if ($user->hasRole('passenger')) { // Si l'utilisateur est un passager
+            $userUpdateData['npi'] = $request->npi;
+            Profile::create([
+                'user_id' => $user->id,
+                'avatar' => $avatarPath,
+                'identy_card' => $npiPath, // Enregistrement du fichier dans identity_card
             ]);
-
-            $userArray = $user->toArray();
-
-            unset($userArray['roles']);
-
-            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-            $country = Country::find($user->country_id);
-            $userArray['country_name'] = $user->country_name;
-            $userArray['city_name'] = $user->city_name;
-            $userArray['indicatif'] = $user->country_code;
-            $userArray['phone_number'] = $user->phone_number;
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Profil modifié avec succès.',
-                'user' => $userArray,
-                'cities' => City::whereCountryId($country->id)->pluck('name')
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
-            ], 401);
+        } elseif ($user->hasRole('driver')) { // Si l'utilisateur est un conducteur
+            $userUpdateData['driving_license_number'] = $request->npi;
+            Profile::create([
+                'user_id' => $user->id,
+                'avatar' => $avatarPath,
+                'driver_licence_card' => $npiPath, // Enregistrement du fichier dans driver_licence_card
+            ]);
         }
+    
+        $user->update($userUpdateData);
+    
+        Preference::create([
+            'user_id' => $user->id,
+        ]);
+    
+        // Appeler la méthode privée pour formater l'utilisateur
+        $userArray = $this->formatUserArray($user);
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre inscription a été finalisée avec succès.',
+            'user' => $userArray,
+        ], 201);
     }
+    
 
     public function updateWishes(Request $request) {
         // Convertir les valeurs string en booléens pour les champs boolean
