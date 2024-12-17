@@ -164,7 +164,7 @@ class AuthenticatedSessionController extends Controller
     public function finalise(Request $request) {
         $rules = [
             'gender' => 'required|string|max:255',
-            'npi' => 'required|string|size:9|unique:users',
+            'npi' => 'required|string|unique:users',
             'birth_of_date' => 'required|date',
             'city_id' => 'required|string|max:255',
             'npi_file' => 'required|mimes:pdf|max:1024',
