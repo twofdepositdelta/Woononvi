@@ -516,7 +516,7 @@ class RideController extends Controller
             ->where('bookings.status', $request->status); // Filtrer par statut
 
         // Si le statut est 'in progress', récupérer uniquement la première réservation
-        if ($request->status === 'in progress') {
+        if ($request->status === 'in progress' || $request->status === 'validated_by_driver') {
             $booking = $query->first();
 
             if (!$booking) {
@@ -533,7 +533,7 @@ class RideController extends Controller
             ]);
         }
 
-        // Si le statut est différent de 'in progress', récupérer toutes les réservations correspondantes
+        // Si le statut est différent de 'in progress' et de 'validated_by_passenger', récupérer toutes les réservations correspondantes
         $bookings = $query->get();
 
         return response()->json([
