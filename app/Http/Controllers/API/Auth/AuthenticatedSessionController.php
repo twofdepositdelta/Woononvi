@@ -61,10 +61,11 @@ class AuthenticatedSessionController extends Controller
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->date_of_birth) {
                 return response()->json([
                     'success' => true,
-                    'cities' => City::whereCountryId($user->country_id)->get(),
                     'token' => $token,
                     'reason' => true,
+                    'user' => $userArray,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
+                    'cities' => City::whereCountryId($user->country_id)->get(),
                 ], 200);
             }
 
@@ -77,9 +78,9 @@ class AuthenticatedSessionController extends Controller
                 return response()->json([
                     'success' => true,
                     'reason' => false,
-                    'message' => 'Authentification réussie.',
                     'token' => $token,
                     'user' => $userArray,
+                    'message' => 'Authentification réussie.',
                     'cities' => City::whereCountryId($user->country_id)->pluck('name')
                 ], 200);
             } else {
