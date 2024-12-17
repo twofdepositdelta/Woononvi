@@ -36,6 +36,7 @@ return new class extends Migration
             $table->timestamp('validated_by_driver_at')->nullable();
             $table->timestamp('refunded_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
+            $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
