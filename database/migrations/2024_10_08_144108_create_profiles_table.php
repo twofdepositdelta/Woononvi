@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('bio')->nullable();
             $table->string('identy_card')->unique()->nullable();
+            $table->string('driver_licence_card')->unique()->nullable();
             $table->string('address')->nullable();
             $table->foreignIdFor(User::class);
             $table->timestamps();

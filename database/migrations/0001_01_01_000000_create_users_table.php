@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->string('npi')->nullable()->unique();
+            $table->string('driving_license_number')->nullable()->unique();
             $table->rememberToken();
             $table->foreignIdFor(Country::class)->nullable();
             $table->foreignIdFor(City::class)->nullable();

@@ -107,7 +107,6 @@ class ProfileController extends Controller
                 'lastname' => $request->lastname,
                 'firstname' => $request->firstname,
                 'country_id' => $country->id,
-                'npi' => $request->npi,
                 'gender' => $request->gender,
                 'phone' => $request->phone,
                 'city_id' => $city->id,
