@@ -1006,7 +1006,7 @@ class RideController extends Controller
         ]);
     }
 
-    private function createReview($bookingId, $rating, $comment, $role)
+    private function createReview($bookingId, $rating, $comment, $reviewId, $role)
     {
         // Récupérer la réservation
         $booking = Booking::find($bookingId);
@@ -1024,7 +1024,7 @@ class RideController extends Controller
         $review = new Review();
         $review->rating = $rating;
         $review->comment = $comment;
-        $review->booking_id = $booking->id;
+        $review->booking_id = Auth::id();
         $review->reviewer_id = $booking->passenger_id;
         $review->reviewer_type = $role;
         $review->save();
