@@ -885,12 +885,18 @@ class RideController extends Controller
     public function updateBookingStatus(Request $request)
     {
         // Validation des données
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
             'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled,arrived,validated_by_passenger,validated_by_driver',
-            'rating' => 'required_if:status,validated_by_passenger,validated_by_driver|integer|between:1,5', // Note obligatoire pour ces statuts
             'comment' => 'nullable|string|max:1000', // Le commentaire est facultatif mais doit respecter les contraintes s'il est présent
-        ]);
+        ];
+
+        // Ajouter une règle conditionnelle pour le champ "rating"
+        if (in_array($request->status, ['validated_by_passenger', 'validated_by_driver'])) {
+            $rules['rating'] = 'required|integer|between:1,5'; // Rating est requis uniquement pour ces statuts
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
