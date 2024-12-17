@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Ride;
 use App\Models\City;
 use App\Models\Review;
+use App\Models\Booking;
 use App\Models\Country;
 use App\Models\Preference;
 use App\Models\Profile;
