@@ -32,7 +32,7 @@ class UserController extends Controller
         $user = $request->user();
 
         // Vérification pour le passage en mode driver
-        if ($requestedRole === 'passenegr') {
+        if ($requestedRole === 'passenger') {
             if (empty($user->driving_license_number) || $user->driving_license_number == "" || $user->driving_license_number == null) {
                 return response()->json([
                     'success' => false,
