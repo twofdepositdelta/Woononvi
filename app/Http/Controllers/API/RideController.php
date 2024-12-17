@@ -516,7 +516,7 @@ class RideController extends Controller
             ->where('bookings.status', $request->status); // Filtrer par statut
 
         // Si le statut est 'in progress', récupérer uniquement la première réservation
-        if ($request->status === 'in progress' || $request->status === 'validated_by_passenger') {
+        if ($request->status === 'in progress') {
             $booking = $query->first();
 
             if (!$booking) {
@@ -533,7 +533,7 @@ class RideController extends Controller
             ]);
         }
 
-        // Si le statut est différent de 'in progress' et de 'validated_by_passenger', récupérer toutes les réservations correspondantes
+        // Si le statut est différent de 'in progress', récupérer toutes les réservations correspondantes
         $bookings = $query->get();
 
         return response()->json([
@@ -918,15 +918,16 @@ class RideController extends Controller
                     'message' => 'La réservation doit être en cours pour être validée par le passager.',
                 ], 400);
             }
-            $booking->status = 'validated_by_passenger';
+
+            $booking->is_by_passenger = true;
             $booking->validated_by_passenger_at = now();
 
             // Créer l'avis
             try {
                 $this->createReview(
                     $booking->id,
-                    $request->input('rating'), // Note donnée par le passager
-                    $request->input('comment'), // Commentaire facultatif
+                    $request->input('rating'),
+                    $request->input('comment'),
                     'passenger'
                 );
             } catch (\Exception $e) {
@@ -936,21 +937,22 @@ class RideController extends Controller
                 ], 500);
             }
         } elseif ($request->status === 'validated_by_driver') {
-            if ($booking->status !== 'validated_by_passenger') {
+            if (!$booking->is_by_passenger) {
                 return response()->json([
                     'success' => false,
                     'message' => 'La réservation doit être validée par le passager avant d\'être validée par le conducteur.',
                 ], 400);
             }
-            $booking->status = 'validated_by_driver';
+
+            $booking->is_by_driver = true;
             $booking->validated_by_driver_at = now();
 
             // Créer l'avis
             try {
                 $this->createReview(
                     $booking->id,
-                    $request->input('rating'), // Note donnée par le passager
-                    $request->input('comment'), // Commentaire facultatif
+                    $request->input('rating'),
+                    $request->input('comment'),
                     'driver'
                 );
             } catch (\Exception $e) {
@@ -959,33 +961,11 @@ class RideController extends Controller
                     'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
                 ], 500);
             }
+        } elseif ($request->status === 'arrived') {
+            $booking->arrived_at = now();
         } else {
-            // Mise à jour des autres statuts
-            if ($booking->status != 'arrived') {
-                $booking->status = $request->status;
-            }
-
-            if ($request->status === 'in progress') {
-                // Trouver toutes les autres réservations du même trajet (même ride_id) qui ne sont pas encore annulées
-                $otherBookings = Booking::where('ride_id', $booking->ride_id)
-                    ->where('id', '!=', $booking->id)
-                    ->whereIn('status', ['pending', 'accepted', 'in progress'])
-                    ->get();
-
-                // Mettre leur statut à "cancelled"
-                foreach ($otherBookings as $otherBooking) {
-                    $otherBooking->status = 'cancelled';
-                    $otherBooking->cancelled_at = now();
-                    $otherBooking->save();
-                }
-
-                // Modifier le statut du trajet à 'pending'
-                $ride = Ride::find($booking->ride_id);
-                if ($ride) {
-                    $ride->status = 'pending';
-                    $ride->save();
-                }
-            }
+            // Mettre à jour le statut uniquement pour les autres statuts
+            $booking->status = $request->status;
 
             if ($request->status === 'accepted') {
                 $booking->accepted_at = now();
@@ -993,8 +973,37 @@ class RideController extends Controller
                 $booking->rejected_at = now();
             } elseif ($request->status === 'cancelled') {
                 $booking->cancelled_at = now();
-            } elseif ($request->status === 'arrived') {
-                $booking->arrived_at = now();
+            } elseif ($request->status === 'in progress') {
+                // Annuler les autres réservations du même trajet
+                $otherBookings = Booking::where('ride_id', $booking->ride_id)
+                    ->where('id', '!=', $booking->id)
+                    ->whereIn('status', ['pending', 'accepted', 'in progress'])
+                    ->get();
+
+                foreach ($otherBookings as $otherBooking) {
+                    $otherBooking->status = 'cancelled';
+                    $otherBooking->cancelled_at = now();
+                    $otherBooking->save();
+                }
+
+                // Mettre le trajet en "pending"
+                $ride = Ride::find($booking->ride_id);
+                if ($ride) {
+                    $ride->status = 'pending';
+                    $ride->save();
+                }
+            }
+        }
+
+        // Si les deux validations sont remplies, mettre à jour le statut à "completed"
+        if ($booking->is_by_passenger && $booking->is_by_driver) {
+            $booking->status = 'completed';
+
+            // Vérifier si le trajet est de type "regular" et mettre à jour son statut
+            $ride = Ride::find($booking->ride_id);
+            if ($ride && $ride->type === 'regular') {
+                $ride->status = 'active';
+                $ride->save();
             }
         }
 
@@ -1002,7 +1011,7 @@ class RideController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Statut mis à jour avec succès.',
+            'message' => 'Mise à jour effectuée avec succès.',
         ]);
     }
 
