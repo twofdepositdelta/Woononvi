@@ -301,6 +301,14 @@ class AuthenticatedSessionController extends Controller
         $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
         $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
 
+        // Calcul de la note moyenne en tant que passager et conducteur
+        $userArray['average_rating_as_passenger'] = $this->getAverageRating($user, 'passenger');
+        $userArray['average_rating_as_driver'] = $this->getAverageRating($user, 'driver');
+
+        // Calcul du nombre de covoiturages passés en tant que passager et conducteur
+        $userArray['completed_rides_as_passenger'] = $this->getCompletedRidesCount($user, 'passenger');
+        $userArray['completed_rides_as_driver'] = $this->getCompletedRidesCount($user, 'driver');
+
         $vehicles = $user->vehicles()->withCount('rides')->get();
 
         $userArray['vehicles_count'] = $vehicles->count();
@@ -319,5 +327,34 @@ class AuthenticatedSessionController extends Controller
         // });
 
         return $userArray;
+    }
+
+    // Méthode pour calculer le nombre de covoiturages passés de l'utilisateur (en tant que passager ou conducteur)
+    private function getCompletedRidesCount(User $user, $role)
+    {
+        if ($role == 'passenger') {
+            // Nombre de réservations où l'utilisateur est un passager et où le statut est "completed"
+            return Booking::where('passenger_id', $user->id)
+                        ->where('status', 'completed')
+                        ->count();
+        } elseif ($role == 'driver') {
+            // Nombre de réservations où l'utilisateur est un conducteur et où le statut est "completed"
+            return Ride::where('driver_id', $user->id)
+                        ->whereHas('bookings', function($query) {
+                            $query->where('status', 'completed');
+                        })
+                        ->count();
+        }
+
+        return 0;
+    }
+
+    // Méthode pour calculer la note moyenne de l'utilisateur
+    private function getAverageRating(User $user, $reviewerType)
+    {
+        $averageRating = Review::where('reviewer_id', $user->id)
+                                ->where('reviewer_type', $reviewerType)
+                                ->avg('rating');
+        return round($averageRating * 2) / 2;
     }
 }
