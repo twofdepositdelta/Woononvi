@@ -17,7 +17,7 @@ class UserController extends Controller
     public function changeUserRole(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'role' => 'required',
+            'role' => 'required|in:driver,passenger',
         ]);
 
         if ($validator->fails()) {
@@ -28,15 +28,28 @@ class UserController extends Controller
             ], 422);
         }
 
-        $role = ($request->role == 'passenger' ? 'driver' : 'passenger');
-
+        $requestedRole = $request->role; // Rôle demandé (driver ou passenger)
         $user = $request->user();
+
+        // Vérification pour le passage en mode driver
+        if ($requestedRole === 'passenegr') {
+            if (empty($user->driving_license_number)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Veuillez fournir vos informations conducteur.',
+                    'is_driver_set' => false,
+                ], 400);
+            }
+        }
+
+        $role = ($request->role == 'passenger' ? 'driver' : 'passenger');
 
         // Supprime tous les rôles actuels de l'utilisateur
         $user->syncRoles([]);
 
-        $roleGet = Role::findByName($role, 'api');
-        $user->assignRole($roleGet);
+        // Attribuer le nouveau rôle
+        $roleInstance = Role::findByName($role, 'api');
+        $user->assignRole($roleInstance);
 
         // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
         $authController = new Auth\AuthenticatedSessionController();
@@ -50,6 +63,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
+            'is_driver_set' => true,
             'user' => $userArray,
         ]);
     }
