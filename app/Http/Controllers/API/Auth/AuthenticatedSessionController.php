@@ -59,11 +59,12 @@ class AuthenticatedSessionController extends Controller
             $token = $user->createToken('mobile--token')->plainTextToken;
 
             if(!$user->npi || !$user->gender || !$user->city_id || !$user->date_of_birth) {
+                $role = $user->roles->first() ? $user->roles->first()->name : null;
                 return response()->json([
                     'success' => true,
                     'token' => $token,
                     'reason' => true,
-                    'user' => $userArray,
+                    'role' => $role,
                     'message' => "Veuillez finaliser votre compte afin de continuer.",
                     'cities' => City::whereCountryId($user->country_id)->get(),
                 ], 200);
