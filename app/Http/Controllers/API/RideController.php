@@ -922,19 +922,19 @@ class RideController extends Controller
             $booking->validated_by_passenger_at = now();
 
             // Créer l'avis
-            try {
+            // try {
                 $this->createReview(
                     $booking->id,
                     $request->input('rating'), // Note donnée par le passager
                     $request->input('comment'), // Commentaire facultatif
                     'passenger'
                 );
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
-                ], 500);
-            }
+            // } catch (\Exception $e) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+            //     ], 500);
+            // }
         } elseif ($request->status === 'validated_by_driver') {
             if ($booking->status !== 'validated_by_passenger') {
                 return response()->json([
