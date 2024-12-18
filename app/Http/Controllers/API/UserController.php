@@ -35,7 +35,7 @@ class UserController extends Controller
         if ($requestedRole === 'passenger') {
             if (empty($user->driving_license_number) || $user->driving_license_number == "" || $user->driving_license_number == null) {
                 return response()->json([
-                    'success' => false,
+                    'success' => true,
                     'message' => 'Veuillez fournir vos informations conducteur.',
                     'is_driver_set' => false,
                 ], 400);
