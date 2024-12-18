@@ -937,7 +937,27 @@ class RideController extends Controller
     
                     // Mettre à jour le statut de la réservation
                     $booking->status = 'in progress';
+                    $booking->in_progress_at = now();
                     $booking->save();
+
+                    // Annuler les autres réservations du même trajet
+                    $otherBookings = Booking::where('ride_id', $booking->ride_id)
+                        ->where('id', '!=', $booking->id)
+                        ->whereIn('status', ['pending', 'accepted', 'in progress'])
+                        ->get();
+
+                    foreach ($otherBookings as $otherBooking) {
+                        $otherBooking->status = 'cancelled';
+                        $otherBooking->cancelled_at = now();
+                        $otherBooking->save();
+                    }
+
+                    // Mettre le trajet en "pending"
+                    $ride = Ride::find($booking->ride_id);
+                    if ($ride) {
+                        $ride->status = 'pending';
+                        $ride->save();
+                    }
                 });
             } catch (\Exception $e) {
                 return response()->json([
@@ -1020,25 +1040,6 @@ class RideController extends Controller
                 $booking->rejected_at = now();
             } elseif ($request->status === 'cancelled') {
                 $booking->cancelled_at = now();
-            } elseif ($request->status === 'in progress') {
-                // Annuler les autres réservations du même trajet
-                $otherBookings = Booking::where('ride_id', $booking->ride_id)
-                    ->where('id', '!=', $booking->id)
-                    ->whereIn('status', ['pending', 'accepted', 'in progress'])
-                    ->get();
-
-                foreach ($otherBookings as $otherBooking) {
-                    $otherBooking->status = 'cancelled';
-                    $otherBooking->cancelled_at = now();
-                    $otherBooking->save();
-                }
-
-                // Mettre le trajet en "pending"
-                $ride = Ride::find($booking->ride_id);
-                if ($ride) {
-                    $ride->status = 'pending';
-                    $ride->save();
-                }
             }
         }
 
