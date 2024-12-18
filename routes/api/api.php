@@ -22,6 +22,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('conversations/message/support', [ConversationController::class, 'storeForSupport'])->name('api.conversation.storeForSupport');
 
     Route::post('users/change-role', [UserController::class, 'changeUserRole'])->name('api.user.changeUserRole');
+    Route::post('users/become-driver', [UserController::class, 'becomeDriver'])->name('api.user.becomeDriver');
 
     Route::get('drivers/vehicles', [VehicleController::class, 'getUserVehicles'])->name('api.vehicle.get');
     Route::get('drivers/vehicles/get-types', [VehicleController::class, 'getVehicleTypes'])->name('api.vehicle.getTypes');

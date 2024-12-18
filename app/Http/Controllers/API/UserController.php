@@ -68,6 +68,72 @@ class UserController extends Controller
         ]);
     }
 
+    public function becomeDriver(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'driver_licence_number' => 'required',
+            'driver_licence_file' => 'required|mimes:pdf|max:1024',
+            'address' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Il y a un souci avec vos données.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilisateur non authentifié.'
+            ], 401);
+        }
+
+        $licencePath = null;
+        if ($request->hasFile('driver_licence_file')) {
+            try {
+                $licencePath = $request->file('driver_licence_file')->store("api/users/{$user->id}/documents", 'public');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur est survenue lors de l\'enregistrement du fichier.',
+                ], 500);
+            }
+        }
+
+        try {
+            $profile = $user->profile; // Assuming User model has a relationship `profile`
+            if (!$profile) {
+                $profile = $user->profile()->create([]); // Create profile if it doesn't exist
+            }
+
+            $profile->update([
+                'driver_licence_card' => $licencePath,
+                'address' => $request->input('address'),
+            ]);
+
+            // Assigning the 'driver' role using Laravel Permission
+            $user->syncRoles(['driver']);
+
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'profile' => $profile,
+                'message' => 'Votre compte a été mis à jour avec succès en tant que conducteur.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la mise à jour de votre compte.',
+            ], 500);
+        }
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
