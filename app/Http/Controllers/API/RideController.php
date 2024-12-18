@@ -906,6 +906,47 @@ class RideController extends Controller
             ], 422);
         }
 
+        $user = auth()->user();
+
+        if ($request->status === 'in progress') {
+            // Vérification du solde de l'utilisateur
+            if ($user->balance < $booking->price) {
+                return response()->json([
+                    'success' => false,
+                    'reason' => true,
+                    'message' => 'Votre solde est insuffisant. Veuillez recharger votre compte.',
+                ], 400);
+            }
+    
+            // Effectuer le paiement
+            try {
+                DB::transaction(function () use ($user, $booking) {
+                    // Soustraire le montant du solde
+                    $user->balance -= $booking->price;
+                    $user->save();
+    
+                    // Enregistrer la transaction dans la table payments
+                    Payment::create([
+                        'amount' => $booking->price,
+                        'reference' => uniqid('PAY_'),
+                        'payment_method' => 'MOMO', // Exemple de méthode de paiement
+                        'status' => 'SUCCESSFUL',
+                        'booking_id' => $booking->id,
+                        'payment_type_id' => 3, // Remplacez par l'ID de votre type de paiement
+                    ]);
+    
+                    // Mettre à jour le statut de la réservation
+                    $booking->status = 'in progress';
+                    $booking->save();
+                });
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+                ], 500);
+            }
+        }
+
         // Récupérer la réservation
         $booking = Booking::find($request->booking_id);
 
