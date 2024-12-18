@@ -267,7 +267,7 @@ class ConversationController extends Controller
         ];
 
         event(new NewMessage($message));
-        // broadcast(new NewMessage($message))->toOthers();
+        broadcast(new NewMessage($message))->toOthers();
 
         return response()->json([
             'success' => true,
