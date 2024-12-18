@@ -38,7 +38,7 @@ class UserController extends Controller
                     'success' => true,
                     'message' => 'Veuillez fournir vos informations conducteur.',
                     'is_driver_set' => false,
-                ], 400);
+                ], 200);
             }
         }
 
