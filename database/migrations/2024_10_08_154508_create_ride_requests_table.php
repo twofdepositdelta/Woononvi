@@ -25,7 +25,7 @@ return new class extends Migration
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->unsignedBigInteger('driver_id')->nullable();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('validated_by_passenger_at')->nullable();
@@ -37,6 +37,10 @@ return new class extends Migration
             // Index
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
+        });
+
+        Schema::table('ride_requests', function (Blueprint $table) {
+            $table->foreign('driver_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

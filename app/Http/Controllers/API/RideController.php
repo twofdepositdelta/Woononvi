@@ -100,7 +100,7 @@ class RideController extends Controller
                 ["POINT(2.6217 9.3405)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-        ["POINT(2.6217 9.3405)", 2000])->get();
+        ["POINT(2.6217 9.3405)", 5000])->get();
 
         // Retourner les trajets qui correspondent
         return response()->json([
@@ -708,7 +708,7 @@ class RideController extends Controller
     //             ["POINT($request->start_lng $request->start_lat)"]
     //         )
     //     ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-    //         ["POINT($request->start_lng $request->start_lat)", 2000])
+    //         ["POINT($request->start_lng $request->start_lat)", 5000])
     //     ->get();
     // }
     private function findAvailableRides(Request $request)
@@ -751,7 +751,7 @@ class RideController extends Controller
                 ["POINT($request->start_lng $request->start_lat)"]
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-            ["POINT($request->start_lng $request->start_lat)", 2000])
+            ["POINT($request->start_lng $request->start_lat)", 5000])
         ->where(function ($query) use ($currentDay, $currentDate) {
             $query->where(function ($subQuery) use ($currentDate) {
                 $subQuery->where('type', 'single')
@@ -773,38 +773,76 @@ class RideController extends Controller
      */
     private function createRideRequest(Request $request)
     {
-        // Récupérer le taux de commission à partir de la table 'settings'
-        $commissionRateSetting = DB::table('settings')
-            ->where('key', 'commission_rate')
-            ->first();
+        try {
+            // Vérifier si le taux de commission existe
+            $commissionRateSetting = DB::table('settings')
+                ->where('key', 'commission_rate')
+                ->first();
 
-        if (!$commissionRateSetting) {
-            // Loguer l'erreur si le paramètre n'existe pas
-            logger()->error('Le paramètre commission_rate est introuvable dans la table settings.', [
-                'user_id' => $request->user()->id,
+            if (!$commissionRateSetting) {
+                // Journaliser l'erreur si le paramètre n'existe pas
+                logger()->error('Le paramètre commission_rate est introuvable dans la table settings.', [
+                    'user_id' => $request->user()->id,
+                ]);
+                return response()->json(['message' => 'Le paramètre de commission est manquant.'], 422);
+            }
+
+            // Extraire la valeur du commission_rate depuis la table settings
+            $commissionRate = $commissionRateSetting->value;
+
+            // Validation des données d'entrée
+            $validator = Validator::make($request->all(), [
+                'start_location_name' => 'required|string|max:255',
+                'start_lat' => 'required|numeric',
+                'start_lng' => 'required|numeric',
+                'end_location_name' => 'required|string|max:255',
+                'end_lat' => 'required|numeric',
+                'end_lng' => 'required|numeric',
+                'seats' => 'nullable|integer|min:1',
+                'preferred_amount' => 'nullable|numeric|min:0',
             ]);
-            return response()->json(['message' => 'Le paramètre de commission est manquant.'], 422);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Les données fournies ne sont pas valides.',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            // Insérer la demande de trajet dans la table 'ride_requests'
+            DB::table('ride_requests')->insert([
+                'start_location_name' => $request->start_location_name,
+                'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})', 4326)"),
+                'end_location_name' => $request->end_location_name,
+                'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})', 4326)"),
+                'seats' => $request->seats ?? 1,
+                'preferred_time' => now(),
+                'preferred_amount' => $request->preferred_amount ?? 0,
+                'commission_rate' => $commissionRate,
+                'status' => 'pending',
+                'passenger_id' => $request->user()->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Demande de trajet créée avec succès.',
+            ], 201);
+        } catch (\Exception $e) {
+            // Loguer l'exception pour le suivi
+            logger()->error('Erreur lors de la création de la demande de trajet.', [
+                'error' => $e->getMessage(),
+                'user_id' => $request->user()->id ?? null,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la création de la demande de trajet.',
+            ], 500);
         }
-
-        // Extraire la valeur du commission_rate depuis la table settings
-        $commissionRate = $commissionRateSetting->value;
-
-        // Insérer la demande de trajet dans la table 'ride_requests'
-        DB::table('ride_requests')->insert([
-            'start_location_name' => $request->start_location_name,
-            'start_location' => DB::raw("ST_GeomFromText('POINT({$request->start_lng} {$request->start_lat})', 4326)"),
-            'end_location_name' => $request->end_location_name,
-            'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})', 4326)"),
-            'seats' => $request->seats ?? 1,
-            'preferred_time' => now(),
-            'preferred_amount' => $request->preferred_amount ?? 0,
-            'commission_rate' => $commissionRate, // Utilisation du taux de commission récupéré
-            'status' => 'pending',
-            'passenger_id' => $request->user()->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
     }
+
 
     private function generateUniqueRideNumber()
     {
