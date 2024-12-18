@@ -111,6 +111,10 @@ class UserController extends Controller
                 $profile = $user->profile()->create([]); // Create profile if it doesn't exist
             }
 
+            $user->update([
+                'driving_license_number' => $request->driver_licence_number,
+            ]);
+
             $profile->update([
                 'driver_licence_card' => $licencePath,
                 'address' => $request->input('address'),
@@ -119,10 +123,13 @@ class UserController extends Controller
             // Assigning the 'driver' role using Laravel Permission
             $user->syncRoles(['driver']);
 
+            // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
+            $authController = new Auth\AuthenticatedSessionController();
+            $userArray = $authController->formatUserArray($user);
+
             return response()->json([
                 'success' => true,
-                'user' => $user,
-                'profile' => $profile,
+                'user' => $userArray,
                 'message' => 'Votre compte a été mis à jour avec succès en tant que conducteur.',
             ], 200);
         } catch (\Exception $e) {
