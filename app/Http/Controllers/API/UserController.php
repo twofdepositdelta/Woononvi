@@ -33,7 +33,7 @@ class UserController extends Controller
 
         // Vérification pour le passage en mode driver
         if ($requestedRole === 'passenger') {
-            if (empty($user->driving_license_number) || $user->driving_license_number == "" || $user->driving_license_number == null) {
+            if (empty($user->driving_license_number) && !$user->profile->driver_licence_card) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Veuillez fournir vos informations conducteur.',
