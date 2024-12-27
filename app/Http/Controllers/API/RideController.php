@@ -1069,14 +1069,14 @@ class RideController extends Controller
         if ($booking->status === 'pending' && $request->status !== 'accepted') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez modifier la réservation en pending qu\'à "accepted".',
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
             ], 400);
         }
 
         if ($booking->status === 'accepted' && $request->status !== 'in progress') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez modifier la réservation en accepted qu\'à "in progress".',
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
             ], 400);
         }
 
@@ -1090,7 +1090,7 @@ class RideController extends Controller
         if ($booking->arrived_at && ($request->status !== 'validated_by_passenger' || $request->status !== 'validated_by_driver')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez modifier la réservation en arrived qu\'à "validated_by_passenger".',
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
             ], 400);
         }
 
