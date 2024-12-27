@@ -178,8 +178,8 @@ class RideController extends Controller
 
         // Affecter la valeur de 'value' à 'price_per_km'
         $pricePerKm = $setting->value;
-        //dd(1);
         $days = $request->input('days');
+        dd($days);
         if ($request->type === 'Régulier') {
             // Vérifier que les jours sont fournis
             if (!$days || !is_array($days)) {
