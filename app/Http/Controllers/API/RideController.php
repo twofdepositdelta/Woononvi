@@ -45,23 +45,7 @@ class RideController extends Controller
             'rides.available_seats',
             'rides.created_at',
             'rides.updated_at'
-        ])->get()
-        ->map(function ($ride) {
-            // Vérifier si "days" n'est pas nul
-            if (!is_null($ride->days)) {
-                // Décoder le JSON et joindre les valeurs avec un espace
-                $decodedDays = json_decode($ride->days, true);
-                if (is_array($decodedDays)) {
-                    $ride->days_string = implode(' ', $decodedDays); // Ajouter un nouvel attribut
-                } else {
-                    $ride->days_string = ''; // Si le format est incorrect, laisser vide
-                }
-            } else {
-                $ride->days_string = null; // Si "days" est nul
-            }
-
-            return $ride;
-        });
+        ])->get();
 
         return response()->json([
             'success' => true,

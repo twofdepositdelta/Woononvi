@@ -38,6 +38,11 @@ class Ride extends Model
         'end_location' => LocationCast::class
     ];
 
+    public function getDaysStringAttribute()
+    {
+        return $this->days ? implode(' ', $this->days) : null;
+    }
+
     // Relation avec le conducteur (utilisateur)
     public function driver()
     {
