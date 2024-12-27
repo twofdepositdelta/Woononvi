@@ -888,7 +888,7 @@ class RideController extends Controller
             try {
                 DB::transaction(function () use ($user, $booking) {
                     // Soustraire le montant du solde
-                    $user->balance -= $booking->tottal_price;
+                    $user->balance -= $booking->total_price;
                     $user->save();
     
                     // Enregistrer la transaction dans la table payments
