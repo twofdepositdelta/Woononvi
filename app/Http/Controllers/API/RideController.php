@@ -876,7 +876,7 @@ class RideController extends Controller
 
         if ($request->status === 'in progress') {
             // Vérification du solde de l'utilisateur
-            if ($user->balance < $booking->price) {
+            if ((float) $user->balance < (float) $booking->price) {
                 return response()->json([
                     'success' => false,
                     'reason' => true,
