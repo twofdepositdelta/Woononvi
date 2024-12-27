@@ -409,6 +409,16 @@ class RideController extends Controller
             ], 422);
         }
 
+        $statusNames = [
+            'pending' => 'En attente',
+            'in progress' => 'En cours',
+            'accepted' => 'Acceptée',
+            'rejected' => 'Rejetée',
+            'completed' => 'Terminée',
+            'refunded' => 'Remboursée',
+            'cancelled' => 'Annulée',
+        ];
+
         // Construction de la requête de base
         $query = DB::table('bookings')
             ->select([
@@ -444,7 +454,21 @@ class RideController extends Controller
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
             ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
             ->where('bookings.status', $request->status) // Filtrer par statut
-            ->groupBy('bookings.id');
+            ->groupBy('bookings.id')
+            ->map(function ($booking) use ($statusNames) {
+                // Ajouter le nom du statut à chaque réservation
+                $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
+
+                // Formater departure_time et return_time
+                $booking->departure_time = $booking->departure_time 
+                    ? Carbon::parse($booking->departure_time)->format('H:i') 
+                    : null;
+                $booking->return_time = $booking->return_time 
+                    ? Carbon::parse($booking->return_time)->format('H:i') 
+                    : null;
+
+                return $booking;
+            });
 
         // Si le statut est 'in progress', récupérer uniquement la première réservation
         if ($request->status === 'in progress') {
