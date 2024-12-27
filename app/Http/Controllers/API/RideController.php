@@ -1015,7 +1015,7 @@ class RideController extends Controller
 
         return response()->json([
             'success' => true,
-            'booking' => $booking,
+            //'booking' => $booking,
             'balance' => $user->balance,
             'message' => 'Mise à jour effectuée avec succès.',
         ]);
