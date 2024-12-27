@@ -116,7 +116,6 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        // logger()->error('E', ['user_id' => $request]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
@@ -179,7 +178,7 @@ class RideController extends Controller
 
         // Affecter la valeur de 'value' à 'price_per_km'
         $pricePerKm = $setting->value;
-
+        dd(1);
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
             // Vérifier que les jours sont fournis
