@@ -1219,19 +1219,28 @@ class RideController extends Controller
             if ($ride) {
                 $driver = $ride->driver; // Assurez-vous que la relation "driver" est définie dans le modèle Ride
                 if ($driver) {
-                    Payment::create([
-                        'amount' => $amountToCredit,
-                        'reference' => uniqid('PAY_'),
-                        'payment_method' => 'MOMO',
-                        'status' => 'SUCCESSFUL',
-                        'booking_id' => $booking->id,
-                        'user_id' => $booking->ride->driver->id,
-                        'payment_type_id' => 1,
-                    ]);
+                    DB::transaction(function () use ($driver, $booking) {
+                        Payment::create([
+                            'amount' => $amountToCredit,
+                            'reference' => uniqid('PAY_'),
+                            'payment_method' => 'MOMO',
+                            'status' => 'SUCCESSFUL',
+                            'booking_id' => $booking->id,
+                            'user_id' => $driver->id,
+                            'payment_type_id' => 1,
+                        ]);
 
-                    // Créditez le compte du conducteur
-                    $driver->balance += $amountToCredit;
-                    $driver->save();
+                        // Créditez le compte du conducteur
+                        $driver->balance += $amountToCredit;
+                        $driver->save();
+
+                        // Loguer l'opération pour référence
+                        Log::info('Crédit du compte du conducteur', [
+                            'driver_id' => $driver->id ?? null,
+                            'amount_credited' => $amountToCredit,
+                            'commission_rate' => $commissionRate,
+                        ]);
+                    });
                 }
         
                 // Mettre à jour le statut du trajet s'il est de type "regular"
@@ -1240,13 +1249,6 @@ class RideController extends Controller
                     $ride->save();
                 }
             }
-            
-            // Loguer l'opération pour référence
-            Log::info('Crédit du compte du conducteur', [
-                'driver_id' => $driver->id ?? null,
-                'amount_credited' => $amountToCredit,
-                'commission_rate' => $commissionRate,
-            ]);
             
             if ($ride && $ride->type === 'regular') {
                 $ride->status = 'active';
