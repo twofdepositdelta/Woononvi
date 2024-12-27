@@ -115,6 +115,7 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
+        logger()->error('E', ['user_id' => $request]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
