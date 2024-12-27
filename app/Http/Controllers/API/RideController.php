@@ -24,9 +24,8 @@ class RideController extends Controller
 {
     public function getRides(Request $request)
     {
-        $user = Auth::user();
         $data = DB::table('rides')->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
-            ->where('rides.driver_id', $user->id)->select([
+            ->where('rides.driver_id', $request->user()->id)->select([
             'rides.id',
             'rides.driver_id',
             'vehicle_id',
@@ -46,6 +45,11 @@ class RideController extends Controller
             'rides.created_at',
             'rides.updated_at'
         ])->get();
+
+        $data->transform(function ($ride) {
+            $ride->days_string = $ride->days ? implode(' ', json_decode($ride->days, true)) : null;
+            return $ride;
+        });
 
         return response()->json([
             'success' => true,
