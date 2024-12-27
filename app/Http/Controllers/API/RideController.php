@@ -1087,7 +1087,7 @@ class RideController extends Controller
         //     ], 400);
         // }
 
-        if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
+        if ($booking->arrived_at && ($request->status !== 'validated_by_passenger' || $request->status !== 'validated_by_driver')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Vous ne pouvez modifier la réservation en arrived qu\'à "validated_by_passenger".',
