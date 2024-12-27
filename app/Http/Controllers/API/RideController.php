@@ -116,6 +116,9 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
+        logger()->error('E.', [
+            'days' => $request->days,
+        ]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
@@ -198,6 +201,8 @@ class RideController extends Controller
                 'Sam' => 'Samedi',
                 'Dim' => 'Dimanche'
             ];
+
+            //dd($days);
 
             $convertedDays = [];
             foreach ($days as $day) {
