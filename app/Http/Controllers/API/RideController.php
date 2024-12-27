@@ -1202,7 +1202,33 @@ class RideController extends Controller
         if ($booking->is_by_passenger && $booking->is_by_driver) {
             $booking->status = 'completed';
 
+            // Calculer le montant à créditer au conducteur
+            $commissionRate = $booking->commission_rate; // Assurez-vous que ce champ existe dans la réservation
+            $amountToCredit = $booking->total_price * (1 - $commissionRate);
+
             $ride = Ride::find($booking->ride_id);
+            if ($ride) {
+                $driver = $ride->driver; // Assurez-vous que la relation "driver" est définie dans le modèle Ride
+                if ($driver) {
+                    // Créditez le compte du conducteur
+                    $driver->balance += $amountToCredit;
+                    $driver->save();
+                }
+        
+                // Mettre à jour le statut du trajet s'il est de type "regular"
+                if ($ride->type === 'regular') {
+                    $ride->status = 'active';
+                    $ride->save();
+                }
+            }
+            
+            // Loguer l'opération pour référence
+            Log::info('Crédit du compte du conducteur', [
+                'driver_id' => $driver->id ?? null,
+                'amount_credited' => $amountToCredit,
+                'commission_rate' => $commissionRate,
+            ]);
+            
             if ($ride && $ride->type === 'regular') {
                 $ride->status = 'active';
                 $ride->save();
