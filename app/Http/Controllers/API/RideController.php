@@ -47,7 +47,16 @@ class RideController extends Controller
         ])->get();
 
         $data->transform(function ($ride) {
-            $ride->days_string = $ride->days ? implode(' ', json_decode($ride->days, true)) : null;
+            // Décoder la chaîne JSON en tableau
+            $decodedDays = json_decode($ride->days, true);
+        
+            // Vérifier que la décodage a réussi et que c'est un tableau
+            if (is_array($decodedDays)) {
+                $ride->days_string = implode(' ', $decodedDays);
+            } else {
+                $ride->days_string = null; // Si "days" n'est pas valide, définir comme null
+            }
+        
             return $ride;
         });
 
