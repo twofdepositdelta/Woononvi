@@ -454,21 +454,7 @@ class RideController extends Controller
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
             ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
             ->where('bookings.status', $request->status) // Filtrer par statut
-            ->groupBy('bookings.id')
-            ->map(function ($booking) use ($statusNames) {
-                // Ajouter le nom du statut à chaque réservation
-                $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
-
-                // Formater departure_time et return_time
-                $booking->departure_time = $booking->departure_time 
-                    ? Carbon::parse($booking->departure_time)->format('H:i') 
-                    : null;
-                $booking->return_time = $booking->return_time 
-                    ? Carbon::parse($booking->return_time)->format('H:i') 
-                    : null;
-
-                return $booking;
-            });
+            ->groupBy('bookings.id');
 
         // Si le statut est 'in progress', récupérer uniquement la première réservation
         if ($request->status === 'in progress') {
@@ -489,7 +475,20 @@ class RideController extends Controller
         }
 
         // Si le statut est différent de 'in progress', récupérer toutes les réservations correspondantes
-        $bookings = $query->get();
+        $bookings = $query->get()->map(function ($booking) use ($statusNames) {
+            // Ajouter le nom du statut à chaque réservation
+            $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
+
+            // Formater departure_time et return_time
+            $booking->departure_time = $booking->departure_time 
+                ? Carbon::parse($booking->departure_time)->format('H:i') 
+                : null;
+            $booking->return_time = $booking->return_time 
+                ? Carbon::parse($booking->return_time)->format('H:i') 
+                : null;
+
+            return $booking;
+        });
 
         return response()->json([
             'success' => true,
