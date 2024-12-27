@@ -181,7 +181,7 @@ class RideController extends Controller
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
             // Vérifier que les jours sont fournis
-            if (!$days || !is_array($days)) {
+            if (!$days) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Les jours doivent être définis pour un trajet régulier.',
