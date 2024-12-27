@@ -1080,12 +1080,12 @@ class RideController extends Controller
             ], 400);
         }
 
-        if ($booking->status === 'in progress' && $request->status !== 'arrived') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vous ne pouvez modifier la réservation en in progress qu\'à "arrived".',
-            ], 400);
-        }
+        // if ($booking->status === 'in progress' && $request->status !== 'arrived') {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Vous ne pouvez modifier la réservation en in progress qu\'à "arrived".',
+        //     ], 400);
+        // }
 
         if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
             return response()->json([

@@ -35,12 +35,7 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-
-
-        // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
-
-
-
+            // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         });
 
         // Schema::table('rides', function (Blueprint $table) {
