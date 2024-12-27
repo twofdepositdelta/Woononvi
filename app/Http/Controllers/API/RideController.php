@@ -839,6 +839,196 @@ class RideController extends Controller
         
     }
 
+    // public function updateBookingStatus(Request $request)
+    // {
+    //     // Validation des données
+    //     $rules = [
+    //         'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
+    //         'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled,arrived,validated_by_passenger,validated_by_driver',
+    //         'comment' => 'nullable|string|max:1000', // Le commentaire est facultatif mais doit respecter les contraintes s'il est présent
+    //     ];
+
+    //     // Ajouter une règle conditionnelle pour le champ "rating"
+    //     if (in_array($request->status, ['validated_by_passenger', 'validated_by_driver'])) {
+    //         $rules['rating'] = 'required|integer|between:1,5'; // Rating est requis uniquement pour ces statuts
+    //     }
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Les données envoyées ne sont pas valides.',
+    //             'errors' => $validator->errors()->all(),
+    //         ], 422);
+    //     }
+
+    //     $user = auth()->user();
+
+    //     // Récupérer la réservation
+    //     $booking = Booking::find($request->booking_id);
+
+    //     if (!$booking) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Réservation introuvable.',
+    //         ], 404);
+    //     }
+
+    //     if ($request->status === 'in progress') {
+    //         // Vérification du solde de l'utilisateur
+    //         if ((float) $user->balance < (float) $booking->total_price) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'reason' => true,
+    //                 'message' => 'Votre solde est insuffisant. Veuillez recharger votre compte.',
+    //             ], 400);
+    //         }
+    
+    //         // Effectuer le paiement
+    //         try {
+    //             DB::transaction(function () use ($user, $booking) {
+    //                 // Soustraire le montant du solde
+    //                 $user->balance -= $booking->total_price;
+    //                 $user->save();
+    
+    //                 // Enregistrer la transaction dans la table payments
+    //                 Payment::create([
+    //                     'amount' => $booking->total_price,
+    //                     'reference' => uniqid('PAY_'),
+    //                     'payment_method' => 'MOMO', // Exemple de méthode de paiement
+    //                     'status' => 'SUCCESSFUL',
+    //                     'booking_id' => $booking->id,
+    //                     'payment_type_id' => 3, // Remplacez par l'ID de votre type de paiement
+    //                 ]);
+    
+    //                 // Mettre à jour le statut de la réservation
+    //                 $booking->status = 'in progress';
+    //                 $booking->in_progress_at = now();
+    //                 $booking->save();
+
+    //                 // Annuler les autres réservations du même trajet
+    //                 $otherBookings = Booking::where('ride_id', $booking->ride_id)
+    //                     ->where('id', '!=', $booking->id)
+    //                     ->whereIn('status', ['pending', 'accepted', 'in progress'])
+    //                     ->get();
+
+    //                 foreach ($otherBookings as $otherBooking) {
+    //                     $otherBooking->status = 'cancelled';
+    //                     $otherBooking->cancelled_at = now();
+    //                     $otherBooking->save();
+    //                 }
+
+    //                 // Mettre le trajet en "pending"
+    //                 $ride = Ride::find($booking->ride_id);
+    //                 if ($ride) {
+    //                     $ride->status = 'pending';
+    //                     $ride->save();
+    //                 }
+    //             });
+    //         } catch (\Exception $e) {
+    //             Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
+    //                 'exception' => $e,
+    //                 'booking_id' => $booking->id,
+    //                 'user_balance' => $user->balance,
+    //                 'booking_price' => $booking->price,
+    //             ]);
+
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+    //             ], 500);
+    //         }
+    //     }
+
+    //     // Gestion des statuts spéciaux
+    //     if ($request->status === 'validated_by_passenger') {
+    //         if ($booking->status !== 'in progress') {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'La réservation doit être en cours pour être validée par le passager.',
+    //             ], 400);
+    //         }
+
+    //         $booking->is_by_passenger = true;
+    //         $booking->validated_by_passenger_at = now();
+
+    //         // Créer l'avis
+    //         try {
+    //             $this->createReview(
+    //                 $booking->id,
+    //                 $request->input('rating'),
+    //                 $request->input('comment'),
+    //                 'passenger'
+    //             );
+    //         } catch (\Exception $e) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+    //             ], 500);
+    //         }
+    //     } elseif ($request->status === 'validated_by_driver') {
+    //         if (!$booking->is_by_passenger) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'La réservation doit être validée par le passager avant d\'être validée par le conducteur.',
+    //             ], 400);
+    //         }
+
+    //         $booking->is_by_driver = true;
+    //         $booking->validated_by_driver_at = now();
+
+    //         // Créer l'avis
+    //         try {
+    //             $this->createReview(
+    //                 $booking->id,
+    //                 $request->input('rating'),
+    //                 $request->input('comment'),
+    //                 'driver'
+    //             );
+    //         } catch (\Exception $e) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+    //             ], 500);
+    //         }
+    //     } elseif ($request->status === 'arrived') {
+    //         $booking->arrived_at = now();
+    //     } else {
+    //         // Mettre à jour le statut uniquement pour les autres statuts
+    //         $booking->status = $request->status;
+
+    //         if ($request->status === 'accepted') {
+    //             $booking->accepted_at = now();
+    //         } elseif ($request->status === 'rejected') {
+    //             $booking->rejected_at = now();
+    //         } elseif ($request->status === 'cancelled') {
+    //             $booking->cancelled_at = now();
+    //         }
+    //     }
+
+    //     // Si les deux validations sont remplies, mettre à jour le statut à "completed"
+    //     if ($booking->is_by_passenger && $booking->is_by_driver) {
+    //         $booking->status = 'completed';
+
+    //         // Vérifier si le trajet est de type "regular" et mettre à jour son statut
+    //         $ride = Ride::find($booking->ride_id);
+    //         if ($ride && $ride->type === 'regular') {
+    //             $ride->status = 'active';
+    //             $ride->save();
+    //         }
+    //     }
+
+    //     $booking->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         //'booking' => $booking,
+    //         'balance' => $user->balance,
+    //         'message' => 'Mise à jour effectuée avec succès.',
+    //     ]);
+    // }
+
     public function updateBookingStatus(Request $request)
     {
         // Validation des données
@@ -875,8 +1065,37 @@ class RideController extends Controller
             ], 404);
         }
 
+        // Règles de modification de statut
+        if ($booking->status === 'pending' && $request->status !== 'accepted') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez modifier la réservation en pending qu\'à "accepted".',
+            ], 400);
+        }
+
+        if ($booking->status === 'accepted' && $request->status !== 'in progress') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez modifier la réservation en accepted qu\'à "in progress".',
+            ], 400);
+        }
+
+        if ($booking->status === 'in progress' && $request->status !== 'arrived') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez modifier la réservation en in progress qu\'à "arrived".',
+            ], 400);
+        }
+
+        if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez modifier la réservation en arrived qu\'à "validated_by_passenger".',
+            ], 400);
+        }
+
+        // Vérification des autres règles et mise à jour des champs
         if ($request->status === 'in progress') {
-            // Vérification du solde de l'utilisateur
             if ((float) $user->balance < (float) $booking->total_price) {
                 return response()->json([
                     'success' => false,
@@ -884,47 +1103,24 @@ class RideController extends Controller
                     'message' => 'Votre solde est insuffisant. Veuillez recharger votre compte.',
                 ], 400);
             }
-    
-            // Effectuer le paiement
+
             try {
                 DB::transaction(function () use ($user, $booking) {
-                    // Soustraire le montant du solde
                     $user->balance -= $booking->total_price;
                     $user->save();
-    
-                    // Enregistrer la transaction dans la table payments
+
                     Payment::create([
                         'amount' => $booking->total_price,
                         'reference' => uniqid('PAY_'),
-                        'payment_method' => 'MOMO', // Exemple de méthode de paiement
+                        'payment_method' => 'MOMO',
                         'status' => 'SUCCESSFUL',
                         'booking_id' => $booking->id,
-                        'payment_type_id' => 3, // Remplacez par l'ID de votre type de paiement
+                        'payment_type_id' => 3,
                     ]);
-    
-                    // Mettre à jour le statut de la réservation
+
                     $booking->status = 'in progress';
                     $booking->in_progress_at = now();
                     $booking->save();
-
-                    // Annuler les autres réservations du même trajet
-                    $otherBookings = Booking::where('ride_id', $booking->ride_id)
-                        ->where('id', '!=', $booking->id)
-                        ->whereIn('status', ['pending', 'accepted', 'in progress'])
-                        ->get();
-
-                    foreach ($otherBookings as $otherBooking) {
-                        $otherBooking->status = 'cancelled';
-                        $otherBooking->cancelled_at = now();
-                        $otherBooking->save();
-                    }
-
-                    // Mettre le trajet en "pending"
-                    $ride = Ride::find($booking->ride_id);
-                    if ($ride) {
-                        $ride->status = 'pending';
-                        $ride->save();
-                    }
                 });
             } catch (\Exception $e) {
                 Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
@@ -939,10 +1135,7 @@ class RideController extends Controller
                     'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
                 ], 500);
             }
-        }
-
-        // Gestion des statuts spéciaux
-        if ($request->status === 'validated_by_passenger') {
+        } elseif ($request->status === 'validated_by_passenger') {
             if ($booking->status !== 'in progress') {
                 return response()->json([
                     'success' => false,
@@ -953,7 +1146,6 @@ class RideController extends Controller
             $booking->is_by_passenger = true;
             $booking->validated_by_passenger_at = now();
 
-            // Créer l'avis
             try {
                 $this->createReview(
                     $booking->id,
@@ -1007,11 +1199,9 @@ class RideController extends Controller
             }
         }
 
-        // Si les deux validations sont remplies, mettre à jour le statut à "completed"
         if ($booking->is_by_passenger && $booking->is_by_driver) {
             $booking->status = 'completed';
 
-            // Vérifier si le trajet est de type "regular" et mettre à jour son statut
             $ride = Ride::find($booking->ride_id);
             if ($ride && $ride->type === 'regular') {
                 $ride->status = 'active';
@@ -1023,7 +1213,6 @@ class RideController extends Controller
 
         return response()->json([
             'success' => true,
-            //'booking' => $booking,
             'balance' => $user->balance,
             'message' => 'Mise à jour effectuée avec succès.',
         ]);
