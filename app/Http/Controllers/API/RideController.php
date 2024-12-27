@@ -259,8 +259,8 @@ class RideController extends Controller
         }
 
         $type = ($request->type == "Régulier" ? 'regular' : 'single');
-        $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
-        $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
+        $startLocation = new Point(lng: $request->start_lng, lat: $request->start_lat, srid: 4326);
+        $endLocation = new Point(lng: $request->end_lng, lat: $request->end_lat, srid: 4326);
         $numeroRide = $this->generateUniqueRideNumber();
 
         // Enregistrement du trajet dans la base de données
