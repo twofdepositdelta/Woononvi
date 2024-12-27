@@ -45,7 +45,8 @@ class RideController extends Controller
             'rides.available_seats',
             'rides.created_at',
             'rides.updated_at'
-        ])->map(function ($ride) {
+        ])->get()
+        ->map(function ($ride) {
             // Vérifier si "days" n'est pas nul
             if (!is_null($ride->days)) {
                 // Décoder le JSON et joindre les valeurs avec un espace
@@ -60,8 +61,7 @@ class RideController extends Controller
             }
 
             return $ride;
-        })
-        ->get();
+        });
 
         return response()->json([
             'success' => true,
