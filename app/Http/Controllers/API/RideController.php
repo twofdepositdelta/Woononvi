@@ -1091,7 +1091,7 @@ class RideController extends Controller
             if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vous ne pouvez pas modifier la réservation 1.',
+                    'message' => 'Vous ne pouvez pas modifier la réservation.',
                 ], 400);
             }
         }
@@ -1213,7 +1213,7 @@ class RideController extends Controller
 
             // Calculer le montant à créditer au conducteur
             $commissionRate = $booking->commission_rate; // Assurez-vous que ce champ existe dans la réservation
-            $amountToCredit = $booking->total_price * (1 - $commissionRate);
+            $amountToCredit = $booking->total_price * (1 - ($commissionRate / 100));
 
             $ride = Ride::find($booking->ride_id);
             if ($ride) {
