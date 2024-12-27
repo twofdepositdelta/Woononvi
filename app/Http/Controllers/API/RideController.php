@@ -481,6 +481,8 @@ class RideController extends Controller
             // Ajouter le nom du statut à chaque réservation
             $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
 
+            $booking->amount_received = $booking->total_price * (1 - ($booking->commission_rate / 100));
+
             // Formater departure_time et return_time
             $booking->departure_time = $booking->departure_time 
                 ? Carbon::parse($booking->departure_time)->format('H:i') 
