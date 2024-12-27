@@ -47,14 +47,20 @@ class RideController extends Controller
         ])->get();
 
         $data->transform(function ($ride) {
-            // Décoder la chaîne JSON en tableau
-            $decodedDays = json_decode($ride->days, true);
+            // Supprimer les guillemets externes
+            $rawDays = trim($ride->days, '"'); 
         
-            // Vérifier que la décodage a réussi et que c'est un tableau
+            // Décoder les caractères échappés
+            $decodedRawDays = stripslashes($rawDays);
+        
+            // Décoder la chaîne JSON pour obtenir un tableau
+            $decodedDays = json_decode($decodedRawDays, true);
+        
+            // Vérifier si le décodage est réussi et si le résultat est un tableau
             if (is_array($decodedDays)) {
-                $ride->days_string = implode(' ', $decodedDays);
+                $ride->days_string = implode(' ', $decodedDays); // Joindre les jours avec des espaces
             } else {
-                $ride->days_string = null; // Si "days" n'est pas valide, définir comme null
+                $ride->days_string = null; // Si la valeur n'est pas valide, définir comme null
             }
         
             return $ride;
