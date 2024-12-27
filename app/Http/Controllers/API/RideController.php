@@ -1219,6 +1219,16 @@ class RideController extends Controller
             if ($ride) {
                 $driver = $ride->driver; // Assurez-vous que la relation "driver" est définie dans le modèle Ride
                 if ($driver) {
+                    Payment::create([
+                        'amount' => $amountToCredit,
+                        'reference' => uniqid('PAY_'),
+                        'payment_method' => 'MOMO',
+                        'status' => 'SUCCESSFUL',
+                        'booking_id' => $booking->id,
+                        'user_id' => $booking->ride->driver->id,
+                        'payment_type_id' => 1,
+                    ]);
+
                     // Créditez le compte du conducteur
                     $driver->balance += $amountToCredit;
                     $driver->save();
