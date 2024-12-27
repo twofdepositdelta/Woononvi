@@ -894,7 +894,7 @@ class RideController extends Controller
     
                     // Enregistrer la transaction dans la table payments
                     Payment::create([
-                        'amount' => $booking->price,
+                        'amount' => $booking->total_price,
                         'reference' => uniqid('PAY_'),
                         'payment_method' => 'MOMO', // Exemple de méthode de paiement
                         'status' => 'SUCCESSFUL',
