@@ -1094,6 +1094,13 @@ class RideController extends Controller
             ], 400);
         }
 
+        if ($booking->is_by_passenger && $request->status !== 'validated_by_driver') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
+            ], 400);
+        }
+
         // Vérification des autres règles et mise à jour des champs
         if ($request->status === 'in progress') {
             if ((float) $user->balance < (float) $booking->total_price) {
