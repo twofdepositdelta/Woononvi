@@ -9,6 +9,7 @@ use App\Models\RideMessage;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Country;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
