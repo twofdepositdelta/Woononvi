@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TarfinLabs\LaravelSpatial\Types\Point;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class RideController extends Controller
@@ -926,6 +927,13 @@ class RideController extends Controller
                     }
                 });
             } catch (\Exception $e) {
+                Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
+                    'exception' => $e,
+                    'booking_id' => $booking->id,
+                    'user_balance' => $user->balance,
+                    'booking_price' => $booking->price,
+                ]);
+
                 return response()->json([
                     'success' => false,
                     'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
