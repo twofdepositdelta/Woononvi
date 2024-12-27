@@ -184,17 +184,17 @@ class RideController extends Controller
 
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
+            // S'assurer que $days est un tableau
+            if (is_string($days)) {
+                $days = json_decode($days, true); // Décoder la chaîne JSON en tableau
+            }
+
             // Vérifier que les jours sont fournis
             if (!$days || !is_array($days)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Les jours doivent être définis pour un trajet régulier.',
                 ], 422);
-            }
-
-            // S'assurer que $days est un tableau
-            if (is_string($days)) {
-                $days = json_decode($days, true); // Décoder la chaîne JSON en tableau
             }
 
             // Correspondance des abréviations des jours avec les jours complets
