@@ -443,7 +443,8 @@ class RideController extends Controller
             ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
             ->join('profiles', 'profiles.user_id', '=', 'users.id')
             ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
-            ->where('bookings.status', $request->status); // Filtrer par statut
+            ->where('bookings.status', $request->status) // Filtrer par statut
+            ->groupBy('bookings.id');
 
         // Si le statut est 'in progress', récupérer uniquement la première réservation
         if ($request->status === 'in progress') {
