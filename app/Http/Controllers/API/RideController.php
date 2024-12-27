@@ -608,8 +608,8 @@ class RideController extends Controller
         $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
         $currentDate = now()->toDateString(); // Obtenir la date actuelle au format 'YYYY-MM-DD'
 
-        return DB::table('rides')->distinct()->select([
-            'rides.id',
+        return DB::table('rides')->select([
+            'DISTINCT rides.id',
             'rides.driver_id',
             'rides.vehicle_id',
             'users.firstname',
