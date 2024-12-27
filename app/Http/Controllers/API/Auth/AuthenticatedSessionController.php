@@ -409,13 +409,13 @@ class AuthenticatedSessionController extends Controller
         if ($role == 'passenger') {
             // Nombre de réservations où l'utilisateur est un passager et où le statut est "completed"
             return Booking::where('passenger_id', $user->id)
-                        ->where('status', 'completed')
+                        ->where('status', 'completed')->OrWhere('status', '')
                         ->count();
         } elseif ($role == 'driver') {
             // Nombre de réservations où l'utilisateur est un conducteur et où le statut est "completed"
             return Ride::where('driver_id', $user->id)
                         ->whereHas('bookings', function($query) {
-                            $query->where('status', 'completed');
+                            $query->where('status', 'completed')->OrWhere('status', '');
                         })
                         ->count();
         }
