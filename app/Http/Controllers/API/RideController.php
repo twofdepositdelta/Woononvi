@@ -863,6 +863,16 @@ class RideController extends Controller
 
         $user = auth()->user();
 
+        // Récupérer la réservation
+        $booking = Booking::find($request->booking_id);
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Réservation introuvable.',
+            ], 404);
+        }
+
         if ($request->status === 'in progress') {
             // Vérification du solde de l'utilisateur
             if ($user->balance < $booking->price) {
@@ -920,16 +930,6 @@ class RideController extends Controller
                     'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
                 ], 500);
             }
-        }
-
-        // Récupérer la réservation
-        $booking = Booking::find($request->booking_id);
-
-        if (!$booking) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Réservation introuvable.',
-            ], 404);
         }
 
         // Gestion des statuts spéciaux
