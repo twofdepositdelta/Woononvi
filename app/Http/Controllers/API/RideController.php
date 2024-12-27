@@ -116,9 +116,9 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        logger()->error('E.', [
-            'days' => $request->days,
-        ]);
+        // logger()->error('E.', [
+        //     'days' => $request->days,
+        // ]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
@@ -181,14 +181,20 @@ class RideController extends Controller
 
         // Affecter la valeur de 'value' à 'price_per_km'
         $pricePerKm = $setting->value;
+
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
             // Vérifier que les jours sont fournis
-            if (!$days) {
+            if (!$days || !is_array($days)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Les jours doivent être définis pour un trajet régulier.',
                 ], 422);
+            }
+
+            // S'assurer que $days est un tableau
+            if (is_string($days)) {
+                $days = json_decode($days, true); // Décoder la chaîne JSON en tableau
             }
 
             // Correspondance des abréviations des jours avec les jours complets
@@ -201,8 +207,6 @@ class RideController extends Controller
                 'Sam' => 'Samedi',
                 'Dim' => 'Dimanche'
             ];
-
-            //dd($days);
 
             $convertedDays = [];
             foreach ($days as $day) {
