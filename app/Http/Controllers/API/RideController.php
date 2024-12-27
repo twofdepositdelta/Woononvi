@@ -115,7 +115,7 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        logger()->error('E', ['user_id' => $request]);
+        // logger()->error('E', ['user_id' => $request]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
@@ -130,7 +130,7 @@ class RideController extends Controller
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
             'seats' => 'required',
-            'days' => 'nullable|array', // Ajout de la validation pour les jours
+            // 'days' => 'nullable|array', // Ajout de la validation pour les jours
         ]);
 
         if ($validator->fails()) {
