@@ -363,8 +363,8 @@ class RideController extends Controller
             ->where('key', 'commission_rate')
             ->value('value'); // Récupère uniquement la colonne "value" pour `commission_rate`
 
-        $startLocation = new Point(lat: $request->start_lng, lng: $request->start_lat, srid: 4326);
-        $endLocation = new Point(lat: $request->end_lng, lng: $request->end_lat, srid: 4326);
+        $startLocation = new Point(lng: $request->start_lng, lat: $request->start_lat, srid: 4326);
+        $endLocation = new Point(lng: $request->end_lng, lat: $request->end_lat, srid: 4326);
 
         // Création de la réservation
         $booking = DB::table('bookings')->insert([
