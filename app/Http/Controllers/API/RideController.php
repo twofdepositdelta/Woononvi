@@ -1087,17 +1087,19 @@ class RideController extends Controller
         //     ], 400);
         // }
 
-        if ($booking->arrived_at && ($request->status !== 'validated_by_passenger' || $request->status !== 'validated_by_driver')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation 1.',
-            ], 400);
+        if(!$booking->is_by_passenger) {
+            if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous ne pouvez pas modifier la réservation 1.',
+                ], 400);
+            }
         }
 
         if ($booking->is_by_passenger && $request->status !== 'validated_by_driver') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation 2.',
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
             ], 400);
         }
 
