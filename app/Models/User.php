@@ -115,7 +115,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function profile()
     {
-        return $this->hasOne(Profile::class); // Assurez-vous d'importer le modèle Booking
+        return $this->hasOne(Profile::class); 
+    }
+
+    public function preference()
+    {
+        return $this->hasOne(Preference::class); 
     }
 
     public function ride_requests()
