@@ -287,7 +287,7 @@ class AuthenticatedSessionController extends Controller
             'identy_card' => $npiPath,
         ]);
     
-        $city = City::findOrFail($request->city_id);
+        $city = City::whereName($request->city_id)->first();
     
         $user->update([
             'date_of_birth' => $request->birth_of_date,
