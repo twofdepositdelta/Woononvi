@@ -243,7 +243,7 @@ class AuthenticatedSessionController extends Controller
             'gender' => 'required|string|max:255',
             'npi' => 'required|string|unique:users',
             'birth_of_date' => 'required|date',
-            'city_id' => 'required|exists:cities,id',
+            'city_id' => 'required',
             'npi_file' => 'required|mimes:pdf|max:1024',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
         ];
