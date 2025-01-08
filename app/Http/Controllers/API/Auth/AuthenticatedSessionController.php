@@ -292,6 +292,7 @@ class AuthenticatedSessionController extends Controller
         if($setting) {
             Preference::create([
                 'prefered_amount' => $setting->value,
+                'user_id' => Auth::id()
             ]);
         }
         
