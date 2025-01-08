@@ -243,6 +243,7 @@ class AuthenticatedSessionController extends Controller
             'gender' => 'required|string|max:255',
             'npi' => 'required|string|unique:users',
             'birth_of_date' => 'required|date',
+            'expiry_date' => 'required|date',
             'city_id' => 'required',
             'npi_file' => 'required|mimes:pdf|max:1024',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
@@ -266,7 +267,7 @@ class AuthenticatedSessionController extends Controller
         if ($age < 18) {
             return response()->json([
                 'success' => false,
-                'message' => "Vous devez avoir au moins 18 ans pour continuer.",
+                'errors' => ["Vous devez avoir au moins 18 ans pour continuer."],
                 'age' => $age,
             ], 401);
         }
@@ -307,7 +308,7 @@ class AuthenticatedSessionController extends Controller
             'paper' => $npiPath,
             'user_id' => Auth::id(),
             'type_document_id' => $type,
-            'expiry_date' => 2025-12-31,
+            'expiry_date' => $request->expiry_date,
         ]);
     
         $city = City::whereName($request->city_id)->first();
