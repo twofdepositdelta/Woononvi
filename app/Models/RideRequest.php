@@ -30,19 +30,19 @@ class RideRequest extends Model
     ];
 
     protected $casts = [
-
         'start_location' => LocationCast::class,
         'end_location' => LocationCast::class
     ];
+
     // Relation avec le passager (utilisateur)
     public function passenger()
     {
         return $this->belongsTo(User::class, 'passenger_id'); // Assurez-vous d'importer le modèle User
     }
 
-     // Relation avec le passager (utilisateur)
-     public function driver()
-     {
-         return $this->belongsTo(User::class, 'driver_id'); // Assurez-vous d'importer le modèle User
-     }
+    // Relation avec le passager (utilisateur)
+    public function driver()
+    {
+        return $this->belongsTo(User::class, 'driver_id'); // Assurez-vous d'importer le modèle User
+    }
 }

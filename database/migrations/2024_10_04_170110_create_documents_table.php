@@ -28,7 +28,6 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class)->nullable();
             $table->timestamps();
         });
-
     }
 
     /**

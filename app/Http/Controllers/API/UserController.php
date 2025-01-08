@@ -4,10 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -32,13 +35,29 @@ class UserController extends Controller
         $user = $request->user();
 
         // Vérification pour le passage en mode driver
+        // if ($requestedRole === 'passenger') {
+        //     if (empty($user->driving_license_number) && !$user->profile->driver_licence_card) {
+        //         return response()->json([
+        //             'success' => true,
+        //             'message' => 'Veuillez fournir vos informations conducteur.',
+        //             'is_driver_set' => false,
+        //         ], 200);
+        //     }
+        // }
+
         if ($requestedRole === 'passenger') {
-            if (empty($user->driving_license_number) && !$user->profile->driver_licence_card) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Veuillez fournir vos informations conducteur.',
-                    'is_driver_set' => false,
-                ], 200);
+            // Récupérer le premier document pour l'utilisateur connecté
+            $document = Document::where('user_id', Auth::id())->first();
+        
+            if (!is_null($document)) {
+                // Vérifier si le type de document est nul
+                if (is_null($document->type_document_id)) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Veuillez fournir vos informations conducteur.',
+                        'is_driver_set' => false,
+                    ], 200);
+                }
             }
         }
 
@@ -116,8 +135,18 @@ class UserController extends Controller
             ]);
 
             $profile->update([
-                'driver_licence_card' => $licencePath,
+                //'driver_licence_card' => $licencePath,
                 'address' => $request->input('address'),
+            ]);
+
+            $number = Str::random(8);
+            $document = Document::create([
+                'slug' => Str::slug($request->driver_licence_number),
+                'number' => $request->driver_licence_number,
+                'paper' => driver_licence_file,
+                'user_id' => Auth::id(),
+                'type_document_id' => 1,
+                'expiry_date' => 2025-12-31,
             ]);
 
             // Assigning the 'driver' role using Laravel Permission

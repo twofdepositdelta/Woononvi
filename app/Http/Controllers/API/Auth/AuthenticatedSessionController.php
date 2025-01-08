@@ -284,7 +284,30 @@ class AuthenticatedSessionController extends Controller
         Profile::create([
             'user_id' => $user->id,
             'avatar' => $avatarPath,
-            'identy_card' => $npiPath,
+            //'identy_card' => $npiPath
+        ]);
+
+        $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
+        if($setting) {
+            Preference::create([
+                'prefered_amount' => $setting->value,
+            ]);
+        }
+        
+        $type = 1;
+        if($user->roles->first()->name == "driver")
+            $type = 1;
+        else
+            $type = 5;
+
+        $number = Str::random(8);
+        $document = Document::create([
+            'slug' => Str::slug($number),
+            'number' => $request->npi,
+            'paper' => $npiPath,
+            'user_id' => Auth::id(),
+            'type_document_id' => $type,
+            'expiry_date' => 2025-12-31,
         ]);
     
         $city = City::whereName($request->city_id)->first();
@@ -295,9 +318,7 @@ class AuthenticatedSessionController extends Controller
             'gender' => $request->gender,
             'city_id' => $city->id,
         ]);
-    
-        $user->preference()->create();
-    
+        
         $userArray = $this->formatUserArray($user);
     
         return response()->json([
