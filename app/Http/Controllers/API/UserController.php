@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Auth\AuthenticatedController;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,7 @@ class UserController extends Controller
         $user->assignRole($roleInstance);
 
         // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
-        $authController = new Auth\AuthenticatedSessionController();
+        $authController = new AuthenticatedSessionController();
         $userArray = $authController->formatUserArray($user);
 
         if($role == 'driver')
