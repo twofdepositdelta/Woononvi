@@ -1148,7 +1148,7 @@ class RideController extends Controller
                 ], 500);
             }
         } elseif ($request->status === 'validated_by_passenger') {
-            if ($booking->status !== 'in progress') {
+            if ($booking->status !== 'in progress' || $booking->arrived_at == null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'La réservation doit être en cours pour être validée par le passager.',
