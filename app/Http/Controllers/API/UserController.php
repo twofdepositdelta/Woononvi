@@ -154,7 +154,7 @@ class UserController extends Controller
             $user->syncRoles(['driver']);
 
             // Créer une instance d'AuthenticatedSessionController pour appeler formatUserArray
-            $authController = new Auth\AuthenticatedSessionController();
+            $authController = new AuthenticatedSessionController();
             $userArray = $authController->formatUserArray($user);
 
             return response()->json([
