@@ -137,12 +137,23 @@ class VehicleController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
+                'reason' => false,
                 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
 
         $user = $request->user();
+
+        // Vérifier si le solde de l'utilisateur est suffisant
+        if ($user->balance < 1000) {
+            return response()->json([
+                'success' => false,
+                'reason' => true,
+                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte.',
+            ], 422);
+        }
+
         $vehicle = Vehicle::where('id', $request->vehicle_id)->where('driver_id', $user->id)->first();
 
         if (!$vehicle) {
