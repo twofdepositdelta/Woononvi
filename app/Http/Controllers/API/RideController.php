@@ -137,9 +137,6 @@ class RideController extends Controller
      */
     public function store(Request $request)
     {
-        // logger()->error('E.', [
-        //     'days' => $request->days,
-        // ]);
         // Validation des données
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:Régulier,Ponctuel',
@@ -160,12 +157,24 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
+                'reason' => false,
                 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
 
-        $countryId = Auth::user()->country_id;
+        $driver = Auth::user();
+
+        // Vérifier si le solde de l'utilisateur est suffisant
+        if ($driver->balance < 1000) {
+            return response()->json([
+                'success' => false,
+                'reason' => true,
+                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins.',
+            ], 422);
+        }
+
+        $countryId = $driver->country_id;
         if (!$countryId) {
             // Loguer l'erreur
             logger()->error('Le conducteur n\'a pas de pays associé.', ['user_id' => $user->id]);
@@ -250,7 +259,6 @@ class RideController extends Controller
         }
 
         // Vérifier si le conducteur a un véhicule actif
-        $driver = Auth::user();
         $activeVehicle = $driver->vehicles()->where('is_active', true)->first();
 
         if (!$activeVehicle) {
