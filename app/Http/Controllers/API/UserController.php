@@ -35,23 +35,11 @@ class UserController extends Controller
         $requestedRole = $request->role; // Rôle demandé (driver ou passenger)
         $user = $request->user();
 
-        // Vérification pour le passage en mode driver
-        // if ($requestedRole === 'passenger') {
-        //     if (empty($user->driving_license_number) && !$user->profile->driver_licence_card) {
-        //         return response()->json([
-        //             'success' => true,
-        //             'message' => 'Veuillez fournir vos informations conducteur.',
-        //             'is_driver_set' => false,
-        //         ], 200);
-        //     }
-        // }
-
         if ($requestedRole === 'passenger') {
             // Récupérer le premier document pour l'utilisateur connecté
             $document = Document::where('user_id', Auth::id())->where('type_document_id', 1)->first();
         
             if (!$document) {
-                // Vérifier si le type de document est nul
                 return response()->json([
                     'success' => true,
                     'message' => 'Veuillez fournir vos informations conducteur.',
