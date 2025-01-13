@@ -15,6 +15,7 @@ class Booking extends Model
         'ride_id',
         'passenger_id',
         'status',
+        'mode',
         'passenger_start_location',
         'passenger_start_location_name',
         'passenger_end_location',

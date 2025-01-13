@@ -364,7 +364,7 @@ class RideController extends Controller
         }
 
         // Calcul du prix total
-        $total_price = $ride->total_price;
+        $total_price = $ride->total_price * $request->seats_reserved;
 
         // Génération d'un numéro unique de réservation
         $booking_number = 'BOOK-' . strtoupper(Str::random(10));

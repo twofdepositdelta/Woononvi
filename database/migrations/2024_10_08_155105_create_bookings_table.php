@@ -26,6 +26,7 @@ return new class extends Migration
             $table->geography('passenger_end_location', 'point');
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'in progress', 'accepted', 'rejected', 'refunded', 'cancelled', 'completed'])->default('pending');
+            $table->enum('mode', ['in cash', 'wallet']);
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->timestamp('accepted_at')->nullable();

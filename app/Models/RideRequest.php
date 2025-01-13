@@ -19,6 +19,7 @@ class RideRequest extends Model
         'preferred_amount',
         'commission_rate',
         'status',
+        'mode',
         'passenger_id',
         'driver_id',
         'accepted_at',

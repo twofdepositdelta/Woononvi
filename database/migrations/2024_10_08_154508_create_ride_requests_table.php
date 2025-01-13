@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('preferred_amount')->nullable(); // Nombre de places disponibles
             $table->integer('commission_rate');
             $table->enum('status', ['pending', 'accepted', 'rejected', 'completed', 'refunded', 'cancelled'])->default('pending');
+            $table->enum('mode', ['in cash', 'wallet']);
             $table->boolean('is_by_passenger')->default(false);
             $table->boolean('is_by_driver')->default(false);
             $table->foreignId('passenger_id')->constrained('users')->onDelete('cascade');
