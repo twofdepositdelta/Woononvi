@@ -151,7 +151,6 @@ class RideController extends Controller
             'is_nearby_ride' => 'required|boolean',
             'total_price' => 'required',
             'seats' => 'required',
-            // 'days' => 'nullable|array', // Ajout de la validation pour les jours
         ]);
 
         if ($validator->fails()) {
@@ -594,6 +593,7 @@ class RideController extends Controller
             'end_location_name' => 'required|string',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
+            'seats_reserved' => 'required|min:1',
             // 'departure_time' => 'required|date',
             // 'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
@@ -656,6 +656,7 @@ class RideController extends Controller
         return DB::table('rides')->select([
             'rides.id',
             'rides.driver_id',
+            'rides.available_seats',
             'rides.vehicle_id',
             'users.firstname',
             'users.lastname',
@@ -688,7 +689,8 @@ class RideController extends Controller
             )
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
             ["POINT($request->start_lng $request->start_lat)", 5000])
-        ->where('rides.driver_id', '!=', Auth::id())   
+        ->where('rides.driver_id', '!=', Auth::id())
+        ->where('rides.available_seats', '>=', $request->seats_reserved)
         ->where(function ($query) use ($currentDay, $currentDate) {
             $query->where(function ($subQuery) use ($currentDate) {
                 $subQuery->where('type', 'single')
@@ -729,23 +731,23 @@ class RideController extends Controller
             $commissionRate = $commissionRateSetting->value;
 
             // Validation des données d'entrée
-            $validator = Validator::make($request->all(), [
-                'start_location_name' => 'required|string|max:255',
-                'start_lat' => 'required|numeric',
-                'start_lng' => 'required|numeric',
-                'end_location_name' => 'required|string|max:255',
-                'end_lat' => 'required|numeric',
-                'end_lng' => 'required|numeric',
-                'seats' => 'nullable|integer|min:1',
-                'preferred_amount' => 'nullable|numeric|min:0',
-            ]);
+            // $validator = Validator::make($request->all(), [
+            //     'start_location_name' => 'required|string|max:255',
+            //     'start_lat' => 'required|numeric',
+            //     'start_lng' => 'required|numeric',
+            //     'end_location_name' => 'required|string|max:255',
+            //     'end_lat' => 'required|numeric',
+            //     'end_lng' => 'required|numeric',
+            //     'seats' => 'nullable|integer|min:1',
+            //     'preferred_amount' => 'nullable|numeric|min:0',
+            // ]);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'message' => 'Les données fournies ne sont pas valides.',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
+            // if ($validator->fails()) {
+            //     return response()->json([
+            //         'message' => 'Les données fournies ne sont pas valides.',
+            //         'errors' => $validator->errors(),
+            //     ], 422);
+            // }
 
             // Insérer la demande de trajet dans la table 'ride_requests'
             DB::table('ride_requests')->insert([
@@ -759,6 +761,7 @@ class RideController extends Controller
                 'commission_rate' => $commissionRate,
                 'status' => 'pending',
                 'passenger_id' => $request->user()->id,
+                'mode' => $request->mode,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
