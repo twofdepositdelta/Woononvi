@@ -48,17 +48,15 @@ class UserController extends Controller
 
         if ($requestedRole === 'passenger') {
             // Récupérer le premier document pour l'utilisateur connecté
-            $document = Document::where('user_id', Auth::id())->first();
+            $document = Document::where('user_id', Auth::id())->where('type_document_id', 1)->first();
         
-            if (!is_null($document)) {
+            if (!$document) {
                 // Vérifier si le type de document est nul
-                if (is_null($document->type_document_id)) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Veuillez fournir vos informations conducteur.',
-                        'is_driver_set' => false,
-                    ], 200);
-                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Veuillez fournir vos informations conducteur.',
+                    'is_driver_set' => false,
+                ], 200);
             }
         }
 
