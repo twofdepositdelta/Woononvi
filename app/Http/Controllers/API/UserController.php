@@ -130,7 +130,7 @@ class UserController extends Controller
             $document = Document::create([
                 'slug' => Str::slug($request->driver_licence_number),
                 'number' => $request->driver_licence_number,
-                'paper' => driver_licence_file,
+                'paper' => $licencePath,
                 'user_id' => Auth::id(),
                 'type_document_id' => 1,
                 'expiry_date' => 2025-12-31,
