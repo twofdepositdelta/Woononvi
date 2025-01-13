@@ -343,13 +343,13 @@ class RideController extends Controller
         $validator = Validator::make($request->all(), [
             'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
             'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
-            'mode' => 'required|in:in cash,wallet', // Vérifie le nombre de places réservées
+            'mode' => 'required|in:in cash,wallet',
             'start_lat' => 'required',
             'start_lng' => 'required',
             'end_lat' => 'required',
             'end_lng' => 'required',
             'start_location_name' => 'required',
-            'end_location_name' => 'required',
+            'end_location_name' => 'required'
         ]);
 
         if ($validator->fails()) {
