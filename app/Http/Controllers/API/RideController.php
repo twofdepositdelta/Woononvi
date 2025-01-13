@@ -335,7 +335,7 @@ class RideController extends Controller
     {
         if ($request->has('mode')) {
             $request->merge([
-                'mode' => $request->mode === 'en espèce' ? 'in cash' : 'wallet',
+                'mode' => $request->mode === 'En espèce' ? 'in cash' : 'wallet',
             ]);
         }
 
