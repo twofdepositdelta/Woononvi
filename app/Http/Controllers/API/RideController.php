@@ -333,10 +333,17 @@ class RideController extends Controller
 
     public function bookRide(Request $request)
     {
+        if ($request->has('mode')) {
+            $request->merge([
+                'mode' => $request->mode === 'en espèce' ? 'in cash' : 'wallet',
+            ]);
+        }
+
         // Validation des données envoyées
         $validator = Validator::make($request->all(), [
             'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
             'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
+            'mode' => 'required|in:in cash,wallet', // Vérifie le nombre de places réservées
             'start_lat' => 'required',
             'start_lng' => 'required',
             'end_lat' => 'required',
@@ -364,7 +371,7 @@ class RideController extends Controller
         }
 
         // Calcul du prix total
-        $total_price = $ride->total_price * $request->seats_reserved;
+        $total_price = (int) $ride->total_price * (int) $request->seats_reserved;
 
         // Génération d'un numéro unique de réservation
         $booking_number = 'BOOK-' . strtoupper(Str::random(10));
@@ -389,6 +396,7 @@ class RideController extends Controller
             'passenger_start_location' => DB::raw("ST_GeomFromText('POINT($request->start_lng $request->start_lat)', 4326)"),
             'passenger_end_location' => DB::raw("ST_GeomFromText('POINT($request->end_lng $request->end_lat)', 4326)"), 
             'passenger_id' => $request->user()->id,
+            'mode' => $request->mode,
             'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
