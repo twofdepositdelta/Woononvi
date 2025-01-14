@@ -1142,6 +1142,13 @@ class RideController extends Controller
             ], 400);
         }
 
+        if ($booking->status === 'accepted' && $request->status !== 'in progress') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez pas modifier la réservation.',
+            ], 400);
+        }
+
         if ($request->status === 'rejected') {
             $booking->rejected_at = now();
         } elseif ($request->status === 'cancelled') {
@@ -1149,67 +1156,72 @@ class RideController extends Controller
         }
 
         if ($request->status === 'accepted') {
-            $commissionRate = DB::table('settings')
-                ->where('key', 'commission_rate')
-                ->value('value');
-            $commission = (int) $booking->total_price * (int) $booking->seats_reserved * (int) $commissionRate / 100;
-            if ($user->balance < $commission) {
-                return response()->json([
-                    'success' => false,
-                    'reason' => 'balance',
-                    'message' => 'Veuillez recharger votre compte afin d\'accepter cette réservation.',
-                ], 400);
-            } else {
-                try {
-                    DB::transaction(function () use ($user, $booking, $commission) {
-                        $user->balance -= $commission;
-                        $user->save();
-    
-                        // Payment::create([
-                        //     'amount' => $commission,
-                        //     'reference' => uniqid('PAY_'),
-                        //     'payment_method' => 'MOMO',
-                        //     'status' => 'SUCCESSFUL',
-                        //     'booking_id' => $booking->id,
-                        //     'payment_type_id' => 3,
-                        // ]);
-    
-                        $booking->status = 'accepted';
-                        $booking->accepted_at = now();
-                        $booking->save();
-
-                        $ride = $booking->ride;
-                        $ride->available_seats -= $booking->seats_reserved;
-                        $ride->save();
-
-                        return response()->json([
-                            'success' => true,
-                            'balance' => $user->balance,
-                            'message' => "Réservation acceptée avec succès.",
-                        ]);
-                    });
-                } catch (\Exception $e) {
-                    Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
-                        'exception' => $e,
-                        'booking_id' => $booking->id,
-                        'user_balance' => $user->balance,
-                        'booking_price' => $booking->total_price,
-                    ]);
-    
+            try {
+                // Récupérer le taux de commission en float
+                $commissionRate = (float) DB::table('settings')
+                    ->where('key', 'commission_rate')
+                    ->value('value');
+        
+                // Calcul de la commission
+                $commission = $booking->total_price * $booking->seats_reserved * $commissionRate / 100;
+        
+                // Vérifier si le solde de l'utilisateur est suffisant
+                if ($user->balance < $commission) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
-                    ], 500);
+                        'reason' => 'balance',
+                        'message' => 'Veuillez recharger votre compte afin d\'accepter cette réservation.',
+                    ], 400);
                 }
+        
+                // Gérer la transaction
+                DB::transaction(function () use ($user, $booking, $commission) {
+                    // Déduire la commission du solde utilisateur
+                    $user->balance -= $commission;
+                    $user->save();
+        
+                    // Enregistrer le paiement
+                    Payment::create([
+                        'amount' => $commission,
+                        'reference' => uniqid('PAY_'),
+                        'payment_method' => 'MOMO',
+                        'status' => 'SUCCESSFUL',
+                        'booking_id' => $booking->id,
+                        'payment_type_id' => 3,
+                    ]);
+        
+                    // Mettre à jour la réservation
+                    $booking->status = 'accepted';
+                    $booking->accepted_at = now();
+                    $booking->save();
+        
+                    // Mettre à jour les sièges disponibles du trajet
+                    $ride = $booking->ride;
+                    $ride->available_seats -= $booking->seats_reserved;
+                    $ride->save();
+                });
+        
+                return response()->json([
+                    'success' => true,
+                    'balance' => $user->balance,
+                    'message' => "Réservation acceptée avec succès.",
+                ]);
+            } catch (\Exception $e) {
+                // Enregistrer l'erreur dans les logs avec des détails pertinents
+                Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
+                    'exception' => $e,
+                    'booking_id' => $booking->id ?? null,
+                    'user_balance' => $user->balance ?? null,
+                    'booking_price' => $booking->total_price ?? null,
+                ]);
+        
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+                ], 500);
             }
         }
-
-        if ($booking->status === 'accepted' && $request->status !== 'in progress') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation.',
-            ], 400);
-        }
+        
 
         if ($request->status === 'in progress') {
             $booking->status = 'in progress';
