@@ -1176,8 +1176,11 @@ class RideController extends Controller
     
                         $booking->status = 'accepted';
                         $booking->accepted_at = now();
-                        $booking->ride->available_seats -= $booking->seats_reserved;
                         $booking->save();
+
+                        $ride = $booking->ride;
+                        $ride->available_seats -= $booking->seats_reserved;
+                        $ride->save();
 
                         return response()->json([
                             'success' => true,
