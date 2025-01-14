@@ -9,7 +9,7 @@
     <meta name="description" content>
     <meta name="keywords" content>
 
-    <title>WONONVI &bull; @yield('title')</title>
+    <title>Wòónɔ̀ví &bull; @yield('title')</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/favicon.png') }}">
 
@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/jquery.timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/nice-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/preload.css') }}">
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
@@ -48,6 +49,8 @@
         .navbar-nav .nav-item > a:hover {
             color: #FFB300; /* Appliquer la même couleur au survol */
         }
+
+
     </style>
     @yield('customCSS')
 </head>

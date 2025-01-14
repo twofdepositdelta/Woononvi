@@ -14,18 +14,18 @@
             <div class="row">
                 <div class="col">
                     <div class="terms-content">
-                        <h3>Conditions Générales d'Utilisation de Wononvi</h3>
-                        <p>Bienvenue sur Wononvi, votre plateforme de covoiturage dédiée à la mobilité durable et partagée. En accédant à notre service, vous acceptez de vous conformer aux présentes conditions générales d'utilisation. Veuillez les lire attentivement avant d'utiliser nos services.</p>
+                        <h3>Conditions Générales d'Utilisation de {{ FrontHelper::getAppName() }}</h3>
+                        <p>Bienvenue sur {{ FrontHelper::getAppName() }}, votre plateforme de covoiturage dédiée à la mobilité durable et partagée. En accédant à notre service, vous acceptez de vous conformer aux présentes conditions générales d'utilisation. Veuillez les lire attentivement avant d'utiliser nos services.</p>
                     </div>
 
                     <div class="terms-content">
                         <h3>1. Acceptation des Conditions</h3>
-                        <p>En utilisant l'application Wononvi, vous acceptez ces <strong>Conditions Générales d'Utilisation</strong>. Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser notre plateforme. Nous nous réservons le droit de modifier ces conditions à tout moment, et les utilisateurs seront informés des modifications majeures via notre plateforme.</p>
+                        <p>En utilisant l'application {{ FrontHelper::getAppName() }}, vous acceptez ces <strong>Conditions Générales d'Utilisation</strong>. Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser notre plateforme. Nous nous réservons le droit de modifier ces conditions à tout moment, et les utilisateurs seront informés des modifications majeures via notre plateforme.</p>
                     </div>
 
                     <div class="terms-content">
                         <h3>2. Inscription et Responsabilités de l'Utilisateur</h3>
-                        <p>Pour utiliser les services de covoiturage sur Wononvi, vous devez vous inscrire et créer un compte en fournissant des informations exactes et complètes. Vous vous engagez à :</p>
+                        <p>Pour utiliser les services de covoiturage sur {{ FrontHelper::getAppName() }}, vous devez vous inscrire et créer un compte en fournissant des informations exactes et complètes. Vous vous engagez à :</p>
                         <ul class="terms-list ms-4">
                             <li>Fournir des informations à jour et véridiques lors de votre inscription.</li>
                             <li>Maintenir la confidentialité de vos informations de connexion.</li>
@@ -35,8 +35,8 @@
                     </div>
 
                     <div class="terms-content">
-                        <h3>3. Services Offerts par Wononvi</h3>
-                        <p>Wononvi offre une plateforme de mise en relation entre conducteurs et passagers, permettant de partager un trajet tout en optimisant les coûts et l'impact environnemental. En tant qu'utilisateur, vous pouvez :</p>
+                        <h3>3. Services Offerts par {{ FrontHelper::getAppName() }}</h3>
+                        <p>{{ FrontHelper::getAppName() }} offre une plateforme de mise en relation entre conducteurs et passagers, permettant de partager un trajet tout en optimisant les coûts et l'impact environnemental. En tant qu'utilisateur, vous pouvez :</p>
                         <ul class="terms-list ms-4">
                             <li><strong>Passager</strong> : Réserver un trajet auprès d'un conducteur vérifié.</li>
                             <li><strong>Conducteur</strong> : Proposer vos trajets pour permettre à des passagers de vous rejoindre.</li>
@@ -49,18 +49,18 @@
                         <ul class="terms-list ms-4">
                             <li>Respecter toutes les lois locales de circulation et à conduire de manière responsable.</li>
                             <li>Ne pas adopter de comportement abusif ou dangereux pendant un trajet.</li>
-                            <li>Signaler tout comportement inapproprié ou suspect à l’équipe de support Wononvi.</li>
+                            <li>Signaler tout comportement inapproprié ou suspect à l’équipe de support {{ FrontHelper::getAppName() }}.</li>
                         </ul>
                     </div>
 
                     <div class="terms-content">
                         <h3>5. Politique de Paiement et Tarification</h3>
-                        <p>Tous les paiements pour les trajets réservés via Wononvi se font directement sur la plateforme. Le prix de chaque trajet est déterminé par le conducteur et peut varier en fonction de la distance, de la durée et d’autres critères.</p>
+                        <p>Tous les paiements pour les trajets réservés via {{ FrontHelper::getAppName() }} se font directement sur la plateforme. Le prix de chaque trajet est déterminé par le conducteur et peut varier en fonction de la distance, de la durée et d’autres critères.</p>
                         <ul class="terms-list ms-4">
                             <li><strong>Méthodes de paiement</strong> : Nous acceptons les paiements par carte bancaire, PayPal et d'autres moyens de paiement sécurisés.</li>
                             <li><strong>Confirmation de paiement</strong> : Une fois le paiement effectué, une confirmation vous sera envoyée par email et via l'application.</li>
                         </ul>
-                        <p>Les conducteurs doivent s'assurer que les informations de paiement sont correctes avant de confirmer leur trajet. En cas de problème de paiement, Wononvi se réserve le droit de suspendre ou annuler la réservation.</p>
+                        <p>Les conducteurs doivent s'assurer que les informations de paiement sont correctes avant de confirmer leur trajet. En cas de problème de paiement, {{ FrontHelper::getAppName() }} se réserve le droit de suspendre ou annuler la réservation.</p>
                     </div>
 
                     <div class="terms-content">
@@ -90,18 +90,18 @@
 
                     <div class="terms-content">
                         <h3>9. Déni de Responsabilité</h3>
-                        <p>Bien que nous nous efforcions de maintenir un service sans faille, nous ne garantissons pas que l’application Wononvi sera toujours disponible ou sans erreur. Vous acceptez d'utiliser l'application à vos propres risques.</p>
-                        <p>Wononvi ne pourra être tenu responsable des pertes ou dommages résultant de l'utilisation de la plateforme, qu'ils soient directs ou indirects, y compris mais sans s'y limiter, les dommages liés à la sécurité des données ou à des erreurs dans les trajets.</p>
+                        <p>Bien que nous nous efforcions de maintenir un service sans faille, nous ne garantissons pas que l’application {{ FrontHelper::getAppName() }} sera toujours disponible ou sans erreur. Vous acceptez d'utiliser l'application à vos propres risques.</p>
+                        <p>{{ FrontHelper::getAppName() }} ne pourra être tenu responsable des pertes ou dommages résultant de l'utilisation de la plateforme, qu'ils soient directs ou indirects, y compris mais sans s'y limiter, les dommages liés à la sécurité des données ou à des erreurs dans les trajets.</p>
                     </div>
 
                     <div class="terms-content">
                         <h3>10. Modifications des Conditions</h3>
-                        <p>Wononvi se réserve le droit de modifier ces conditions générales d'utilisation à tout moment. Les utilisateurs seront informés des modifications importantes via une notification sur l'application. Il est de votre responsabilité de consulter régulièrement les conditions d'utilisation afin de prendre connaissance de toute mise à jour.</p>
+                        <p>{{ FrontHelper::getAppName() }} se réserve le droit de modifier ces conditions générales d'utilisation à tout moment. Les utilisateurs seront informés des modifications importantes via une notification sur l'application. Il est de votre responsabilité de consulter régulièrement les conditions d'utilisation afin de prendre connaissance de toute mise à jour.</p>
                     </div>
 
                     <div class="terms-content">
                         <h3>Contact et Support</h3>
-                        <p>Pour toute question concernant nos conditions d'utilisation ou pour signaler un problème avec un trajet, contactez notre service client à l’adresse suivante : <strong>support@wononvi.com</strong>.</p>
+                        <p>Pour toute question concernant nos conditions d'utilisation ou pour signaler un problème avec un trajet, contactez notre service client à l’adresse suivante : <strong>support@{{ FrontHelper::getAppName() }}.com</strong>.</p>
                     </div>
                 </div>
             </div>

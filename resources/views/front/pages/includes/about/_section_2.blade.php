@@ -4,7 +4,7 @@
             <div class="col-lg-6">
                 <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="about-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/07.png') }}" alt="Illustration de la Communauté Wononvi">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/07.png') }}" alt="Illustration de la Communauté {{ FrontHelper::getAppName() }}">
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                         </h2>
                     </div>
                     <p class="about-text">
-                        Chez Wononvi, nous croyons en la force de la communauté. Notre plateforme rassemble des utilisateurs partageant les mêmes valeurs de respect et de solidarité, qui sont vérifiés et engagés à assurer la sécurité et le confort des trajets partagés.
+                        Chez {{ FrontHelper::getAppName() }}, nous croyons en la force de la communauté. Notre plateforme rassemble des utilisateurs partageant les mêmes valeurs de respect et de solidarité, qui sont vérifiés et engagés à assurer la sécurité et le confort des trajets partagés.
                     </p>
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">

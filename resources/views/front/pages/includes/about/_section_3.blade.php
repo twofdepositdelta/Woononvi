@@ -12,7 +12,7 @@
                         </h2>
                     </div>
                     <p class="vision-text">
-                        Chez Wononvi, nous avons pour vision de transformer la mobilité en une expérience partagée et durable, réduisant l’impact environnemental tout en renforçant les liens sociaux. Nous croyons qu'en facilitant le covoiturage, nous contribuons à bâtir un futur où chaque trajet a un sens, aussi bien pour les individus que pour la planète.
+                        Chez {{ FrontHelper::getAppName() }}, nous avons pour vision de transformer la mobilité en une expérience partagée et durable, réduisant l’impact environnemental tout en renforçant les liens sociaux. Nous croyons qu'en facilitant le covoiturage, nous contribuons à bâtir un futur où chaque trajet a un sens, aussi bien pour les individus que pour la planète.
                     </p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                         </h2>
                     </div>
                     <p class="mission-text">
-                        Notre mission est de faciliter l’accès à un mode de transport économique et sécurisé pour tous. Grâce à notre plateforme conviviale, nous aidons les utilisateurs à partager leurs trajets de manière fiable, réduisant ainsi les coûts, la congestion routière, et l’empreinte carbone. Wononvi s’engage à créer des solutions de covoiturage inclusives et innovantes, pour tous.
+                        Notre mission est de faciliter l’accès à un mode de transport économique et sécurisé pour tous. Grâce à notre plateforme conviviale, nous aidons les utilisateurs à partager leurs trajets de manière fiable, réduisant ainsi les coûts, la congestion routière, et l’empreinte carbone. {{ FrontHelper::getAppName() }} s’engage à créer des solutions de covoiturage inclusives et innovantes, pour tous.
                     </p>
                 </div>
             </div>

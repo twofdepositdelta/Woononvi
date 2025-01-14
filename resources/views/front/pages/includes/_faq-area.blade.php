@@ -33,13 +33,13 @@
                         <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                <span><i class="far fa-question"></i></span> Comment puis-je devenir membre de Wononvi ?
+                                <span><i class="far fa-question"></i></span> Comment puis-je devenir membre de {{ FrontHelper::getAppName() }} ?
                             </button>
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                Vous pouvez vous inscrire directement sur l'application mobile Wononvi. Il vous suffit de télécharger l'application sur votre smartphone, de créer un compte et de compléter votre profil pour commencer à utiliser nos services.
+                                Vous pouvez vous inscrire directement sur l'application mobile {{ FrontHelper::getAppName() }}. Il vous suffit de télécharger l'application sur votre smartphone, de créer un compte et de compléter votre profil pour commencer à utiliser nos services.
                             </div>
                         </div>
                     </div>
@@ -48,13 +48,13 @@
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseThree" aria-expanded="false"
                                 aria-controls="collapseThree">
-                                <span><i class="far fa-question"></i></span> Quels modes de paiement sont acceptés sur Wononvi ?
+                                <span><i class="far fa-question"></i></span> Quels modes de paiement sont acceptés sur {{ FrontHelper::getAppName() }} ?
                             </button>
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse"
                             aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                Sur Wononvi, nous acceptons uniquement les paiements via Mobile Money pour garantir des transactions simples et sécurisées. Vous pouvez utiliser des services comme MTN et MOOV Mobile Money, ou d'autres options locales disponibles dans votre pays.
+                                Sur {{ FrontHelper::getAppName() }}, nous acceptons uniquement les paiements via Mobile Money pour garantir des transactions simples et sécurisées. Vous pouvez utiliser des services comme MTN et MOOV Mobile Money, ou d'autres options locales disponibles dans votre pays.
                             </div>
                         </div>
                     </div>

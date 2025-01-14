@@ -10,10 +10,10 @@
                                 <i class="flaticon-drive"></i> L'Application Incontournable
                             </span>
                             <h2 class="site-title mb-10">
-                                <span>Wononvi</span>, votre Compagnon de Covoiturage
+                                <span>{{ FrontHelper::getAppName() }}</span>, votre Compagnon de Covoiturage
                             </h2>
                             <p>
-                                Avec l'application Wononvi, rien ne vous échappe ! Proposez ou réservez des trajets en toute simplicité. Téléchargez dès maintenant pour profiter d'une expérience de covoiturage fluide et rapide.
+                                Avec l'application {{ FrontHelper::getAppName() }}, rien ne vous échappe ! Proposez ou réservez des trajets en toute simplicité. Téléchargez dès maintenant pour profiter d'une expérience de covoiturage fluide et rapide.
                             </p>
                         </div>
                         <!-- Boutons de Téléchargement -->
@@ -38,7 +38,7 @@
                 <!-- Section Image -->
                 <div class="col-lg-6 text-center">
                     <div class="download-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/01.png') }}" alt="Téléchargez l'application Wononvi" class="img-fluid">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/01.png') }}" alt="Téléchargez l'application Wòónɔ̀ví" class="img-fluid">
                     </div>
                 </div>
             </div>

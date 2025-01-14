@@ -12,11 +12,11 @@
                 <div class="about-right wow fadeInRight" data-wow-delay=".25s">
                     <div class="site-heading mb-3">
                         <h2 class="site-title">
-                            Simplifiez vos trajets avec <span>Wononvi</span>
+                            Simplifiez vos trajets avec <span>{{ FrontHelper::getAppName() }}</span>
                         </h2>
                     </div>
                     <p class="about-text">
-                        Profitez d'un covoiturage sécurisé et abordable. Wononvi connecte ceux qui veulent partager leur trajet et voyager en toute sérénité.
+                        Profitez d'un covoiturage sécurisé et abordable. {{ FrontHelper::getAppName() }} connecte ceux qui veulent partager leur trajet et voyager en toute sérénité.
                     </p>
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">
@@ -31,7 +31,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="{{ route('about') }}" class="theme-btn mt-4">En savoir plus<i class="fas fa-arrow-right"></i></a>
+                    <a href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/wononvi-app.apk') }}" class="theme-btn mt-4"><span class="fas fa-download"></span> Commencer maintenant</a>
                 </div>
             </div>
         </div>
