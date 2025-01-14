@@ -1166,6 +1166,15 @@ class RideController extends Controller
                 $commission = $booking->total_price * $booking->seats_reserved * $commissionRate / 100;
         
                 // Vérifier si le solde de l'utilisateur est suffisant
+                if ($booking->ride->available_seats < $booking->seats_reserved) {
+                    return response()->json([
+                        'success' => false,
+                        'reason' => 'seats',
+                        'message' => 'Vous n\avez plus assez de place disponible pour accepter cette réservation.',
+                    ], 400);
+                }
+
+                // Vérifier si le solde de l'utilisateur est suffisant
                 if ($user->balance < $commission) {
                     return response()->json([
                         'success' => false,
