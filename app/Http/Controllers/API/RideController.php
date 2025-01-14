@@ -593,7 +593,7 @@ class RideController extends Controller
             'end_location_name' => 'required|string',
             'end_lat' => 'required|numeric',
             'end_lng' => 'required|numeric',
-            'seats_reserved' => 'required|min:1',
+            // 'seats_reserved' => 'required|min:1',
             // 'departure_time' => 'required|date',
             // 'tolerance' => 'nullable|integer|min:100|max:5000',
         ]);
@@ -690,7 +690,7 @@ class RideController extends Controller
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
             ["POINT($request->start_lng $request->start_lat)", 5000])
         ->where('rides.driver_id', '!=', Auth::id())
-        ->where('rides.available_seats', '>=', $request->seats_reserved)
+        // ->where('rides.available_seats', '>=', $request->seats_reserved)
         ->where(function ($query) use ($currentDay, $currentDate) {
             $query->where(function ($subQuery) use ($currentDate) {
                 $subQuery->where('type', 'single')
