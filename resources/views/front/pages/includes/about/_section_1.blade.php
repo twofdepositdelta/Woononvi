@@ -12,7 +12,7 @@
                         </h2>
                     </div>
                     <p class="about-text">
-                        Avec Wononvi, nous mettons à votre disposition un service de covoiturage fiable et sécurisé qui vous permet de partager vos trajets en toute tranquillité. Notre mission est de créer une communauté de voyageurs qui se déplacent ensemble en réduisant leur empreinte carbone et en économisant sur leurs trajets.
+                        Avec {{ FrontHelper::getAppName() }}, nous mettons à votre disposition un service de covoiturage fiable et sécurisé qui vous permet de partager vos trajets en toute tranquillité. Notre mission est de créer une communauté de voyageurs qui se déplacent ensemble en réduisant leur empreinte carbone et en économisant sur leurs trajets.
                     </p>
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">
@@ -32,7 +32,7 @@
             <div class="col-lg-6">
                 <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="about-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/illustration_1.gif') }}" alt="Illustration À Propos de Wononvi">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/illustration_1.gif') }}" alt="Illustration À Propos de {{ FrontHelper::getAppName() }}">
                     </div>
                     {{-- <div class="about-experience">
                         <div class="about-experience-icon">

@@ -20,9 +20,9 @@ class ActualitySeeder extends Seeder
 
         DB::table('actualities')->insert([
             [
-                'titre' => 'Wononvi, première plateforme de covoiturage au Bénin',
-                'slug' => Str::slug('Wononvi, première plateforme de covoiturage au Bénin'),
-                'description' => 'Découvrez comment Wononvi révolutionne la mobilité au Bénin avec sa plateforme innovante et accessible à tous.',
+                'titre' => 'Wòónɔ̀ví, première plateforme de covoiturage au Bénin',
+                'slug' => Str::slug('Wòónɔ̀ví, première plateforme de covoiturage au Bénin'),
+                'description' => 'Découvrez comment Wòónɔ̀ví révolutionne la mobilité au Bénin avec sa plateforme innovante et accessible à tous.',
                 'image_url' => $imageBasePath . '01.jpg',
                 'type_new_id' => 3, // ID pour "Lancement"
                 'published' => true,
@@ -30,9 +30,9 @@ class ActualitySeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'titre' => 'Covoiturage en Afrique : Wononvi montre la voie',
-                'slug' => Str::slug('Covoiturage en Afrique : Wononvi montre la voie'),
-                'description' => 'Avec son approche centrée sur la communauté, Wononvi offre une solution pratique et économique pour les déplacements en Afrique.',
+                'titre' => 'Covoiturage en Afrique : Wòónɔ̀ví montre la voie',
+                'slug' => Str::slug('Covoiturage en Afrique : Wòónɔ̀ví montre la voie'),
+                'description' => 'Avec son approche centrée sur la communauté, Wòónɔ̀ví offre une solution pratique et économique pour les déplacements en Afrique.',
                 'image_url' => $imageBasePath . '02.jpg',
                 'type_new_id' => 3, // ID pour "Innovations"
                 'published' => true,
@@ -40,9 +40,9 @@ class ActualitySeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'titre' => 'Pourquoi choisir Wononvi pour vos trajets quotidiens ?',
-                'slug' => Str::slug('Pourquoi choisir Wononvi pour vos trajets quotidiens ?'),
-                'description' => 'Découvrez les avantages uniques de Wononvi : sécurité, convivialité et économies pour vos déplacements.',
+                'titre' => 'Pourquoi choisir Wòónɔ̀ví pour vos trajets quotidiens ?',
+                'slug' => Str::slug('Pourquoi choisir Wòónɔ̀ví pour vos trajets quotidiens ?'),
+                'description' => 'Découvrez les avantages uniques de Wòónɔ̀ví : sécurité, convivialité et économies pour vos déplacements.',
                 'image_url' => $imageBasePath . '03.jpg',
                 'type_new_id' => 3, // ID pour "Conseils"
                 'published' => true,

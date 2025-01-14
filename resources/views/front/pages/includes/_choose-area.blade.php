@@ -5,11 +5,11 @@
                 <div class="choose-content">
                     <div class="site-heading wow fadeInDown mb-4" data-wow-delay=".25s">
                         <span class="site-title-tagline text-white justify-content-start">
-                            <i class="flaticon-drive"></i> Pourquoi Choisir Wononvi
+                            <i class="flaticon-drive"></i> Pourquoi Choisir {{ FrontHelper::getAppName() }}
                         </span>
                         <h2 class="site-title text-white mb-10">Nous sommes dédiés <span>à offrir</span> un service de qualité</h2>
                         <p class="text-white">
-                            Avec Wononvi, profitez d'une expérience de covoiturage inégalée. Nos conducteurs experts et nos véhicules de qualité garantissent votre sécurité et confort tout au long de votre trajet.
+                            Avec {{ FrontHelper::getAppName() }}, profitez d'une expérience de covoiturage inégalée. Nos conducteurs experts et nos véhicules de qualité garantissent votre sécurité et confort tout au long de votre trajet.
                         </p>
                     </div>
                     <div class="choose-img wow fadeInUp" data-wow-delay=".25s">
@@ -46,7 +46,7 @@
                         </div>
                         <div class="choose-item-info">
                             <h3>Nombreuses Destinations</h3>
-                            <p>Avec Wononvi, vous pouvez voyager dans de nombreuses villes et régions, que ce soit pour un trajet local ou interurbain, avec une couverture étendue pour tous vos besoins.</p>
+                            <p>Avec {{ FrontHelper::getAppName() }}, vous pouvez voyager dans de nombreuses villes et régions, que ce soit pour un trajet local ou interurbain, avec une couverture étendue pour tous vos besoins.</p>
                         </div>
                     </div>
                 </div>

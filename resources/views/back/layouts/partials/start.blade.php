@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>WONONVI - @yield('title')</title>
-    <link rel="icon" type="image/png" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/favicon.png') }}" sizes="16x16">
+    <title>
+        Wòónɔ̀ví &bull;
+        @if (Route::currentRouteName() == 'login')
+            Connexion
+        @else
+            @yield('title')
+        @endif
+    </title>
+    {{-- <link rel="icon" type="image/png" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/favicon.png') }}" sizes="16x16"> --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/favicon.png') }}">
+
     <!-- remix icon font css  -->
     <link rel="stylesheet" href="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/css/remixicon.css') }}">
     <!-- BootStrap css -->
@@ -41,6 +50,7 @@
     <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/css/custom.css') }}">
     @yield('customCSS')
 
     <style>

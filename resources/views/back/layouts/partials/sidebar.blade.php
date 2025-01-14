@@ -3,15 +3,20 @@
         <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
     </button>
     <div>
-        <a href="{{ route('dashboard') }}" class="sidebar-logo">
-            {{-- <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo.png') }}"
+        {{-- <a href="{{ route('dashboard') }}" class="sidebar-logo">
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo.png') }}"
                 alt="site logo" class="light-logo">
             <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-light.png') }}"
-                alt="site logo" class="dark-logo"> --}}
+                alt="site logo" class="dark-logo">
 
             <h6 class="text-warning">WONONVI</h6>
             <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-icon.png') }}"
                 alt="site logo" class="logo-icon">
+        </a> --}}
+
+        <a class="sidebar-logo logo-text" href="{{ route('index') }}">
+            {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi"> --}}
+            <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
         </a>
     </div>
     <div class="sidebar-menu-area">

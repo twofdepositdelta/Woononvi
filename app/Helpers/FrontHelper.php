@@ -17,7 +17,7 @@ class FrontHelper
 {
     public static function getAppName()
     {
-        return config('name', 'Wononvi');
+        return config('name', 'Wòónɔ̀ví');
     }
 
     public static function getEnvFolder()

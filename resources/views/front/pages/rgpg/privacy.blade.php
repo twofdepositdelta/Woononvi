@@ -14,8 +14,8 @@
             <div class="row">
                 <div class="col">
                     <div class="privacy-content">
-                        <h3>Politique de Confidentialité de Wononvi</h3>
-                        <p>Chez Wononvi, nous prenons votre vie privée au sérieux. Cette politique de confidentialité explique comment nous collectons, utilisons, protégeons et partageons vos informations lorsque vous utilisez notre plateforme. Veuillez la lire attentivement.</p>
+                        <h3>Politique de Confidentialité de {{ FrontHelper::getAppName() }}</h3>
+                        <p>Chez {{ FrontHelper::getAppName() }}, nous prenons votre vie privée au sérieux. Cette politique de confidentialité explique comment nous collectons, utilisons, protégeons et partageons vos informations lorsque vous utilisez notre plateforme. Veuillez la lire attentivement.</p>
                     </div>
 
                     <div class="privacy-content">
@@ -63,7 +63,7 @@
 
                     <div class="privacy-content">
                         <h3>6. Accès et contrôle sur vos informations</h3>
-                        <p>Vous avez le droit d’accéder à vos informations personnelles et de les mettre à jour ou de les supprimer, conformément aux lois applicables. Pour exercer vos droits, veuillez contacter notre service client à l’adresse suivante : <strong>support@wononvi.com</strong>.</p>
+                        <p>Vous avez le droit d’accéder à vos informations personnelles et de les mettre à jour ou de les supprimer, conformément aux lois applicables. Pour exercer vos droits, veuillez contacter notre service client à l’adresse suivante : <strong>support@{{ FrontHelper::getAppName() }}.com</strong>.</p>
                     </div>
 
                     <div class="privacy-content">
@@ -78,7 +78,7 @@
 
                     <div class="privacy-content">
                         <h3>9. Contactez-nous</h3>
-                        <p>Si vous avez des questions ou des préoccupations concernant cette politique de confidentialité, veuillez contacter notre équipe de support à l'adresse suivante : <strong>support@wononvi.com</strong>.</p>
+                        <p>Si vous avez des questions ou des préoccupations concernant cette politique de confidentialité, veuillez contacter notre équipe de support à l'adresse suivante : <strong>support@{{ FrontHelper::getAppName() }}.com</strong>.</p>
                     </div>
                 </div>
             </div>

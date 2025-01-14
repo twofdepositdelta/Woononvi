@@ -6,11 +6,15 @@
                 <!-- About Us Section -->
                 <div class="col-md-6 col-lg-4">
                     <div class="footer-widget-box about-us">
-                        <a href="#" class="footer-logo">
-                            <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo-light.png') }}" alt="Wononvi Logo">
+                        {{-- <a href="#" class="footer-logo">
+                            <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo-light.png') }}" alt="{{ FrontHelper::getAppName() }} Logo">
+                        </a> --}}
+                        <a class="footer-logo logo-text" href="{{ route('index') }}">
+                            {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi"> --}}
+                            <span class="logo-white">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
                         </a>
                         <p class="mb-3">
-                            Wononvi, la plateforme de covoiturage qui favorise la fraternité, la sécurité et l'accessibilité pour tous.
+                            {{ FrontHelper::getAppName() }}, la plateforme de covoiturage qui favorise la fraternité, la sécurité et l'accessibilité pour tous.
                         </p>
                         <ul class="footer-contact">
                             <li>
@@ -61,7 +65,7 @@
                     <div class="footer-widget-box list">
                         <h4 class="footer-widget-title">Newsletter</h4>
                         <div class="footer-newsletter">
-                            <p>Abonnez-vous pour recevoir les dernières actualités et offres de Wononvi.</p>
+                            <p>Abonnez-vous pour recevoir les dernières actualités et offres de {{ FrontHelper::getAppName() }}.</p>
                             <div class="subscribe-form">
                                 <form action="#">
                                     <input type="email" class="form-control" placeholder="Votre Email">
@@ -83,7 +87,7 @@
             <div class="row">
                 <div class="col-md-6 align-self-center">
                     <p class="copyright-text">
-                        &copy; Copyright {{ date('Y') }} <a href="{{ route('index') }}">Wononvi</a> Tous droits réservés.
+                        &copy; Copyright {{ date('Y') }} <a href="{{ route('index') }}">{{ FrontHelper::getAppName() }}</a> Tous droits réservés.
                         Développé par <a href="https://twoftechnologies.com/" target="_blank"><span style="color: orange;">TwoF</span> <span style="color: skyblue;">Technologies</span></a>.
                     </p>
                 </div>

@@ -1,4 +1,5 @@
 @include('back.layouts.partials.start')
+@section('title', 'Page de connexion')
     <body>
 
     <section class="auth bg-base d-flex flex-wrap">
@@ -9,9 +10,10 @@
         </div> --}}
         <div class="col-md-6 offset-md-3 py-32 px-24 d-flex flex-column justify-content-center">
             <div class="max-w-464-px mx-auto w-100">
-                <div>
-                    <a href="{{ route('index') }}" class="mb-40 max-w-290-px">
-                        <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/logo.png') }}" alt="">
+                <div class="text-center">
+                    <a class="navbar-brand logo-text" href="{{ route('index') }}">
+                        {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo Wòónɔ̀ví"> --}}
+                        <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
                     </a>
                     @if ($errors->any())
                         <div class="alert alert-danger bg-danger-100 text-danger-600 border-danger-600 border-start-width-4-px border-top-0 border-end-0 border-bottom-0 px-24 py-4 mb-3 mb-0 fw-semibold text-sm radius-4 d-flex align-items-center justify-content-between" role="alert">
@@ -57,7 +59,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32"> Se connecter</button>
+                    <button type="submit" class="btn text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32" style="background: #FFB300; color: #000"> Se connecter</button>
 
                     {{-- <div class="mt-32 center-border-horizontal text-center">
                         <span class="bg-base z-1 px-4">Ou connectez-vous avec</span>

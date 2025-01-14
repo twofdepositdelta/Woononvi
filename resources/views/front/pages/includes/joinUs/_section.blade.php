@@ -17,11 +17,11 @@
                             <i class="flaticon-drive"></i> Rejoignez-nous en tant que conducteur
                         </span>
                         <h2 class="site-title">
-                            Devenez un conducteur sur <span>Wononvi</span> et commencez à gagner
+                            Devenez un conducteur sur <span>{{ FrontHelper::getAppName() }}</span> et commencez à gagner
                         </h2>
                     </div>
                     <p class="about-text">
-                        Téléchargez l'application Wononvi et suivez quelques étapes simples pour rejoindre notre communauté de conducteurs. Ajoutez vos informations personnelles, soumettez vos documents pour vérification, et commencez à accepter des trajets.
+                        Téléchargez l'application {{ FrontHelper::getAppName() }} et suivez quelques étapes simples pour rejoindre notre communauté de conducteurs. Ajoutez vos informations personnelles, soumettez vos documents pour vérification, et commencez à accepter des trajets.
                     </p>
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">
@@ -63,7 +63,7 @@
                                 <span class="site-title-tagline justify-content-start">FAQ</span>
                                 <h2 class="site-title my-3">Devenir conducteur <span>Questions fréquemment posées</span></h2>
                             </div>
-                            <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir conducteur avec Wononvi.</p>
+                            <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir conducteur avec {{ FrontHelper::getAppName() }}.</p>
                             <div class="faq-img mt-3">
                                 <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/faqs-concept-illustration.avif') }}" alt="FAQ Conducteur">
                             </div>
@@ -90,15 +90,15 @@
                             <i class="flaticon-drive"></i> Rejoignez-nous en tant que passager
                         </span>
                         <h2 class="site-title">
-                            Profitez de trajets sûrs et abordables sur <span>Wononvi</span>
+                            Profitez de trajets sûrs et abordables sur <span>{{ FrontHelper::getAppName() }}</span>
                         </h2>
                     </div>
                     <p class="about-text">
-                        En tant que passager, vous pouvez facilement réserver des trajets en utilisant l'application Wononvi. Recherchez des trajets qui vous conviennent, réservez une place et profitez de votre voyage en toute sécurité.
+                        En tant que passager, vous pouvez facilement réserver des trajets en utilisant l'application {{ FrontHelper::getAppName() }}. Recherchez des trajets qui vous conviennent, réservez une place et profitez de votre voyage en toute sécurité.
                     </p>
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">
-                            <li>Téléchargez l'application Wononvi</li>
+                            <li>Téléchargez l'application {{ FrontHelper::getAppName() }}</li>
                             <li>Créez un profil passager et connectez-vous</li>
                             <li>Recherchez un trajet qui correspond à votre destination</li>
                             <li>Réservez et profitez de votre voyage avec un conducteur vérifié</li>
@@ -136,7 +136,7 @@
                                 <span class="site-title-tagline justify-content-start">FAQ</span>
                                 <h2 class="site-title my-3">Devenir passager <span>Questions fréquemment posées</span></h2>
                             </div>
-                            <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir passager avec Wononvi.</p>
+                            <p class="about-text">Voici les réponses aux questions courantes concernant le processus pour devenir passager avec {{ FrontHelper::getAppName() }}.</p>
                             <div class="faq-img mt-3">
                                 <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/faqs-concept-illustrationk.avif') }}" alt="FAQ Passager">
                             </div>

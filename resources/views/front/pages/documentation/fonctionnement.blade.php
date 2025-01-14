@@ -28,7 +28,7 @@
                     <h3>Un exemple concret</h3>
                     <p>
                         Imaginez que vous vivez à <strong>Cotonou</strong> et travaillez à <strong>Porto-Novo</strong>.
-                        Plutôt que de faire le trajet seul, vous pouvez utiliser <strong>Wononvi</strong>
+                        Plutôt que de faire le trajet seul, vous pouvez utiliser <strong>{{ FrontHelper::getAppName() }}</strong>
                         pour trouver des passagers ou des conducteurs allant dans la même direction.
                         Vous économisez sur les frais, contribuez à réduire la pollution et voyagez
                         dans une ambiance conviviale.

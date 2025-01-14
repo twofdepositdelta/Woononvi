@@ -33,7 +33,7 @@
                                     La lecture des articles est essentielle pour rester informé et acquérir de nouvelles connaissances.
                                     Prendre le temps de lire permet de mieux comprendre le contenu, d'approfondir les sujets importants et
                                     de développer une perspective enrichie.
-                                    <h6 class="blockqoute-author">Wononvi</h6>
+                                    <h6 class="blockqoute-author">{{ FrontHelper::getAppName() }}</h6>
                                 </blockquote>
                             </div>
                         </div>
