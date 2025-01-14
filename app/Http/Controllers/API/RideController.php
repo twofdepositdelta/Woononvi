@@ -169,7 +169,7 @@ class RideController extends Controller
             return response()->json([
                 'success' => false,
                 'reason' => true,
-                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins.',
+                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins 1.000 FCFA.',
             ], 422);
         }
 
