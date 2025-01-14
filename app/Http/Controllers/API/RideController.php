@@ -694,8 +694,8 @@ class RideController extends Controller
         ->where(function ($query) use ($currentDay, $currentDate) {
             $query->where(function ($subQuery) use ($currentDate) {
                 $subQuery->where('type', 'single')
-                        ->where('rides.status', 'active');
-                        // ->whereDate('rides.created_at', $currentDate);
+                        ->where('rides.status', 'active')
+                        ->whereDate('rides.created_at', $currentDate);
             })
             ->orWhere(function ($subQuery) use ($currentDay) {
                 $subQuery->where('type', 'regular')
@@ -1161,7 +1161,7 @@ class RideController extends Controller
                 ], 400);
             } else {
                 try {
-                    DB::transaction(function () use ($user, $booking) {
+                    DB::transaction(function () use ($user, $booking, $commission) {
                         $user->balance -= $commission;
                         $user->save();
     
