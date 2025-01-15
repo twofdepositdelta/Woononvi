@@ -343,6 +343,7 @@ class RideController extends Controller
             'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
             'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
             'mode' => 'required|in:in cash,wallet',
+            'amount' => 'required',
             'start_lat' => 'required',
             'start_lng' => 'required',
             'end_lat' => 'required',
@@ -371,6 +372,24 @@ class RideController extends Controller
 
         // Calcul du prix total
         $total_price = (int) $ride->total_price * (int) $request->seats_reserved;
+        if($total_price / 2 < $request->amount) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le montant que vous avez fixé ne semble pas raisonnable !',
+            ], 400);
+        }
+
+        // Vérification du solde si le mode de paiement est "wallet"
+        if ($request->mode === 'wallet') {
+            $passenger = $request->user(); // Récupérer l'utilisateur connecté
+
+            if ($passenger->balance < $request->amount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Votre solde est insuffisant pour effectuer cette réservation !',
+                ], 400);
+            }
+        }
 
         // Génération d'un numéro unique de réservation
         $booking_number = 'BOOK-' . strtoupper(Str::random(10));
@@ -386,8 +405,8 @@ class RideController extends Controller
         $booking = DB::table('bookings')->insert([
             'booking_number' => $booking_number,
             'seats_reserved' => $request->seats_reserved,
-            'total_price' => $total_price,
-            'price_maintain' => $total_price, // Ajoutez une logique ici si nécessaire
+            'total_price' => $request->amount,
+            'price_maintain' => $request->amount, // Ajoutez une logique ici si nécessaire
             'commission_rate' => $commissionRate,
             'ride_id' => $request->ride_id,
             'passenger_start_location_name' => $request->start_location_name,  
@@ -437,59 +456,97 @@ class RideController extends Controller
         ];
 
         // Construction de la requête de base
-        $query = DB::table('bookings')
-            ->select([
-                'bookings.id',
-                'bookings.booking_number',
-                'bookings.seats_reserved',
-                'users.firstname',
-                'users.lastname',
-                'users.phone',
-                DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
-                'bookings.total_price',
-                'bookings.price_maintain',
-                'bookings.commission_rate',
-                'bookings.status',
-                'bookings.created_at',
-                'bookings.updated_at',
-                'bookings.arrived_at',
-                DB::raw('ST_AsText(rides.start_location) as start_location'),
-                DB::raw('ST_AsText(rides.end_location) as end_location'),
-                DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
-                DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
-                'rides.start_location_name',
-                'rides.end_location_name',
-                'bookings.passenger_start_location_name',
-                'bookings.passenger_end_location_name',
-                'rides.departure_time',
-                'rides.return_time',
-                'rides.type',
-                'rides.price_per_km',
-            ])
-            ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
-            ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
-            ->join('profiles', 'profiles.user_id', '=', 'users.id')
-            ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
-            ->where('bookings.status', $request->status) // Filtrer par statut
-            ->groupBy('bookings.id');
-
-        // Si le statut est 'in progress', récupérer uniquement la première réservation
-        if ($request->status === 'in progress') {
-            $booking = $query->first();
-
-            if (!$booking) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Aucune réservation en cours trouvée.',
-                ], 404);
+        if($request->status === "accepted") {
+            $query = DB::table('bookings')
+                ->select([
+                    'bookings.id',
+                    'bookings.booking_number',
+                    'bookings.seats_reserved',
+                    'users.firstname',
+                    'users.lastname',
+                    'users.phone',
+                    DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
+                    'bookings.total_price',
+                    'bookings.price_maintain',
+                    'bookings.commission_rate',
+                    'bookings.status',
+                    'bookings.created_at',
+                    'bookings.updated_at',
+                    'bookings.arrived_at',
+                    DB::raw('ST_AsText(rides.start_location) as start_location'),
+                    DB::raw('ST_AsText(rides.end_location) as end_location'),
+                    DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
+                    DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
+                    'rides.start_location_name',
+                    'rides.end_location_name',
+                    'bookings.passenger_start_location_name',
+                    'bookings.passenger_end_location_name',
+                    'rides.departure_time',
+                    'rides.return_time',
+                    'rides.type',
+                    'rides.price_per_km',
+                ])
+                ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
+                ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+                ->join('profiles', 'profiles.user_id', '=', 'users.id')
+                ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
+                ->where('bookings.status', "accepted") 
+                ->orWhere('bookings.status', "in progress") 
+                ->groupBy('bookings.id');
+            } else {
+                $query = DB::table('bookings')
+                ->select([
+                    'bookings.id',
+                    'bookings.booking_number',
+                    'bookings.seats_reserved',
+                    'users.firstname',
+                    'users.lastname',
+                    'users.phone',
+                    DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
+                    'bookings.total_price',
+                    'bookings.price_maintain',
+                    'bookings.commission_rate',
+                    'bookings.status',
+                    'bookings.created_at',
+                    'bookings.updated_at',
+                    'bookings.arrived_at',
+                    DB::raw('ST_AsText(rides.start_location) as start_location'),
+                    DB::raw('ST_AsText(rides.end_location) as end_location'),
+                    DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
+                    DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
+                    'rides.start_location_name',
+                    'rides.end_location_name',
+                    'bookings.passenger_start_location_name',
+                    'bookings.passenger_end_location_name',
+                    'rides.departure_time',
+                    'rides.return_time',
+                    'rides.type',
+                    'rides.price_per_km',
+                ])
+                ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
+                ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
+                ->join('profiles', 'profiles.user_id', '=', 'users.id')
+                ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
+                ->where('bookings.status', $request->status) // Filtrer par statut
+                ->groupBy('bookings.id');
             }
+        // Si le statut est 'in progress', récupérer uniquement la première réservation
+        // if ($request->status === 'in progress') {
+        //     $booking = $query->first();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Réservation en cours trouvée.',
-                'booking' => $booking,
-            ]);
-        }
+        //     if (!$booking) {
+        //         return response()->json([
+        //             'success' => false,
+        //             'message' => 'Aucune réservation en cours trouvée.',
+        //         ], 404);
+        //     }
+
+        //     return response()->json([
+        //         'success' => true,
+        //         'message' => 'Réservation en cours trouvée.',
+        //         'booking' => $booking,
+        //     ]);
+        // }
 
         // Si le statut est différent de 'in progress', récupérer toutes les réservations correspondantes
         $bookings = $query->get()->map(function ($booking) use ($statusNames) {
@@ -845,22 +902,6 @@ class RideController extends Controller
             && $longitude >= $togoBounds['min_lng'] && $longitude <= $togoBounds['max_lng'];
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request)
-    {
-        
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        
-    }
-
     // public function updateBookingStatus(Request $request)
     // {
     //     // Validation des données
@@ -1138,14 +1179,14 @@ class RideController extends Controller
             return response()->json([
                 'success' => false,
                 'reason' => 'error',
-                'message' => 'Vous ne pouvez pas modifier la réservation.',
+                'message' => 'Vous ne pouvez pas modifier la réservation !',
             ], 400);
         }
 
         if ($booking->status === 'accepted' && $request->status !== 'in progress') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation.',
+                'message' => 'Vous ne pouvez pas modifier la réservation !',
             ], 400);
         }
 
@@ -1233,7 +1274,7 @@ class RideController extends Controller
         
 
         if ($request->status === 'in progress') {
-            $booking->status = 'in progress';
+            $booking->status = $request->status;
             $booking->in_progress_at = now();
             $booking->save();
 
@@ -1258,13 +1299,6 @@ class RideController extends Controller
                 'message' => 'Vous ne pouvez pas modifier la réservation.',
             ], 400);
         } elseif ($request->status === 'validated_by_passenger') {
-            // if ($booking->status !== 'in progress') {
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => 'La réservation doit être en cours pour être validée par le passager.',
-            //     ], 400);
-            // }
-
             $booking->is_by_passenger = true;
             $booking->validated_by_passenger_at = now();
 
@@ -1281,6 +1315,9 @@ class RideController extends Controller
                     'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
                 ], 500);
             }
+
+            $this->proccessPayment($booking->id);
+
         } elseif ($request->status === 'validated_by_driver') {
             if (!$booking->is_by_passenger) {
                 return response()->json([
@@ -1314,46 +1351,16 @@ class RideController extends Controller
         if ($booking->is_by_passenger && $booking->is_by_driver) {
             $booking->status = 'completed';
 
-            // Calculer le montant à créditer au conducteur
-            if($booking->mode === "in cash") {
-                $commissionRate = $booking->commission_rate; // Assurez-vous que ce champ existe dans la réservation
-                $amountToCredit = $booking->total_price;
-                // $amountToCredit = $booking->total_price * (1 - ($commissionRate / 100));
-
-                $ride = Ride::find($booking->ride_id);
-                if ($ride) {
-                    $driver = $ride->driver; // Assurez-vous que la relation "driver" est définie dans le modèle Ride
-                    if ($driver) {
-                        DB::transaction(function () use ($driver, $booking) {
-                            Payment::create([
-                                'amount' => $amountToCredit,
-                                'reference' => uniqid('PAY_'),
-                                'payment_method' => 'MOMO',
-                                'status' => 'SUCCESSFUL',
-                                'booking_id' => $booking->id,
-                                'user_id' => $driver->id,
-                                'payment_type_id' => 1,
-                            ]);
-
-                            // Créditez le compte du conducteur
-                            $driver->balance += $amountToCredit;
-                            $driver->save();
-
-                            // Loguer l'opération pour référence
-                            Log::info('Crédit du compte du conducteur', [
-                                'driver_id' => $driver->id ?? null,
-                                'amount_credited' => $amountToCredit,
-                                'commission_rate' => $commissionRate,
-                            ]);
-
-                            if ($ride) {
-                                $ride->available_seats += $booking->seats_reserved;
-                                $ride->save();
-                            }
-                        });
+            $ride = Ride::find($booking->ride_id);
+            if ($ride) {
+                DB::transaction(function () use ($driver, $booking) {
+                    if ($ride) {
+                        $this->makePayment($booking->id);
+                        $ride->available_seats += $booking->seats_reserved;
+                        $ride->save();
                     }
-                }
-            } 
+                });
+            }
         }
 
         $booking->save();
@@ -1390,5 +1397,141 @@ class RideController extends Controller
         $review->save();
 
         return $review;
+    }
+
+    private function processPayment(int $bookingId)
+    {
+        DB::beginTransaction(); // Début de la transaction
+
+        try {
+            // Récupérer la réservation
+            $booking = Booking::find($bookingId);
+            if (!$booking) {
+                return [
+                    'success' => false,
+                    'message' => 'Réservation introuvable.',
+                ];
+            }
+
+            // Récupérer l'utilisateur lié à la réservation
+            $user = $booking->passenger;
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'Utilisateur introuvable.',
+                ];
+            }
+
+            // Traiter le paiement en fonction du mode
+            if ($booking->mode === "wallet") {
+                if ($user->balance < $booking->total_price) {
+                    return [
+                        'success' => false,
+                        'message' => 'Solde insuffisant pour effectuer le paiement.',
+                    ];
+                }
+
+                // Mettre à jour le solde
+                $user->balance -= $booking->total_price;
+                $user->save(); // Sauvegarder les changements
+
+                Payment::create([
+                    'amount' => $booking->total_price,
+                    'reference' => uniqid('PAY_'),
+                    'payment_method' => 'MOMO',
+                    'status' => 'SUCCESSFUL',
+                    'booking_id' => $booking->id,
+                    'user_id' => $user->id,
+                    'payment_type_id' => 1,
+                ]);
+            }
+
+            // Si tout est correct, valider la transaction
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => 'Paiement effectué avec succès.',
+            ];
+        } catch (\Exception $e) {
+            // Annuler la transaction en cas d'erreur
+            DB::rollBack();
+
+            // Journaliser l'erreur pour le suivi
+            \Log::error('Erreur lors du traitement du paiement : ' . $e->getMessage());
+
+            // Relancer l'exception pour l'appelant
+            throw $e;
+        }
+    }
+
+    private function makePayment(int $bookingId)
+    {
+        DB::beginTransaction(); // Début de la transaction
+
+        try {
+            // Récupérer la réservation
+            $booking = Booking::find($bookingId);
+            if (!$booking) {
+                return [
+                    'success' => false,
+                    'message' => 'Réservation introuvable !',
+                ];
+            }
+
+            // Récupérer le conducteur lié à la réservation
+            $ride = $booking->ride;
+            $user = $ride->driver;
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'Utilisateur introuvable !',
+                ];
+            }
+
+            // Traiter le paiement en fonction du mode
+            if ($booking->mode === "wallet") {
+                // Mettre à jour le solde
+                $user->balance += $booking->total_price;
+                $user->save(); // Sauvegarder les changements
+
+                Payment::create([
+                    'amount' => $booking->total_price,
+                    'reference' => uniqid('PAY_'),
+                    'payment_method' => 'MOMO',
+                    'status' => 'SUCCESSFUL',
+                    'booking_id' => $booking->id,
+                    'user_id' => $user->id,
+                    'payment_type_id' => 1,
+                ]);
+
+                if ($ride) {
+                    $ride->available_seats += $booking->seats_reserved;
+                    $ride->save();
+                } else {
+                    return [
+                        'success' => false,
+                        'message' => 'Trajet introuvable !',
+                    ];
+                }
+            }
+
+            // Si tout est correct, valider la transaction
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => 'Paiement effectué avec succès.',
+            ];
+        } catch (\Exception $e) {
+            // Annuler la transaction en cas d'erreur
+            DB::rollBack();
+
+            // Journaliser l'erreur pour le suivi
+            \Log::error('Erreur lors du traitement du paiement : ' . $e->getMessage());
+
+            // Relancer l'exception pour l'appelant
+            throw $e;
+        }
     }
 }
