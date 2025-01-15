@@ -1369,7 +1369,7 @@ $query->groupBy('bookings.id');
         return $review;
     }
 
-    private function processPayment(int $bookingId)
+    private function proccessPayment(int $bookingId)
     {
         DB::beginTransaction(); // Début de la transaction
 
