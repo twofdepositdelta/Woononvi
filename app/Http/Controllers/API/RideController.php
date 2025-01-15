@@ -1325,7 +1325,7 @@ $query->groupBy('bookings.id');
 
             $ride = Ride::find($booking->ride_id);
             if ($ride) {
-                DB::transaction(function () use ($driver, $booking) {
+                DB::transaction(function () use ($ride, $booking) {
                     if ($ride) {
                         $this->makePayment($booking->id);
                         $ride->available_seats += $booking->seats_reserved;
