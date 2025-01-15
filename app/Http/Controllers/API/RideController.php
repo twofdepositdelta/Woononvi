@@ -420,9 +420,6 @@ class RideController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Mise à jour des places disponibles pour le trajet
-        // DB::table('rides')->where('id', $request->ride_id)->decrement('available_seats', $request->seats_reserved);
-
         return response()->json([
             'success' => true,
             'message' => 'Réservation effectuée avec succès.',
@@ -1248,6 +1245,9 @@ class RideController extends Controller
                     // Mettre à jour les sièges disponibles du trajet
                     $ride = $booking->ride;
                     $ride->available_seats -= $booking->seats_reserved;
+                    if($ride->available_seats === 0)
+                        $ride->status = 'in progress';
+
                     $ride->save();
                 });
         
