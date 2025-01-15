@@ -458,6 +458,7 @@ class RideController extends Controller
             ->select([
                 'bookings.id',
                 'bookings.booking_number',
+                'bookings.validated_by_driver_at',
                 'bookings.seats_reserved',
                 'users.firstname',
                 'users.lastname',
@@ -557,6 +558,7 @@ $query->groupBy('bookings.id');
             ->select([
                 'bookings.id',
                 'bookings.booking_number',
+                'bookings.validated_by_passenger_at',
                 'bookings.seats_reserved',
                 DB::raw("CONCAT(users.firstname, ' ', users.lastname) as driver_name"),
                 DB::raw("CONCAT('" . asset('storage/') . "/', profiles.avatar) as driver_avatar"),
