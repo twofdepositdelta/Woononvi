@@ -34,6 +34,7 @@ class RideController extends Controller
             'licence_plate',
             'days',
             'type',
+            'rides.total_price',
             'departure_time',
             'return_time',
             'price_per_km',
@@ -1245,8 +1246,8 @@ class RideController extends Controller
                     // Mettre à jour les sièges disponibles du trajet
                     $ride = $booking->ride;
                     $ride->available_seats -= $booking->seats_reserved;
-                    if($ride->available_seats === 0)
-                        $ride->status = 'in progress';
+                    // if($ride->available_seats === 0)
+                    //     $ride->status = 'pending';
 
                     $ride->save();
                 });
