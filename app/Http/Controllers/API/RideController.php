@@ -372,13 +372,13 @@ class RideController extends Controller
         }
 
         // Calcul du prix total
-        $total_price = (int) $ride->total_price * (int) $request->seats_reserved;
-        if($total_price / 2 < $request->amount) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Le montant que vous avez fixé ne semble pas raisonnable !',
-            ], 400);
-        }
+        // $total_price = (int) $ride->total_price * (int) $request->seats_reserved;
+        // if($total_price / 2 < $request->amount) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Le montant que vous avez fixé ne semble pas raisonnable !',
+        //     ], 400);
+        // }
 
         // Vérification du solde si le mode de paiement est "wallet"
         if ($request->mode === 'wallet') {
