@@ -454,80 +454,49 @@ class RideController extends Controller
         ];
 
         // Construction de la requête de base
-        if($request->status === "accepted") {
-            $query = DB::table('bookings')
-                ->select([
-                    'bookings.id',
-                    'bookings.booking_number',
-                    'bookings.seats_reserved',
-                    'users.firstname',
-                    'users.lastname',
-                    'users.phone',
-                    DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
-                    'bookings.total_price',
-                    'bookings.price_maintain',
-                    'bookings.commission_rate',
-                    'bookings.status',
-                    'bookings.created_at',
-                    'bookings.updated_at',
-                    'bookings.arrived_at',
-                    DB::raw('ST_AsText(rides.start_location) as start_location'),
-                    DB::raw('ST_AsText(rides.end_location) as end_location'),
-                    DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
-                    DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
-                    'rides.start_location_name',
-                    'rides.end_location_name',
-                    'bookings.passenger_start_location_name',
-                    'bookings.passenger_end_location_name',
-                    'rides.departure_time',
-                    'rides.return_time',
-                    'rides.type',
-                    'rides.price_per_km',
-                ])
-                ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
-                ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
-                ->join('profiles', 'profiles.user_id', '=', 'users.id')
-                ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
-                ->where('bookings.status', "accepted") 
-                ->orWhere('bookings.status', "in progress") 
-                ->groupBy('bookings.id');
-            } else {
-                $query = DB::table('bookings')
-                ->select([
-                    'bookings.id',
-                    'bookings.booking_number',
-                    'bookings.seats_reserved',
-                    'users.firstname',
-                    'users.lastname',
-                    'users.phone',
-                    DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
-                    'bookings.total_price',
-                    'bookings.price_maintain',
-                    'bookings.commission_rate',
-                    'bookings.status',
-                    'bookings.created_at',
-                    'bookings.updated_at',
-                    'bookings.arrived_at',
-                    DB::raw('ST_AsText(rides.start_location) as start_location'),
-                    DB::raw('ST_AsText(rides.end_location) as end_location'),
-                    DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
-                    DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
-                    'rides.start_location_name',
-                    'rides.end_location_name',
-                    'bookings.passenger_start_location_name',
-                    'bookings.passenger_end_location_name',
-                    'rides.departure_time',
-                    'rides.return_time',
-                    'rides.type',
-                    'rides.price_per_km',
-                ])
-                ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Jointure pour relier les trajets
-                ->join('users', 'rides.driver_id', '=', 'users.id') // Jointure avec la table `users` pour les conducteurs
-                ->join('profiles', 'profiles.user_id', '=', 'users.id')
-                ->where('rides.driver_id', $request->user()->id) // Filtrer par conducteur
-                ->where('bookings.status', $request->status) // Filtrer par statut
-                ->groupBy('bookings.id');
-            }
+        $query = DB::table('bookings')
+            ->select([
+                'bookings.id',
+                'bookings.booking_number',
+                'bookings.seats_reserved',
+                'users.firstname',
+                'users.lastname',
+                'users.phone',
+                DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
+                'bookings.total_price',
+                'bookings.price_maintain',
+                'bookings.commission_rate',
+                'bookings.status',
+                'bookings.created_at',
+                'bookings.updated_at',
+                'bookings.arrived_at',
+                DB::raw('ST_AsText(rides.start_location) as start_location'),
+                DB::raw('ST_AsText(rides.end_location) as end_location'),
+                DB::raw('ST_AsText(bookings.passenger_start_location) as passenger_start_location'),
+                DB::raw('ST_AsText(bookings.passenger_end_location) as passenger_end_location'),
+                'rides.start_location_name',
+                'rides.end_location_name',
+                'bookings.passenger_start_location_name',
+                'bookings.passenger_end_location_name',
+                'rides.departure_time',
+                'rides.return_time',
+                'rides.type',
+                'rides.price_per_km',
+            ])
+            ->join('rides', 'bookings.ride_id', '=', 'rides.id') // Liaison avec les trajets
+            ->join('users', 'rides.driver_id', '=', 'users.id') // Liaison avec la table `users` pour les conducteurs
+            ->join('profiles', 'profiles.user_id', '=', 'users.id')
+            ->where('rides.driver_id', $request->user()->id); // Filtrer par conducteur
+
+        // Appliquer les filtres de statut selon la condition
+        if ($request->status != "accepted") {
+            $query->where('bookings.status', $request->status);
+        } else {
+            $query->whereIn('bookings.status', ['accepted', 'in progress']);
+        }
+
+// Grouper les résultats
+$query->groupBy('bookings.id');
         // Si le statut est 'in progress', récupérer uniquement la première réservation
         // if ($request->status === 'in progress') {
         //     $booking = $query->first();
