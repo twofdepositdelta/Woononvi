@@ -18,7 +18,7 @@
                         </div>
                         <!-- Boutons de Téléchargement -->
                         <div class="download-btn d-flex gap-3">
-                            <a href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/wononvi-app.apk') }}" class="btn btn-primary">
+                            <a href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/woononvi-app.apk') }}" class="btn btn-primary">
                                 <i class="fab fa-google-play"></i>
                                 <div class="download-btn-content">
                                     <span>Disponible sur</span>
