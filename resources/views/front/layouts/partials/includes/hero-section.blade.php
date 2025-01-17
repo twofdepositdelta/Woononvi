@@ -4,7 +4,7 @@
             <div class="col-lg-6">
                 <div class="about-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="about-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/illustration_2.png') }}" alt>
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/hero.png') }}" alt>
                     </div>
                 </div>
             </div>
