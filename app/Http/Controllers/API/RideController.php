@@ -496,8 +496,8 @@ class RideController extends Controller
             $query->whereIn('bookings.status', ['accepted', 'in progress']);
         }
 
-// Grouper les résultats
-$query->groupBy('bookings.id');
+        // Grouper les résultats
+        $query->groupBy('bookings.id');
         // Si le statut est 'in progress', récupérer uniquement la première réservation
         // if ($request->status === 'in progress') {
         //     $booking = $query->first();
@@ -756,25 +756,6 @@ $query->groupBy('bookings.id');
             // Extraire la valeur du commission_rate depuis la table settings
             $commissionRate = $commissionRateSetting->value;
 
-            // Validation des données d'entrée
-            // $validator = Validator::make($request->all(), [
-            //     'start_location_name' => 'required|string|max:255',
-            //     'start_lat' => 'required|numeric',
-            //     'start_lng' => 'required|numeric',
-            //     'end_location_name' => 'required|string|max:255',
-            //     'end_lat' => 'required|numeric',
-            //     'end_lng' => 'required|numeric',
-            //     'seats' => 'nullable|integer|min:1',
-            //     'preferred_amount' => 'nullable|numeric|min:0',
-            // ]);
-
-            // if ($validator->fails()) {
-            //     return response()->json([
-            //         'message' => 'Les données fournies ne sont pas valides.',
-            //         'errors' => $validator->errors(),
-            //     ], 422);
-            // }
-
             // Insérer la demande de trajet dans la table 'ride_requests'
             DB::table('ride_requests')->insert([
                 'start_location_name' => $request->start_location_name,
@@ -783,7 +764,7 @@ $query->groupBy('bookings.id');
                 'end_location' => DB::raw("ST_GeomFromText('POINT({$request->end_lng} {$request->end_lat})', 4326)"),
                 'seats' => $request->seats ?? 1,
                 'preferred_time' => now(),
-                'preferred_amount' => $request->preferred_amount ?? 0,
+                'preferred_amount' => $request->preferred_amount ?? 800,
                 'commission_rate' => $commissionRate,
                 'status' => 'pending',
                 'passenger_id' => $request->user()->id,
@@ -1340,7 +1321,7 @@ $query->groupBy('bookings.id');
         return response()->json([
             'success' => true,
             'balance' => $user->balance,
-            'message' => 'Mise à jour effectuée avec succès.',
+            'message' => 'Mises à jour effectuée avec succès.',
         ]);
 
     }

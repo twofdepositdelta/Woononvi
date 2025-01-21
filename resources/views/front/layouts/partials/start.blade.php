@@ -54,8 +54,7 @@
     </style>
     @yield('customCSS')
 </head>
-<body class="{{Route::currentRouteName() == 'index' ? 'home-3':'' }}">
-
+<body class="{{ Route::currentRouteName() == 'index' ? 'home-3':'' }}">
     <div class="preloader">
         <div class="loader-wononvi">
             <div class="circle"></div>
