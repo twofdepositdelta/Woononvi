@@ -87,7 +87,7 @@
                     <!-- Bouton de téléchargement -->
                     <div class="nav-right">
                         <div class="nav-right-btn mt-2">
-                            <a href="{{ route('download') }}" class="theme-btn"><span class="fas fa-download"></span> Télécharger App</a>
+                            <a href="{{ route('download') }}" class="theme-btn"><span class="fas fa-download"></span> Télécharger l'App</a>
                         </div>
                     </div>
                 </div>
