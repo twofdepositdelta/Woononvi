@@ -31,7 +31,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/woononvi-app.apk') }}" class="theme-btn mt-4"><span class="fas fa-download"></span> Télécharger l'application maintenant</a>
+                    <a href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/download/woononvi-app.apk') }}" class="theme-btn mt-4"><span class="fas fa-download"></span> Télécharger l'App</a>
                 </div>
             </div>
         </div>
