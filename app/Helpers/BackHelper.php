@@ -56,19 +56,77 @@ class BackHelper
 
     public static function getUsersTotal()
     {
+
         return User::count();
     }
 
     public static function getPassengersTotal()
     {
-        $total = User::role('passenger')->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les reservations où le conducteur appartient au même pays
+                    $total = User::whereHas('city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                     })->role('passenger')->count();
+
+
+                }
+
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = User::whereHas('city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->role('passenger')->count();
+
+
+
+        }
+
+        // $total = User::role('passenger')->count();
 
         return $total;
     }
 
     public static function getDriversTotal()
     {
-        $total = User::role('driver')->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les reservations où le conducteur appartient au même pays
+                    $total = User::whereHas('city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                     })->role('driver')->count();
+
+
+                }
+
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = User::whereHas('city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->role('driver')->count();
+
+
+
+        }
+        // $total = User::role('driver')->count();
 
         return $total;
     }
@@ -77,15 +135,61 @@ class BackHelper
 
     public static function getRidesTotal()
     {
-        return Ride::count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $rides = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $rides = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->count();
+        }
+        return $rides;
     }
 
     public static function getRidesActive()
     {
-        $now = Carbon::now();  // Récupérer la date et l'heure actuelles
+        $now = Carbon::now(); // Récupérer la date et l'heure actuelles
 
-        // Récupérer les trajets créés aujourd'hui
-        $rides = Ride::where('status', 'active')->get();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $rides = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->where('status', 'active')->get();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $rides = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->where('status', 'active')->get();
+        }
 
         // Compter les trajets
         $total = $rides->count();
@@ -95,36 +199,140 @@ class BackHelper
 
     public static function getBooking()
     {
-        $total = Booking::count();
+
+
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $total = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->count();;
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->count();
+        }
 
         return $total;
     }
 
     public static function getBookingPending()
     {
-        $total = Booking::where('status', 'pending')->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $total = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->where('status', 'pending')->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', 'pending')->count();
+        }
 
         return $total;
     }
 
     public static function getRideRequest()
     {
-        $total = RideRequest::count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $total = RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->count();
+        }
+        // $total = RideRequest::count();
 
         return $total;
     }
 
     public static function getRideNotResponse()
     {
-        $total = RideRequest::where('status', '!=', 'responded')->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $total = RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->where('status', '!=', 'responded')->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', '!=', 'responded')->count();
+        }
+        // $total = RideRequest::where('status', '!=', 'responded')->count();
 
         return $total;
     }
 
     public static function getTotalBookingPayments()
     {
+        $selectedCountry = session('selected_country', 'benin');
+
+        // Obtenir l'ID du pays via BackHelper
+        $countryName = BackHelper::getCountryByName($selectedCountry);
+        $countryId = $countryName->id ?? null; // Assurez-vous que $countryName n'est pas null
+
         // Récupérer le montant total des paiements liés aux réservations
-        $total = Payment::whereNotNull('booking_id') // Vérifier que le paiement est lié à une réservation
+        $total = Payment::whereHas('user.city.country', function ($query) use ($countryId) {
+                    $query->where('id', $countryId);
+                })->whereNotNull('booking_id') // Vérifier que le paiement est lié à une réservation
                         ->where('status', 'SUCCESSFUL') // Filtrer les paiements réussis
                         ->sum('amount'); // Calculer la somme des montants
 
@@ -133,8 +341,16 @@ class BackHelper
 
     public static function getTotalBookingPaymentsOther()
     {
+        $selectedCountry = session('selected_country', 'benin');
+
+        // Obtenir l'ID du pays via BackHelper
+        $countryName = BackHelper::getCountryByName($selectedCountry);
+        $countryId = $countryName->id ?? null; // Assurez-vous que $countryName n'est pas null
+
         // Récupérer le montant total des paiements liés aux réservations
-        $total = Payment::whereNotNull('booking_id') // Vérifier que le paiement est lié à une réservation
+        $total = Payment::whereHas('user.city.country', function ($query) use ($countryId) {
+                    $query->where('id', $countryId);
+                    })->whereNotNull('booking_id') // Vérifier que le paiement est lié à une réservation
                         ->where('status', '!=', 'SUCCESSFUL') // Filtrer les paiements non réussis
                         ->sum('amount'); // Calculer la somme des montants
 
@@ -143,24 +359,59 @@ class BackHelper
 
     public static function getTotalCompletedBookingPayments()
     {
+
+        $selectedCountry = session('selected_country', 'benin');
+
+        // Obtenir l'ID du pays via BackHelper
+        $countryName = BackHelper::getCountryByName($selectedCountry);
+        $countryId = $countryName->id ?? null; // Assurez-vous que $countryName n'est pas null
         // Récupérer les IDs des trajets terminés
-        $completedRideIds = Ride::where('status', 'completed')->pluck('id');
+        $completedRideIds = Ride::whereHas('driver.city.country', function ($query) use ($countryId) {
+            $query->where('id', $countryId);
+        })->where('status', 'completed')->pluck('id');
 
         // Récupérer les IDs des réservations associées aux trajets terminés
-        $completedBookingIds = Booking::whereIn('ride_id', $completedRideIds)->pluck('id');
+        $completedBookingIds = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryId) {
+            $query->where('id', $countryId);
+         })->whereIn('ride_id', $completedRideIds)->pluck('id');
 
         // Calculer le montant total des paiements réussis pour les réservations terminées
-        $total = Payment::whereIn('booking_id', $completedBookingIds) // Filtre par réservations terminées
+        $total = Payment::whereHas('user.city.country', function ($query) use ($countryId) {
+            $query->where('id', $countryId);
+            })->whereIn('booking_id', $completedBookingIds) // Filtre par réservations terminées
                         ->where('status', 'SUCCESSFUL') // Filtre les paiements réussis
                         ->sum('amount'); // Calcule la somme des montants
 
         return $total;
     }
 
+    // public static function getTotalBalence()
+    // {
+    //    return User::getTotalBalance();
+    // }
+
     public static function getTotalBalence()
-    {
-       return User::getTotalBalance();
+{
+    // Récupérer le pays sélectionné depuis la session, par défaut 'benin'
+    $selectedCountry = session('selected_country', 'benin');
+
+    // Obtenir l'ID du pays via BackHelper
+    $countryName = BackHelper::getCountryByName($selectedCountry);
+    $countryId = $countryName->id ?? null; // Assurez-vous que $countryName n'est pas null
+
+    $query = User::query();
+
+    // Appliquer le filtre par pays si un ID de pays est disponible
+    if ($countryId) {
+        $query->whereHas('city.country', function ($q) use ($countryId) {
+            $q->where('id', $countryId);
+        });
     }
+
+    // Calculer le total du solde
+    return $query->sum('balance');
+}
+
 
     public static function getTotalComision()
     {
@@ -171,11 +422,42 @@ class BackHelper
     {
         $today = Carbon::today();
 
-        // Récupère les trajets dont la date de départ est aujourd'hui
-        $todayRides = Ride::whereDate('departure_time', $today)
-                        ->orderBy('departure_time', 'desc')
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(10);
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $todayRides = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->whereDate('departure_time', $today)
+                                ->orderBy('departure_time', 'desc')
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(10);
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $todayRides = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->whereDate('departure_time', $today)
+             ->orderBy('departure_time', 'desc')
+             ->orderBy('created_at', 'desc')
+             ->paginate(10);
+        }
+
+        // // Récupère les trajets dont la date de départ est aujourd'hui
+        // $todayRides = Ride::whereDate('departure_time', $today)
+        //                 ->orderBy('departure_time', 'desc')
+        //                 ->orderBy('created_at', 'desc')
+        //                 ->paginate(10);
 
         return $todayRides;
     }
@@ -184,9 +466,36 @@ class BackHelper
     {
         $today = Carbon::today();
 
+
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $total = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->whereDate('departure_time', $today)
+                                ->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $total = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->whereDate('departure_time', $today)
+             ->count();
+        }
         // Récupère les trajets dont la date de départ est aujourd'hui
-        $total = Ride::whereDate('departure_time', $today)
-                            ->count();
+        // $total = Ride::whereDate('departure_time', $today)
+        //                     ->count();
 
         return $total;
     }
@@ -194,18 +503,68 @@ class BackHelper
     public static function getTodayBookings()
     {
         $today = Carbon::today();
+        if (auth()->user()->hasRole('support')) {
 
-        return Booking::whereDate('created_at', $today)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(10); // Pagination si nécessaire
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $todayBookings = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->whereDate('created_at', $today)
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(10);
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $todayBookings = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->whereDate('created_at', $today)
+             ->orderBy('created_at', 'desc')
+             ->paginate(10);
+        }
+        return $todayBookings;
     }
 
     public static function getTodayBookingsTotal()
     {
         $today = Carbon::today();
 
-        return Booking::whereDate('created_at', $today)
-                    ->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $totale = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->whereDate('created_at', $today)
+                                ->count();
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $totale = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->whereDate('created_at', $today)
+             ->count();
+        }
+        return $totale;
     }
 
     public static function showLastFiftyUsers()
@@ -241,5 +600,20 @@ class BackHelper
             'notifications' => $user->notifications()->latest()->get(),
             'unread_count' => $user->unreadNotifications()->count(),
         ];
+    }
+
+
+    public static function countries()
+    {
+        $countries=Country::where('is_active',true)->get();
+
+        return $countries;
+    }
+
+
+    public static function getCountryByName($countryName)
+    {
+        // Rechercher le pays par son nom
+        return Country::where('name', $countryName)->first();
     }
 }

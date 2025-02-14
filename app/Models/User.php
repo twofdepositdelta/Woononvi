@@ -115,12 +115,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function profile()
     {
-        return $this->hasOne(Profile::class); 
+        return $this->hasOne(Profile::class);
     }
 
     public function preference()
     {
-        return $this->hasOne(Preference::class); 
+        return $this->hasOne(Preference::class);
     }
 
     public function ride_requests()
@@ -175,7 +175,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // Montant total reçu par le conducteur
     public function totalAmountReceived()
     {
-        return $this->driverBookings()->sum('total_price'); // Remplacez 'total_price' par le champ correct
+        return $this->driverBookings()->sum('bookings.total_price'); // Remplacez 'total_price' par le champ correct
     }
 
     // Relation pour obtenir les réservations où l'utilisateur est le passager

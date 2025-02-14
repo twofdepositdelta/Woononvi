@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BackHelper;
 use App\Models\RideRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +15,57 @@ class RideRequestController extends Controller
     public function index()
     {
         //
-        $rideRequests=RideRequest::orderBy('created_at','desc')->paginate(20);
-        $rideRequestcount=RideRequest::count();
-        $rideRequestcountpending=RideRequest::where('status','pending')->count();
-        $rideRequestcountresponded=RideRequest::where('status','responded')->count();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $rideRequests=RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->orderBy('created_at', 'desc')
+                                  ->paginate(20);
+
+                                  $rideRequestcount=RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                      $query->where('id', $auth_country_id);
+                                  })->count();
+                                  $rideRequestcountpending=RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                      $query->where('id', $auth_country_id);
+                                  })->where('status','pending')->count();
+                                  $rideRequestcountresponded=RideRequest::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                      $query->where('id', $auth_country_id);
+                                  })->where('status','responded')->count();
+                }
+
+        }else{
+          // $rideRequests=RideRequest::orderBy('created_at','desc')->paginate(20);
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+
+            $rideRequests=RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+            $rideRequestcount=RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->count();
+            $rideRequestcountpending=RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->where('status','pending')->count();
+            $rideRequestcountresponded=RideRequest::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->where('status','responded')->count();
+
+
+        }
+
         return view('back.pages.demandes.index',compact('rideRequests','rideRequestcount','rideRequestcountpending','rideRequestcountresponded'));
     }
 

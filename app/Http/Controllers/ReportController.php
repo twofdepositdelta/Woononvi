@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Models\ReportType;
+use App\Helpers\BackHelper;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -14,7 +15,37 @@ class ReportController extends Controller
     public function index()
     {
         //
-        $reports=Report::orderBy('created_at','desc')->paginate(10);
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $reports=Report::whereHas('user.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })->orderBy('created_at', 'desc')
+                                  ->paginate(10);
+
+                }
+
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $reports=Report::whereHas('user.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->orderBy('created_at', 'desc')
+              ->paginate(10);
+
+
+        }
+
         $reportypes=ReportType::orderBy('created_at','desc')->get();
         return view('back.pages.signaler.index',compact('reports','reportypes'));
     }
@@ -74,13 +105,47 @@ class ReportController extends Controller
         // Récupérer le type de véhicule filtré
         $typeId = $request->input('type_id');
 
-        // Si un type de véhicule est sélectionné, filtrer les véhicules
-        if ($typeId) {
-            $reports = Report::where('report_type_id', $typeId)->orderBy('created_at', 'desc')->get();
-        } else {
-            // Si aucun type n'est sélectionné, récupérer tous les véhicules
-            $reports = Report::orderBy('created_at', 'desc')->get();
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+              if ($auth_country_id) {
+                // Si un type de véhicule est sélectionné, filtrer les véhicules
+
+                    if ($typeId) {
+                        $reports = Report::whereHas('user.city.country', function ($query) use ($auth_country_id) {
+                            $query->where('id', $auth_country_id);
+                        })->where('report_type_id', $typeId)->orderBy('created_at', 'desc')->get();
+                    } else {
+                        // Si aucun type n'est sélectionné, récupérer tous les véhicules
+                        $reports = Report::whereHas('user.city.country', function ($query) use ($auth_country_id) {
+                            $query->where('id', $auth_country_id);
+                        })->orderBy('created_at', 'desc')->get();
+                    }
+            }
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                if ($typeId) {
+                    $reports = Report::whereHas('user.city.country', function ($query) use ($countryid) {
+                        $query->where('id', $countryid);
+                    })->where('report_type_id', $typeId)->orderBy('created_at', 'desc')->get();
+                } else {
+                    // Si aucun type n'est sélectionné, récupérer tous les véhicules
+                    $reports = Report::whereHas('user.city.country', function ($query) use ($countryid) {
+                        $query->where('id', $countryid);
+                    })->orderBy('created_at', 'desc')->get();
+                }
+
+
         }
+
+
 
         // Retourner la vue partielle de la table avec les véhicules filtrés
         return view('back.pages.signaler.table', compact('reports'));

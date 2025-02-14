@@ -22,8 +22,10 @@ class CitySeeder extends Seeder
         }
         $beninId = $benin->id;
 
+
+
         // Liste étendue des villes avec leur statut d'activation et country_id
-        $cities = [
+        $beninCities  = [
             ['name' => 'Abomey', 'status' => true, 'country_id' => $beninId],
             ['name' => 'Abomey-Calavi', 'status' => true, 'country_id' => $beninId],
             ['name' => 'Allada', 'status' => false, 'country_id' => $beninId],
@@ -56,7 +58,50 @@ class CitySeeder extends Seeder
             ['name' => 'Tchaourou', 'status' => false, 'country_id' => $beninId],
         ];
 
+
+        //  Liste des villes du Togo
+
+         $togo = Country::where('name', 'Togo')->first();
+        if (!$togo) {
+            throw new \Exception("Le pays T n'existe pas.");
+        }
+        $togoId = $togo->id;
+
+        $togoCities = [
+            // Région Maritime
+            ['name' => 'Lomé', 'status' => true, 'country_id' => $togoId],
+            ['name' => 'Tsévié', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Aného', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Vogan', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Tabligbo', 'status' => false, 'country_id' => $togoId],
+
+            // Région des Plateaux
+            ['name' => 'Atakpamé', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Kpalimé', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Badou', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Amlamé', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Notsé', 'status' => false, 'country_id' => $togoId],
+
+            // Région Centrale
+            ['name' => 'Sokodé', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Tchamba', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Bafilo', 'status' => false, 'country_id' => $togoId],
+
+            // Région de la Kara
+            ['name' => 'Kara', 'status' => true, 'country_id' => $togoId],
+            ['name' => 'Bassar', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Niamtougou', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Pagouda', 'status' => false, 'country_id' => $togoId],
+
+            // Région des Savanes
+            ['name' => 'Dapaong', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Mango', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Tandjouaré', 'status' => false, 'country_id' => $togoId],
+            ['name' => 'Cinkassé', 'status' => false, 'country_id' => $togoId],
+        ];
+
+
         // Insertion des villes dans la base de données
-        City::insert($cities);
+        City::insert(array_merge($beninCities, $togoCities));
     }
 }

@@ -16,7 +16,7 @@
             <div class="d-flex flex-wrap align-items-center gap-3">
                 <button type="button" data-theme-toggle
                     class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"></button>
-                <div class="dropdown d-none d-sm-inline-block">
+                {{-- <div class="dropdown d-none d-sm-inline-block">
                     <button
                         class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
                         type="button" data-bs-toggle="dropdown">
@@ -27,7 +27,7 @@
                         <div
                             class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
                             <div>
-                                <h6 class="text-lg text-primary-light fw-semibold mb-0">Choisir votre langue</h6>
+                                <h6 class="text-lg text-primary-light fw-semibold mb-0">Choisir un pays</h6>
                             </div>
                         </div>
 
@@ -55,11 +55,11 @@
                                     for="france">
                                     <span
                                         class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                        <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/flags/flag3.png') }}"
+                                        <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/flags/to.png') }}"
                                             alt=""
                                             class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0"
                                             id="France">
-                                        <span class="text-md fw-semibold mb-0">France</span>
+                                        <span class="text-md fw-semibold mb-0">Togo</span>
                                     </span>
                                 </label>
                                 <input class="form-check-input" type="radio" name="crypto" id="france">
@@ -72,7 +72,53 @@
 
                         </div>
                     </div>
-                </div><!-- Language dropdown end -->
+                </div> --}}
+
+                <div class="dropdown d-none d-sm-inline-block">
+                    @if ( !auth()->user()->hasRole('support'))
+                       <form id="country-form" method="GET" action="{{ route('country.select') }}">
+                            <button
+                                class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                                type="button" data-bs-toggle="dropdown">
+                                
+                                @php
+                                  $selectedCountry = session('selected_country', 'benin'); // Pays sélectionné par défaut
+                                    $country = BackHelper::getCountryByName($selectedCountry); // Récupère le pays à partir de son nom
+                                    $icon = $country->icon ?? 'default-icon-class'; // Valeur par défaut si aucune icône n'est définie
+                                @endphp
+                                <i class="{{ $icon }}"></i> <!-- Affichage de l'icône -->
+
+                            </button>
+
+                            <div class="dropdown-menu to-top dropdown-menu-sm">
+                                <div class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                    <h6 class="text-lg text-primary-light fw-semibold mb-0">Choisir un pays</h6>
+                                </div>
+
+
+                                <div class="max-h-400-px overflow-y-auto scroll-sm pe-8">
+                                        @foreach (BackHelper::countries() as $countrie )
+                                            <!-- Bénin -->
+                                            <div class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                <label for="benin">
+                                                    <span class="d-flex align-items-center gap-3">
+                                                        <i class="{{$countrie->icon}}"></i>
+                                                        <span>{{$countrie->name}}</span>
+                                                    </span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="country" value="{{$countrie->name}}" id="benin"
+                                                    onchange="document.getElementById('country-form').submit();"
+                                                    @if(session('selected_country') == $countrie->name) checked @endif>
+                                            </div>
+
+
+                                        @endforeach
+                                </div>
+                            </div>
+                        </form>
+                    @endif
+                    </div>
+
 
 
 

@@ -56,22 +56,25 @@ class ActualityController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required|string',
-            'image_url' => 'required|image',
-            'published' => 'boolean',
+            'image_url' => 'nullable|image',
             'type_new_id' => 'required|exists:type_news,id',
             'roles' => 'array',
             'roles.*' => 'exists:roles,id',
         ]);
 
+        $imagePath=null;
         $imageHelper = new ImageHelper();
-        $imagePath = $imageHelper->enregistrerImage($request->image_url, 'images/Actualité');
+
+        if ($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
+            $imagePath = $imageHelper->enregistrerImage($request->file('image_url'), 'images/Actualité');
+        }
 
         $actualitie = Actuality::create([
             'titre' => $request->titre,
             'slug' => Str::slug($request->titre),
             'description' => strip_tags($request->description),
-            'image_url' => FrontHelper::getEnvFolder() . $imagePath,
-            'published' => $request->published,
+            'image_url' => $imagePath ? FrontHelper::getEnvFolder() . $imagePath : " ",
+            'published' => $request->published ? $request->published : false,
             'type_new_id' => $request->type_new_id,
         ]);
 

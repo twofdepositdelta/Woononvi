@@ -107,13 +107,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="phone" placeholder="Votre téléphone"
-                                    value="{{ old('phone') }}" required>
-                                @error('phone')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            <div class="form-group d-flex">
+                                <div class="col-md-3">
+                                    <label for="country_code"></label>
+                                    <select class="form-control" name="country_code" id="country_code" required>
+                                        @foreach (BackHelper::countries() as $countrie )
+
+                                        <option value="{{ $countrie->id }}" {{ old('country_code') == $countrie->indicatif ? 'selected' : '' }}>
+                                            {{ $countrie->name }} ({{ $countrie->indicatif }})
+                                        </option>
+
+                                        @endforeach
+                                        <!-- Ajoute d'autres indicatifs ici -->
+                                    </select>
+                                    @error('country_code')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-9">
+                                    <label for="phone"></label>
+                                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Votre téléphone"
+                                        value="{{ old('phone') }}" required>
+                                    @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
+
                             <div class="form-group">
                                 <input type="text" class="form-control" name="subject" placeholder="Sujet"
                                     value="{{ old('subject') }}" required>

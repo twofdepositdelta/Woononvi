@@ -40,8 +40,6 @@ class ChatController extends Controller
         return response()->json(['status' => 'success', 'updated_count' => $updatedCount]);
     }
 
-
-
     public function getMessages()
     {
         // Vérifier si l'utilisateur a le rôle d'administrateur ou de manager

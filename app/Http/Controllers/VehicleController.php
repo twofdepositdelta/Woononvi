@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Helpers\BackHelper;
 use App\Mail\VehicleStatus;
 use App\Models\TypeVehicle;
 use Illuminate\Http\Request;
@@ -16,7 +17,34 @@ class VehicleController extends Controller
     public function index()
     {
         //
-        $vehicles=Vehicle::orderBy('created_at','desc')->paginate(10);
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $vehicles=Vehicle::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                    })->orderBy('created_at','desc')->paginate(10);
+
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $vehicles=Vehicle::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->orderBy('created_at','desc')->paginate(10);
+
+
+        }
+
         $typevehicles=TypeVehicle::orderBy('created_at','desc')->paginate(10);
 
         return view('back.pages.vehicules.index',compact('vehicles','typevehicles'));
@@ -82,14 +110,50 @@ class VehicleController extends Controller
     $typeId = $request->input('type_id');
 
     // Si un type de véhicule est sélectionné, filtrer les véhicules
-    if ($typeId) {
-        $vehicles = Vehicle::where('type_vehicle_id', $typeId)->orderBy('created_at', 'desc')->get();
-    } else {
-        // Si aucun type n'est sélectionné, récupérer tous les véhicules
-        $vehicles = Vehicle::orderBy('created_at', 'desc')->get();
-    }
 
-    // Retourner la vue partielle de la table avec les véhicules filtrés
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+            if ($auth_country_id) {
+                // Si un type de véhicule est sélectionné, filtrer les véhicules
+
+                if ($typeId) {
+                    $vehicles = Vehicle::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                    })->where('type_vehicle_id', $typeId)->orderBy('created_at', 'desc')->get();
+                } else {
+                    // Si aucun type n'est sélectionné, récupérer tous les véhicules
+                    $vehicles = Vehicle::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                    })->orderBy('created_at', 'desc')->get();
+                }
+            }
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                if ($typeId) {
+                    $vehicles = Vehicle::whereHas('driver.city.country', function ($query) use ($countryid) {
+                        $query->where('id', $countryid);
+                    })->where('type_vehicle_id', $typeId)->orderBy('created_at', 'desc')->get();
+                } else {
+                    // Si aucun type n'est sélectionné, récupérer tous les véhicules
+                    $vehicles = Vehicle::whereHas('driver.city.country', function ($query) use ($countryid) {
+                        $query->where('id', $countryid);
+                    })->orderBy('created_at', 'desc')->get();
+                }
+
+
+            }
+
+
+
+        // Retourner la vue partielle de la table avec les véhicules filtrés
     return view('back.pages.vehicules.table', compact('vehicles'));
 }
 

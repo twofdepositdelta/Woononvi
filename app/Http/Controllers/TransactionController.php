@@ -14,6 +14,7 @@ class TransactionController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
         //
         $transactions=Transaction::orderBy('created_at','desc')->paginate(10);

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -15,6 +15,17 @@ class CountryController extends Controller
     {
         //
     }
+
+
+    public function selectCountry(Request $request)
+    {
+        $country = $request->input('country', 'benin'); // Par défaut, Bénin
+        session(['selected_country' => $country]);
+
+        return redirect()->back()->with('success', 'Pays sélectionné : ' . ucfirst($country));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
