@@ -19,7 +19,7 @@
                             <div class="col-12">
                                 <label class="form-label" for="titre">Titre</label>
                                 <input type="text" class="form-control @error('titre') is-invalid @enderror"
-                                    id="titre" name="titre" placeholder="Entrez le titre de l'actualité"
+                                    id="titre" value="{{old('titre')}}" name="titre" placeholder="Entrez le titre de l'actualité"
                                     value="{{ old('titre') }}" required>
                                 @error('titre')
                                     <div class="invalid-feedback">{{ $message }}</div>
