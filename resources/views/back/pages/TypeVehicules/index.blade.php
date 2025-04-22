@@ -5,7 +5,7 @@
 <div class="card h-100 p-0 radius-12">
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
         <h5 class="card-title mb-0">Liste des Types de Véhicules</h5>
-        {{-- <a href="{{ route($typevehicles.create') }}" class="btn btn-primary">Ajouter un Type de Véhicule</a> --}}
+        <a href="{{ route('typevehicles.create') }}" class="btn btn-primary">Ajouter un Type de Véhicule</a>
     </div>
     <!-- Content -->
     <div class="card-body p-24">
@@ -17,7 +17,7 @@
                             <div class="d-flex align-items-center gap-10">#</div>
                         </th>
                         <th scope="col">Nom du Type</th>
-                        <th scope="col">Taux par km (FCFA)</th>
+                        <th scope="col">Catégorie</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -40,14 +40,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $typevehicle->taux_per_km }} FCFA</span>
+                                    <span class="text-primary">{{ $typevehicle->categorie ? $typevehicle->categorie->label : 'Erreur' }}</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center gap-10 justify-content-center">
-                                        {{-- <!-- Edit -->
-                                        <a href="{{ route($typevehicles.edit', $typeVehicle) }}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                        @hasrole('super admin')
+                                        <!-- Edit --> 
+                                        <a href="{{ route('typevehicles.edit', $typevehicle) }}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                             <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-                                        </a> --}}
+                                        </a> 
 
                                         <!-- Delete -->
                                         <form action="{{ route('typevehicles.destroy', $typevehicle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type de véhicule ?');">
@@ -57,6 +58,7 @@
                                                 <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                             </button>
                                         </form>
+                                        @endhasrole
                                     </div>
                                 </td>
                             </tr>

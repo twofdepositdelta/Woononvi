@@ -21,14 +21,14 @@ class TypeVehicleSeeder extends Seeder
 
          $types = [
              // Voitures
-             ['label' => 'Citadine', 'taux_per_km' => 100, 'category_id' => $voitureId],
-             ['label' => 'Berline', 'taux_per_km' => 120, 'category_id' => $voitureId],
-             ['label' => 'SUV', 'taux_per_km' => 150, 'category_id' => $voitureId],
-             ['label' => 'Monospace', 'taux_per_km' => 130, 'category_id' => $voitureId],
+             ['label' => 'Citadine', 'category_id' => $voitureId],
+             ['label' => 'Berline', 'category_id' => $voitureId],
+             ['label' => 'SUV',  'category_id' => $voitureId],
+             ['label' => 'Monospace', 'category_id' => $voitureId],
 
              // Motos
-             ['label' => 'Scooter', 'taux_per_km' => 60, 'category_id' => $motoId],
-             ['label' => 'Moto urbaine', 'taux_per_km' => 70, 'category_id' => $motoId],
+             ['label' => 'Scooter', 'category_id' => $motoId],
+             ['label' => 'Moto urbaine', 'category_id' => $motoId],
 
          ];
 
@@ -37,7 +37,6 @@ class TypeVehicleSeeder extends Seeder
             DB::table('type_vehicles')->insert([
                 'label' => $type['label'],
                 'slug' => Str::slug($type['label']),
-                'taux_per_km' => $type['taux_per_km'],
                 'categorie_id' => $type['category_id'],
                 'created_at' => now(),
                 'updated_at' => now(),

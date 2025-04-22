@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->string('label');
             $table->string('slug');
-            $table->integer('taux_per_km');
             $table->foreignIdFor(Categorie::class);
             $table->timestamps();
         });
