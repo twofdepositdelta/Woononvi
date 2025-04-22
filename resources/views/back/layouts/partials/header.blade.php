@@ -75,7 +75,7 @@
                 </div> --}}
 
                 <div class="dropdown d-none d-sm-inline-block">
-                    @if ( !auth()->user()->hasRole('support'))
+                    @if ( !auth()->user()->hasRole(['support','manager']))
                        <form id="country-form" method="GET" action="{{ route('country.select') }}">
                             <button
                                 class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"

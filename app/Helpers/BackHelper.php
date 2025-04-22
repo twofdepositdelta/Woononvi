@@ -98,7 +98,7 @@ class BackHelper
 
     public static function getDriversTotal()
     {
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -135,7 +135,7 @@ class BackHelper
 
     public static function getRidesTotal()
     {
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -166,7 +166,7 @@ class BackHelper
     {
         $now = Carbon::now(); // Récupérer la date et l'heure actuelles
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -201,7 +201,7 @@ class BackHelper
     {
 
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -231,7 +231,7 @@ class BackHelper
 
     public static function getBookingPending()
     {
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -261,7 +261,7 @@ class BackHelper
 
     public static function getRideRequest()
     {
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -292,7 +292,7 @@ class BackHelper
 
     public static function getRideNotResponse()
     {
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -422,7 +422,7 @@ class BackHelper
     {
         $today = Carbon::today();
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -467,7 +467,7 @@ class BackHelper
         $today = Carbon::today();
 
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -503,7 +503,7 @@ class BackHelper
     public static function getTodayBookings()
     {
         $today = Carbon::today();
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -538,7 +538,7 @@ class BackHelper
     {
         $today = Carbon::today();
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent

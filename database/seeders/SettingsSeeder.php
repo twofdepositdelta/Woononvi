@@ -61,11 +61,11 @@ class SettingsSeeder extends Seeder
                 'description' => 'La monnaie utilisée dans l\'entreprise',
             ],
 
-            [
-                'key' => 'suggested_price_per_km',
-                'value' => '50',
-                'description' => 'Prix recommandé pour les trajets.',
-            ],
+            // [
+            //     'key' => 'suggested_price_per_km',
+            //     'value' => '50',
+            //     'description' => 'Prix recommandé pour les trajets.',
+            // ],
 
             [
                 'key' => 'Booking_Percentage',

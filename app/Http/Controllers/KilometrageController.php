@@ -71,7 +71,7 @@ class KilometrageController extends Controller
 
             if ($exists) {
                 return redirect()->back()->withErrors([
-                    "min_km.$index" => "L’intervalle [$minKm - $maxKm] km entre en conflit avec un autre déjà enregistré pour cette catégorie. Veuillez saisir un intervalle totalement distinct. Par exemple, si [0 - 20] est déjà enregistré, vous pouvez utiliser [21 - 30].",
+                    "min_km.$index" => "L’intervalle [$minKm - $maxKm] km entre en conflit avec un autre déjà enregistré pour cette catégorie. Veuillez saisir un intervalle totalement distinct.",
                 ])->withInput();
             }
 
@@ -148,8 +148,8 @@ class KilometrageController extends Controller
             ->where('id', '!=', $kilometrage->id)
             ->where(function ($query) use ($request) {
                 $query->where(function ($q) use ($request) {
-                    $q->where('min_km', '<=', $request->max_km + 1)
-                    ->where('max_km', '>=', $request->min_km - 1);
+                    $q->where('min_km', '<=', $request->max_km )
+                    ->where('max_km', '>=', $request->min_km );
                 });
             })
             ->exists();
@@ -168,7 +168,7 @@ class KilometrageController extends Controller
             'categorie_id' => $request->categorie_id,
         ]);
 
-        return redirect()->route('kilometrages.index')->with('success', 'Kilométrage modifié avec succès.');
+        return back()->with('success', 'Kilométrage modifié avec succès.');
     }
 
 

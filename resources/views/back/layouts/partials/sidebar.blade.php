@@ -291,7 +291,7 @@
             </li>
 
             {{-- document --}}
-            @hasanyrole(['super admin', 'manager','dev'])
+            @hasanyrole(['super admin','manager','dev'])
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="ic:baseline-insert-drive-file" class="menu-icon"></iconify-icon>

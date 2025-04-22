@@ -15,7 +15,7 @@ class ReportController extends Controller
     public function index()
     {
         //
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -105,7 +105,7 @@ class ReportController extends Controller
         // Récupérer le type de véhicule filtré
         $typeId = $request->input('type_id');
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent

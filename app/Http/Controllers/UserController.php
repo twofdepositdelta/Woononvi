@@ -260,7 +260,8 @@ class UserController extends Controller
     }
 
         public function doc(){
-            //    $documents = Document::orderBy('created_at', 'desc')->paginate(10);
+
+            if (auth()->user()->hasAnyRole(['super admin', 'dev'])) {
                 // Récupérer le pays sélectionné depuis la session
                 $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin'
                 $country = BackHelper::getCountryByName($selectedCountry);
@@ -273,6 +274,22 @@ class UserController extends Controller
                 });
             })
             ->paginate(10);
+
+            }else{
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                $users = User::whereHas('roles', function($query) {
+                    $query->whereIn('name', ['driver','passenger']);
+                })->when($auth_country_id, function ($query) use ($auth_country_id) {
+                    $query->whereHas('city.country', function ($subQuery) use ($auth_country_id) {
+                        $subQuery->where('id', $auth_country_id);
+                    });
+                })
+                ->paginate(10);
+
+            }
 
         return view('back.pages.documents.index',compact('users'));
 
