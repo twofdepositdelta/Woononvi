@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\Categorie;
+use App\Models\TypeVehicle;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TypeVehicle extends Model
+class Categorie extends Model
 {
     use HasFactory;
+    
     protected $fillable = [
         'label',
         'slug',
-        'categorie_id'
     ];
 
-    public function categorie()
+    public function typeVehicles()
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->hasMany(TypeVehicle::class, 'type_vehicle_id');
     }
-
-
 }

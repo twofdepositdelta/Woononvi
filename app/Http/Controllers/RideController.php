@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ride;
 use Carbon\Carbon;
+use App\Models\Ride;
+use App\Helpers\BackHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,10 +16,41 @@ class RideController extends Controller
     public function index()
     {
         //
-        $rides = Ride::orderBy('created_at', 'desc')->paginate(10);
+        // $rides = Ride::orderBy('created_at', 'desc')->paginate(10);
 
-        return view('back.pages.trajets.index', compact('rides'));
+        // Récupérer le pays sélectionné de la session
 
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $rides = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                                    $query->where('id', $auth_country_id);
+                                })
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(10);
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $rides = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        }
+
+
+      return view('back.pages.trajets.index', compact('rides'));
     }
 
     /**
@@ -192,9 +224,22 @@ class RideController extends Controller
         if (auth()->user()->hasAnyRole(['super admin', 'manager'])) {
             //
 
-            $ridecount = Ride::count();
-            $ridecountactive = Ride::where('status', 'active')->count();
-            $ridecountcomplete = Ride::where('status', 'suspend')->count();
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $ridecount = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->count();
+            $ridecountactive = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->where('status', 'active')->count();
+
+
+            $ridecountcomplete = Ride::whereHas('driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+            })->where('status', 'suspend')->count();
 
             //  $rides = Ride::select('start_location ', 'end_location', \DB::raw('count(*) as count'))
             //          ->groupBy('start_location', 'end_location')
@@ -210,8 +255,19 @@ class RideController extends Controller
     public function getRidesReport(Request $request)
     {
 
+
             $period = $request->get('period');
+            $selectedCountry = session('selected_country', 'benin'); // 'benin' par défaut
+            $country = BackHelper::getCountryByName($selectedCountry);
+            $countryId = $country->id ?? null;
+
             $query = Ride::query();
+            if ($countryId) {
+                $query->whereHas('driver.city.country', function ($q) use ($countryId) {
+                    $q->where('id', $countryId);
+                });
+            }
+
 
             switch ($period) {
                 case 'weeklyride':
@@ -282,6 +338,7 @@ class RideController extends Controller
             ]);
 
     }
+
 
     // private function getCityFromLocation($location)
     // {

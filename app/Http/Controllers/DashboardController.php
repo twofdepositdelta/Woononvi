@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\City;
 use App\Models\User;
-use App\Models\Country;
 use App\Models\Booking;
+use App\Models\Country;
 use App\Models\Setting;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Helpers\BackHelper;
+use App\Models\Kilometrage;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -18,15 +19,51 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $last30Days = User::where('created_at', '>=', Carbon::now()->subDays(30));
-        $totalUsersLast30Days = $last30Days->count();
 
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les reservations où le conducteur appartient au même pays
+                    $last30Days = User::whereHas('city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                     })->where('created_at', '>=', Carbon::now()->subDays(30));
+
+                     $totalDriversLast30Days = User::whereHas('city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                     })->where('created_at', '>=', Carbon::now()->subDays(30))
+                        ->role('driver')
+                         ->count();
+                }
+
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $last30Days = User::whereHas('city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('created_at', '>=', Carbon::now()->subDays(30));
+
+
+             $totalDriversLast30Days = User::whereHas('city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('created_at', '>=', Carbon::now()->subDays(30))
+                ->role('driver')
+                 ->count();
+
+        }
+        // $last30Days = User::where('created_at', '>=', Carbon::now()->subDays(30));
+        $totalUsersLast30Days = $last30Days->count();
         $totalPassengersLast30Days = $last30Days->role('passenger')->count();
 
-
-        $totalDriversLast30Days = User::where('created_at', '>=', Carbon::now()->subDays(30))
-                         ->role('driver')
-                         ->count();
+        // $totalDriversLast30Days = User::where('created_at', '>=', Carbon::now()->subDays(30))
+        //                  ->role('driver')
+        //                  ->count();
         $totalDrivers = User::role('driver')->count();
 
         // dd(BackHelper::getTodayBookings());
@@ -125,7 +162,8 @@ class DashboardController extends Controller
     {
         if (auth()->user()->hasAnyRole(['super admin' ,'dev'])) {
             $settings=Setting::all();
-            return view('back.pages.settings.index',compact('settings'));
+            $kilos = Kilometrage::latest()->get();
+            return view('back.pages.settings.index',compact('settings','kilos'));
         }else{
 
             abort(401);

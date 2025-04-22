@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Commission;
+use App\Helpers\BackHelper;
 use Illuminate\Http\Request;
 
 class CommissionController extends Controller
@@ -14,8 +15,16 @@ class CommissionController extends Controller
     public function index()
     {
         if (auth()->user()->hasAnyRole(['super admin', 'manager'])){
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
             /// Récupérer toutes les commissions
-            $commissions = Booking::all();
+            $commissions = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->get();
 
             // Calcul du total des commissions (toutes)
             $totalcommission = $commissions->sum(function ($booking) {
@@ -23,8 +32,13 @@ class CommissionController extends Controller
             });
 
             // Récupérer les commissions associées aux trajets en attente et actifs
-            $commission_pending = Booking::where('status', 'pending')->get();
-            $commission_actif = Booking::where('status', 'accepted')->get();
+            $commission_pending = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', 'pending')->get();
+
+            $commission_actif = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', 'accepted')->get();
 
             // Calcul des totaux pour les commissions "pending" et "active"
             $totalpendingcomiss = $commission_pending->sum(function ($booking) {

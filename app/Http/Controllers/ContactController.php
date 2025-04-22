@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Helpers\BackHelper;
 use Illuminate\Http\Request;
 use App\Mail\SendContactMail;
 use App\Mail\ReceiveContactMail;
@@ -16,7 +17,30 @@ class ContactController extends Controller
     public function index()
     {
         //
-        $contacts=Contact::orderBy('created_at','desc')->paginate(10);
+          //
+          if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les trajets où le conducteur appartient au même pays
+                    $contacts=Contact::where('country_id', $auth_country_id)->orderBy('created_at', 'desc')
+                      ->paginate(10);
+
+                }
+
+        }else{
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $contacts=Contact::where('country_id', $countryid)->orderBy('created_at', 'desc')
+              ->paginate(10);
+
+        }
         return view('back.pages.contact.index',compact('contacts'));
 
     }
@@ -41,6 +65,8 @@ class ContactController extends Controller
             'phone' => ['required'],
             'subject' => ['required', 'string'],
             'message' => ['required', 'string'],
+            'country_code'=>['required']
+
         ]);
 
         $data = Contact::create([
@@ -49,6 +75,7 @@ class ContactController extends Controller
             'phone' => $request->phone,
             'subject' => $request->subject,
             'message' => $request->message,
+            'country_id'=>$request->country_code
         ]);
 
         Mail::to('wononvi@gmail.com')->send(new ReceiveContactMail($data));

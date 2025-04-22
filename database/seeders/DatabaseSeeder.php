@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UserNotificationSettingSeeder::class,
             SettingsSeeder::class,
             EnvironmentSeeder::class,
+            CategorySeeder::class,
             TypeVehicleSeeder::class,
             VehicleSeeder::class,          // Ajoutez le véhicule avant les trajets
              RideSeeder::class,

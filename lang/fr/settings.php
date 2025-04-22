@@ -13,7 +13,8 @@ return [
     'Suggested_Price'=> ' Prix suggéré',
     'Booking_Percentage'=> 'Pourcentage de réservation',
     'Mini_Price_Kilomete'=>'Prix minimum par kilomètre',
-    'Max_Price_Kilomete'=> 'Prix maximum par kilomètre'
+    'Max_Price_Kilomete'=> 'Prix maximum par kilomètre',
+    'suggested_price_per_km'=>'Prix recommandé'
 ];
 
 

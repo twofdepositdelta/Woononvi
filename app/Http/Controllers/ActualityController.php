@@ -52,65 +52,66 @@ class ActualityController extends Controller
 
         // Sauvegarder une nouvelle actualité
         public function store(Request $request)
-    {
-        $request->validate([
-            'titre' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image_url' => 'required|image',
-            'published' => 'boolean',
-            'type_new_id' => 'required|exists:type_news,id',
-            'roles' => 'array',
-            'roles.*' => 'exists:roles,id',
-        ]);
+        {
+            $request->validate([
+                'titre' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image_url' => 'nullable|image',
+                'type_new_id' => 'required|exists:type_news,id',
+                'roles' => 'array',
+                'roles.*' => 'exists:roles,id',
+            ]);
 
-        $imageHelper = new ImageHelper();
-        $imagePath = $imageHelper->enregistrerImage($request->image_url, 'images/Actualité');
+            $imagePath=null;
+            $imageHelper = new ImageHelper();
 
-        $actualitie = Actuality::create([
-            'titre' => $request->titre,
-            'slug' => Str::slug($request->titre),
-            'description' => strip_tags($request->description),
-            'image_url' => FrontHelper::getEnvFolder() . $imagePath,
-            'published' => $request->published,
-            'type_new_id' => $request->type_new_id,
-        ]);
+            if ($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
+                $imagePath = $imageHelper->enregistrerImage($request->file('image_url'), 'images/Actualité');
+            }
 
-        $typeNew = TypeNew::find($request->type_new_id);
+            $actualitie = Actuality::create([
+                'titre' => $request->titre,
+                'slug' => Str::slug($request->titre),
+                'description' => strip_tags($request->description),
+                'image_url' => $imagePath ? FrontHelper::getEnvFolder() . $imagePath : " ",
+                'published' => $request->published ? $request->published : false,
+                'type_new_id' => $request->type_new_id,
+            ]);
 
-        if ($typeNew->name == 'Notification'|| $typeNew->name == 'Message email') {
+            $typeNew = TypeNew::find($request->type_new_id);
 
+            if ($typeNew->name == 'Notification'|| $typeNew->name == 'Message email') {
+
+                foreach ($request->roles as $roleId) {
+                    DB::table('actuality_role')->insert([
+                        'actuality_id' => $actualitie->id,
+                        'role_id' => $roleId,
+                    ]);
+                }
+
+                // Notification
             foreach ($request->roles as $roleId) {
-                DB::table('actuality_role')->insert([
-                    'actuality_id' => $actualitie->id,
-                    'role_id' => $roleId,
-                ]);
-            }
+                $role = Role::findById($roleId);
+                $users = User::role($role->name)->get();
 
-            // Notification
-        foreach ($request->roles as $roleId) {
-            $role = Role::findById($roleId);
-            $users = User::role($role->name)->get();
+                if ($typeNew->name == 'Notification') {
+                    $details = [
+                        'message' => strip_tags($actualitie->description),
+                    ];
 
-            if ($typeNew->name == 'Notification') {
-                $details = [
-                    'message' => strip_tags($actualitie->description),
-                ];
-
-                foreach ($users as $user) {
-                    $user->notify(new NotificationLocale($details));
-                }
-            } elseif ($typeNew->name == 'Message email') {
-                foreach ($users as $user) {
-                    $user->notify(new ActualiteNotification($user->email, $actualitie->description, $actualitie->titre));
+                    foreach ($users as $user) {
+                        $user->notify(new NotificationLocale($details));
+                    }
+                } elseif ($typeNew->name == 'Message email') {
+                    foreach ($users as $user) {
+                        $user->notify(new ActualiteNotification($user->email, $actualitie->description, $actualitie->titre));
+                    }
                 }
             }
+            }
+            
+            return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
         }
-        }
-
-
-
-        return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
-    }
 
 
         // Afficher les détails d'une actualité spécifique

@@ -261,9 +261,18 @@ class UserController extends Controller
 
         public function doc(){
             //    $documents = Document::orderBy('created_at', 'desc')->paginate(10);
+                // Récupérer le pays sélectionné depuis la session
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin'
+                $country = BackHelper::getCountryByName($selectedCountry);
+                $countryId = $country->id ?? null;
             $users = User::whereHas('roles', function($query) {
                 $query->whereIn('name', ['driver','passenger']);
-            })->paginate(10);
+            })->when($countryId, function ($query) use ($countryId) {
+                $query->whereHas('city.country', function ($subQuery) use ($countryId) {
+                    $subQuery->where('id', $countryId);
+                });
+            })
+            ->paginate(10);
 
         return view('back.pages.documents.index',compact('users'));
 

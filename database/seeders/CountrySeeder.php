@@ -56,7 +56,7 @@ class CountrySeeder extends Seeder
             ['name' => 'Soudan du Sud', 'icon' => 'fi fi-ss', 'code' => 'SS', 'indicatif' => '+211', 'is_active' => false],
             ['name' => 'Tanzanie', 'icon' => 'fi fi-tz', 'code' => 'TZ', 'indicatif' => '+255', 'is_active' => false],
             ['name' => 'Tchad', 'icon' => 'fi fi-td', 'code' => 'TD', 'indicatif' => '+235', 'is_active' => false],
-            ['name' => 'Togo', 'icon' => 'fi fi-tg', 'code' => 'TG', 'indicatif' => '+228', 'is_active' => false],
+            ['name' => 'Togo', 'icon' => 'fi fi-tg', 'code' => 'TG', 'indicatif' => '+228', 'is_active' => true],
             ['name' => 'Tunisie', 'icon' => 'fi fi-tn', 'code' => 'TN', 'indicatif' => '+216', 'is_active' => false],
             ['name' => 'Uganda', 'icon' => 'fi fi-ug', 'code' => 'UG', 'indicatif' => '+256', 'is_active' => false],
             ['name' => 'Zambie', 'icon' => 'fi fi-zm', 'code' => 'ZM', 'indicatif' => '+260', 'is_active' => false],

@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -18,9 +19,11 @@ use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ActualityController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RideSearchController;
+use App\Http\Controllers\KilometrageController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeVehicleController;
@@ -52,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     Route::put('/notification/settings', [ProfileController::class, 'updateNotificationSettings'])->name('notification.settings.update');
 
+    Route::get('/select-country', [CountryController::class, 'selectCountry'])->name('country.select');
     // contact
 
     Route::get('/contacter/liste', [ContactController::class, 'index'])->name('contact.index');
@@ -135,6 +139,8 @@ Route::middleware('auth')->group(function () {
         'faqs' => 'faq:slug',
     ]);
 
+    Route::resource('kilometrages', KilometrageController::class);
+
     // vehicles
     Route::resource('vehicles', VehicleController::class)->parameters([
         'vehicles' => 'vehicle:slug',
@@ -144,9 +150,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
 
-    // Route::resource('typevehicles', TypeVehicleController::class)->parameters([
-    //     'typevehicles' => 'typevehicle:slug',
-    // ]);
+    Route::resource('categories', CategorieController::class)->parameters([
+        'categories' => 'categorie:slug',
+    ]);
+    
+    Route::resource('typevehicles', TypeVehicleController::class)->parameters([
+        'typevehicles' => 'typevehicle:slug',
+    ]);
 
     // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');

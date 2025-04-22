@@ -14,6 +14,12 @@ class Contact extends Model
         'email',
         'phone',
         'subject',
-        'message'
+        'message',
+        'country_id'
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

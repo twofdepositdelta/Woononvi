@@ -2,23 +2,27 @@
 
 namespace App\Models;
 
-use App\Models\Categorie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TypeVehicle extends Model
+class Kilometrage extends Model
 {
+    //
     use HasFactory;
+
     protected $fillable = [
-        'label',
-        'slug',
-        'categorie_id'
+        'min_km',
+        'max_km',
+        'taux_par_km',
+        'categorie_id',
     ];
 
+    /**
+     * Relation avec la catégorie.
+     */
     public function categorie()
     {
         return $this->belongsTo(Categorie::class);
     }
-
 
 }

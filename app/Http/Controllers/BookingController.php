@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Ride;
 use App\Models\Booking;
+use App\Helpers\BackHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,34 @@ class BookingController extends Controller
     public function index()
     {
         //
-        $bookings=Booking::orderBy('created_at','desc')->paginate(10);
+        if (auth()->user()->hasRole('support')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
+            // Vérifier si le pays a été trouvé
+                if ($auth_country_id) {
+                    // Récupérer les reservations où le conducteur appartient au même pays
+                    $bookings=Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                        $query->where('id', $auth_country_id);
+                     })->orderBy('created_at', 'desc')
+                      ->paginate(10);
+                }
+
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $bookings=Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->orderBy('created_at', 'desc')
+              ->paginate(10);
+
+        }
+
+
         return view('back.pages.reservations.index',compact('bookings'));
     }
 
@@ -129,10 +157,25 @@ class BookingController extends Controller
     {
         //
         if (auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])){
-            $bookingcount = Booking::count();
-            $bookingcountrefunded = Booking::where('status', 'refunded')->count();
-            $bookingcountpending = Booking::where('status', 'pending')->count();
 
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+
+
+            $bookingcount = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->count();
+            $bookingcountrefunded = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', 'refunded')->count();
+
+            $bookingcountpending = Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
+                $query->where('id', $countryid);
+             })->where('status', 'pending')->count();
 
             return view('back.pages.rapports.reservation.statistique',compact('bookingcount','bookingcountpending','bookingcountrefunded'));
         }else{
@@ -144,7 +187,19 @@ class BookingController extends Controller
     public function getBookingsReport(Request $request)
     {
         $period = $request->get('period');
+
+        $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+        // Récupérer l'ID du pays basé sur le pays sélectionné
+        $countryName = BackHelper::getCountryByName($selectedCountry);
+        $countryid =$countryName->id;
+
         $query = Booking::query();
+
+        if ($countryid) {
+            $query->whereHas('ride.driver.city.country', function ($q) use ($countryid) {
+                $q->where('id', $countryid);
+             });
+        }
 
         switch ($period) {
             case 'weekly':
@@ -217,7 +272,18 @@ class BookingController extends Controller
     public function getCommissionReport(Request $request)
     {
         $period = $request->get('period');
+        $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+        // Récupérer l'ID du pays basé sur le pays sélectionné
+        $countryName = BackHelper::getCountryByName($selectedCountry);
+        $countryid =$countryName->id;
+
          $query=Booking::query();
+
+         if ($countryid) {
+            $query->whereHas('ride.driver.city.country', function ($q) use ($countryid) {
+                $q->where('id', $countryid);
+             });
+        }
 
         switch ($period) {
             case 'yearly':

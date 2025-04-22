@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <strong>Type de Véhicule :</strong>
-                                <p>{{ $vehicle->typeVehicle->label }} ({{ $vehicle->typeVehicle->taux_per_km }} FCFA/km)</p>
+                                <p>{{ $vehicle->typeVehicle->label }}</p>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <strong>Propriétaire :</strong>

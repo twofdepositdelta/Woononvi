@@ -39,7 +39,7 @@
 
                                     <!-- Trajet (Départ et Destination) -->
                                     <td>
-                                        <a href="{{ route('rides.show', $booking->ride->id) }}">
+                                        <a href="{{ route('rides.show', $booking->ride->numero_ride) }}">
                                             {{ $booking->ride->start_location_name }} -
                                             {{ $booking->ride->end_location_name }}
                                         </a>

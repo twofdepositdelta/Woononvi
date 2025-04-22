@@ -9,15 +9,19 @@
             <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-light.png') }}"
                 alt="site logo" class="dark-logo">
 
-            <h6 class="text-warning">WONONVI</h6>
+            <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
+
             <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-icon.png') }}"
                 alt="site logo" class="logo-icon">
-        </a> --}}
 
+        </a> --}}
         <a class="sidebar-logo logo-text" href="{{ route('index') }}">
             {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi"> --}}
             <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
         </a>
+
+
+
     </div>
     <div class="sidebar-menu-area">
         <ul class="sidebar-menu" id="sidebar-menu">
@@ -259,8 +263,6 @@
                 </li>
             @endhasanyrole
 
-
-
             {{-- vehicule --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -275,10 +277,14 @@
                     {{-- <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li> --}}
-                    {{-- <li>
+                    <li>
+                        <a href="{{route('categories.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Categories</a>
+                    </li>
+                    <li>
                         <a href="{{route('typevehicles.index')}}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
-                    </li> --}}
+                    </li>
                 </ul>
             </li>
 

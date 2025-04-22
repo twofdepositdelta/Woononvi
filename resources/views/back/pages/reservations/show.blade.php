@@ -92,7 +92,7 @@
                 <div class="col-md-6">
                     <strong>Date d'acceptement :</strong>
                     <p class="mb-0">
-                        {{ $booking->accepted_at? \Carbon\Carbon::parse($booking->accepted_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore acceptée' }}
+                        {{ $booking->accepted_at? \Carbon\Carbon::parse($booking->accepted_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
 
@@ -101,7 +101,7 @@
                 <div class="col-md-6">
                     <strong>Date du rejet :</strong>
                     <p class="mb-0">
-                        {{ $booking->rejected_at? \Carbon\Carbon::parse($booking->rejected_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore rejetée' }}
+                        {{ $booking->rejected_at? \Carbon\Carbon::parse($booking->rejected_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
 
@@ -111,13 +111,13 @@
                 <div class="col-md-6">
                     <strong>Date Validée par Passager :</strong>
                     <p class="mb-0">
-                        {{ $booking->validated_by_passenger_at? \Carbon\Carbon::parse($booking->validated_by_passenger_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
+                        {{ $booking->validated_by_passenger_at? \Carbon\Carbon::parse($booking->validated_by_passenger_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
                 <div class="col-md-6">
                     <strong>Date Validée par Conducteur :</strong>
                     <p class="mb-0">
-                        {{ $booking->validated_by_driver_at? \Carbon\Carbon::parse($booking->validated_by_driver_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
+                        {{ $booking->validated_by_driver_at? \Carbon\Carbon::parse($booking->validated_by_driver_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
             </div>
@@ -127,14 +127,14 @@
                 <div class="col-md-6">
                     <strong>Date du Remboursement :</strong>
                     <p class="mb-0">
-                        {{ $booking->refunded_at? \Carbon\Carbon::parse($booking->refunded_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
+                        {{ $booking->refunded_at? \Carbon\Carbon::parse($booking->refunded_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
 
                 <div class="col-md-6">
                     <strong>Date d'annulement :</strong>
                     <p class="mb-0">
-                        {{ $booking->cancelled_at? \Carbon\Carbon::parse($booking->cancelled_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
+                        {{ $booking->cancelled_at? \Carbon\Carbon::parse($booking->cancelled_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): '-' }}
                     </p>
                 </div>
             </div>
