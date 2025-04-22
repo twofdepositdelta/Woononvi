@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
 use App\Models\TypeVehicle;
 use Illuminate\Http\Request;
 
@@ -22,10 +23,8 @@ class TypeVehicleController extends Controller
      */
     public function create()
     {
-        //
-        return view('back.pages.TypeVehicules.create');
-
-
+        $categories = Categorie::get();
+        return view('back.pages.TypeVehicules.create', compact('categories'));
     }
 
     /**
@@ -37,6 +36,7 @@ class TypeVehicleController extends Controller
         $request->validate([
             'label' => 'required|string|max:255',
             'taux_per_km' => 'required|numeric',
+            'categorie_id' => 'required|exists:categories,id',
         ]);
 
         // Create a new ride entry in the database
@@ -44,6 +44,7 @@ class TypeVehicleController extends Controller
             'label' => $request->label,
             'taux_per_km' => $request->question,
             'slug'=>Str::slug($request->label),
+            'categorie_id' => $request->categorie_id,
         ]);
 
 
@@ -64,10 +65,9 @@ class TypeVehicleController extends Controller
      */
     public function edit( $slug)
     {
-        //
-
         $typevehicle=TypeVehicle::where('slug',$slug)->first();
-       return view('back.pages.TypeVehicules.edit', compact('typevehicle'));
+        $categories = Categorie::get();
+       return view('back.pages.TypeVehicules.edit', compact('typevehicle', 'categories'));
     }
 
     /**
@@ -76,6 +76,22 @@ class TypeVehicleController extends Controller
     public function update(Request $request, TypeVehicle $typeVehicle)
     {
         //
+        $request->validate([
+            'label' => 'required|string|max:255',
+            'taux_per_km' => 'required|numeric',
+            'categorie_id' => 'required|exists:categories,id,'.$typeVehicle->id,
+        ]);
+
+        // Create a new ride entry in the database
+        $typeVehicle->update([
+            'label' => $request->label,
+            'taux_per_km' => $request->question,
+            'slug'=>Str::slug($request->label),
+            'categorie_id' => $request->categorie_id,
+        ]);
+
+        // Redirect back to a suitable route with a success message
+        return redirect()->route('typevehicles.index')->with('success', 'Mise à jour avec succès !');
     }
 
     /**
@@ -87,7 +103,7 @@ class TypeVehicleController extends Controller
         $typevehicle=TypeVehicle::where('slug',$slug)->first();
         $typevehicle->delete();
 
-        return redirect()->route('typevehicles.index')->with('success', 'Faq a été supprimé avec succès !');
+        return redirect()->route('typevehicles.index')->with('success', 'Type supprimé avec succès !');
 
     }
 }

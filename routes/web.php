@@ -19,6 +19,7 @@ use App\Http\Controllers\TypeNewController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ActualityController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RideSearchController;
@@ -149,9 +150,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/vehicule/filter-by-type', [VehicleController::class, 'filterByType'])->name('vehicles.filterByType');
 
-    // Route::resource('typevehicles', TypeVehicleController::class)->parameters([
-    //     'typevehicles' => 'typevehicle:slug',
-    // ]);
+    Route::resource('categories', CategorieController::class)->parameters([
+        'categories' => 'categorie:slug',
+    ]);
+    
+    Route::resource('typevehicles', TypeVehicleController::class)->parameters([
+        'typevehicles' => 'typevehicle:slug',
+    ]);
 
     // document
     Route::get('/document-detail/{user:email}', [UserController::class, 'Showdoc'])->name('documents.show');
