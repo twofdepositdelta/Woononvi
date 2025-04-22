@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\City;
 use App\Models\User;
-use App\Models\Country;
 use App\Models\Booking;
+use App\Models\Country;
 use App\Models\Setting;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Helpers\BackHelper;
+use App\Models\Kilometrage;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -161,7 +162,8 @@ class DashboardController extends Controller
     {
         if (auth()->user()->hasAnyRole(['super admin' ,'dev'])) {
             $settings=Setting::all();
-            return view('back.pages.settings.index',compact('settings'));
+            $kilos = Kilometrage::latest()->get();
+            return view('back.pages.settings.index',compact('settings','kilos'));
         }else{
 
             abort(401);

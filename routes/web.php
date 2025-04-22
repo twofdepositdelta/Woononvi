@@ -22,6 +22,7 @@ use App\Http\Controllers\ActualityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RideSearchController;
+use App\Http\Controllers\KilometrageController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeVehicleController;
@@ -136,6 +137,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('faqs', FaqController::class)->parameters([
         'faqs' => 'faq:slug',
     ]);
+
+    Route::resource('kilometrages', KilometrageController::class);
 
     // vehicles
     Route::resource('vehicles', VehicleController::class)->parameters([
