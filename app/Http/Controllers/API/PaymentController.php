@@ -41,18 +41,34 @@ class PaymentController extends Controller
             $amount = $request->input('amount');
             $description = $request->input('description');
 
+            if ((int) $amount <= 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Montant invalide pour créditer le compte.'
+                ], 422);
+            }
+
             $response = Http::withHeaders([
                 'Authorization' => "Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL",
                 'Content-Type' => 'application/json'
             ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
                 'shop' => '672dfbc9ff4146187db288cc',
-                'amount' => 1,
+                'amount' => $amount,
                 'phoneNumber' => $phoneNumber,
                 'description' => $description,
             ]);
 
             if ($response->successful()) {
-                $transactionRef = $response->json()['reference']; // Assume the response contains a 'reference'
+                $data = $response->json();
+                if (!isset($data['reference'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'La transaction n’a pas pu être initiée correctement (référence manquante).',
+                        'error' => $data
+                    ], 422);
+                }
+                $transactionRef = $data['reference'];
+                // $transactionRef = $response->json()['reference']; // Assume the response contains a 'reference'
         
                 // Lancer les vérifications du statut de la transaction toutes les 5 secondes
                 for ($i = 0; $i < 100; $i++) {

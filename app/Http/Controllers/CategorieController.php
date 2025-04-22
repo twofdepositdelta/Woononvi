@@ -43,7 +43,7 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'label' => 'required|string|max:255',
+            'label' => 'required|string|max:255|unique:categories,label',
         ]);
 
         $categorie = Categorie::create([

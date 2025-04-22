@@ -11,7 +11,7 @@
                 <h5 class="card-title mb-0">Modifier la catégorie</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('categories.update', $actuality) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('categories.update', $categorie) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 

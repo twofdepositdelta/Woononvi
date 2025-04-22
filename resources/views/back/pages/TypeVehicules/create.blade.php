@@ -23,18 +23,20 @@
                         @enderror
                     </div>
 
-                    <!-- Champ Taux par Kilomètre -->
-                    <div class="mb-3">
-                        <label for="taux_per_km" class="form-label">Taux par Kilomètre (FCFA)</label>
-                        <input type="number" class="form-control @error('taux_per_km') is-invalid @enderror" id="taux_per_km" name="taux_per_km" placeholder="Ex: 100" value="{{ old('taux_per_km') }}" required>
-                        @error('taux_per_km')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <!-- Champs Catégories  -->
+                    <div class="col-md-12">
+                        <label class="form-label">Sélectionnez une catégorie</label>
+                        <select class="form-select" name="categorie_id" required>
+                            <option value="">Sélectionnez une catégorie</option>
+                            @foreach ($categories as $categorie)
+                                <option value="{{ $categorie->id }}">{{ $categorie->label }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Boutons d'action -->
                     <!-- Bouton Soumettre -->
-                    <div class="col-12 text-end mt-4">
+                    <div class="col-12 text-end mt-3">
                         <button type="submit" class="btn btn-primary">Ajouter</button>
                     </div>
                 </form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\TypeVehicle;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class TypeVehicleController extends Controller
@@ -15,6 +16,7 @@ class TypeVehicleController extends Controller
     {
         //
         $typevehicles=TypeVehicle::orderBy('created_at','desc')->paginate(10);
+  
         return view('back.pages.TypeVehicules.index',compact('typevehicles'));
     }
 
@@ -35,14 +37,12 @@ class TypeVehicleController extends Controller
         //
         $request->validate([
             'label' => 'required|string|max:255',
-            'taux_per_km' => 'required|numeric',
             'categorie_id' => 'required|exists:categories,id',
         ]);
 
         // Create a new ride entry in the database
             TypeVehicle::create([
             'label' => $request->label,
-            'taux_per_km' => $request->question,
             'slug'=>Str::slug($request->label),
             'categorie_id' => $request->categorie_id,
         ]);
@@ -73,19 +73,22 @@ class TypeVehicleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TypeVehicle $typeVehicle)
+    public function update(Request $request, $slug)
     {
+        $typeVehicle=TypeVehicle::where('slug',$slug)->first();
+        if(!$typeVehicle){
+            return redirect()->back()->with('warning', 'Type de véhicule non trouvé');
+        }
+
         //
         $request->validate([
             'label' => 'required|string|max:255',
-            'taux_per_km' => 'required|numeric',
-            'categorie_id' => 'required|exists:categories,id,'.$typeVehicle->id,
+            'categorie_id' => 'required|exists:categories,id',
         ]);
 
         // Create a new ride entry in the database
         $typeVehicle->update([
             'label' => $request->label,
-            'taux_per_km' => $request->question,
             'slug'=>Str::slug($request->label),
             'categorie_id' => $request->categorie_id,
         ]);

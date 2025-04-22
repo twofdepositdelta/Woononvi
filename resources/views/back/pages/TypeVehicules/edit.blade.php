@@ -18,17 +18,18 @@
                         <input type="text" name="label" id="label" class="form-control" value="{{ old('label', $typevehicle->label) }}" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="taux_per_km" class="form-label">Taux par km (FCFA)</label>
-                        <input type="number" name="taux_per_km" id="taux_per_km" class="form-control" value="{{ old('taux_per_km', $typevehicle->taux_per_km) }}" required>
+                    <!-- Champs Catégories  -->
+                    <div class="col-md-12">
+                        <label class="form-label">Sélectionnez une catégorie</label>
+                        <select class="form-select" name="categorie_id" required>
+                            <option value="">Sélectionnez une catégorie</option>
+                            @foreach ($categories as $categorie)
+                                <option value="{{ $categorie->id }}" {{ $categorie->id == $typevehicle->categorie_id ? 'selected' : '' }}>{{ $categorie->label }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control" rows="4">{{ old('description', $typevehicle->description) }}</textarea>
-                    </div>
-
-                    <div class="text-end">
+                    <div class="text-end mt-3">
                         <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
                         <a href="{{ route('typevehicles.index') }}" class="btn btn-secondary">Retour à la liste</a>
                     </div>

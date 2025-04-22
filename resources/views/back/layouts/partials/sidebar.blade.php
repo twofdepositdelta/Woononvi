@@ -263,8 +263,6 @@
                 </li>
             @endhasanyrole
 
-
-
             {{-- vehicule --}}
             <li class="dropdown">
                 <a href="javascript:void(0)">
