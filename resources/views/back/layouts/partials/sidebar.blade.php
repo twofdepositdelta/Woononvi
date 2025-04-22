@@ -279,10 +279,14 @@
                     {{-- <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                     </li> --}}
-                    {{-- <li>
+                    <li>
+                        <a href="{{route('categories.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i> Categories</a>
+                    </li>
+                    <li>
                         <a href="{{route('typevehicles.index')}}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type vehicule</a>
-                    </li> --}}
+                    </li>
                 </ul>
             </li>
 

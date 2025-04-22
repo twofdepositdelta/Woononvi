@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,12 +17,14 @@ class CategorySeeder extends Seeder
         //
         DB::table('categories')->insert([
             [
-                'label' => 'Voiture',
+                'label' => 'Voiture', 
+                'slug' => Str::slug('Voiture'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'label' => 'Moto',
+                'slug' => Str::slug('Moto'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
