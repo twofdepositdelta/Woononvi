@@ -11,7 +11,15 @@ class TypeVehicle extends Model
     protected $fillable = [
         'label',
         'taux_per_km',
-        'slug'
+        'slug',
+        'categorie_id'
 
     ];
+
+    public function Categorie()
+    {
+        return $this->belongsTo(Categorie::class);
+    }
+
+
 }

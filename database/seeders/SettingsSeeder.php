@@ -75,13 +75,13 @@ class SettingsSeeder extends Seeder
 
             [
                 'key' => 'Mini_Price_Kilomete',
-                'value' => '40', // La monnaie utilisée
+                'value' => '20', // La monnaie utilisée
                 'description' => 'Prix minimal par kilomètre.',
             ],
 
             [
                 'key' => 'Max_Price_Kilomete',
-                'value' => '200', // La monnaie utilisée
+                'value' => '100', // La monnaie utilisée
                 'description' => 'Prix maximal par kilomètre.',
             ],
         ]);

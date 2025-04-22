@@ -80,7 +80,7 @@
                             <button
                                 class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
                                 type="button" data-bs-toggle="dropdown">
-                                
+
                                 @php
                                   $selectedCountry = session('selected_country', 'benin'); // Pays sélectionné par défaut
                                     $country = BackHelper::getCountryByName($selectedCountry); // Récupère le pays à partir de son nom
@@ -247,7 +247,7 @@
     </div>
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Sélectionner les boutons radio pour chaque pays
         const benin = document.getElementById('benin');
@@ -274,7 +274,7 @@
         // Appeler la fonction au chargement pour afficher la bonne section par défaut
         handleEnvironmentChange();
     });
-</script>
+</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
