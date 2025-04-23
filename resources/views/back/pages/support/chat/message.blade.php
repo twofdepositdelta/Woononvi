@@ -7,6 +7,7 @@
         }
     </style>
 @endsection
+
 @section('content')
 <div class="chat-wrapper">
     <div class="chat-sidebar card">
