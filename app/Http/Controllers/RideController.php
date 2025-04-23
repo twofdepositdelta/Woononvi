@@ -383,4 +383,25 @@ class RideController extends Controller
     //     return $result ? $result->getLocality() : 'Inconnu';
     // }
 
+
+    public function filter(Request $request)
+    {
+        $query = Ride::with('driver');
+
+
+        if ($request->numero) {
+            $query->where('numero_ride', 'like', '%' . $request->numero . '%');
+        }
+
+        if ($request->status_ride) {
+            $query->where('status', $request->status_ride);
+        }
+
+        $rides = $query->orderByDesc('created_at')->paginate(10);
+
+
+         return view('back.pages.trajets.table', compact('rides'))->render();
+
+    }
+
 }

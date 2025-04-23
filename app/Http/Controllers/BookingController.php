@@ -37,8 +37,8 @@ class BookingController extends Controller
             $countryName = BackHelper::getCountryByName($selectedCountry);
             $auth_country_id =$countryName->id;
 
-            $bookings=Booking::whereHas('ride.driver.city.country', function ($query) use ($countryid) {
-                $query->where('id', $countryid);
+            $bookings=Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
              })->orderBy('created_at', 'desc')
               ->paginate(10);
 
@@ -395,6 +395,27 @@ class BookingController extends Controller
             'total' => round($total, 2)
         ]);
     }
+
+    public function filter(Request $request)
+    {
+        $query = Booking::with(['ride', 'passenger']);
+
+
+        if ($request->numero_ride) {
+            $query->where('booking_number', 'like', '%' . $request->numero_ride . '%');
+        }
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $bookings = $query->orderByDesc('created_at')->paginate(10);
+
+
+            return view('back.pages.reservations.table', compact('bookings'))->render();
+
+    }
+
 }
 
 

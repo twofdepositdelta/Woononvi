@@ -106,9 +106,9 @@
                                                         <span>{{$countrie->name}}</span>
                                                     </span>
                                                 </label>
-                                                <input class="form-check-input" type="radio" name="country" value="{{$countrie->name}}" id="benin"
+                                                <input class="form-check-input" type="radio" name="country" value="{{$countrie->name}}"
                                                     onchange="document.getElementById('country-form').submit();"
-                                                    @if(session('selected_country') == $countrie->name) checked @endif>
+                                                    @if(session('selected_country','Bénin') == $countrie->name) checked @endif>
                                             </div>
 
 

@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function __construct() {
 
-        if (!auth()->user()->hasAnyRole(['super admin', 'dev'])) {
+        if (!auth()->user()->hasAnyRole(['super admin','manager','dev'])) {
             // Si l'utilisateur n'a pas le rôle requis, lancer une exception ou une erreur
             abort(401);
         }

@@ -23,7 +23,7 @@
 
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{{ $vehicle->main_image ?? 'path/to/default/avatar.jpg' }}"
+                            <img src="{{ asset($vehicle->main_image ?? 'path/to/default/avatar.jpg') }}"
                                 alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden"
                                 style="width: 40px; height: 40px; object-fit: cover;">
                             <h6 class="text-md mb-0 fw-medium flex-grow-1">{{ $vehicle->vehicle_model }}</h6>

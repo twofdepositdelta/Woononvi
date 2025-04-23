@@ -31,7 +31,7 @@
                             <div class="col-12">
                                 <label class="form-label" for="description">Description</label>
                                 {{-- <div id="editor" class="form-control"></div> --}}
-                                <div id="editor" style="height: 300px;"></div>
+                                <div id="editor" style="height: 300px;">{{ old('description')}}</div>
                                 <input type="hidden" name="description" id="description">
                                 {{-- <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Entrez la description de l'actualité" rows="3" required>{{ old('description') }}</textarea> --}}
 

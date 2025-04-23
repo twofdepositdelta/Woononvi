@@ -187,6 +187,20 @@
                 </ul>
             </li>
 
+            {{-- avis --}}
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:message-alert-outline" class="menu-icon"></iconify-icon>
+                    <span>RECLAMATION</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{route('reclamations.index')}}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>liste</a>
+                    </li>
+                </ul>
+            </li>
+
             {{-- support --}}
             @hasanyrole(['super admin', 'manager', 'support' ,'dev'])
                 <li class="dropdown">
