@@ -39,7 +39,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="text-xl mb-1">Total </h6>
-                            <p class="fw-medium text-secondary-light mb-0">Trajets actifs actuellemnt
+                            <p class="fw-medium text-secondary-light mb-0">Trajets actifs actuellement
 
                             </p>
                         </div>

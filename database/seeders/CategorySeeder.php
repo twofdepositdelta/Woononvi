@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
         //
         DB::table('categories')->insert([
             [
-                'label' => 'Voiture', 
+                'label' => 'Voiture',
                 'slug' => Str::slug('Voiture'),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -25,6 +25,12 @@ class CategorySeeder extends Seeder
             [
                 'label' => 'Moto',
                 'slug' => Str::slug('Moto'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'label' => 'Tricycle',
+                'slug' => Str::slug('Tricycle'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

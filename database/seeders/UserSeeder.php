@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
         //             'firstname' => ucfirst($role), // Mettre la première lettre en majuscule
         //             'lastname' => 'Test',
         //             'username' => strtolower($role) . 'user' . ($i > 0 ? ($i + 1) : ''), // Format d'utilisateur unique
-        //             'email' => strtolower(str_replace(' ', '', trim($role))) . ($i > 0 ? ($i + 1) : '') . '@wononvi.com', // Format d'email unique
+        //             'email' => strtolower(str_replace(' ', '', trim($role))) . ($i > 0 ? ($i + 1) : '') . '@woononvi.com', // Format d'email unique
         //             'password' => Hash::make('Pass*24'), // Hasher le mot de passe
         //             'phone' => '600000' . $index . $i, // Numéro de téléphone unique par occurrence
         //             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'), // Date de naissance aléatoire
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Driver',
                 'lastname' => 'Test',
                 'username' => 'driveruser' . ($i + 1),
-                'email' => 'driver' . ($i + 1) . '@wononvi.com',
+                'email' => 'driver' . ($i + 1) . '@woononvi.com',
                 'password' => Hash::make('Pass*24'),
                 'phone' => '6000001' . $i,
                 'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -84,7 +84,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Passenger',
                 'lastname' => 'Test',
                 'username' => 'passengeruser' . ($i + 1),
-                'email' => 'passenger' . ($i + 1) . '@wononvi.com',
+                'email' => 'passenger' . ($i + 1) . '@woononvi.com',
                 'password' => Hash::make('Pass*24'),
                 'phone' => '6000002' . $i,
                 'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -104,7 +104,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Super admin',
             'lastname' => 'Test',
             'username' => 'superadmin',
-            'email' => 'ceo@wononvi.com',
+            'email' => 'ceo@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60010203',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -123,7 +123,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Manager',
             'lastname' => 'Test',
             'username' => 'managertest',
-            'email' => 'manager@wononvi.com',
+            'email' => 'manager@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60040203',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -142,7 +142,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Support',
             'lastname' => 'Test',
             'username' => 'supportest',
-            'email' => 'support@wononvi.com',
+            'email' => 'support@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60020103',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -161,7 +161,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Forester',
             'lastname' => 'CODJO',
             'username' => 'forestercodjo',
-            'email' => 'forestercodjo@wononvi.com',
+            'email' => 'forestercodjo@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60050301',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -180,7 +180,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Fabrice',
             'lastname' => 'DEGLA',
             'username' => 'fabricedegla',
-            'email' => 'fabricedegla@wononvi.com',
+            'email' => 'fabricedegla@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60060301',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),

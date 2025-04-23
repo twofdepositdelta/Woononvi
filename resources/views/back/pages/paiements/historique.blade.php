@@ -12,7 +12,6 @@
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
-
                         <th>Référence</th>
                         <th>Méthode de paiement</th>
                         <th>Montant</th>
