@@ -23,13 +23,14 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             EnvironmentSeeder::class,
             CategorySeeder::class,
+            KilometrageSeeder::class,
             TypeVehicleSeeder::class,
             VehicleSeeder::class,          // Ajoutez le véhicule avant les trajets
             RideSeeder::class,
             BookingSeeder::class,          // Ajoutez les réservations après les trajets
             ReportTypeSeeder::class,       // Ajoutez les types de rapports avant les rapports
             ReportSeeder::class,           // Ajoutez les rapports après les réservations
-             RideRequestSeeder::class,
+            RideRequestSeeder::class,
             ConversationSeeder::class,
             MessageSeeder::class,
             TypeNewSeeder::class,
@@ -41,8 +42,8 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             ApiSeeder::class,
             PaymentTypeSeeder::class,
-             PaymentSeeder::class,
-             NotificationSeeder::class
+            PaymentSeeder::class,
+            NotificationSeeder::class
         ]);
     }
 }
