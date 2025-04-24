@@ -23,7 +23,7 @@ class ActualitySeeder extends Seeder
                 'titre' => 'Wòónɔ̀ví, première plateforme de covoiturage au Bénin',
                 'slug' => Str::slug('Wòónɔ̀ví, première plateforme de covoiturage au Bénin'),
                 'description' => 'Découvrez comment Wòónɔ̀ví révolutionne la mobilité au Bénin avec sa plateforme innovante et accessible à tous.',
-                'image_url' => $imageBasePath . '01.jpg',
+                'image_url' => $imageBasePath . '02.jpg',
                 'type_new_id' => 3, // ID pour "Lancement"
                 'published' => true,
                 'created_at' => now(),

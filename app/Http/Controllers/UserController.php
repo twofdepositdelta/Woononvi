@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Profile;
-use App\Models\User;
 use App\Models\City;
+use App\Models\User;
 use App\Models\Review;
+use App\Models\Profile;
+use App\Mail\UserCreated;
+use App\Helpers\BackHelper;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Permission\Models\Permission;
-use App\Helpers\BackHelper;
 use App\Http\Requests\StoreUserRequest;
-use App\Mail\UserCreated;
+use App\Http\Requests\UpdateUserRequest;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -176,7 +177,7 @@ class UserController extends Controller
             $user = User::create([
                 'firstname' => $request->firstname,
                 'lastname'  => $request->lastname,
-                'email'     => $request->email.'@wononvi.com',
+                'email'     => $request->email.'@woononvi.com',
                 'phone'     => $request->phone,
                 'gender'    => $request->gender,
                 'city_id'    => $request->city,
@@ -231,23 +232,19 @@ class UserController extends Controller
 
         public function edit(User $user)
         {
-            //
-            if (auth()->user()->hasRole('manager')) {
+                $cities = City::all();
+                if (auth()->user()->hasRole('manager')) {
 
-                $auth_user = auth()->user();
-                $auth_country_id = $auth_user->city->country->id ?? null;
+                    $auth_user = auth()->user();
+                    $auth_country_id = $auth_user->city->country->id ?? null;
 
-                $cities = City::where('country_id',$auth_country_id)->get();
-            }else {
-                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+                    $cities = City::where('country_id',$auth_country_id)->get();
+                }else {
 
-                // Récupérer l'ID du pays basé sur le pays sélectionné
-                $countryName = BackHelper::getCountryByName($selectedCountry);
-                $countryid =$countryName->id;
-                $cities = City::where('country_id',$countryid)->get();
+                    $cities = City::all();
 
-            }
-            return view('back.pages.users.edit', compact('cities'));
+                }
+            return view('back.pages.users.edit', compact('user','cities'));
         }
 
         /**
@@ -255,7 +252,35 @@ class UserController extends Controller
          */
         public function update(Request $request, User $user)
         {
+            $request->validate([
+                'firstname' => 'required|string|max:255',
+                'lastname'  => 'required|string|max:255',
+                'email' => 'required|string|max:255|unique:users,email,' . $user->id,
+                'phone' => 'required|string|max:20|unique:users,phone,' . $user->id,
+                'npi'   => 'required|string|max:50|unique:users,npi,' . $user->id,
+                'gender'    => 'nullable|string',
+                'city'      => 'required|exists:cities,id',
+            ]);
             //
+            $password = Str::random(10);
+
+            $user->update([
+                'firstname' => $request->firstname,
+                'lastname'  => $request->lastname,
+                'email'     => $request->email.'@woononvi.com',
+                'phone'     => $request->phone,
+                'gender'    => $request->gender,
+                'city_id'    => $request->city,
+                'npi'       => $request->npi,
+                'is_verified' => true,
+                'email_verified_at' => now(),
+                'password'  => Hash::make($password),
+            ]);
+
+            Mail::to($user->email)->send(new UserCreated($user, $password));
+            // Rediriger avec un message de succès
+            return redirect()->route('users.index')->with('success', 'Utilisateur modifier avec succès. Un email lui a été envoyé.');
+
         }
 
         /**
@@ -282,7 +307,7 @@ class UserController extends Controller
                 return redirect()->route('users.index')->with('success', 'L\'utilisateur a été supprimé avec succès.');
             } else {
                 // Message d'erreur si l'utilisateur a des trajets ou réservations
-                return redirect()->route('users.index')->with('danger', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
+                return redirect()->route('users.index')->with('error', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
             }
         }
 

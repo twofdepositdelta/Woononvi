@@ -22,7 +22,7 @@
             <tr>
                 <td>
                     <div class="d-flex align-items-center gap-10">
-                        <a href="{{ route('bookings.show', $report->booking->id) }}">
+                        <a href="{{ route('bookings.show', $report->booking->booking_number) }}">
                             #{{ $report->booking->booking_number }} <!-- ID de la réservation -->
                         </a>
                     </div>

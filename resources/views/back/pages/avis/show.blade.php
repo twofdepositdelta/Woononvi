@@ -21,7 +21,7 @@
 
          <div class="mb-4">
             <strong>Trajet :</strong>
-            <a href="{{ route('rides.show',$review->booking->ride->id) }}">{{ $review->booking->ride->start_location_name }} - {{ $review->booking->ride->end_location_name }}
+            <a href="{{ route('rides.show',$review->booking->ride->numero_ride) }}">{{ $review->booking->ride->start_location_name }} - {{ $review->booking->ride->end_location_name }}
         </div>
 
         <div class="mb-4">

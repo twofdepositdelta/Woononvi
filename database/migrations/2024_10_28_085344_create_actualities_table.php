@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('actualities', function (Blueprint $table) {
             $table->id();
-            $table->string('titre');
+            $table->string('titre')->unique();
             $table->string('slug');
             $table->text('description');
             $table->string('image_url');
