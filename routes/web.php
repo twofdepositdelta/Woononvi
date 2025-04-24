@@ -108,6 +108,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('rides', RideController::class)->parameters([
         'rides' => 'ride:numero_ride',
     ]);
+    Route::get('/trajet/filter', [RideController::class, 'filter'])->name('rides.filter');
+
 
     Route::resource('reviews', ReviewController::class)->parameters([
         'reviews' => 'review',
@@ -126,6 +128,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('bookings', BookingController::class)->parameters([
         'bookings' => 'booking:booking_number',
     ]);
+    Route::get('/reservation/filter', [BookingController::class, 'filter'])->name('bookings.filter');
 
     Route::resource('reports', ReportController::class)->parameters([
         'reports' => 'report',
@@ -133,9 +136,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/reclamations/{reclamation}/statut', [ReclamationController::class, 'updateStatut'])->name('reclamations.updateStatut');
 
-    Route::get('/reservation/filter', [BookingController::class, 'filter'])->name('bookings.filter');
 
-    Route::get('/trajet/filter', [RideController::class, 'filter'])->name('rides.filter');
 
 
     Route::get('/signaler/filter', [ReportController::class, 'filterByType'])->name('reports.filterByType');
@@ -150,6 +151,8 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::resource('kilometrages', KilometrageController::class);
+
+    Route::get('/kilo/filter', [KilometrageController::class, 'filter'])->name('kilos.filter');
 
     // vehicles
     Route::resource('vehicles', VehicleController::class)->parameters([

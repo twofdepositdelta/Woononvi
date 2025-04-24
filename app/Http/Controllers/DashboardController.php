@@ -113,42 +113,42 @@ class DashboardController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request)
-{
-    // Valider les données soumises dans le formulaire
-    $validatedData = $request->validate([
-        'settings.company_name' => 'required|string|max:255',
-        'settings.company_phone' => 'required|string|max:20',
-        'settings.company_email' => 'required|email|max:255',
-        'settings.company_address' => 'nullable|string|max:255',
-        'settings.default_language' => 'nullable|string|max:255',
-        'settings.timezone' => 'nullable|string|max:255',
-        'settings.commission_rate' => 'nullable|numeric|min:0',
-        'settings.currency' => 'nullable|string|max:10',
-        'settings.company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'settings.Suggested_Price' => 'nullable|numeric|min:0',
-        'settings.Booking_Percentage' => 'nullable|numeric|min:0',
-        'settings.Mini_Price_Kilomete' => 'nullable|numeric|min:0',
-        'settings.Max_Price_Kilomete' => 'nullable|numeric|min:0',
+    {
+        // Valider les données soumises dans le formulaire
+        $validatedData = $request->validate([
+            'settings.company_name' => 'required|string|max:255',
+            'settings.company_phone' => 'required|string|max:20',
+            'settings.company_email' => 'required|email|max:255',
+            'settings.company_address' => 'nullable|string|max:255',
+            'settings.default_language' => 'nullable|string|max:255',
+            'settings.timezone' => 'nullable|string|max:255',
+            'settings.commission_rate' => 'nullable|numeric|min:0',
+            'settings.currency' => 'nullable|string|max:10',
+            'settings.company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'settings.Suggested_Price' => 'nullable|numeric|min:0',
+            'settings.Booking_Percentage' => 'nullable|numeric|min:0',
+            'settings.Mini_Price_Kilomete' => 'nullable|numeric|min:0',
+            'settings.Max_Price_Kilomete' => 'nullable|numeric|min:0',
 
 
 
-    ]);
+        ]);
 
-    foreach ($validatedData['settings'] as $key => $value) {
-        // Si le paramètre concerne le logo de l'entreprise
-        if ($key === 'company_logo' && $request->hasFile('settings.company_logo')) {
-            // Upload du fichier et récupération du chemin
-            $logoPath = $request->file('settings.company_logo')->store('logos', 'public');
-            $value = $logoPath;
+        foreach ($validatedData['settings'] as $key => $value) {
+            // Si le paramètre concerne le logo de l'entreprise
+            if ($key === 'company_logo' && $request->hasFile('settings.company_logo')) {
+                // Upload du fichier et récupération du chemin
+                $logoPath = $request->file('settings.company_logo')->store('logos', 'public');
+                $value = $logoPath;
+            }
+
+            // Mettre à jour chaque paramètre dans la base de données
+            Setting::where('key', $key)->update(['value' => $value]);
         }
 
-        // Mettre à jour chaque paramètre dans la base de données
-        Setting::where('key', $key)->update(['value' => $value]);
+        // Redirection après la mise à jour
+        return redirect()->back()->with('success', 'Paramètres mis à jour avec succès.');
     }
-
-    // Redirection après la mise à jour
-    return redirect()->back()->with('success', 'Paramètres mis à jour avec succès.');
-}
 
     /**
      * Remove the specified resource from storage.
@@ -161,9 +161,8 @@ class DashboardController extends Controller
     public function setting()
     {
         if (auth()->user()->hasAnyRole(['super admin' ,'dev'])) {
-            $settings=Setting::all();
-            $kilos = Kilometrage::latest()->get();
-            return view('back.pages.settings.index',compact('settings','kilos'));
+            $settings = Setting::all();
+            return view('back.pages.settings.index',compact('settings'));
         }else{
 
             abort(401);
