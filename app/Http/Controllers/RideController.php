@@ -388,16 +388,51 @@ class RideController extends Controller
     {
         $query = Ride::with('driver');
 
+        if (auth()->user()->hasRole(['support','manager'])) {
 
-        if ($request->numero) {
-            $query->where('numero_ride', 'like', '%' . $request->numero . '%');
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null;
+            // Si numéro spécifié
+            if ($request->numero) {
+                $query->where('numero_ride', 'like', '%' . $request->numero . '%');
+            }
+
+            // Si statut spécifié
+            if ($request->status_ride) {
+                $query->where('status', $request->status_ride);
+            }
+
+            // Appliquer le filtre pays (de l'utilisateur) pour tous les cas
+            $query->whereHas('driver.city.country', function ($q) use ($auth_country_id) {
+                $q->where('id', $auth_country_id);
+            });
+
+            $rides = $query->orderByDesc('created_at')->paginate(10);
+        }else {
+
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+             // Si numéro spécifié
+             if ($request->numero) {
+                $query->where('numero_ride', 'like', '%' . $request->numero . '%');
+            }
+
+            // Si statut spécifié
+            if ($request->status_ride) {
+                $query->where('status', $request->status_ride);
+            }
+
+            // Appliquer le filtre pays (de l'utilisateur) pour tous les cas
+            $query->whereHas('driver.city.country', function ($q) use ($countryid) {
+                $q->where('id', $countryid);
+            });
+
+            $rides = $query->orderByDesc('created_at')->paginate(10);
         }
-
-        if ($request->status_ride) {
-            $query->where('status', $request->status_ride);
-        }
-
-        $rides = $query->orderByDesc('created_at')->paginate(10);
 
 
          return view('back.pages.trajets.table', compact('rides'))->render();

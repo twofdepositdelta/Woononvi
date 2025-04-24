@@ -362,6 +362,11 @@
                             <a href="{{route('settings')}}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Globaux</a>
                         </li>
+
+                        <li>
+                            <a href="{{route('kilometrages.index')}}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Kilometrage</a>
+                        </li>
                         @hasrole('developer')
                         <li>
                             <a href="{{route('setting.city')}}"><i

@@ -14,6 +14,14 @@ class KilometrageController extends Controller
     public function index()
     {
         //
+        $kilos = Kilometrage::orderByDesc('created_at')
+        ->orderBy('categorie_id')
+        ->paginate(10);
+
+        $categories = Categorie::all();
+
+        return view('back.pages.kilometrages.index',compact('kilos','categories'));
+
 
     }
 
@@ -180,5 +188,23 @@ class KilometrageController extends Controller
         $kilometrage->delete();
 
         return back()->with('success','Action effectuée succès');
+    }
+
+    public function filter(Request $request){
+
+        $query = Kilometrage::query();
+
+        // Si statut spécifié
+        if ($request->categorie) {
+            $query->where('categorie_id', $request->categorie);
+        }
+
+        $kilos = $query->orderByDesc('created_at')
+                ->orderBy('categorie_id')
+                ->paginate(10);
+
+
+        return view('back.pages.kilometrages.table', compact('kilos'))->render();
+
     }
 }

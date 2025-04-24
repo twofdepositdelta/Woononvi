@@ -1,31 +1,33 @@
 @extends('back.layouts.master')
-@section('title', 'Liste des Paiements ')
+@section('title', 'Liste des kilomètrages ')
 @section('content')
 
     <div class="card h-100 p-0 radius-12">
         <div
             class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-            <h5 class="card-title mb-0">Liste des Paiements</h5>
-            <div class="col-4">
-                <select name="type_payment_filter" id="type_payment_filter" class="form-select form-select-sm">
-                    <option value="">Tout</option>
-                    @foreach ($typepayments as $typepayment)
-                        <option value="{{ $typepayment->id }}"
-                            {{ request('type_id') == $typepayment->id ? 'selected' : '' }}>
-                            {{ $typepayment->label_fr  }}
-                        </option>
+            <h5 class="card-title mb-0">@yield('title')</h5>
+
+            <div class="col-md-4">
+                <select name="categorie" id="categorie" class="form-select">
+                    <option value="">-- Filtrer par categorie --</option>
+                    @foreach ($categories as $categorie )
+                    <option value="{{$categorie->id}}">{{ $categorie->label}}</option>
                     @endforeach
+
                 </select>
             </div>
+
+            <div class="col-md-4 text-end">
+                <a href="{{ route('kilometrages.create') }}" class="btn btn-info">
+                    Ajouter
+                </a>
+            </div>
+
         </div>
         <!-- Content -->
         <div class="card-body p-24">
-            <div class="table-responsive scroll-sm" id="typ">
-
-              @include('back.pages.paiements.table', ['payments' => $payments])
-
-
-
+            <div class="table-responsive scroll-sm" id="table-resp">
+                @include('back.pages.kilometrages.table',['kilos'=>$kilos])
             </div>
         </div>
         <!-- / Content -->
@@ -37,10 +39,10 @@
             // Fonction pour mettre à jour les données filtrées
             function updateTransactions(page = 1) {
                 // Récupérer les valeurs des filtres
-                var typeId = $('#type_payment_filter').val();
+                var categorie = $('#categorie').val();
 
                 // Créer l'URL avec les paramètres de filtre et de pagination
-                var url = '/pa/filter/' + '?page=' + page + '&type_payment_filter=' + typeId ;
+                var url = '/kilo/filter' + '?page=' + page + '&categorie=' + categorie ;
 
                 // Envoi des données via AJAX pour récupérer les transactions filtrées
                 $.ajax({
@@ -48,7 +50,7 @@
                     method: 'GET',
                     success: function(response) {
                         // Remplacer le contenu de la table avec les résultats filtrés
-                        $('#typ').html(response);
+                        $('#table-resp').html(response);
                     },
                     error: function(error) {
                         alert('Une erreur est survenue');
@@ -58,7 +60,7 @@
 
 
             // Écouteur d'événements pour la modification des filtres (changement dans le champ date ou statut)
-            $('#type_payment_filter').on('change', function() {
+            $('#categorie').on('change', function() {
                 // Mettre à jour les transactions lors du changement de filtre
                 updateTransactions();
             });
@@ -78,33 +80,5 @@
             updateTransactions();
         });
     </script>
-
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-         const typePaymentFilter = document.getElementById('type_payment_filter');
-
-         typePaymentFilter.addEventListener('change', function () {
-             const typeId = this.value;
-
-             fetch(`{{ route("payments.filterByType") }}?type_id=${typeId}`, {
-                 method: 'GET',
-             })
-             .then(response => {
-                 if (!response.ok) {
-                     throw new Error('Erreur de requête');
-                 }
-                 return response.text();
-             })
-             .then(html => {
-                 document.querySelector('table').innerHTML = html;
-             })
-             .catch(error => {
-                 console.error('Erreur:', error);
-             });
-         });
-       });
-
-    </script> --}}
 
 @endsection

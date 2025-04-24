@@ -86,31 +86,38 @@
 
             <div class="row mb-3">
 
+                @if ($rideRequest->accepted_at)
                     <div class="col-md-6">
                         <strong>Date d'acceptement :</strong>
                         <p class="mb-0">
                             {{ $rideRequest->accepted_at? \Carbon\Carbon::parse($rideRequest->accepted_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
                         </p>
                     </div>
+                @endif
 
 
+                @if ($rideRequest->rejected_at)
                     <div class="col-md-6">
                         <strong>Date du rejet :</strong>
                         <p class="mb-0">
                             {{ $rideRequest->rejected_at? \Carbon\Carbon::parse($rideRequest->rejected_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
                         </p>
                     </div>
+                @endif
 
             </div>
 
             <div class="row mb-3">
+                @if ($rideRequest->validated_by_passenger_at)
                     <div class="col-md-6">
                         <strong>Date Validée par Passager :</strong>
                         <p class="mb-0">
                             {{ $rideRequest->validated_by_passenger_at? \Carbon\Carbon::parse($rideRequest->validated_by_passenger_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
                         </p>
                     </div>
+                @endif
 
+                @if ($rideRequest->validated_by_driver_at)
 
                     <div class="col-md-6">
                         <strong>Date Validée par Conducteur :</strong>
@@ -118,27 +125,37 @@
                             {{ $rideRequest->validated_by_driver_at? \Carbon\Carbon::parse($rideRequest->validated_by_driver_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non défini' }}
                         </p>
                     </div>
+                @endif
+
+
+
+
 
             </div>
 
-            <div class="row mb-3">
-                @if ($rideRequest->refunded_at)
-                    <div class="col-md-6">
-                        <strong>Date du Remboursement :</strong>
-                        <p class="mb-0">
-                            {{ $rideRequest->refunded_at? \Carbon\Carbon::parse($rideRequest->refunded_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore remboursée' }}
-                        </p>
-                    </div>
-                @endif
-                @if ($rideRequest->cancelled_at)
-                    <div class="col-md-6">
-                        <strong>Date d'annulement :</strong>
-                        <p class="mb-0">
-                            {{ $rideRequest->cancelled_at? \Carbon\Carbon::parse($rideRequest->cancelled_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore annulée' }}
-                        </p>
-                    </div>
-                @endif
-            </div>
+
+                <div class="row mb-3">
+                    @if ($rideRequest->refunded_at)
+                        <div class="col-md-6">
+                            <strong>Date du Remboursement :</strong>
+                            <p class="mb-0">
+                                {{ $rideRequest->refunded_at? \Carbon\Carbon::parse($rideRequest->refunded_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore remboursée' }}
+                            </p>
+                        </div>
+                    @endif
+
+                    @if ($rideRequest->cancelled_at)
+                        <div class="col-md-6">
+                            <strong>Date d'annulement :</strong>
+                            <p class="mb-0">
+                                {{ $rideRequest->cancelled_at? \Carbon\Carbon::parse($rideRequest->cancelled_at)->locale('fr')->translatedFormat('D, d M Y, H:i'): 'Non encore annulée' }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+
+       
+
         </div>
 
 
