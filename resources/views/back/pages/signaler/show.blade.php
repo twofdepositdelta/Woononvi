@@ -31,7 +31,7 @@
             <div class="col-md-6">
                 <strong>Réservation</strong>
                 <p>
-                    <a href="{{ route('bookings.show', $report->booking->id) }}">
+                    <a href="{{ route('bookings.show', $report->booking->booking_number) }}">
                         #{{ $report->booking->booking_number }} <!-- ID de la réservation -->
                     </a>
                 </p>

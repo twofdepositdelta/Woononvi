@@ -90,7 +90,7 @@ class BookingController extends Controller
     public function show( $booking_number)
     {
         //
-        $booking=Booking::where('booking_number',$booking_number)->first();
+        $booking=Booking::where('booking_number',$booking_number)->firstOrFail();
         return view('back.pages.reservations.show',compact('booking'));
 
     }
@@ -400,16 +400,49 @@ class BookingController extends Controller
     {
         $query = Booking::with(['ride', 'passenger']);
 
+        if (auth()->user()->hasRole(['support','manager'])) {
 
-        if ($request->numero_ride) {
-            $query->where('booking_number', 'like', '%' . $request->numero_ride . '%');
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null;
+
+            if ($request->numero_ride) {
+                $query->where('booking_number', 'like', '%' . $request->numero_ride . '%');
+            }
+
+            if ($request->status) {
+                $query->where('status', $request->status);
+            }
+
+            $query->whereHas('ride.driver.city.country', function ($q) use ($auth_country_id) {
+                $q->where('id', $auth_country_id);
+            });
+
+            $bookings = $query->orderByDesc('created_at')->paginate(10);
+        }else {
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $country_id =$countryName->id;
+
+
+            if ($request->numero_ride) {
+                $query->where('booking_number', 'like', '%' . $request->numero_ride . '%');
+            }
+
+            if ($request->status) {
+                $query->where('status', $request->status);
+            }
+
+            $query->whereHas('ride.driver.city.country', function ($q) use ($country_id) {
+                $q->where('id', $country_id);
+            });
+
+            $bookings = $query->orderByDesc('created_at')->paginate(10);
+
+
         }
 
-        if ($request->status) {
-            $query->where('status', $request->status);
-        }
-
-        $bookings = $query->orderByDesc('created_at')->paginate(10);
 
 
             return view('back.pages.reservations.table', compact('bookings'))->render();

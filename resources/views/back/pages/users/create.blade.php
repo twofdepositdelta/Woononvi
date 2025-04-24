@@ -45,7 +45,7 @@
                                         <input type="text" class="form-control radius-8" id="emailPrefix" name="email"
                                                value="{{ old('email') }}" placeholder="Entrez votre nom"
                                                oninput="validateEmail()" onkeydown="preventAtSign(event)" maxlength="25" minlength="5">
-                                        <span class="input-group-text">@wononvi.com</span>
+                                        <span class="input-group-text">@woononvi.com</span>
                                     </div>
                                     <span id="emailError" class="text-danger" style="display: none;"></span>
                                 </div>
@@ -147,10 +147,10 @@
     function validateEmail() {
         const emailPrefixInput = document.getElementById('emailPrefix');
         const emailError = document.getElementById('emailError');
-        const emailPattern = /^[A-Za-z0-9._%+-]+@wononvi\.com$/;
+        const emailPattern = /^[A-Za-z0-9._%+-]+@woononvi\.com$/;
 
         // Assemble l'email complet
-        const fullEmail = emailPrefixInput.value + '@wononvi.com';
+        const fullEmail = emailPrefixInput.value + '@woononvi.com';
 
         // Vérifie si l'email respecte le format
         if (emailPrefixInput.value && !emailPattern.test(fullEmail)) {

@@ -39,7 +39,7 @@
             <div class="col-lg-6">
                 <div class="security-left wow fadeInLeft" data-wow-delay=".25s">
                     <div class="security-img">
-                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/a.avif') }}" alt="Illustration Notation Transparente">
+                        <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/about/02.png') }}" alt="Illustration Notation Transparente">
                     </div>
                 </div>
             </div>
