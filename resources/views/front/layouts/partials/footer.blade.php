@@ -11,7 +11,7 @@
                         </a> --}}
                         <a class="footer-logo logo-text" href="{{ route('index') }}">
                             {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi"> --}}
-                            <span class="logo-white">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
+                            <span class="logo-white">{{ explode('ō', FrontHelper::getAppName())[0] }}ō</span><span class="logo-yellow">{{ explode('ō', FrontHelper::getAppName())[1] }}</span>
                         </a>
                         <p class="mb-3">
                             {{ FrontHelper::getAppName() }}, la plateforme de covoiturage qui favorise la fraternité, la sécurité et l'accessibilité pour tous.

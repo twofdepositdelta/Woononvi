@@ -17,7 +17,7 @@ class SettingsSeeder extends Seeder
         DB::table('settings')->insert([
             [
                 'key' => 'company_name',
-                'value' => 'Wononvi',
+                'value' => 'Wɔōnonvi',
                 'description' => 'Le nom officiel de l\'entreprise',
             ],
             [
