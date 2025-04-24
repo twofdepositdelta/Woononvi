@@ -188,7 +188,7 @@
             </li>
 
             {{-- avis --}}
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:message-alert-outline" class="menu-icon"></iconify-icon>
                     <span>RECLAMATION</span>
@@ -199,7 +199,7 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>liste</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
             {{-- support --}}
             @hasanyrole(['super admin', 'manager', 'support' ,'dev'])
@@ -365,7 +365,7 @@
 
                         <li>
                             <a href="{{route('kilometrages.index')}}"><i
-                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Kilometrage</a>
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Kilométrage</a>
                         </li>
                         @hasrole('developer')
                         <li>

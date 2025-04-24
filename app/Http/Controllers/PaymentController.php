@@ -47,7 +47,7 @@ class PaymentController extends Controller
 
             }
 
-            $typepayments= PaymentType::orderBy('created_at', 'desc')->paginate(10);
+            $typepayments= PaymentType::orderBy('created_at', 'desc')->get();
 
             return view('back.pages.paiements.index', compact('payments','typepayments'));
         }
@@ -113,10 +113,8 @@ class PaymentController extends Controller
 
     public function filterByType(Request $request)
     {
-        // Récupérer le type de véhicule filtré
-        $typeId = $request->typeId;
+        $query = Payment::query();
 
-        dd($typeId);
 
         if (auth()->user()->hasRole(['support','manager'])) {
 
@@ -124,26 +122,34 @@ class PaymentController extends Controller
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
             // Vérifier si le pays a été trouvé
                if ($auth_country_id) {
-                // Si un type de véhicule est sélectionné, filtrer les véhicules
-                    $payments = Payment::whereHas('user.city.country', function ($query) use ($auth_country_id) {
-                        $query->where('id', $auth_country_id);
-                    })->where('payment_type_id', $typeId)->orderBy('created_at', 'desc')->paginate(10);
 
+                if ($request->typeId) {
+                    $query->where('payment_type_id', $request->typeId);
+                }
 
+                $query->whereHas('user.city.country', function ($q) use ($auth_country_id) {
+                    $q->where('id', $auth_country_id);
+                });
+
+                $payments = $query->orderByDesc('created_at')->paginate(10);
                 }
         }else{
             $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
 
                 // Récupérer l'ID du pays basé sur le pays sélectionné
                 $countryName = BackHelper::getCountryByName($selectedCountry);
-                $countryid =$countryName->id;
+                $countryid = $countryName->id;
 
-            if ($typeId) {
-                $payments = Payment::whereHas('user.city.country', function ($query) use ($countryid) {
-                    $query->where('id', $countryid);
-                })->where('payment_type_id', $typeId)->orderBy('created_at', 'desc')->paginate(10);
 
-            }
+                if ($request->typeId) {
+                    $query->where('payment_type_id', $request->typeId);
+                }
+
+                $query->whereHas('user.city.country', function ($q) use ($countryid) {
+                    $q->where('id', $countryid);
+                });
+
+                $payments = $query->orderByDesc('created_at')->paginate(10);
 
 
         }

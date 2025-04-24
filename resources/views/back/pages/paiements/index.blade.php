@@ -10,8 +10,7 @@
                 <select name="type_payment_filter" id="type_payment_filter" class="form-select form-select-sm">
                     <option value="">Tout</option>
                     @foreach ($typepayments as $typepayment)
-                        <option value="{{ $typepayment->id }}"
-                            {{ request('type_id') == $typepayment->id ? 'selected' : '' }}>
+                        <option value="{{ $typepayment->id }}">
                             {{ $typepayment->label_fr  }}
                         </option>
                     @endforeach
@@ -21,16 +20,12 @@
         <!-- Content -->
         <div class="card-body p-24">
             <div class="table-responsive scroll-sm" id="typ">
-
               @include('back.pages.paiements.table', ['payments' => $payments])
-
-
 
             </div>
         </div>
         <!-- / Content -->
     </div>
-
 
     <script>
         $(document).ready(function() {
@@ -40,7 +35,7 @@
                 var typeId = $('#type_payment_filter').val();
 
                 // Créer l'URL avec les paramètres de filtre et de pagination
-                var url = '/pa/filter/' + '?page=' + page + '&type_payment_filter=' + typeId ;
+                var url = '/pa/filter/' + '?page=' + page + '&typeId=' + typeId ;
 
                 // Envoi des données via AJAX pour récupérer les transactions filtrées
                 $.ajax({
@@ -79,6 +74,7 @@
         });
     </script>
 
+    
 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -35,9 +35,32 @@ class UserController extends Controller
         {
             // Récupérer tous les rôles
             $roles = Role::all();
+            if (auth()->user()->hasRole('manager')) {
 
-            // Récupérer tous les utilisateurs ou filtrer par rôle et statut
-            $users = User::when($request->role, function ($query) use ($request) {
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                // Récupérer tous les utilisateurs ou filtrer par rôle et statut
+                $users = User::when($request->role, function ($query) use ($request) {
+                        return $query->whereHas('roles', function ($query) use ($request) {
+                            $query->where('name', $request->role);
+                        });
+                    })
+                    ->when($request->status !== null, function ($query) use ($request) {
+                        return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
+                    })
+                    ->whereHas('city.country', function ($q) use ($auth_country_id) {
+                        $q->where('id', $auth_country_id);
+                    })
+                    ->paginate(20);
+            }else {
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                $users = User::when($request->role, function ($query) use ($request) {
                     return $query->whereHas('roles', function ($query) use ($request) {
                         $query->where('name', $request->role);
                     });
@@ -45,7 +68,11 @@ class UserController extends Controller
                 ->when($request->status !== null, function ($query) use ($request) {
                     return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
                 })
+                ->whereHas('city.country', function ($q) use ($countryid) {
+                    $q->where('id', $countryid);
+                })
                 ->paginate(20);
+            }
 
             return view('back.pages.users.index', compact('users', 'roles'));
         }
@@ -60,25 +87,59 @@ class UserController extends Controller
             // Commencez par la requête de base
             $query = User::query();
 
-            // Appliquez le filtre par rôle si un rôle est sélectionné
-            if ($request->role) {
-                $query->whereHas('roles', function ($query) use ($request) {
-                    $query->where('name', $request->role);
+
+            if (auth()->user()->hasRole('manager')) {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                // Appliquez le filtre par rôle si un rôle est sélectionné
+                if ($request->role) {
+                    $query->whereHas('roles', function ($query) use ($request) {
+                        $query->where('name', $request->role);
+                    });
+                }
+                // dd($request->status);
+                // Appliquez le filtre par statut si un statut est sélectionné
+                if ($request->status != null) {
+                    $query->where('status', $request->status);
+                }
+
+                $query->whereHas('city.country', function ($q) use ($auth_country_id) {
+                    $q->where('id', $auth_country_id);
                 });
-            }
-            // dd($request->status);
-            // Appliquez le filtre par statut si un statut est sélectionné
-            if ($request->status != null) {
-                $query->where('status', $request->status);
+            }else{
+
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                // Appliquez le filtre par rôle si un rôle est sélectionné
+                if ($request->role) {
+                    $query->whereHas('roles', function ($query) use ($request) {
+                        $query->where('name', $request->role);
+                    });
+                }
+
+                if ($request->status != null) {
+                    $query->where('status', $request->status);
+                }
+
+                $query->whereHas('city.country', function ($q) use ($countryid) {
+                    $q->where('id', $countryid);
+                });
+
             }
 
-            // Récupérer les utilisateurs avec les filtres appliqués
-            $users = $query->get();
+                // Récupérer les utilisateurs avec les filtres appliqués
+                $users = $query->get();
 
-            // Vérifiez si des utilisateurs ont été trouvés
-            if ($users->isEmpty()) {
-                return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
-            }
+                // Vérifiez si des utilisateurs ont été trouvés
+                if ($users->isEmpty()) {
+                    return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
+                }
 
             // Retourner la vue partielle avec les utilisateurs
             return response()->json([
@@ -89,7 +150,22 @@ class UserController extends Controller
         public function create()
         {
             $roles = Role::whereNotIn('name', ['developer', 'driver', 'passenger'])->get();
-            $cities = City::all();
+
+            if (auth()->user()->hasRole('manager')) {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                $cities = City::where('country_id',$auth_country_id)->get();
+            }else {
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+                $cities = City::where('country_id',$countryid)->get();
+
+            }
             return view('back.pages.users.create', compact('roles', 'cities'));
         }
 
@@ -156,6 +232,22 @@ class UserController extends Controller
         public function edit(User $user)
         {
             //
+            if (auth()->user()->hasRole('manager')) {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                $cities = City::where('country_id',$auth_country_id)->get();
+            }else {
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+                $cities = City::where('country_id',$countryid)->get();
+
+            }
+            return view('back.pages.users.edit', compact('cities'));
         }
 
         /**
