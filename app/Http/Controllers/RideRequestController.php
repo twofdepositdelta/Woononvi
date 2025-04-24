@@ -15,7 +15,7 @@ class RideRequestController extends Controller
     public function index()
     {
         //
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support','manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent

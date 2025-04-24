@@ -2,9 +2,8 @@
     <table class="table bordered-table sm-table mb-0">
         <thead>
             <tr>
-
-                <th>Référence</th>
                 <th>Nom et Prénom(s)</th>
+                <th>Référence</th>
                 <th>Méthode</th>
                 <th>Date</th>
                 <th>Montant</th>
@@ -20,8 +19,6 @@
             @else
                 @foreach ($payments as $index => $payment)
                     <tr>
-
-                        <td>{{ $payment->reference }}</td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <img src="{{ asset($payment->user->profile->avatar ?? 'path/to/default/avatar.jpg') }}"
@@ -30,6 +27,7 @@
                                 <h6 class="text-md mb-0 fw-medium flex-grow-1">{{ $payment->user->firstname }} {{ $payment->user->lastname }}</h6>
                             </div>
                         </td>
+                        <td>{{ $payment->reference }}</td>
                         <td>{{ $payment->payment_method }}</td>
                         <td> {{ \Carbon\Carbon::parse($payment->created_at)->locale('fr')->translatedFormat('D, d M Y, H:i') }}</td>
                         <td>{{ number_format($payment->amount, 0, ',', ' ') }} Fcfa</td>

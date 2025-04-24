@@ -45,7 +45,7 @@
                     <span class="icon top-50 translate-middle-y">
                         <iconify-icon icon="mage:email"></iconify-icon>
                     </span>
-                    <input type="email" name="email" class="form-control h-56-px bg-neutral-50 radius-12" placeholder="Adresse e-mail" required>
+                    <input type="email" value="{{old('email')}}" name="email" class="form-control h-56-px bg-neutral-50 radius-12" placeholder="Adresse e-mail" required>
                 </div>
 
                 <div class="">

@@ -1,6 +1,6 @@
 @extends('back.layouts.master')
 
-@section('title', 'Mon Profile')
+@section('title', 'Mon Profil')
 @section('content')
 @php
 // Définir la locale à français

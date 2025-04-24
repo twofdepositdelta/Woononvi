@@ -19,7 +19,7 @@
                             <div class="col-12">
                                 <label class="form-label" for="titre">Titre</label>
                                 <input type="text" class="form-control @error('titre') is-invalid @enderror"
-                                    id="titre" name="titre" placeholder="Entrez le titre de l'actualité"
+                                    id="titre" value="{{old('titre')}}" name="titre" placeholder="Entrez le titre de l'actualité"
                                     value="{{ old('titre') }}" required>
                                 @error('titre')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -31,7 +31,7 @@
                             <div class="col-12">
                                 <label class="form-label" for="description">Description</label>
                                 {{-- <div id="editor" class="form-control"></div> --}}
-                                <div id="editor" style="height: 300px;"></div>
+                                <div id="editor" style="height: 300px;">{{ old('description')}}</div>
                                 <input type="hidden" name="description" id="description">
                                 {{-- <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Entrez la description de l'actualité" rows="3" required>{{ old('description') }}</textarea> --}}
 

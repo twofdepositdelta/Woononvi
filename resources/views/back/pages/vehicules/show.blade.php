@@ -12,7 +12,7 @@
                 <div class="row">
                     <!-- Image du véhicule -->
                     <div class="col-md-5 text-center mb-3">
-                        <img src="{{ $vehicle->main_image }}" alt="Image du véhicule" class="img-fluid rounded" style="max-height: 300px;">
+                        <img src="{{ asset($vehicle->main_image) }}" alt="Image du véhicule" class="img-fluid rounded" style="max-height: 300px;">
                     </div>
 
                     <!-- Informations du véhicule -->

@@ -20,7 +20,7 @@ class RideController extends Controller
 
         // Récupérer le pays sélectionné de la session
 
-        if (auth()->user()->hasRole('support')) {
+        if (auth()->user()->hasRole(['support', 'manager'])) {
 
             $auth_user = auth()->user();
             $auth_country_id = $auth_user->city->country->id ?? null; // Assure-toi que ces relations existent
@@ -221,7 +221,7 @@ class RideController extends Controller
 
     public function statistique()
     {
-        if (auth()->user()->hasAnyRole(['super admin', 'manager'])) {
+        if (auth()->user()->hasRole('super admin')) {
             //
 
             $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
@@ -241,33 +241,63 @@ class RideController extends Controller
                 $query->where('id', $countryid);
             })->where('status', 'suspend')->count();
 
-            //  $rides = Ride::select('start_location ', 'end_location', \DB::raw('count(*) as count'))
-            //          ->groupBy('start_location', 'end_location')
-            //          ->get();
+        }else{
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null;
+
+            $ridecount = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+            })->count();
+            $ridecountactive = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+            })->where('status', 'active')->count();
+
+
+            $ridecountcomplete = Ride::whereHas('driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+            })->where('status', 'suspend')->count();
+
+
+        }
+
             return view('back.pages.rapports.trajet.statistique', compact('ridecount', 'ridecountactive', 'ridecountcomplete'));
-        }
-        else
-        {
-            abort(401);
-        }
+
     }
 
     public function getRidesReport(Request $request)
     {
 
 
-            $period = $request->get('period');
-            $selectedCountry = session('selected_country', 'benin'); // 'benin' par défaut
-            $country = BackHelper::getCountryByName($selectedCountry);
-            $countryId = $country->id ?? null;
+            if (auth()->user()->hasAnyRole(['super admin', 'dev'])) {
+                $period = $request->get('period');
+                $selectedCountry = session('selected_country', 'benin'); // 'benin' par défaut
+                $country = BackHelper::getCountryByName($selectedCountry);
+                $countryId = $country->id ?? null;
 
-            $query = Ride::query();
-            if ($countryId) {
-                $query->whereHas('driver.city.country', function ($q) use ($countryId) {
-                    $q->where('id', $countryId);
-                });
+                $query = Ride::query();
+                if ($countryId) {
+                    $query->whereHas('driver.city.country', function ($q) use ($countryId) {
+                        $q->where('id', $countryId);
+                    });
+                }
+
+            }else {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                $period = $request->get('period');
+                $query = Ride::query();
+                if ($auth_country_id) {
+                    $query->whereHas('driver.city.country', function ($q) use ($auth_country_id) {
+                        $q->where('id', $auth_country_id);
+                    });
+                }
+
+
+
             }
-
 
             switch ($period) {
                 case 'weeklyride':
@@ -352,5 +382,26 @@ class RideController extends Controller
 
     //     return $result ? $result->getLocality() : 'Inconnu';
     // }
+
+
+    public function filter(Request $request)
+    {
+        $query = Ride::with('driver');
+
+
+        if ($request->numero) {
+            $query->where('numero_ride', 'like', '%' . $request->numero . '%');
+        }
+
+        if ($request->status_ride) {
+            $query->where('status', $request->status_ride);
+        }
+
+        $rides = $query->orderByDesc('created_at')->paginate(10);
+
+
+         return view('back.pages.trajets.table', compact('rides'))->render();
+
+    }
 
 }

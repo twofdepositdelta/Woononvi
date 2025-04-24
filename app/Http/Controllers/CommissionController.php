@@ -14,7 +14,7 @@ class CommissionController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasAnyRole(['super admin', 'manager'])){
+        if (auth()->user()->hasRole(['super admin'])){
 
             $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
 
@@ -49,12 +49,44 @@ class CommissionController extends Controller
                 return $booking->total_price * ($booking->commission_rate / 100);
             });
 
+        }else{
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null;
+
+            /// Récupérer toutes les commissions
+            $commissions = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+             })->get();
+
+            // Calcul du total des commissions (toutes)
+            $totalcommission = $commissions->sum(function ($booking) {
+                return $booking->total_price * ($booking->commission_rate / 100);
+            });
+
+            // Récupérer les commissions associées aux trajets en attente et actifs
+            $commission_pending = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+             })->where('status', 'pending')->get();
+
+            $commission_actif = Booking::whereHas('ride.driver.city.country', function ($query) use ($auth_country_id) {
+                $query->where('id', $auth_country_id);
+             })->where('status', 'accepted')->get();
+
+            // Calcul des totaux pour les commissions "pending" et "active"
+            $totalpendingcomiss = $commission_pending->sum(function ($booking) {
+                return $booking->total_price * ($booking->commission_rate / 100);
+            });
+
+            $totalactifcomiss = $commission_actif->sum(function ($booking) {
+                return $booking->total_price * ($booking->commission_rate / 100);
+            });
+
+
+
+        }
 
             return view('back.pages.commission.index',compact('totalpendingcomiss','totalactifcomiss','totalcommission'));
-       }else{
-
-        abort(401);
-       }
 
     }
 

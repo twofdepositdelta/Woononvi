@@ -75,7 +75,7 @@
                 </div> --}}
 
                 <div class="dropdown d-none d-sm-inline-block">
-                    @if ( !auth()->user()->hasRole('support'))
+                    @if ( !auth()->user()->hasRole(['support','manager']))
                        <form id="country-form" method="GET" action="{{ route('country.select') }}">
                             <button
                                 class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
@@ -106,9 +106,9 @@
                                                         <span>{{$countrie->name}}</span>
                                                     </span>
                                                 </label>
-                                                <input class="form-check-input" type="radio" name="country" value="{{$countrie->name}}" id="benin"
+                                                <input class="form-check-input" type="radio" name="country" value="{{$countrie->name}}"
                                                     onchange="document.getElementById('country-form').submit();"
-                                                    @if(session('selected_country') == $countrie->name) checked @endif>
+                                                    @if(session('selected_country','Bénin') == $countrie->name) checked @endif>
                                             </div>
 
 

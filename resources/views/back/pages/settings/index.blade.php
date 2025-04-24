@@ -106,7 +106,7 @@
                                                             <!-- Delete -->
                                                             <form action="{{ route('kilometrages.destroy', $kilo) }}"
                                                                 method="POST"
-                                                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?');">
+                                                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ?');">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit"

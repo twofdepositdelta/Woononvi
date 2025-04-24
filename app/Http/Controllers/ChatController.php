@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\BackHelper;
+use Carbon\Carbon;
 
 class ChatController extends Controller
 {
@@ -52,7 +53,6 @@ class ChatController extends Controller
                     $query->where('is_read', false)
                         ->where('sender_id', '!=', auth()->id()); // Exclure les messages envoyés par l'utilisateur connecté
                 }])
-                ->orderBy('created_at', 'desc')
                 ->get();
         } else {
             // Récupérer les conversations non prises en charge (is_taken = false) ou non résolues
@@ -69,10 +69,13 @@ class ChatController extends Controller
                                 ->where('is_taken', false); // Conversations non prises en charge
                         });
                 })
-                ->orderBy('created_at', 'desc')
                 ->get();
-
         }
+
+        // Trier les conversations selon la date du dernier message (du plus récent au plus ancien)
+        $conversations = $conversations->sortByDesc(function ($conversation) {
+            return optional($conversation->lastMessage)->created_at;
+        })->values(); // Réindexer proprement
 
         // Retourner les conversations au format JSON avec le compte des messages non lus
         return response()->json($conversations->map(function ($conversation) {
@@ -81,15 +84,14 @@ class ChatController extends Controller
                 'firstname' => $conversation->user->firstname,
                 'lastname' => $conversation->user->lastname,
                 'lastMessage' => $conversation->lastMessage->content ? Str::limit($conversation->lastMessage->content, 20, '...') : null,
-                'time' => $conversation->lastMessage->created_at->format('H:i'),
-                'createdAt' => $conversation->lastMessage->created_at,
-                'unreadCount' => $conversation->unread_count, // Utiliser le compte des messages non lus calculé
-                'image' => $conversation->user->profile->avatar ?? 'default-image.png', // Image par défaut
-                'active' => false, // Déterminez la logique pour savoir si la conversation est active
+                'time' => optional($conversation->lastMessage)->created_at?->format('H:i'),
+                'createdAt' => optional($conversation->lastMessage)->created_at,
+                'unreadCount' => $conversation->unread_count,
+                'image' => $conversation->user->profile->avatar ?? 'default-image.png',
+                'active' => false,
             ];
         }));
     }
-
 
     public function sendMessage(Request $request, $conversationId)
     {
@@ -122,6 +124,12 @@ class ChatController extends Controller
 
             // Création du message
             $message = Message::create($data);
+
+            $conversation = Conversation::find($conversationId)->first();
+
+            $conversation->update([
+                'updated_at' => Carbon::now()
+            ]);
 
             return response()->json(['success' => true]);
         }

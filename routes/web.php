@@ -24,6 +24,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RideSearchController;
 use App\Http\Controllers\KilometrageController;
+use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeVehicleController;
@@ -96,6 +97,8 @@ Route::middleware('auth')->group(function () {
         'typenews' => 'typenew:slug',
     ]);
 
+    Route::resource('reclamations', ReclamationController::class);
+
     Route::resource('actualities', ActualityController::class)->parameters([
         'actualities' => 'actuality:slug',
     ]);
@@ -128,6 +131,13 @@ Route::middleware('auth')->group(function () {
         'reports' => 'report',
     ]);
 
+    Route::put('/reclamations/{reclamation}/statut', [ReclamationController::class, 'updateStatut'])->name('reclamations.updateStatut');
+
+    Route::get('/reservation/filter', [BookingController::class, 'filter'])->name('bookings.filter');
+
+    Route::get('/trajet/filter', [RideController::class, 'filter'])->name('rides.filter');
+
+
     Route::get('/signaler/filter', [ReportController::class, 'filterByType'])->name('reports.filterByType');
 
     // Maps & Cartographie
@@ -153,7 +163,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategorieController::class)->parameters([
         'categories' => 'categorie:slug',
     ]);
-    
+
     Route::resource('typevehicles', TypeVehicleController::class)->parameters([
         'typevehicles' => 'typevehicle:slug',
     ]);

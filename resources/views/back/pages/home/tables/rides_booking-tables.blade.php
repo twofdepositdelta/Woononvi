@@ -22,15 +22,17 @@
                                 class="text-sm fw-semibold py-6 px-12 bg-neutral-500 rounded-pill text-white line-height-1 ms-12 notification-alert">{{ backHelper::getTodayBookingsTotal() }}</span>
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link d-flex align-items-center" id="pills-recent-users-tab"
-                            data-bs-toggle="pill" data-bs-target="#pills-users-leads" type="button" role="tab"
-                            aria-controls="pills-recent-leads" aria-selected="false" tabindex="-1">
-                            Dernières inscriptions
-                            <span
-                                class="text-sm fw-semibold py-6 px-12 bg-neutral-500 rounded-pill text-white line-height-1 ms-12 notification-alert">{{ backHelper::showLastFiftyUsersTotal() }}</span>
-                        </button>
-                    </li>
+                    @hasrole('super admin')
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link d-flex align-items-center" id="pills-recent-users-tab"
+                                data-bs-toggle="pill" data-bs-target="#pills-users-leads" type="button" role="tab"
+                                aria-controls="pills-recent-leads" aria-selected="false" tabindex="-1">
+                                Dernières inscriptions
+                                <span
+                                    class="text-sm fw-semibold py-6 px-12 bg-neutral-500 rounded-pill text-white line-height-1 ms-12 notification-alert">{{ backHelper::showLastFiftyUsersTotal() }}</span>
+                            </button>
+                        </li>
+                    @endhasrole
                 </ul>
                 <a href="{{ route('tarjets.cartograpie') }}"
                     class="text-primary-600 hover-text-primary d-flex align-items-center gap-1">
@@ -174,64 +176,68 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pills-users-leads" role="tabpanel"
-                    aria-labelledby="pills-recent-users-tab" tabindex="0">
-                    <div class="table-responsive scroll-sm">
-                        <table class="table bordered-table sm-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Depuis le</th>
-                                    <th scope="col">Genre</th>
-                                    <th scope="col">Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse (backHelper::showLastFiftyUsers() as $user)
+                @hasrole('super admin')
+
+                    <div class="tab-pane fade" id="pills-users-leads" role="tabpanel"
+                        aria-labelledby="pills-recent-users-tab" tabindex="0">
+                        <div class="table-responsive scroll-sm">
+                            <table class="table bordered-table sm-table mb-0">
+                                <thead>
                                     <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <img src="{{ asset($user->profile->avatar ?? 'default-avatar.png') }}"
-                                                    alt="Avatar"
-                                                    class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="text-md mb-0 fw-medium">
-                                                        {{ $user->lastname . ' ' . $user->firstname }}</h6>
-                                                    <span
-                                                        class="text-sm text-secondary-light fw-medium">{{ $user->phone }}</span>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Depuis le</th>
+                                        <th scope="col">Genre</th>
+                                        <th scope="col">Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse (backHelper::showLastFiftyUsers() as $user)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="{{ asset($user->profile->avatar ?? 'default-avatar.png') }}"
+                                                        alt="Avatar"
+                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="text-md mb-0 fw-medium">
+                                                            {{ $user->lastname . ' ' . $user->firstname }}</h6>
+                                                        <span
+                                                            class="text-sm text-secondary-light fw-medium">{{ $user->phone }}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                                        <td class="text-{{ $user->gender == 'male' ? 'info' : 'warning' }}">
-                                            @if ($user->gender)
-                                                {{ $user->gender == 'male' ? 'Homme' : 'Femme' }}
-                                            @else
-                                                Pas defini
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span
-                                                class="badge {{ $user->status == true ? 'bg-success-600' : 'bg-danger-600' }} text-sm fw-semibold px-20 py-9 radius-4 text-white">
-                                                {{ $user->status == true ? 'Actif' : 'Inactif' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">Aucun utilisateur trouvé</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                        <!-- Pagination Links -->
-                        <div class="mt-4">
-                            {{ BackHelper::showLastFiftyUsers()->links() }}
+                                            </td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                                            <td class="text-{{ $user->gender == 'male' ? 'info' : 'warning' }}">
+                                                @if ($user->gender)
+                                                    {{ $user->gender == 'male' ? 'Homme' : 'Femme' }}
+                                                @else
+                                                    Pas defini
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge {{ $user->status == true ? 'bg-success-600' : 'bg-danger-600' }} text-sm fw-semibold px-20 py-9 radius-4 text-white">
+                                                    {{ $user->status == true ? 'Actif' : 'Inactif' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">Aucun utilisateur trouvé</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <!-- Pagination Links -->
+                            <div class="mt-4">
+                                {{ BackHelper::showLastFiftyUsers()->links() }}
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                @endhasrole
             </div>
         </div>
     </div>
