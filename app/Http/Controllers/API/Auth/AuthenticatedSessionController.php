@@ -164,85 +164,10 @@ class AuthenticatedSessionController extends Controller
         ], 201);
     }
 
-    // public function finalise(Request $request) {
-    //     $rules = [
-    //         'gender' => 'required|string|max:255',
-    //         'npi' => 'required|string|unique:users',
-    //         'birth_of_date' => 'required|date',
-    //         'city_id' => 'required|string|max:255',
-    //         'npi_file' => 'required|mimes:pdf|max:1024',
-    //         'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
-    //     ];
-
-    //     $validator = Validator::make($request->all(), $rules);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Revoyez les champs svp.',
-    //             'errors' => $validator->errors()->all()
-    //         ], 422);
-    //     }
-
-    //     $user = $request->user();
-
-    //     $npiPath = null;
-    //     if ($request->hasFile('npi_file')) {
-    //         $npiPath = $request->file('npi_file')->store("api/users/$user->id/documents", 'public'); 
-    //     }
-
-    //     $avatarPath = null;
-    //     if ($request->hasFile('avatar')) {
-    //         $avatarPath = $request->file('avatar')->store("api/users/$user->id/documents", 'public'); 
-    //     }
-
-    //     Profile::create([
-    //         'user_id' => $user->id,
-    //         'avatar' => $avatarPath,
-    //         'identy_card' => $npiPath,
-    //     ]);
-
-    //     // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-    //     $birthDate = new \DateTime($request->birth_of_date);
-    //     $today = new \DateTime();
-    //     $age = $today->diff($birthDate)->y;
-
-    //     if ($age < 18) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => "Vous devez avoir au moins 18 ans pour continuer.",
-    //             'age' => $age
-    //         ], 401); // Statut 401 pour indiquer que l'inscription est refusée
-    //     }
-
-    //     $city = City::whereName($request->city_id)->first();
-
-    //     $user->update([
-    //         'date_of_birth' => $request->birth_of_date,
-    //         'npi' => $request->npi,
-    //         'gender' => $request->gender,
-    //         'city_id' => $city->id,
-    //     ]);
-
-    //     Preference::create([
-    //         'user_id' => $user->id,
-    //     ]);
-
-    //     // Appeler la méthode privée pour formater l'utilisateur
-    //     $userArray = $this->formatUserArray($user);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Votre inscription a été finalisée avec succès.',
-    //         'user' => $userArray,
-    //         'cities' => City::whereCountryId($user->country_id)->pluck('name')
-    //     ], 201);
-    // }
-
     public function finalise(Request $request) {
         $rules = [
             'gender' => 'required|string|max:255',
-            'npi' => 'required|string|unique:users',
+            'npi' => 'required|string|max:255|unique:users',
             'birth_of_date' => 'required|date',
             'expiry_date' => 'required|date',
             'city_id' => 'required',
@@ -289,13 +214,9 @@ class AuthenticatedSessionController extends Controller
             //'identy_card' => $npiPath
         ]);
 
-        $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
-        if($setting) {
-            Preference::create([
-                'prefered_amount' => $setting->value,
-                'user_id' => Auth::id()
-            ]);
-        }
+        Preference::create([
+            'user_id' => Auth::id()
+        ]);
         
         $type = 1;
         if($user->roles->first()->name == "driver")
