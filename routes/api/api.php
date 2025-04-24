@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\DocumentController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\RideController;
+use App\Http\Controllers\API\ActualityController;
 
 require __DIR__ . '/auth_api.php';
 
@@ -43,4 +44,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('rides/bookings', [RideController::class, 'getDriverBookings'])->name('api.ride.getDriverBookings');
     Route::post('rides/bookings/passenger', [RideController::class, 'getPassengerBookings'])->name('api.ride.getPassengerBookings');
     Route::post('rides/bookings/updateBookingStatus', [RideController::class, 'updateBookingStatus'])->name('api.ride.updateBookingStatus');
+    Route::post('rides/calculateRidePrice', [RideController::class, 'calculateRidePrice'])->name('api.rides.calculateRidePrice');
+
+    Route::get('actualities/index', [ActualityController::class, 'index'])->name('api.actualities.index');
+
+    Route::get('settings/kms', [RideController::class, 'getKms'])->name('api.settings.kms');
 });

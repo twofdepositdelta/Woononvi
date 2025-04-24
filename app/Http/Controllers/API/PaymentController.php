@@ -91,7 +91,7 @@ class PaymentController extends Controller
                                 'payment_type_id' => 1,
                             ]);
 
-                            $user->balance += (int) $request->amount;
+                            $user->balance += (int) $amount;
                             $user->update();
         
                             return response()->json([
@@ -100,10 +100,12 @@ class PaymentController extends Controller
                                 'user' => $user
                             ]);
                         } elseif ($transactionStatus === 'FAILED') {
+                            $user->update();
                             return response()->json([
                                 'success' => false,
                                 'message' => 'Transaction échouée !',
-                                'data' => $statusData
+                                'data' => $statusData,
+                                'user' => $user
                             ]);
                         }
                     }

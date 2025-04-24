@@ -32,7 +32,7 @@ class VehicleSeeder extends Seeder
                 'driver_id' => 6,
                 'type_vehicle_id' => TypeVehicle::where('label', 'Berline')->first()->id,
                 'is_active' => false, // Définir is_active à trfalse
-                 'status' => true,    // Définir status à true
+                'status' => true,    // Définir status à true
             ],
             [
                 'licence_plate' => 'EF456GH',
