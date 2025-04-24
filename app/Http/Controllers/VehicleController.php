@@ -72,7 +72,7 @@ class VehicleController extends Controller
     public function show($slug)
     {
         //
-        $vehicle=Vehicle::where('slug',$slug)->first();
+        $vehicle=Vehicle::where('slug',$slug)->firstOrFail();
         return view('back.pages.vehicules.show',compact('vehicle'));
 
     }
@@ -99,7 +99,7 @@ class VehicleController extends Controller
     public function destroy( $slug)
     {
         //
-        $vehicle=Vehicle::where('slug',$slug)->first();
+        $vehicle=Vehicle::where('slug',$slug)->firstOrFail();
         $vehicle->delete();
         return redirect()->route('vehicles.index')->with('success', 'vehicule a été supprimé avec succès !');
     }
@@ -160,7 +160,7 @@ class VehicleController extends Controller
     public function status($slug)
     {
         if (auth()->user()->hasAnyRole(['super admin', 'manager' ,'dev'])){
-            $vehicle=Vehicle::where('slug',$slug)->first();
+            $vehicle=Vehicle::where('slug',$slug)->firstOrFail();
             $vehicle->is_active=!$vehicle->is_active;
             $vehicle->save();
             Mail::to($vehicle->driver->email)->send(new VehicleStatus($vehicle));

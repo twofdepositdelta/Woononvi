@@ -74,7 +74,7 @@ class PaymentController extends Controller
      */
     public function show( $reference)
     {
-        $payment=Payment::where('reference',$reference)->first();
+        $payment=Payment::where('reference',$reference)->firstOrFail();
         return view('back.pages.paiements.show', compact('payment'));
     }
 

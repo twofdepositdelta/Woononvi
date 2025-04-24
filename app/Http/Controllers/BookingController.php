@@ -90,7 +90,7 @@ class BookingController extends Controller
     public function show( $booking_number)
     {
         //
-        $booking=Booking::where('booking_number',$booking_number)->first();
+        $booking=Booking::where('booking_number',$booking_number)->firstOrFail();
         return view('back.pages.reservations.show',compact('booking'));
 
     }

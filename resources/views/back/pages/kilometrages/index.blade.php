@@ -9,7 +9,6 @@
 
             <div class="col-md-4">
                 <select name="categorie" id="categorie" class="form-select">
-                    <option value="">-- Filtrer par categorie --</option>
                     @foreach ($categories as $categorie )
                     <option value="{{$categorie->id}}" {{ $categorie->id == 1 ? 'selected' : '' }}>{{ $categorie->label}}</option>
                     @endforeach

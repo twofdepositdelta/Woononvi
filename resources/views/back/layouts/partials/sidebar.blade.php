@@ -269,10 +269,10 @@
                             <a href="{{route('actualities.create')}}"><i
                                     class="ri-circle-fill circle-icon text-warning-main w-auto"></i>Ajouter</a>
                         </li>
-                        <li>
+                        {{--<li>
                             <a href="{{route('typenews.index')}}"><i
                                     class="ri-circle-fill circle-icon text-success-main w-auto"></i> Type actualité</a>
-                        </li>
+                        </li>--}}
                     </ul>
                 </li>
             @endhasanyrole

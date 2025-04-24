@@ -117,7 +117,7 @@ class ActualityController extends Controller
         // Afficher les détails d'une actualité spécifique
         public function show( $slug)
         {
-            $actuality=Actuality::where('slug',$slug)->first();
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
             return view('back.pages.actualities.show', compact('actuality'));
         }
 
@@ -126,7 +126,7 @@ class ActualityController extends Controller
         {
             $typenews = TypeNew::where('name','Blog')->get();
 
-            $actuality=Actuality::where('slug',$slug)->first();
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
 
             $allowedTypes = ['driver', 'passenger','support','sales'];
             $roles = Role::whereIn('name', $allowedTypes)
@@ -147,7 +147,7 @@ class ActualityController extends Controller
                 'roles' => 'array', // Changer en 'array' pour accepter plusieurs rôles
                 'roles.*' => 'exists:roles,id',
             ]);
-            $actuality=Actuality::where('slug',$slug)->first();
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
 
             $imagePath = null;
             $imageHelper = new ImageHelper();
