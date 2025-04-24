@@ -40,4 +40,6 @@
         let table = new DataTable('#dataTable');
     </script>
     @yield('customJS')
+    @yield('customJ')
+
 

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Profile;
-use App\Models\User;
 use App\Models\City;
+use App\Models\User;
 use App\Models\Review;
+use App\Models\Profile;
+use App\Mail\UserCreated;
+use App\Helpers\BackHelper;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Permission\Models\Permission;
-use App\Helpers\BackHelper;
 use App\Http\Requests\StoreUserRequest;
-use App\Mail\UserCreated;
+use App\Http\Requests\UpdateUserRequest;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -35,9 +36,32 @@ class UserController extends Controller
         {
             // Récupérer tous les rôles
             $roles = Role::all();
+            if (auth()->user()->hasRole('manager')) {
 
-            // Récupérer tous les utilisateurs ou filtrer par rôle et statut
-            $users = User::when($request->role, function ($query) use ($request) {
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                // Récupérer tous les utilisateurs ou filtrer par rôle et statut
+                $users = User::when($request->role, function ($query) use ($request) {
+                        return $query->whereHas('roles', function ($query) use ($request) {
+                            $query->where('name', $request->role);
+                        });
+                    })
+                    ->when($request->status !== null, function ($query) use ($request) {
+                        return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
+                    })
+                    ->whereHas('city.country', function ($q) use ($auth_country_id) {
+                        $q->where('id', $auth_country_id);
+                    })
+                    ->paginate(20);
+            }else {
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                $users = User::when($request->role, function ($query) use ($request) {
                     return $query->whereHas('roles', function ($query) use ($request) {
                         $query->where('name', $request->role);
                     });
@@ -45,7 +69,11 @@ class UserController extends Controller
                 ->when($request->status !== null, function ($query) use ($request) {
                     return $query->where('status', $request->status); // 1 pour actif, 0 pour inactif
                 })
+                ->whereHas('city.country', function ($q) use ($countryid) {
+                    $q->where('id', $countryid);
+                })
                 ->paginate(20);
+            }
 
             return view('back.pages.users.index', compact('users', 'roles'));
         }
@@ -60,25 +88,59 @@ class UserController extends Controller
             // Commencez par la requête de base
             $query = User::query();
 
-            // Appliquez le filtre par rôle si un rôle est sélectionné
-            if ($request->role) {
-                $query->whereHas('roles', function ($query) use ($request) {
-                    $query->where('name', $request->role);
+
+            if (auth()->user()->hasRole('manager')) {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                // Appliquez le filtre par rôle si un rôle est sélectionné
+                if ($request->role) {
+                    $query->whereHas('roles', function ($query) use ($request) {
+                        $query->where('name', $request->role);
+                    });
+                }
+                // dd($request->status);
+                // Appliquez le filtre par statut si un statut est sélectionné
+                if ($request->status != null) {
+                    $query->where('status', $request->status);
+                }
+
+                $query->whereHas('city.country', function ($q) use ($auth_country_id) {
+                    $q->where('id', $auth_country_id);
                 });
-            }
-            // dd($request->status);
-            // Appliquez le filtre par statut si un statut est sélectionné
-            if ($request->status != null) {
-                $query->where('status', $request->status);
+            }else{
+
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+
+                // Appliquez le filtre par rôle si un rôle est sélectionné
+                if ($request->role) {
+                    $query->whereHas('roles', function ($query) use ($request) {
+                        $query->where('name', $request->role);
+                    });
+                }
+
+                if ($request->status != null) {
+                    $query->where('status', $request->status);
+                }
+
+                $query->whereHas('city.country', function ($q) use ($countryid) {
+                    $q->where('id', $countryid);
+                });
+
             }
 
-            // Récupérer les utilisateurs avec les filtres appliqués
-            $users = $query->get();
+                // Récupérer les utilisateurs avec les filtres appliqués
+                $users = $query->get();
 
-            // Vérifiez si des utilisateurs ont été trouvés
-            if ($users->isEmpty()) {
-                return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
-            }
+                // Vérifiez si des utilisateurs ont été trouvés
+                if ($users->isEmpty()) {
+                    return response()->json(['message' => 'Aucun utilisateur trouvé avec ces filtres.'], 404);
+                }
 
             // Retourner la vue partielle avec les utilisateurs
             return response()->json([
@@ -89,7 +151,22 @@ class UserController extends Controller
         public function create()
         {
             $roles = Role::whereNotIn('name', ['developer', 'driver', 'passenger'])->get();
-            $cities = City::all();
+
+            if (auth()->user()->hasRole('manager')) {
+
+                $auth_user = auth()->user();
+                $auth_country_id = $auth_user->city->country->id ?? null;
+
+                $cities = City::where('country_id',$auth_country_id)->get();
+            }else {
+                $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+
+                // Récupérer l'ID du pays basé sur le pays sélectionné
+                $countryName = BackHelper::getCountryByName($selectedCountry);
+                $countryid =$countryName->id;
+                $cities = City::where('country_id',$countryid)->get();
+
+            }
             return view('back.pages.users.create', compact('roles', 'cities'));
         }
 
@@ -100,7 +177,7 @@ class UserController extends Controller
             $user = User::create([
                 'firstname' => $request->firstname,
                 'lastname'  => $request->lastname,
-                'email'     => $request->email.'@wononvi.com',
+                'email'     => $request->email.'@woononvi.com',
                 'phone'     => $request->phone,
                 'gender'    => $request->gender,
                 'city_id'    => $request->city,
@@ -155,7 +232,19 @@ class UserController extends Controller
 
         public function edit(User $user)
         {
-            //
+                $cities = City::all();
+                if (auth()->user()->hasRole('manager')) {
+
+                    $auth_user = auth()->user();
+                    $auth_country_id = $auth_user->city->country->id ?? null;
+
+                    $cities = City::where('country_id',$auth_country_id)->get();
+                }else {
+
+                    $cities = City::all();
+
+                }
+            return view('back.pages.users.edit', compact('user','cities'));
         }
 
         /**
@@ -163,7 +252,35 @@ class UserController extends Controller
          */
         public function update(Request $request, User $user)
         {
+            $request->validate([
+                'firstname' => 'required|string|max:255',
+                'lastname'  => 'required|string|max:255',
+                'email' => 'required|string|max:255|unique:users,email,' . $user->id,
+                'phone' => 'required|string|max:20|unique:users,phone,' . $user->id,
+                'npi'   => 'required|string|max:50|unique:users,npi,' . $user->id,
+                'gender'    => 'nullable|string',
+                'city'      => 'required|exists:cities,id',
+            ]);
             //
+            $password = Str::random(10);
+
+            $user->update([
+                'firstname' => $request->firstname,
+                'lastname'  => $request->lastname,
+                'email'     => $request->email.'@woononvi.com',
+                'phone'     => $request->phone,
+                'gender'    => $request->gender,
+                'city_id'    => $request->city,
+                'npi'       => $request->npi,
+                'is_verified' => true,
+                'email_verified_at' => now(),
+                'password'  => Hash::make($password),
+            ]);
+
+            Mail::to($user->email)->send(new UserCreated($user, $password));
+            // Rediriger avec un message de succès
+            return redirect()->route('users.index')->with('success', 'Utilisateur modifier avec succès. Un email lui a été envoyé.');
+
         }
 
         /**
@@ -190,7 +307,7 @@ class UserController extends Controller
                 return redirect()->route('users.index')->with('success', 'L\'utilisateur a été supprimé avec succès.');
             } else {
                 // Message d'erreur si l'utilisateur a des trajets ou réservations
-                return redirect()->route('users.index')->with('danger', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
+                return redirect()->route('users.index')->with('error', 'Impossible de supprimer l\'utilisateur car il a des trajets et/ou réservations associés.');
             }
         }
 

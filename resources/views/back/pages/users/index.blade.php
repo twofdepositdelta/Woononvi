@@ -32,28 +32,9 @@
     </div>
 
     <div class="card-body">
-        <div class="table-responsive scroll-sm">
-            <table class="table bordered-table sm-table mb-0" id="dataTable" data-page-length='10'>
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <div class="form-check style-check d-flex align-items-center">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label">S.L</label>
-                            </div>
-                        </th>
-                        <th scope="col">Nom Complet</th>
-                        <th scope="col">Téléphone</th>
-                        <th scope="col">Rôle</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Depuis le</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @include('back.pages.users.table')
-                </tbody>
-            </table>
+        <div class="table-responsive scroll-sm" id="data">
+          @include('back.pages.users.table',['users'=>$users])
+
         </div>
     </div>
 </div>
@@ -78,7 +59,7 @@
                     success: function(response) {
                         // alert('good');
                         // Mettre à jour le tableau avec les résultats filtrés
-                        $('#dataTable tbody').html(response.html);
+                        $('#data').html(response.html);
                     },
                     error: function(xhr) {
                         // alert('bad');

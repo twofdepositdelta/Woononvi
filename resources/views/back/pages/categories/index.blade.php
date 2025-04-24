@@ -6,16 +6,16 @@
     <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
         <h5 class="card-title mb-0">Liste des Catégories</h5>
         <div class="col-4">
-            <select name="type_id" id="type_actuality_filter" class="form-select form-select-sm">
+            {{--<select name="type_id" id="type_actuality_filter" class="form-select form-select-sm">
                 <option value="">Tous les types de catégorie</option>
-                {{--@foreach($typenews as $typenew)
+                @foreach($typenews as $typenew)
                     <option value="{{ $typenew->id }}" {{ request('type_id') == $typenew->id ? 'selected' : '' }}>
                         {{ $typenew->name }}
                     </option>
-                @endforeach--}}
-            </select>
+                @endforeach
+            </select>--}}
         </div>
-        <a href="{{ route('categories.create') }}" class="btn btn-primary">Ajouter une Catégorie</a>
+        {{-- <a href="{{ route('categories.create') }}" class="btn btn-primary">Ajouter une Catégorie</a> --}}
 
     </div>
     <!-- Content -->

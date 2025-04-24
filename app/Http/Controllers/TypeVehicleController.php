@@ -49,7 +49,7 @@ class TypeVehicleController extends Controller
 
 
         // Redirect back to a suitable route with a success message
-        return redirect()->route('typevehicles.index')->with('success', 'créé avec succès !');
+        return redirect()->route('typevehicles.index')->with('success', 'Créé avec succès !');
     }
 
     /**
@@ -102,11 +102,14 @@ class TypeVehicleController extends Controller
      */
     public function destroy($slug)
     {
-        //
-        $typevehicle=TypeVehicle::where('slug',$slug)->first();
-        $typevehicle->delete();
+        $typevehicle=TypeVehicle::where('slug',$slug)->firstOrFail();
 
-        return redirect()->route('typevehicles.index')->with('success', 'Type supprimé avec succès !');
+        if($typevehicle->vehicles()->count() > 0){
+            return redirect()->back()->with('error', 'Impossible de supprimer le type du véhicule.');
+        }else{
+            $typevehicle->delete();
 
+            return redirect()->route('typevehicles.index')->with('success', 'Type supprimé avec succès !');
+        }
     }
 }

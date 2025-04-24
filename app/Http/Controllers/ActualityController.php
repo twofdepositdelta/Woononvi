@@ -54,7 +54,7 @@ class ActualityController extends Controller
         public function store(Request $request)
         {
             $request->validate([
-                'titre' => 'required|string|max:255',
+                'titre' => 'required|string|max:255|unique:actualities,titre',
                 'description' => 'required|string',
                 'image_url' => 'nullable|image',
                 'type_new_id' => 'required|exists:type_news,id',
@@ -109,7 +109,7 @@ class ActualityController extends Controller
                 }
             }
             }
-            
+
             return redirect()->route('actualities.index')->with('success', 'Actualité créée avec succès.');
         }
 
@@ -117,7 +117,7 @@ class ActualityController extends Controller
         // Afficher les détails d'une actualité spécifique
         public function show( $slug)
         {
-            $actuality=Actuality::where('slug',$slug)->first();
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
             return view('back.pages.actualities.show', compact('actuality'));
         }
 
@@ -126,7 +126,7 @@ class ActualityController extends Controller
         {
             $typenews = TypeNew::where('name','Blog')->get();
 
-            $actuality=Actuality::where('slug',$slug)->first();
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
 
             $allowedTypes = ['driver', 'passenger','support','sales'];
             $roles = Role::whereIn('name', $allowedTypes)
@@ -138,8 +138,9 @@ class ActualityController extends Controller
         // Mettre à jour une actualité existante
         public function update(Request $request, $slug)
         {
+            $actuality=Actuality::where('slug',$slug)->firstOrFail();
             $request->validate([
-                'titre' => 'required|string|max:255',
+                'titre' => 'required|string|max:255|unique:actualities,titre,' . $actuality->id,
                 'description' => 'required|string',
                 'image_url' => 'nullable|image',
                 'published' => 'boolean',
@@ -147,7 +148,7 @@ class ActualityController extends Controller
                 'roles' => 'array', // Changer en 'array' pour accepter plusieurs rôles
                 'roles.*' => 'exists:roles,id',
             ]);
-            $actuality=Actuality::where('slug',$slug)->first();
+
 
             $imagePath = null;
             $imageHelper = new ImageHelper();

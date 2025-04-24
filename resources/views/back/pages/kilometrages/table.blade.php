@@ -1,7 +1,7 @@
 <table class="table bordered-table sm-table mb-0" style="max-width: 100%;">
     <thead>
         <tr>
-            <th>Catégorie</th>
+            {{-- <th>Catégorie</th> --}}
             <th>Intervalle (km)</th>
             <th>Taux (FCFA/km)</th>
             <th>Actions</th>
@@ -16,7 +16,7 @@
         @else
             @foreach ($kilos as $index => $kilo)
                 <tr>
-                    <td>{{ $kilo->categorie->label ?? 'Non disponible' }}</td>
+                    {{-- <td>{{ $kilo->categorie->label ?? 'Non disponible' }}</td> --}}
 
                     <td>{{ $kilo->min_km }} - {{ $kilo->max_km }} km</td>
 
@@ -186,3 +186,4 @@
     {{-- endpagination --}}
 
 @endif
+

@@ -92,7 +92,11 @@ class CategorieController extends Controller
      */
     public function destroy(Categorie $categorie)
     {
-        $categorie->delete();
-        return redirect()->route('categories.index')->with('success', 'Catégorie supprimée avec succès.');
+        if($categorie->typeVehicles()->count() > 0 || $categorie->kilometrages()->count() > 0){
+            return redirect()->back()->with('error', 'Impossible de supprimer la catégorie.');
+        }else{
+            $categorie->delete();
+            return redirect()->route('categories.index')->with('success', 'Catégorie supprimée avec succès.');
+        }
     }
 }
