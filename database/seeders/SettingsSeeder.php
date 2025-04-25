@@ -32,12 +32,12 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'key' => 'company_email',
-                'value' => 'wononvi@gmail.com',
+                'value' => 'woononvi@gmail.com',
                 'description' => 'L\'adresse email de l\'entreprise',
             ],
             [
                 'key' => 'company_address',
-                'value' => 'Cotonou, Bénin',
+                'value' => 'Cotonou, Bénin - Lomé, Togo',
                 'description' => 'L\'adresse physique de l\'entreprise',
             ],
             [

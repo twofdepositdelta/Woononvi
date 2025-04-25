@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('titre')->unique();
             $table->string('slug');
             $table->text('description');
+            $table->text('extract');
             $table->string('image_url');
             $table->boolean('published')->default(true);
             $table->foreignIdFor(TypeNew::class);

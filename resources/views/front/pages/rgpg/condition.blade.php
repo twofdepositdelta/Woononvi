@@ -101,7 +101,7 @@
 
                     <div class="terms-content">
                         <h3>Contact et Support</h3>
-                        <p>Pour toute question concernant nos conditions d'utilisation ou pour signaler un problème avec un trajet, contactez notre service client à l’adresse suivante : <strong>support@{{ FrontHelper::getAppName() }}.com</strong>.</p>
+                        <p>Pour toute question concernant nos conditions d'utilisation ou pour signaler un problème avec un trajet, contactez notre service client à l’adresse suivante : <strong>support  {{ '@'.FrontHelper::getAppName() }}.com</strong>.</p>
                     </div>
                 </div>
             </div>

@@ -18,6 +18,7 @@ class Actuality extends Model
         'image_url',
         'type_new_id',
         'published',
+        'extract',
     ];
 
     // Relation avec le modèle TypeActualite
