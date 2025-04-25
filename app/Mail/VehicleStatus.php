@@ -38,7 +38,7 @@ class VehicleStatus extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.validation_vehicle',
+            markdown: 'emails.validation_vehicle',
         );
     }
 

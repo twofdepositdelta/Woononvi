@@ -37,7 +37,7 @@ class UpdateStatusMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.Updatestatus',
+            markdown: 'emails.Updatestatus',
         );
     }
 
