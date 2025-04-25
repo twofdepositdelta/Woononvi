@@ -101,8 +101,8 @@ class UserSeeder extends Seeder
         }
 
         $user4 = User::create([
-            'firstname' => 'Super admin',
-            'lastname' => 'Test',
+            'firstname' => 'PINHERO',
+            'lastname' => 'Dieudonné',
             'username' => 'superadmin',
             'email' => 'ceo@woononvi.com',
             'password' => Hash::make('Pass*24'),
@@ -161,7 +161,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Forester',
             'lastname' => 'CODJO',
             'username' => 'forestercodjo',
-            'email' => 'forestercodjo@woononvi.com',
+            'email' => 'forestercodjo@gmail.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60050301',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -180,7 +180,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Fabrice',
             'lastname' => 'DEGLA',
             'username' => 'fabricedegla',
-            'email' => 'fabricedegla@woononvi.com',
+            'email' => 'fabricedegla@gmail.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60060301',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
