@@ -46,7 +46,7 @@ class VehicleController extends Controller
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
             'logbook' => 'required|mimes:pdf|max:2048',
-            'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
             'vehicle_type' => 'required|max:255|string',
         ];
         
@@ -127,7 +127,7 @@ class VehicleController extends Controller
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
             'logbook' => 'nullable|mimes:pdf|max:2048',
-            'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:6000',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
             // 'is_active' => 'string|in:0,1'
@@ -146,13 +146,13 @@ class VehicleController extends Controller
         $user = $request->user();
 
         // Vérifier si le solde de l'utilisateur est suffisant
-        if ($user->balance < 1000) {
-            return response()->json([
-                'success' => false,
-                'reason' => true,
-                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins.',
-            ], 422);
-        }
+        // if ($user->balance < 1000) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'reason' => true,
+        //         'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins 1000 FCFA.',
+        //     ], 422);
+        // }
 
         $vehicle = Vehicle::where('id', $request->vehicle_id)->where('driver_id', $user->id)->first();
 

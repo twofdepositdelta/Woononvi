@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Ride;
+use App\Models\Kilometrage;
 use App\Models\RideRequest;
 use App\Models\Review;
 use App\Models\RideMessage;
@@ -1485,6 +1486,73 @@ class RideController extends Controller
 
             // Relancer l'exception pour l'appelant
             throw $e;
+        }
+    }
+
+    public function getKms()
+    {
+        $data = Kilometrage::whereCategorieId(1)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ], 200);
+    }
+
+    public function calculateRidePrice(Request $request) {
+        // Validation de la requête
+        $validated = $request->validate([
+            'distance' => 'required|numeric|min:1',
+            'categorie_id' => 'sometimes|exists:categories,id'
+        ]);
+        
+        $distance = (int) $validated['distance'];
+        $categorieId = $validated['categorie_id'] ?? 1; // Valeur par défaut si non fournie
+        
+        try {
+            // Récupération des tranches kilométriques depuis la base de données
+            $kilometers = DB::table('kilometrages')
+                ->where('categorie_id', $categorieId)
+                ->orderBy('min_km', 'asc')
+                ->get();
+            
+            if ($kilometers->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucune tranche kilométrique trouvée pour cette catégorie'
+                ], 404);
+            }
+            
+            $totalPrice = 0;
+            
+            // Pour chaque km de la distance totale, trouver le taux applicable
+            for ($currentKm = 1; $currentKm <= $distance; $currentKm++) {
+                // Trouver la tranche applicable pour ce km
+                foreach ($kilometers as $tranche) {
+                    $minKm = (int) $tranche->min_km;
+                    $maxKm = (int) $tranche->max_km;
+                    
+                    if ($currentKm >= $minKm && $currentKm <= $maxKm) {
+                        $totalPrice += (int) $tranche->taux_par_km;
+                        break;
+                    }
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'distance' => $distance,
+                    'price' => $totalPrice,
+                    'currency' => 'XOF' 
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors du calcul du prix',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

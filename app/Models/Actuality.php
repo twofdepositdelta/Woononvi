@@ -30,4 +30,9 @@ class Actuality extends Model
     {
         return $this->belongsToMany(Role::class, 'actuality_role');
     }
+
+    public function getImageUrlAttribute($value)
+    {
+        return asset($value);
+    }
 }

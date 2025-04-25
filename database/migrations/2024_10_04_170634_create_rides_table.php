@@ -28,8 +28,8 @@ return new class extends Migration
             $table->integer('available_seats'); // Nombre de places disponibles
             $table->time('departure_time');
             $table->time('arrival_time')->nullable();
-            $table->double('price_per_km');
-            $table->double('total_price');
+            $table->double('price_per_km')->nullable();
+            $table->double('total_price')->nullable();
             $table->boolean('is_nearby_ride')->default(false);
             $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('active');
             $table->foreignIdFor(Vehicle::class);
