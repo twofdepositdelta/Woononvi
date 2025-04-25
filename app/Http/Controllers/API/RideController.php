@@ -45,6 +45,7 @@ class RideController extends Controller
             'end_location_name',
             DB::raw('ST_AsText(start_location) as start_location'),
             DB::raw('ST_AsText(end_location) as end_location'),
+            DB::raw('CEIL(ST_Distance_Sphere(start_location, end_location) / 1000) AS distance_km'),
             'rides.available_seats',
             'rides.created_at',
             'rides.updated_at'
@@ -151,7 +152,7 @@ class RideController extends Controller
             'departure_time' => 'required|date',
             'return_time' => 'required',
             'is_nearby_ride' => 'required|boolean',
-            'total_price' => 'required',
+            'vehicle_id' => 'required',
             'seats' => 'required',
         ]);
 
@@ -167,13 +168,13 @@ class RideController extends Controller
         $driver = Auth::user();
 
         // Vérifier si le solde de l'utilisateur est suffisant
-        if ($driver->balance < 1000) {
-            return response()->json([
-                'success' => false,
-                'reason' => true,
-                'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins 1.000 FCFA.',
-            ], 422);
-        }
+        // if ($driver->balance < 1000) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'reason' => true,
+        //         'message' => 'Votre solde est insuffisant pour ajouter un véhicule. Veuillez recharger votre compte d\'au moins 1.000 FCFA.',
+        //     ], 422);
+        // }
 
         $countryId = $driver->country_id;
         if (!$countryId) {
@@ -197,21 +198,21 @@ class RideController extends Controller
         }
 
         // Récupérer la valeur du paramètre 'suggested_price_per_km' dans la table settings
-        $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
+        // $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
 
         // Si la clé n'existe pas, retourner une erreur
-        if (!$setting) {
-            // Loguer l'incident
-            logger()->error("Paramètre 'suggested_price_per_km' non trouvé dans la table settings.");
+        // if (!$setting) {
+        //     // Loguer l'incident
+        //     logger()->error("Paramètre 'suggested_price_per_km' non trouvé dans la table settings.");
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Une erreur est survenue, veuillez réessayer plus tard.',
-            ], 422);
-        }
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Une erreur est survenue, veuillez réessayer plus tard.',
+        //     ], 422);
+        // }
 
         // Affecter la valeur de 'value' à 'price_per_km'
-        $pricePerKm = $setting->value;
+        // $pricePerKm = $setting->value;
 
         $days = $request->input('days');
         if ($request->type === 'Régulier') {
@@ -278,19 +279,19 @@ class RideController extends Controller
         $ride = Ride::create([
             'numero_ride' => $numeroRide,
             'driver_id' => Auth::id(), // ID de l'utilisateur (conducteur) connecté
-            'vehicle_id' => $activeVehicle->id, 
+            'vehicle_id' => $request->vehicle_id, 
             'type' => $type,
             'days' => $daysJson,
             'departure_time' => $request->departure_time,
             'return_time' => $request->return_time,
-            'price_per_km' => $pricePerKm,
+            // 'price_per_km' => $pricePerKm,
             'is_nearby_ride' => $request->is_nearby_ride,
             'status' => 'active', 
             'start_location_name' => $request->start_location_name,  
             'end_location_name' => $request->end_location_name,  
             'start_location' => $startLocation,  // Coordonnées de départ
             'end_location' => $endLocation,      // Coordonnées d'arrivée
-            'total_price' => $request->total_price,  
+            // 'total_price' => $request->total_price,  
             'available_seats' => $request->seats
         ]);
 
@@ -345,7 +346,6 @@ class RideController extends Controller
             'ride_id' => 'required|exists:rides,id', // Vérifie que le trajet existe
             'seats_reserved' => 'required|integer|min:1', // Vérifie le nombre de places réservées
             'mode' => 'required|in:in cash,wallet',
-            'amount' => 'required',
             'start_lat' => 'required',
             'start_lng' => 'required',
             'end_lat' => 'required',
@@ -363,7 +363,8 @@ class RideController extends Controller
         }
 
         // Récupérer le trajet
-        $ride = DB::table('rides')->where('id', $request->ride_id)->first();
+        // $ride = DB::table('rides')->where('id', $request->ride_id)->first();
+        $ride = Ride::with('vehicle.typeVehicle.categorie')->find($request->ride_id);
 
         if (!$ride || $ride->available_seats < $request->seats_reserved) {
             return response()->json([
@@ -403,12 +404,36 @@ class RideController extends Controller
         $startLocation = new Point(lng: $request->start_lng, lat: $request->start_lat, srid: 4326);
         $endLocation = new Point(lng: $request->end_lng, lat: $request->end_lat, srid: 4326);
 
+        $distance = $this->haversineDistance(
+            $startLocation->getLat(),
+            $startLocation->getLng(),
+            $endLocation->getLat(),
+            $endLocation->getLng()
+        );
+
+        $tarif = DB::table('kilometrages')
+            ->where('categorie_id', $ride->vehicle->typeVehicle->categorie->id)
+            ->where('min_km', '<=', $distance)
+            ->where('max_km', '>=', $distance)
+            ->first();       
+            
+        if (!$tarif) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune tarification disponible pour cette distance.',
+            ], 400);
+        }
+
+        // Calcul du prix total
+        $total_price = $tarif->taux_par_km * $distance;
+        $request->merge(['amount' => ceil($total_price / 5) * 5]);
+
         // Création de la réservation
         $booking = DB::table('bookings')->insert([
             'booking_number' => $booking_number,
             'seats_reserved' => $request->seats_reserved,
             'total_price' => $request->amount,
-            'price_maintain' => $request->amount, // Ajoutez une logique ici si nécessaire
+            'price_maintain' => $request->amount, 
             'commission_rate' => $commissionRate,
             'ride_id' => $request->ride_id,
             'passenger_start_location_name' => $request->start_location_name,  
@@ -428,6 +453,33 @@ class RideController extends Controller
             'booking' => $booking,
         ]);
     }
+
+    private function haversineDistance($lat1, $lon1, $lat2, $lon2, $unit = 'km') {
+        $earthRadius = ($unit === 'km') ? 6371 : 3958.8; // Rayon de la Terre en kilomètres ou miles
+    
+        // Convertir les degrés en radians
+        $lat1Rad = deg2rad($lat1);
+        $lon1Rad = deg2rad($lon1);
+        $lat2Rad = deg2rad($lat2);
+        $lon2Rad = deg2rad($lon2);
+    
+        // Calcul des différences
+        $deltaLat = $lat2Rad - $lat1Rad;
+        $deltaLon = $lon2Rad - $lon1Rad;
+    
+        // Formule de Haversine
+        $a = sin($deltaLat / 2) ** 2 +
+             cos($lat1Rad) * cos($lat2Rad) *
+             sin($deltaLon / 2) ** 2;
+    
+        $c = 2 * asin(sqrt($a));
+    
+        // Calcul de la distance
+        $distance = $earthRadius * $c;
+    
+        return $distance;
+    }
+    
 
     public function getDriverBookings(Request $request)
     {
@@ -468,6 +520,7 @@ class RideController extends Controller
                 'bookings.total_price',
                 'bookings.price_maintain',
                 'bookings.commission_rate',
+                'bookings.passenger_id',
                 'bookings.status',
                 'bookings.created_at',
                 'bookings.updated_at',
@@ -532,6 +585,26 @@ class RideController extends Controller
                 ? Carbon::parse($booking->return_time)->format('H:i') 
                 : null;
 
+            // Récupérer les informations du passager
+            $passenger = DB::table('users')
+                ->select([
+                    'users.firstname as passenger_firstname',
+                    'users.lastname as passenger_lastname',
+                    'users.phone as passenger_phone',
+                    DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as passenger_avatar")
+                ])
+                ->join('profiles', 'profiles.user_id', '=', 'users.id')
+                ->where('users.id', $booking->passenger_id)
+                ->first();
+
+                // Ajouter les infos du passager à la réservation
+                if ($passenger) {
+                    $booking->passenger_firstname = $passenger->passenger_firstname;
+                    $booking->passenger_lastname = $passenger->passenger_lastname;
+                    $booking->passenger_phone = $passenger->passenger_phone;
+                    $booking->passenger_avatar = $passenger->passenger_avatar;
+                }
+
             return $booking;
         });
 
@@ -560,6 +633,7 @@ class RideController extends Controller
                 'bookings.id',
                 'bookings.booking_number',
                 'bookings.validated_by_passenger_at',
+                'bookings.validated_by_driver_at',
                 'bookings.seats_reserved',
                 DB::raw("CONCAT(users.firstname, ' ', users.lastname) as driver_name"),
                 DB::raw("CONCAT('" . asset('storage/') . "/', profiles.avatar) as driver_avatar"),
@@ -690,7 +764,7 @@ class RideController extends Controller
             'vehicles.licence_plate',
             'vehicles.vehicle_mark',
             'vehicles.vehicle_model',
-            DB::raw("CONCAT('" . asset('') . "', profiles.avatar) as avatar"),
+            DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
             'days',
             'type',
             'departure_time',
@@ -769,7 +843,7 @@ class RideController extends Controller
                 'commission_rate' => $commissionRate,
                 'status' => 'pending',
                 'passenger_id' => $request->user()->id,
-                'mode' => $request->mode,
+                'mode' => 'wallet',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -1239,7 +1313,7 @@ class RideController extends Controller
         }
 
         if(!$booking->is_by_passenger) {
-            if ($booking->in_progress && $request->status !== 'validated_by_passenger') {
+            if ($booking->status == 'in progress' && $request->status !== 'validated_by_passenger') {
                 return response()->json([
                     'success' => false,
                     'message' => 'Vous ne pouvez pas modifier la réservation.',
@@ -1255,6 +1329,7 @@ class RideController extends Controller
         } elseif ($request->status === 'validated_by_passenger') {
             $booking->is_by_passenger = true;
             $booking->validated_by_passenger_at = now();
+            $booking->save();
 
             try {
                 $this->createReview(
@@ -1282,6 +1357,7 @@ class RideController extends Controller
 
             $booking->is_by_driver = true;
             $booking->validated_by_driver_at = now();
+            $booking->save();
 
             // Créer l'avis
             try {
