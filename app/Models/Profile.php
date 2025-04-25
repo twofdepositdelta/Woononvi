@@ -30,6 +30,11 @@ class Profile extends Model
         return asset('storage/' . $this->avatar);
     }
 
+    // public function getAvatarAttribute()
+    // {
+    //     return asset('storage/' . $this->avatar);
+    // }
+
     public function getIdentityFullAttribute()
     {
         return asset('storage/' . $this->identy_card);
