@@ -13,6 +13,34 @@ class NotificationController extends Controller
     public function index()
     {
         //
+      $notifications = auth()->user()->notifications()->latest()->paginate(15);
+
+      return view('back.pages.notifications.index', compact('notifications'));
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $user->unreadNotifications->markAsRead();
+
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'unauthorized'], 401);
+    }
+
+
+    public function markAsRead(Request $request,$id)
+    {
+        $notification = auth()->user()->notifications()->where('id', $id)->first();
+
+        if ($notification && is_null($notification->read_at)) {
+            $notification->markAsRead();
+        }
+
+        return back()->with('success', 'Notification bien marquée comme lue');
     }
 
     /**
@@ -67,26 +95,5 @@ class NotificationController extends Controller
 
 
 
-
-    public function markAllAsRead()
-  {
-    auth()->user()->unreadNotifications->markAsRead();
-
-    return response()->json(['message' => 'Toutes les notifications ont été marquées comme lues.']);
-  }
-
-  public function markAsRead($id)
-{
-    $notification = auth()->user()->notifications()->find($id);
-
-    if ($notification && !$notification->read_at) {
-        $notification->markAsRead();
-        return response()->json(['message' => 'Notification marquée comme lue.'], 200);
-    }
-
-    return response()->json(['message' => 'Notification introuvable ou déjà lue.'], 404);
-}
-
-
-
+    
 }

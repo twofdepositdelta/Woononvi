@@ -5,6 +5,7 @@
                 <div class="d-flex align-items-center gap-10">#</div>
             </th>
             <th scope="col">Titre</th>
+          
             <th scope="col">Publié</th>
             <th scope="col" class="text-center">Actions</th>
         </tr>
