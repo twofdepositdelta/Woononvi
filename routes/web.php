@@ -213,8 +213,13 @@ Route::middleware('auth')->group(function () {
     // Route::put('/chat/messages/{id}/update', [MessageController::class, 'updateMessage']);
 
 
-    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
-    Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.markRead');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.markAllRead');
+
+    Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.markRead');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 
     Route::prefix('api')->group(base_path('routes/api.php'));
 

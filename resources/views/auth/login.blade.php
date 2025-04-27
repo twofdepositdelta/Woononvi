@@ -13,7 +13,7 @@
                 <div class="text-center">
                     <a class="navbar-brand logo-text" href="{{ route('index') }}">
                         {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo Wòónɔ̀ví"> --}}
-                        <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
+                        <span class="logo-black">{{ explode('ō', FrontHelper::getAppName())[0] }}ō</span><span class="logo-yellow">{{ explode('ō', FrontHelper::getAppName())[1] }}</span>
                     </a>
                     @if ($errors->any())
                         <div class="alert alert-danger bg-danger-100 text-danger-600 border-danger-600 border-start-width-4-px border-top-0 border-end-0 border-bottom-0 px-24 py-4 mb-3 mb-0 fw-semibold text-sm radius-4 d-flex align-items-center justify-content-between" role="alert">

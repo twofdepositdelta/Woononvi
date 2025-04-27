@@ -57,52 +57,52 @@ class UserSeeder extends Seeder
         // }
 
 
-        for ($i = 0; $i < 2; $i++) {
-            $user = User::create([
-                'firstname' => 'Driver',
-                'lastname' => 'Test',
-                'username' => 'driveruser' . ($i + 1),
-                'email' => 'driver' . ($i + 1) . '@woononvi.com',
-                'password' => Hash::make('Pass*24'),
-                'phone' => '6000001' . $i,
-                'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
-                'gender' => $i % 2 != 0 ? 'male' : 'female',
-                'npi' => rand(1000000000, 9999999999),
-                'city_id' => $activeCities->random()->id,
-                'is_verified' => true,
-                'status' => $i % 2 == 0,
-                'balance' => 2000,
-                'is_certified' => true,
-                'email_verified_at' => now(),
-            ]);
-            $user->assignRole('driver');
-        }
+        // for ($i = 0; $i < 2; $i++) {
+        //     $user = User::create([
+        //         'firstname' => 'Driver',
+        //         'lastname' => 'Test',
+        //         'username' => 'driveruser' . ($i + 1),
+        //         'email' => 'driver' . ($i + 1) . '@woononvi.com',
+        //         'password' => Hash::make('Pass*24'),
+        //         'phone' => '6000001' . $i,
+        //         'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
+        //         'gender' => $i % 2 != 0 ? 'male' : 'female',
+        //         'npi' => rand(1000000000, 9999999999),
+        //         'city_id' => $activeCities->random()->id,
+        //         'is_verified' => true,
+        //         'status' => $i % 2 == 0,
+        //         'balance' => 2000,
+        //         'is_certified' => true,
+        //         'email_verified_at' => now(),
+        //     ]);
+        //     $user->assignRole('driver');
+        // }
 
-        // PASSENGERS (2 fois)
-        for ($i = 0; $i < 2; $i++) {
-            $user = User::create([
-                'firstname' => 'Passenger',
-                'lastname' => 'Test',
-                'username' => 'passengeruser' . ($i + 1),
-                'email' => 'passenger' . ($i + 1) . '@woononvi.com',
-                'password' => Hash::make('Pass*24'),
-                'phone' => '6000002' . $i,
-                'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
-                'gender' => $i % 2 != 0 ? 'male' : 'female',
-                'npi' => rand(1000000000, 9999999999),
-                'city_id' => $activeCities->random()->id,
-                'is_verified' => true,
-                'status' => $i % 2 == 0,
-                'balance' => null,
-                'is_certified' => false,
-                'email_verified_at' => now(),
-            ]);
-            $user->assignRole('passenger');
-        }
+        // // PASSENGERS (2 fois)
+        // for ($i = 0; $i < 2; $i++) {
+        //     $user = User::create([
+        //         'firstname' => 'Passenger',
+        //         'lastname' => 'Test',
+        //         'username' => 'passengeruser' . ($i + 1),
+        //         'email' => 'passenger' . ($i + 1) . '@woononvi.com',
+        //         'password' => Hash::make('Pass*24'),
+        //         'phone' => '6000002' . $i,
+        //         'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
+        //         'gender' => $i % 2 != 0 ? 'male' : 'female',
+        //         'npi' => rand(1000000000, 9999999999),
+        //         'city_id' => $activeCities->random()->id,
+        //         'is_verified' => true,
+        //         'status' => $i % 2 == 0,
+        //         'balance' => null,
+        //         'is_certified' => false,
+        //         'email_verified_at' => now(),
+        //     ]);
+        //     $user->assignRole('passenger');
+        // }
 
         $user4 = User::create([
-            'firstname' => 'Super admin',
-            'lastname' => 'Test',
+            'firstname' => 'PINHERO',
+            'lastname' => 'Dieudonné',
             'username' => 'superadmin',
             'email' => 'ceo@woononvi.com',
             'password' => Hash::make('Pass*24'),
@@ -120,10 +120,10 @@ class UserSeeder extends Seeder
         $user4->assignRole('super admin');
 
         $user5 = User::create([
-            'firstname' => 'Manager',
-            'lastname' => 'Test',
-            'username' => 'managertest',
-            'email' => 'manager@woononvi.com',
+            'firstname' => 'DEGLA',
+            'lastname' => 'fabrice',
+            'username' => 'fabricedegla',
+            'email' => 'fabricedegla@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60040203',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -140,9 +140,9 @@ class UserSeeder extends Seeder
 
         $user6 = User::create([
             'firstname' => 'Support',
-            'lastname' => 'Test',
-            'username' => 'supportest',
-            'email' => 'support@woononvi.com',
+            'lastname' => 'Hermine',
+            'username' => 'supporhermine',
+            'email' => 'Hermine@woononvi.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60020103',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -161,7 +161,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Forester',
             'lastname' => 'CODJO',
             'username' => 'forestercodjo',
-            'email' => 'forestercodjo@woononvi.com',
+            'email' => 'forestercodjo@gmail.com',
             'password' => Hash::make('Pass*24'),
             'phone' => '60050301',
             'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
@@ -176,23 +176,6 @@ class UserSeeder extends Seeder
         ]);
         $user7->assignRole('developer');
 
-        $user8 = User::create([
-            'firstname' => 'Fabrice',
-            'lastname' => 'DEGLA',
-            'username' => 'fabricedegla',
-            'email' => 'fabricedegla@woononvi.com',
-            'password' => Hash::make('Pass*24'),
-            'phone' => '60060301',
-            'date_of_birth' => now()->subYears(rand(18, 60))->format('Y-m-d'),
-            'gender' => 'male',
-            'npi' => rand(1000000000, 9999999999),
-            'city_id' => $activeCities->random()->id,
-            'is_verified' => true,
-            'status' =>1,
-            'balance' => null,
-            'is_certified' => false,
-            'email_verified_at' => now(),
-        ]);
-        $user8->assignRole('developer');
+
     }
 }

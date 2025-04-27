@@ -1,43 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle {{ $vehicle->vehicle_mark}}</title>
+    <title></title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f9b21e;
             margin: 0;
             padding: 20px;
         }
-
         .container {
+
             max-width: 600px;
             margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 0;
         }
 
+        .logo-small {
+            width: 200px;
+            height: auto;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 4px;
+        }
         h1 {
+            font-size: 18px;
             color: #333;
+            margin-top: 0;
+            font-weight: normal;
+        }
+        .alert {
+            background-color: #174e6a;
+            border-left: 4px solid #718096;
+            padding: 15px;
+            margin: 20px 0;
+            color: #f9b21e;
+        }
+        p {
+            color: #718096;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            color: #174e6a;
+            font-size: 12px;
+            padding: 20px 0;
+        }
+        .logo-black {
+            color: #000000;
+            /* Couleur noire pour "Woô" */
         }
 
-        p {
-            margin-bottom: 10px;
+        .logo-text {
+            font-size: 2rem; /* Taille générale du logo */
+            font-weight: bold; /* Poids pour un impact visuel */
+            font-family: 'Poppins', sans-serif; /* Police moderne et élégante */
+            text-transform: uppercase; /* Texte tout en majuscules */
+            letter-spacing: 1px; /* Espacement entre les lettres */
+            color: #174e6a;
+        }
+
+        .logo-white {
+            color: #FFF;
+            /* Couleur blanche pour "Woô" */
+        }
+
+        .logo-yellow {
+            color: #FFB300;
+            /* Jaune vibrant pour "nonvi" */
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header logo-text" >
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/log.png') }}" alt="" class="logo-small ">
 
-<div class="container">
-    <h1>Bonjour,</h1>
-    <p> Votre vehicule a été : {{ $vehicle->vehicle_mark}} a été validé avec success:</p>
-    <p>Wononvi</p>
-</div>
+        </div>
+        <div class="content">
+            <h1>Bonjour,</h1>
 
+            <div class="alert">
+                Votre véhicule {{ $vehicle->vehicle_mark }} a été validé avec succès.
+            </div>
+
+            <p>Merci de faire confiance à Laravel.</p>
+
+            <p>Cordialement, L'équipe {{ config('app.name') }}</p>
+        </div>
+        <div class="footer">
+            © 2025 Laravel. Tous droits réservés.
+        </div>
+    </div>
 </body>
 </html>

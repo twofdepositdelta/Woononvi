@@ -352,12 +352,34 @@ class UserController extends Controller
 
     public function Indexrole(){
 
-        $roles = Role::whereNotIn('role', ['conducteur', 'passager','Développeur'])->get();  // Exclure 'conducteur' et 'passager'
+        $roles = Role::whereNotIn('role', ['conducteur', 'passager','Développeur','super administrateur'])->get();  // Exclure 'conducteur' et 'passager'
 
-        // Récupérer les utilisateurs qui ont l'un des rôles dans la variable $roles
-        $users = User::whereHas('roles', function($query) use ($roles) {
-            $query->whereIn('role_id', $roles->pluck('id'));
-        })->paginate(10);
+        if (auth()->user()->hasRole('manager')) {
+
+            $auth_user = auth()->user();
+            $auth_country_id = $auth_user->city->country->id ?? null;
+
+            // Récupérer les utilisateurs qui ont l'un des rôles dans la variable $roles
+            $users = User::whereHas('roles', function($query) use ($roles) {
+                $query->whereIn('role_id', $roles->pluck('id'));
+            })->whereHas('city.country', function ($q) use ($auth_country_id) {
+                $q->where('id', $auth_country_id);
+            })->paginate(10);
+
+        }else{
+            $selectedCountry = session('selected_country', 'benin'); // Par défaut 'benin' si rien n'est sélectionné
+            // Récupérer l'ID du pays basé sur le pays sélectionné
+            $countryName = BackHelper::getCountryByName($selectedCountry);
+            $countryid =$countryName->id;
+
+            $users = User::whereHas('roles', function($query) use ($roles) {
+                $query->whereIn('role_id', $roles->pluck('id'));
+            })->whereHas('city.country', function ($q) use ($countryid) {
+                $q->where('id', $countryid);
+            })->paginate(10);
+
+
+        }
 
         return view('back.pages.users.role', compact('users', 'roles'));
     }

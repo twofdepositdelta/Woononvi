@@ -9,7 +9,7 @@
     <meta name="description" content>
     <meta name="keywords" content>
 
-    <title>Wòónɔ̀ví &bull; @yield('title')</title>
+    <title>{{ FrontHelper::getAppName() }} &bull; @yield('title')</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/favicon.png') }}">
 

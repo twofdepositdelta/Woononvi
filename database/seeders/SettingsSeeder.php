@@ -17,7 +17,7 @@ class SettingsSeeder extends Seeder
         DB::table('settings')->insert([
             [
                 'key' => 'company_name',
-                'value' => 'Wononvi',
+                'value' => 'Wɔōnonvi',
                 'description' => 'Le nom officiel de l\'entreprise',
             ],
             [
@@ -32,12 +32,12 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'key' => 'company_email',
-                'value' => 'wononvi@gmail.com',
+                'value' => 'woononvi@gmail.com',
                 'description' => 'L\'adresse email de l\'entreprise',
             ],
             [
                 'key' => 'company_address',
-                'value' => 'Cotonou, Bénin',
+                'value' => 'Cotonou, Bénin - Lomé, Togo',
                 'description' => 'L\'adresse physique de l\'entreprise',
             ],
             [

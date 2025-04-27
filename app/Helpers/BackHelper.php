@@ -585,20 +585,16 @@ class BackHelper
     }
 
 
-    public static function getNotifications()
+    public static function getUserNotifications()
     {
         $user = Auth::user();
 
-        if (!$user) {
-            return [
-                'notifications' => [],
-                'unread_count' => 0,
-            ];
-        }
 
         return [
-            'notifications' => $user->notifications()->latest()->get(),
-            'unread_count' => $user->unreadNotifications()->count(),
+            'all' => $user->notifications()->latest()->where('created_at', '>=', Carbon::now()->subHour())
+            ->get(),
+            'unread' => $user->unreadNotifications()->latest()->get(),
+            'count_unread' => $user->unreadNotifications()->count(),
         ];
     }
 

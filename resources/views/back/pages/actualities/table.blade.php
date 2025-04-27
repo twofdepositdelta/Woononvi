@@ -5,6 +5,7 @@
                 <div class="d-flex align-items-center gap-10">#</div>
             </th>
             <th scope="col">Titre</th>
+          
             <th scope="col">Publié</th>
             <th scope="col" class="text-center">Actions</th>
         </tr>
@@ -24,7 +25,9 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{{ asset($actuality->image_url ? $actuality->image_url : 'storage/front/assets/img/blog/default.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                            @if ($actuality->typeNew->name=="Blog" )
+                                 <img src="{{ asset($actuality->image_url ? $actuality->image_url : 'storage/back/assets/images/flags/flag9.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                            @endif
                             <div class="flex-grow-1">
                               <span class="text-md mb-0 fw-normal text-secondary-light">{{ $actuality->titre }}</span>
                             </div>

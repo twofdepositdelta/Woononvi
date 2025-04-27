@@ -43,6 +43,7 @@ class NotificationLocale extends Notification
     public function toArray($notifiable)
     {
         return [
+            'title' => $this->details['title'],
             'message' => $this->details['message'] ?? 'Message non défini', // Utiliser une valeur par défaut
         ];
     }

@@ -26,6 +26,15 @@
                         </div>
 
 
+                        <div class="col-12">
+                            <label class="form-label" for="titre">Texte court</label>
+                            <input type="text" class="form-control @error('extract') is-invalid @enderror"
+                                id="extract" value="{{old('extract',$actuality->extract)}}" name="extract" placeholder="Entrez le resumé de l'actualité"
+                                value="{{ old('extract') }}" required>
+                            @error('extract')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
                         <!-- Description -->
                         <div class="col-12">
@@ -51,7 +60,6 @@
                          <div class="col-12">
                             <label class="form-label" for="type_new_id">Type d'Actualité</label>
                             <select class="form-select @error('type_new_id') is-invalid @enderror" id="type_new" name="type_new_id" required>
-                                <option value="">Sélectionnez un type</option>
                                 @foreach($typenews as $typenew)
                                     <option value="{{ $typenew->id }}" {{ $typenew->id === $actuality->type_new_id ? 'selected' : '' }}>{{ $typenew->name }}</option>
                                 @endforeach

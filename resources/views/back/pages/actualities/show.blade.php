@@ -18,6 +18,11 @@
 
                   <div class="col mt-5">
                     <div class="mb-3">
+                        <strong>Texte court :</strong>
+                        <p>{{ $actuality->extract }}</p>
+                    </div>
+
+                    <div class="mb-3">
                         <strong>Description :</strong>
                         <p>{!! $actuality->description !!}</p>
                     </div>

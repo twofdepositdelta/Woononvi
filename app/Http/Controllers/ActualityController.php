@@ -53,14 +53,18 @@ class ActualityController extends Controller
         // Sauvegarder une nouvelle actualité
         public function store(Request $request)
         {
+            $messages = [
+                'image_url.required_if' => 'L\'image est obligatoire lorsque le type est blog.',
+            ];
             $request->validate([
                 'titre' => 'required|string|max:255|unique:actualities,titre',
+                'extract' =>  'required|string|max:255',
                 'description' => 'required|string',
-                'image_url' => 'nullable|image',
                 'type_new_id' => 'required|exists:type_news,id',
+                'image_url' => 'required_if:type_new_id,3|nullable|image',
                 'roles' => 'array',
                 'roles.*' => 'exists:roles,id',
-            ]);
+            ],$messages);
 
             $imagePath=null;
             $imageHelper = new ImageHelper();
@@ -71,6 +75,7 @@ class ActualityController extends Controller
 
             $actualitie = Actuality::create([
                 'titre' => $request->titre,
+                'extract' => $request->extract,
                 'slug' => Str::slug($request->titre),
                 'description' => strip_tags($request->description),
                 'image_url' => $imagePath ? FrontHelper::getEnvFolder() . $imagePath : " ",
@@ -96,6 +101,7 @@ class ActualityController extends Controller
 
                 if ($typeNew->name == 'Notification') {
                     $details = [
+                        'title' => $actualitie->titre,
                         'message' => strip_tags($actualitie->description),
                     ];
 
@@ -142,6 +148,7 @@ class ActualityController extends Controller
             $request->validate([
                 'titre' => 'required|string|max:255|unique:actualities,titre,' . $actuality->id,
                 'description' => 'required|string',
+                'extract' =>  'required|string|max:255',
                 'image_url' => 'nullable|image',
                 'published' => 'boolean',
                 'type_new_id' => 'required|exists:type_news,id',
@@ -161,6 +168,7 @@ class ActualityController extends Controller
             $actuality->update([
                 'titre' => $request->titre,
                 'slug' => Str::slug($request->titre), // Générer un slug basé sur le titre
+                'extract' => $request->extract,
                 'description' => strip_tags($request->description),
                 'image_url' => $imagePath ? $imagePath :$actuality->image_url,
                 'published' => $request->input('published'),

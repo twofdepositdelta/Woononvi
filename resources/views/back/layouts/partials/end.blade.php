@@ -41,5 +41,6 @@
     </script>
     @yield('customJS')
     @yield('customJ')
+    @yield('notification')
 
 

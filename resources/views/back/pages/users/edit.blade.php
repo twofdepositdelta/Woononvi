@@ -7,7 +7,7 @@
             <div class="col-xxl-6 col-xl-10 col-lg-10">
                 <div class="card-header">
                     <div class="d-flex mb-3 align-items-center">
-                        <h5 class="card-title mb-2" style="margin-bottom: 15px !important">Création d'un utilisateur</h5>
+                        <h5 class="card-title mb-2" style="margin-bottom: 15px !important"></h5>
                         {{-- <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm ms-auto">Liste Utilisateur</a> --}}
                     </div>
                 </div>
