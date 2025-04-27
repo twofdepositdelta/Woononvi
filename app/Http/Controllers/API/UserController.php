@@ -5,12 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Document;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\API\Auth\AuthenticatedSessionController;
 
 class UserController extends Controller
@@ -156,6 +158,18 @@ class UserController extends Controller
         }
     }
 
+    public function getNotices()
+    {
+        $reviews = Review::with(['booking', 'rideRequest'])
+            ->where('reviewer_id', Auth::id())
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Liste des commentaires de l’utilisateur',
+            'data' => $reviews
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.

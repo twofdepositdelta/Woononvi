@@ -130,7 +130,8 @@ class RideController extends Controller
         // Retourner les trajets qui correspondent
         return response()->json([
             'success' => true,
-            'rides' => $rides,
+            'rides' => [],
+            // 'rides' => $rides,
             'message' => count($rides) > 0 ? 'Trajets disponibles trouvés.' : 'Aucun trajet disponible trouvé.',
         ]);
     }
@@ -731,6 +732,20 @@ class RideController extends Controller
         ]);
     }
 
+    private function calculateBearing($lat1, $lng1, $lat2, $lng2)
+    {
+        $lat1 = deg2rad($lat1);
+        $lat2 = deg2rad($lat2);
+        $deltaLng = deg2rad($lng2 - $lng1);
+
+        $y = sin($deltaLng) * cos($lat2);
+        $x = cos($lat1) * sin($lat2) - sin($lat1) * cos($lat2) * cos($deltaLng);
+
+        $bearing = atan2($y, $x);
+        $bearing = rad2deg($bearing);
+        return ($bearing + 360) % 360; // Normaliser entre 0 et 360°
+    }
+
     /**
      * Enregistre les données de la recherche dans la table ride_searches.
      */
@@ -754,16 +769,22 @@ class RideController extends Controller
         $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
         $currentDate = now()->toDateString(); // Obtenir la date actuelle au format 'YYYY-MM-DD'
 
-        return DB::table('rides')->select([
+        $rides = DB::table('rides')->select([
             'rides.id',
             'rides.driver_id',
             'rides.available_seats',
             'rides.vehicle_id',
             'users.firstname',
             'users.lastname',
+            'users.gender',
+            DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as user_created_at"),
             'vehicles.licence_plate',
             'vehicles.vehicle_mark',
             'vehicles.vehicle_model',
+            'vehicles.color',
+            'vehicles.seats',
+            'vehicles.vehicle_year',
+            DB::raw("CONCAT('" . asset('storage') . "/', vehicles.main_image) as main_image"),
             DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
             'days',
             'type',
@@ -806,8 +827,74 @@ class RideController extends Controller
         })
         ->groupBy('rides.id')
         ->get();
+
+        // 2. Filtrage avancé en PHP
+        $rides = $rides->filter(function ($ride) use ($request) {
+            preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->start_location, $startMatch);
+            preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->end_location, $endMatch);
+
+            if (!$startMatch || !$endMatch) {
+                return false;
+            }
+
+            $driverStartLng = $startMatch[1];
+            $driverStartLat = $startMatch[2];
+            $driverEndLng = $endMatch[1];
+            $driverEndLat = $endMatch[2];
+
+            $passengerStartLng = $request->start_lng;
+            $passengerStartLat = $request->start_lat;
+            $passengerEndLng = $request->end_lng;
+            $passengerEndLat = $request->end_lat;
+
+            // Direction de trajet (non utilisé ici, mais prêt pour plus tard)
+
+            // Vérification que l'arrivée du passager est proche de la route
+            $distanceToPath = $this->distanceToSegment(
+                $passengerEndLng,
+                $passengerEndLat,
+                $driverStartLng,
+                $driverStartLat,
+                $driverEndLng,
+                $driverEndLat
+            );
+
+            if ($distanceToPath > 5000) { // 5km tolérance sur le chemin
+                return false;
+            }
+
+            return true;
+        });
+
+        return $rides->values(); // réindexer
     }
 
+    private function distanceToSegment($px, $py, $ax, $ay, $bx, $by)
+    {
+        $A = $px - $ax;
+        $B = $py - $ay;
+        $C = $bx - $ax;
+        $D = $by - $ay;
+
+        $dot = $A * $C + $B * $D;
+        $len_sq = $C * $C + $D * $D;
+        $param = $len_sq != 0 ? $dot / $len_sq : -1;
+
+        if ($param < 0) {
+            $xx = $ax;
+            $yy = $ay;
+        } elseif ($param > 1) {
+            $xx = $bx;
+            $yy = $by;
+        } else {
+            $xx = $ax + $param * $C;
+            $yy = $ay + $param * $D;
+        }
+
+        $dx = $px - $xx;
+        $dy = $py - $yy;
+        return sqrt($dx * $dx + $dy * $dy) * 111320; // 111.32 km ≈ 1°
+    }
 
     /**
      * Crée une demande dans la table ride_requests si aucun trajet n'est trouvé.
