@@ -17,7 +17,7 @@
                                     {{ FrontHelper::getSettingPhone()->value }}
                                 </a>
                             </li>
-                            <li><a href="#"><i class="far fa-alarm-clock"></i> Lun - Dim (06H - 20H)</a></li>
+                            <li><a href="#"><i class="far fa-alarm-clock"></i> Lun - Dim (06H - 22H)</a></li>
                         </ul>
                     </div>
                 </div>
@@ -28,8 +28,8 @@
                     <div class="header-top-social">
                         <span>Suivez-nous :</span>
                         <a href="#"><i class="fab fa-facebook"></i></a>
-                        {{-- <a href="#"><i class="fab fa-twitter"></i></a> --}}
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        {{-- <a href="#"><i class="fab fa-instagram"></i></a> --}}
                         <a href="#"><i class="fab fa-youtube"></i></a>
                         {{-- <a href="#"><i class="fab fa-linkedin"></i></a> --}}
                     </div>
