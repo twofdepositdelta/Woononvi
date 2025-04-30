@@ -23,7 +23,7 @@
                 </div>
                 <div class="header-top-right">
                     <div class="header-top-link">
-                        <a href="{{ route('login') }}"><i class="far fa-arrow-right-to-bracket"></i> Connexion</a>
+                        <a href="{{ route('login') }}" target="blank"><i class="far fa-arrow-right-to-bracket"></i> Connexion</a>
                     </div>
                     <div class="header-top-social">
                         {{-- <span>Suivez-nous :</span> --}}
