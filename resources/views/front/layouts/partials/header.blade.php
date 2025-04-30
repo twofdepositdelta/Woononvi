@@ -26,11 +26,11 @@
                         <a href="{{ route('login') }}"><i class="far fa-arrow-right-to-bracket"></i> Connexion</a>
                     </div>
                     <div class="header-top-social">
-                        <span>Suivez-nous :</span>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                        {{-- <a href="#"><i class="fab fa-instagram"></i></a> --}}
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        {{-- <span>Suivez-nous :</span> --}}
+                        <a href="https://www.facebook.com/share/1FWDUmG5bW/" target="blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@woononvi?_t=ZM-8vq0MKh0gel&_r=1" target="blank"><i class="fab fa-tiktok"></i></a>
+                        {{-- <a href="#" disabled><i class="fab fa-instagram"></i></a> --}}
+                        <a href="https://www.youtube.com/channel/UCdpFzbj7gqSmpv4mT_Dqa5w" target="blank"><i class="fab fa-youtube" target="blank"></i></a>
                         {{-- <a href="#"><i class="fab fa-linkedin"></i></a> --}}
                     </div>
                 </div>
