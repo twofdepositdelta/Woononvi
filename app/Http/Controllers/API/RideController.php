@@ -67,6 +67,20 @@ class RideController extends Controller
             } else {
                 $ride->days_string = null; // Si la valeur n'est pas valide, définir comme null
             }
+
+            // Formater departure_time en "HH:MM"
+            if (!empty($ride->departure_time)) {
+                $ride->departure_time = \Carbon\Carbon::parse($ride->departure_time)->format('H:i');
+            } else {
+                $ride->departure_time = '-';
+            }
+
+            // Formater return_time ou mettre "-"
+            if (!empty($ride->return_time)) {
+                $ride->return_time = \Carbon\Carbon::parse($ride->return_time)->format('H:i');
+            } else {
+                $ride->return_time = '-';
+            }
         
             return $ride;
         });
@@ -87,7 +101,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -161,7 +175,7 @@ class RideController extends Controller
             return response()->json([
                 'success' => false,
                 'reason' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -187,14 +201,14 @@ class RideController extends Controller
         if (!$this->isWithinCountry($request->start_lat, $request->start_lng, $countryId)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les coordonnées de départ ne sont pas dans le pays du conducteur.',
+                'errors' => ['Les coordonnées de départ ne sont pas dans le pays du conducteur.'],
             ], 422);
         }
 
         if (!$this->isWithinCountry($request->end_lat, $request->end_lng, $countryId)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les coordonnées d\'arrivée ne sont pas dans le pays du conducteur.',
+                'errors' => ['Les coordonnées d\'arrivée ne sont pas dans le pays du conducteur.'],
             ], 422);
         }
 
@@ -226,7 +240,7 @@ class RideController extends Controller
             if (!$days || !is_array($days)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Les jours doivent être définis pour un trajet régulier.',
+                    'errors' => ['Les jours doivent être définis pour un trajet régulier.'],
                 ], 422);
             }
 
@@ -249,7 +263,7 @@ class RideController extends Controller
                 } else {
                     return response()->json([
                         'success' => false,
-                        'message' => "Le jour fourni '{$day}' n'est pas valide.",
+                        'errors' => ["Le jour fourni '{$day}' n'est pas valide."],
                     ], 422);
                 }
             }
@@ -267,7 +281,7 @@ class RideController extends Controller
         if (!$activeVehicle) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous devez avoir un véhicule actif pour créer un trajet.',
+                'errors' => ['Vous devez avoir un véhicule actif pour créer un trajet.'],
             ], 403);
         }
 
@@ -318,7 +332,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -358,7 +372,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all(),
             ], 422);
         }
@@ -370,7 +384,7 @@ class RideController extends Controller
         if (!$ride || $ride->available_seats < $request->seats_reserved) {
             return response()->json([
                 'success' => false,
-                'message' => 'Le trajet sélectionné n\'a pas assez de places disponibles.',
+                'errors' => ['Le trajet sélectionné n\'a pas assez de places disponibles.'],
             ], 400);
         }
 
@@ -384,16 +398,16 @@ class RideController extends Controller
         // }
 
         // Vérification du solde si le mode de paiement est "wallet"
-        if ($request->mode === 'wallet') {
-            $passenger = $request->user(); // Récupérer l'utilisateur connecté
+        // if ($request->mode === 'wallet') {
+        //     $passenger = $request->user(); // Récupérer l'utilisateur connecté
 
-            if ($passenger->balance < $request->amount) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Votre solde est insuffisant pour effectuer cette réservation !',
-                ], 400);
-            }
-        }
+        //     if ($passenger->balance < $request->amount) {
+        //         return response()->json([
+        //             'success' => false,
+        //             'message' => 'Votre solde est insuffisant pour effectuer cette réservation !',
+        //         ], 400);
+        //     }
+        // }
 
         // Génération d'un numéro unique de réservation
         $booking_number = 'BOOK-' . strtoupper(Str::random(10));
@@ -421,12 +435,12 @@ class RideController extends Controller
         if (!$tarif) {
             return response()->json([
                 'success' => false,
-                'message' => 'Aucune tarification disponible pour cette distance.',
+                'errors' => ['Aucune tarification disponible pour cette distance.'],
             ], 400);
         }
 
         // Calcul du prix total
-        $total_price = $tarif->taux_par_km * $distance;
+        $total_price = $tarif->taux_par_km * $distance * (int) $request->seats_reserved;
         $request->merge(['amount' => ceil($total_price / 5) * 5]);
 
         // Création de la réservation
@@ -492,7 +506,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all(),
             ], 422);
         }
@@ -703,7 +717,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -721,7 +735,7 @@ class RideController extends Controller
             return response()->json([
                 'success' => false,
                 'rides' => [],
-                'message' => 'Aucun trajet disponible trouvé. Une demande a été créée.',
+                'errors' => ['Aucun trajet disponible trouvé. Une demande a été créée.'],
             ]);
         }
 
@@ -768,6 +782,7 @@ class RideController extends Controller
         Carbon::setLocale('fr'); // Configure la locale de Carbon en français
         $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
         $currentDate = now()->toDateString(); // Obtenir la date actuelle au format 'YYYY-MM-DD'
+        $now = Carbon::now()->format('H:i:s'); // Heure actuelle au format "HH:MM:SS"
 
         $rides = DB::table('rides')->select([
             'rides.id',
@@ -813,16 +828,18 @@ class RideController extends Controller
             ["POINT($request->start_lng $request->start_lat)", 5000])
         ->where('rides.driver_id', '!=', Auth::id())
         // ->where('rides.available_seats', '>=', $request->seats_reserved)
-        ->where(function ($query) use ($currentDay, $currentDate) {
-            $query->where(function ($subQuery) use ($currentDate) {
+        ->where(function ($query) use ($currentDay, $currentDate, $now) {
+            $query->where(function ($subQuery) use ($currentDate, $now) {
                 $subQuery->where('type', 'single')
                         ->where('rides.status', 'active')
-                        ->whereDate('rides.created_at', $currentDate);
+                        ->whereDate('rides.created_at', $currentDate)
+                        ->where('departure_time', '>=', $now);
             })
-            ->orWhere(function ($subQuery) use ($currentDay) {
+            ->orWhere(function ($subQuery) use ($currentDay, $now) {
                 $subQuery->where('type', 'regular')
                         ->where('rides.status', 'active')
-                        ->whereRaw('JSON_CONTAINS(JSON_UNQUOTE(days), JSON_QUOTE(?))', [$currentDay]);
+                        ->whereRaw('JSON_CONTAINS(JSON_UNQUOTE(days), JSON_QUOTE(?))', [$currentDay])
+                        ->where('departure_time', '>=', $now);
             });
         })
         ->groupBy('rides.id')
@@ -912,7 +929,7 @@ class RideController extends Controller
                 logger()->error('Le paramètre commission_rate est introuvable dans la table settings.', [
                     'user_id' => $request->user()->id,
                 ]);
-                return response()->json(['message' => 'Le paramètre de commission est manquant.'], 422);
+                return response()->json(['errors' => ['Le paramètre de commission est manquant.']], 422);
             }
 
             // Extraire la valeur du commission_rate depuis la table settings
@@ -948,7 +965,7 @@ class RideController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la création de la demande de trajet.',
+                'errors' => ['Une erreur est survenue lors de la création de la demande de trajet.'],
             ], 500);
         }
     }
@@ -1014,242 +1031,6 @@ class RideController extends Controller
             && $longitude >= $togoBounds['min_lng'] && $longitude <= $togoBounds['max_lng'];
     }
 
-    // public function updateBookingStatus(Request $request)
-    // {
-    //     // Validation des données
-    //     $rules = [
-    //         'booking_id' => 'required|exists:bookings,id', // L'ID de la réservation doit exister
-    //         'status' => 'required|in:accepted,rejected,completed,suspended,in progress,cancelled,arrived,validated_by_passenger,validated_by_driver',
-    //         'comment' => 'nullable|string|max:1000', // Le commentaire est facultatif mais doit respecter les contraintes s'il est présent
-    //     ];
-
-    //     // Ajouter une règle conditionnelle pour le champ "rating"
-    //     if (in_array($request->status, ['validated_by_passenger', 'validated_by_driver'])) {
-    //         $rules['rating'] = 'required|integer|between:1,5'; // Rating est requis uniquement pour ces statuts
-    //     }
-
-    //     $validator = Validator::make($request->all(), $rules);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Les données envoyées ne sont pas valides.',
-    //             'errors' => $validator->errors()->all(),
-    //         ], 422);
-    //     }
-
-    //     $user = auth()->user();
-
-    //     // Récupérer la réservation
-    //     $booking = Booking::find($request->booking_id);
-
-    //     if (!$booking) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Réservation introuvable.',
-    //         ], 404);
-    //     }
-
-    //     // Règles de modification de statut
-    //     if ($booking->status === 'pending' && $request->status !== 'accepted') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Vous ne pouvez pas modifier la réservation.',
-    //         ], 400);
-    //     }
-
-    //     if ($booking->status === 'accepted' && $request->status !== 'in progress') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Vous ne pouvez pas modifier la réservation.',
-    //         ], 400);
-    //     }
-
-    //     // if ($booking->status === 'in progress' && $request->status !== 'arrived') {
-    //     //     return response()->json([
-    //     //         'success' => false,
-    //     //         'message' => 'Vous ne pouvez modifier la réservation en in progress qu\'à "arrived".',
-    //     //     ], 400);
-    //     // }
-
-    //     if(!$booking->is_by_passenger) {
-    //         if ($booking->arrived_at && $request->status !== 'validated_by_passenger') {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Vous ne pouvez pas modifier la réservation.',
-    //             ], 400);
-    //         }
-    //     }
-
-    //     if ($booking->is_by_passenger && $request->status !== 'validated_by_driver') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Vous ne pouvez pas modifier la réservation.',
-    //         ], 400);
-    //     }
-
-    //     // Vérification des autres règles et mise à jour des champs
-    //     if ($request->status === 'in progress') {
-    //         if ((float) $user->balance < (float) $booking->total_price) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'reason' => true,
-    //                 'message' => 'Votre solde est insuffisant. Veuillez recharger votre compte.',
-    //             ], 400);
-    //         }
-
-    //         try {
-    //             DB::transaction(function () use ($user, $booking) {
-    //                 $user->balance -= $booking->total_price;
-    //                 $user->save();
-
-    //                 Payment::create([
-    //                     'amount' => $booking->total_price,
-    //                     'reference' => uniqid('PAY_'),
-    //                     'payment_method' => 'MOMO',
-    //                     'status' => 'SUCCESSFUL',
-    //                     'booking_id' => $booking->id,
-    //                     'payment_type_id' => 3,
-    //                 ]);
-
-    //                 $booking->status = 'in progress';
-    //                 $booking->in_progress_at = now();
-    //                 $booking->save();
-    //             });
-    //         } catch (\Exception $e) {
-    //             Log::error('Erreur lors de la transaction de réservation : ' . $e->getMessage(), [
-    //                 'exception' => $e,
-    //                 'booking_id' => $booking->id,
-    //                 'user_balance' => $user->balance,
-    //                 'booking_price' => $booking->price,
-    //             ]);
-
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
-    //             ], 500);
-    //         }
-    //     } elseif ($request->status === 'validated_by_passenger') {
-    //         if ($booking->status !== 'in progress' || $booking->arrived_at == null) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'La réservation doit être en cours pour être validée par le passager.',
-    //             ], 400);
-    //         }
-
-    //         $booking->is_by_passenger = true;
-    //         $booking->validated_by_passenger_at = now();
-
-    //         try {
-    //             $this->createReview(
-    //                 $booking->id,
-    //                 $request->input('rating'),
-    //                 $request->input('comment'),
-    //                 'passenger'
-    //             );
-    //         } catch (\Exception $e) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
-    //             ], 500);
-    //         }
-    //     } elseif ($request->status === 'validated_by_driver') {
-    //         if (!$booking->is_by_passenger) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'La réservation doit être validée par le passager avant d\'être validée par le conducteur.',
-    //             ], 400);
-    //         }
-
-    //         $booking->is_by_driver = true;
-    //         $booking->validated_by_driver_at = now();
-
-    //         // Créer l'avis
-    //         try {
-    //             $this->createReview(
-    //                 $booking->id,
-    //                 $request->input('rating'),
-    //                 $request->input('comment'),
-    //                 'driver'
-    //             );
-    //         } catch (\Exception $e) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
-    //             ], 500);
-    //         }
-    //     } elseif ($request->status === 'arrived') {
-    //         $booking->arrived_at = now();
-    //     } else {
-    //         // Mettre à jour le statut uniquement pour les autres statuts
-    //         $booking->status = $request->status;
-
-    //         if ($request->status === 'accepted') {
-    //             $booking->accepted_at = now();
-    //         } elseif ($request->status === 'rejected') {
-    //             $booking->rejected_at = now();
-    //         } elseif ($request->status === 'cancelled') {
-    //             $booking->cancelled_at = now();
-    //         }
-    //     }
-
-    //     if ($booking->is_by_passenger && $booking->is_by_driver) {
-    //         $booking->status = 'completed';
-
-    //         // Calculer le montant à créditer au conducteur
-    //         $commissionRate = $booking->commission_rate; // Assurez-vous que ce champ existe dans la réservation
-    //         $amountToCredit = $booking->total_price * (1 - ($commissionRate / 100));
-
-    //         $ride = Ride::find($booking->ride_id);
-    //         if ($ride) {
-    //             $driver = $ride->driver; // Assurez-vous que la relation "driver" est définie dans le modèle Ride
-    //             if ($driver) {
-    //                 DB::transaction(function () use ($driver, $booking) {
-    //                     Payment::create([
-    //                         'amount' => $amountToCredit,
-    //                         'reference' => uniqid('PAY_'),
-    //                         'payment_method' => 'MOMO',
-    //                         'status' => 'SUCCESSFUL',
-    //                         'booking_id' => $booking->id,
-    //                         'user_id' => $driver->id,
-    //                         'payment_type_id' => 1,
-    //                     ]);
-
-    //                     // Créditez le compte du conducteur
-    //                     $driver->balance += $amountToCredit;
-    //                     $driver->save();
-
-    //                     // Loguer l'opération pour référence
-    //                     Log::info('Crédit du compte du conducteur', [
-    //                         'driver_id' => $driver->id ?? null,
-    //                         'amount_credited' => $amountToCredit,
-    //                         'commission_rate' => $commissionRate,
-    //                     ]);
-    //                 });
-    //             }
-        
-    //             // Mettre à jour le statut du trajet s'il est de type "regular"
-    //             if ($ride->type === 'regular') {
-    //                 $ride->status = 'active';
-    //                 $ride->save();
-    //             }
-    //         }
-            
-    //         if ($ride && $ride->type === 'regular') {
-    //             $ride->status = 'active';
-    //             $ride->save();
-    //         }
-    //     }
-
-    //     $booking->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'balance' => $user->balance,
-    //         'message' => 'Mise à jour effectuée avec succès.',
-    //     ]);
-    // }
-
     public function updateBookingStatus(Request $request)
     {
         // Validation des données
@@ -1269,7 +1050,7 @@ class RideController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Les données envoyées ne sont pas valides.',
+                // 'message' => 'Les données envoyées ne sont pas valides.',
                 'errors' => $validator->errors()->all(),
             ], 422);
         }
@@ -1282,23 +1063,23 @@ class RideController extends Controller
         if (!$booking) {
             return response()->json([
                 'success' => false,
-                'message' => 'Réservation introuvable.',
+                'errors' => ['Réservation introuvable.'],
             ], 404);
         }
 
         //Règles de modification de statut
-        if ($booking->status === 'pending' && $request->status !== 'accepted') {
+        if ($booking->status === 'pending' && $request->status !== 'cancelled' && $request->status !== 'accepted') {
             return response()->json([
                 'success' => false,
                 'reason' => 'error',
-                'message' => 'Vous ne pouvez pas modifier la réservation !',
+                'errors' => ['Vous ne pouvez pas modifier la réservation !'],
             ], 400);
         }
 
         if ($booking->status === 'accepted' && $request->status !== 'in progress') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation !',
+                'errors' => ['Vous ne pouvez pas modifier la réservation !'],
             ], 400);
         }
 
@@ -1317,13 +1098,14 @@ class RideController extends Controller
         
                 // Calcul de la commission
                 $commission = $booking->total_price * $booking->seats_reserved * $commissionRate / 100;
-        
+                $commission = floor($commission / 5) * 5;
+
                 // Vérifier si le solde de l'utilisateur est suffisant
                 if ($booking->ride->available_seats < $booking->seats_reserved) {
                     return response()->json([
                         'success' => false,
                         'reason' => 'seats',
-                        'message' => 'Vous n\avez plus assez de place disponible pour accepter cette réservation.',
+                        'errors' => ['Vous n\avez plus assez de place disponible pour accepter cette réservation. Veuillez recharger votre compte.'],
                     ], 400);
                 }
 
@@ -1332,7 +1114,7 @@ class RideController extends Controller
                     return response()->json([
                         'success' => false,
                         'reason' => 'balance',
-                        'message' => 'Veuillez recharger votre compte afin d\'accepter cette réservation.',
+                        'errors' => ['Veuillez recharger votre compte afin d\'accepter cette réservation.'],
                     ], 400);
                 }
         
@@ -1382,7 +1164,7 @@ class RideController extends Controller
         
                 return response()->json([
                     'success' => false,
-                    'message' => 'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+                    'errors' => ['Une erreur est survenue lors du paiement. Veuillez réessayer.'],
                 ], 500);
             }
         }
@@ -1403,7 +1185,7 @@ class RideController extends Controller
             if ($booking->status == 'in progress' && $request->status !== 'validated_by_passenger') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vous ne pouvez pas modifier la réservation.',
+                    'errors' => ['Vous ne pouvez pas modifier la réservation.'],
                 ], 400);
             }
         }
@@ -1411,7 +1193,7 @@ class RideController extends Controller
         if ($booking->is_by_passenger && $request->status !== 'validated_by_driver') {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez pas modifier la réservation.',
+                'errors' => ['Vous ne pouvez pas modifier la réservation.'],
             ], 400);
         } elseif ($request->status === 'validated_by_passenger') {
             $booking->is_by_passenger = true;
@@ -1428,7 +1210,7 @@ class RideController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+                    'errors' => ['Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage()],
                 ], 500);
             }
 
@@ -1438,7 +1220,7 @@ class RideController extends Controller
             if (!$booking->is_by_passenger) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'La réservation doit être validée par le passager avant d\'être validée par le conducteur.',
+                    'errors' => ['La réservation doit être validée par le passager avant d\'être validée par le conducteur.'],
                 ], 400);
             }
 
@@ -1457,7 +1239,7 @@ class RideController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage(),
+                    'errors' => ['Une erreur est survenue lors de la création de l\'avis : ' . $e->getMessage()],
                 ], 500);
             }
         } else {
@@ -1467,6 +1249,7 @@ class RideController extends Controller
 
         if ($booking->is_by_passenger && $booking->is_by_driver) {
             $booking->status = 'completed';
+            // $user->balance += $booking->total_price * $booking->seats_reserved * (100 - $commissionRate) / 100;
 
             $ride = Ride::find($booking->ride_id);
             if ($ride) {
@@ -1526,7 +1309,7 @@ class RideController extends Controller
             if (!$booking) {
                 return [
                     'success' => false,
-                    'message' => 'Réservation introuvable.',
+                    'errors' => ['Réservation introuvable.'],
                 ];
             }
 
@@ -1535,7 +1318,7 @@ class RideController extends Controller
             if (!$user) {
                 return [
                     'success' => false,
-                    'message' => 'Utilisateur introuvable.',
+                    'errors' => ['Utilisateur introuvable.'],
                 ];
             }
 
@@ -1544,7 +1327,7 @@ class RideController extends Controller
                 if ($user->balance < $booking->total_price) {
                     return [
                         'success' => false,
-                        'message' => 'Solde insuffisant pour effectuer le paiement.',
+                        'errors' => ['Solde insuffisant pour effectuer le paiement.'],
                     ];
                 }
 
@@ -1592,7 +1375,7 @@ class RideController extends Controller
             if (!$booking) {
                 return [
                     'success' => false,
-                    'message' => 'Réservation introuvable !',
+                    'errors' => ['Réservation introuvable !'],
                 ];
             }
 
@@ -1602,7 +1385,7 @@ class RideController extends Controller
             if (!$user) {
                 return [
                     'success' => false,
-                    'message' => 'Utilisateur introuvable !',
+                    'errors' => ['Utilisateur introuvable !'],
                 ];
             }
 
@@ -1628,7 +1411,7 @@ class RideController extends Controller
                 } else {
                     return [
                         'success' => false,
-                        'message' => 'Trajet introuvable !',
+                        'errors' => ['Trajet introuvable !'],
                     ];
                 }
             }
@@ -1681,7 +1464,7 @@ class RideController extends Controller
             if ($kilometers->isEmpty()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Aucune tranche kilométrique trouvée pour cette catégorie'
+                    'errors' => ['Aucune tranche kilométrique trouvée pour cette catégorie']
                 ], 404);
             }
             
@@ -1713,7 +1496,7 @@ class RideController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors du calcul du prix',
+                'errors' => ['Une erreur est survenue lors du calcul du prix'],
                 'error' => $e->getMessage()
             ], 500);
         }

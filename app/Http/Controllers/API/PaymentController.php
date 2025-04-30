@@ -27,7 +27,7 @@ class PaymentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -44,7 +44,7 @@ class PaymentController extends Controller
             if ((int) $amount <= 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Montant invalide pour créditer le compte.'
+                    'errors' => ['Montant invalide pour créditer le compte.']
                 ], 422);
             }
 
@@ -103,7 +103,7 @@ class PaymentController extends Controller
                             $user->update();
                             return response()->json([
                                 'success' => false,
-                                'message' => 'Transaction échouée !',
+                                'errors' => ['Transaction échouée !'],
                                 'data' => $statusData,
                                 'user' => $user
                             ]);
@@ -114,12 +114,12 @@ class PaymentController extends Controller
                 // Si aucune réponse positive après 50 essais
                 return response()->json([
                     'success' => false,
-                    'message' => 'Échec de la vérification du statut de la transaction. Veuillez réessayer plus tard.'
+                    'errors' => ['Échec de la vérification du statut de la transaction. Veuillez réessayer plus tard.']
                 ]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Échec de l\'initiation de la transaction',
+                    'errors' => ['Échec de l\'initiation de la transaction'],
                     'error' => $response->json()
                 ], $response->status());
             }
@@ -133,7 +133,7 @@ class PaymentController extends Controller
             // Retourner une réponse générique à l'utilisateur
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !'
+                'errors' => ['Quelque chose s\'est mal déroulée. Veuillez réessayer svp !']
             ], 500);
         }
     }

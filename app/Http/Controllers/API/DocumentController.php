@@ -33,14 +33,14 @@ class DocumentController extends Controller
             'number' => 'required|max:255|string',
             'expiry_date' => 'required|date',
             'vehicle_id' => 'required|max:255|string',
-            'paper' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'paper' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
         ];
         
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -49,7 +49,7 @@ class DocumentController extends Controller
         if (!$type_document) {
             return response()->json([
                 'success' => false,
-                'message' => 'Type de document invalide !',
+                'errors' => ['Type de document invalide !'],
             ], 422);
         }
 
@@ -61,7 +61,7 @@ class DocumentController extends Controller
         if ($existingDocument) {
             return response()->json([
                 'success' => false,
-                'message' => 'Un document de ce type est déjà ajouté pour ce véhicule.',
+                'errors' => ['Un document de ce type est déjà ajouté pour ce véhicule.'],
             ], 422);
         }
 
@@ -128,7 +128,7 @@ class DocumentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -138,14 +138,14 @@ class DocumentController extends Controller
         if (!$document) {
             return response()->json([
                 'success' => false,
-                'message' => 'Document introuvable !',
+                'errors' => ['Document introuvable !'],
             ], 404);
         }
 
         if($document->is_validated == true) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez plus supprimer ce document !',
+                'errors' => ['Vous ne pouvez plus supprimer ce document !'],
             ], 422);
         }
 

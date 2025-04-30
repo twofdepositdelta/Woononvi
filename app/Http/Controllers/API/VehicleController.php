@@ -45,7 +45,7 @@ class VehicleController extends Controller
             'color' => 'required|max:255|string',
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
-            'logbook' => 'required|mimes:pdf|max:2048',
+            'logbook' => 'required|mimes:pdf|max:6000',
             'image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
             'vehicle_type' => 'required|max:255|string',
         ];
@@ -54,7 +54,7 @@ class VehicleController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -109,7 +109,7 @@ class VehicleController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Veuillez revoir les informations du type de véhicule !',
+                'errors' => ['Veuillez revoir les informations du type de véhicule !'],
             ], 422);
         }
     }
@@ -126,7 +126,7 @@ class VehicleController extends Controller
             'color' => 'required|max:255|string',
             'model' => 'required|max:255|string',
             'year' => 'required|max:255',
-            'logbook' => 'nullable|mimes:pdf|max:2048',
+            'logbook' => 'nullable|mimes:pdf|max:6000',
             'main_image' => 'nullable|mimes:jpeg,png,jpg,gif,pdf|max:6000',
             'vehicle_type' => 'required|max:255|string',
             'vehicle_id' => 'required|max:255|string',
@@ -138,7 +138,7 @@ class VehicleController extends Controller
             return response()->json([
                 'success' => false,
                 'reason' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -159,7 +159,7 @@ class VehicleController extends Controller
         if (!$vehicle) {
             return response()->json([
                 'success' => false,
-                'message' => 'Véhicule non trouvé.',
+                'errors' => ['Véhicule non trouvé.'],
             ], 404);
         }
 
@@ -181,7 +181,7 @@ class VehicleController extends Controller
             if ($activeVehicleCount == 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Impossible de désactiver ce véhicule car aucun autre véhicule actif n\'est disponible.',
+                    'errors' => ['Impossible de désactiver ce véhicule car aucun autre véhicule actif n\'est disponible.'],
                 ], 422);
             }
 
@@ -227,7 +227,7 @@ class VehicleController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Veuillez revoir les informations du type de véhicule !',
+                'errors' => ['Veuillez revoir les informations du type de véhicule !'],
             ], 422);
         }
 
@@ -246,7 +246,7 @@ class VehicleController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
+                // 'message' => 'Quelque chose s\'est mal déroulée. Veuillez réessayer svp !',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -256,7 +256,7 @@ class VehicleController extends Controller
         if (!$vehicle) {
             return response()->json([
                 'success' => false,
-                'message' => 'Véhicule introuvable !',
+                'errors' => ['Véhicule introuvable !'],
             ], 404);
         }
 

@@ -33,7 +33,7 @@ class PasswordResetLinkController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quelque chose s\'est mal déroulée.',
+                // 'message' => 'Quelque chose s\'est mal déroulée.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -93,7 +93,7 @@ class PasswordResetLinkController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -107,7 +107,7 @@ class PasswordResetLinkController extends Controller
         if (!$record) {
             return response()->json([
                 'success' => false,
-                'message' => 'Le code OTP est invalide ou a expiré.',
+                'errors' => ['Le code OTP est invalide ou a expiré.'],
             ], 422);
         }
 

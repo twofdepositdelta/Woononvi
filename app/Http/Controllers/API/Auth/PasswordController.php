@@ -54,7 +54,7 @@ class PasswordController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -65,7 +65,7 @@ class PasswordController extends Controller
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Le mot de passe actuel est incorrect.',
+                'errors' => ['Le mot de passe actuel est incorrect.'],
             ], 401);
         }
 

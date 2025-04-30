@@ -77,7 +77,7 @@ class ConversationController extends Controller
         ];
         
         if ($request->hasFile('image')) {
-            $rules['image'] = 'mimes:jpeg,png,jpg,gif|max:1024';
+            $rules['image'] = 'mimes:jpeg,png,jpg,gif|max:6000';
         }
         
         $validator = Validator::make($request->all(), $rules);

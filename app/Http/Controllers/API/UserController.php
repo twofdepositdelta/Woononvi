@@ -29,7 +29,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Il y a un souci avec vos données.',
+                // 'message' => 'Il y a un souci avec vos données.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -80,14 +80,14 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'driver_licence_number' => 'required',
-            'driver_licence_file' => 'required|mimes:pdf|max:1024',
+            'driver_licence_file' => 'required|mimes:pdf|max:6000',
             'address' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Il y a un souci avec vos données.',
+                // 'message' => 'Il y a un souci avec vos données.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -97,7 +97,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Utilisateur non authentifié.'
+                'errors' => ['Utilisateur non authentifié.']
             ], 401);
         }
 
@@ -108,7 +108,7 @@ class UserController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Une erreur est survenue lors de l\'enregistrement du fichier.',
+                    'errors' => ['Une erreur est survenue lors de l\'enregistrement du fichier.'],
                 ], 500);
             }
         }
@@ -153,16 +153,14 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la mise à jour de votre compte.',
+                'errors' => ['Une erreur est survenue lors de la mise à jour de votre compte.'],
             ], 500);
         }
     }
 
     public function getNotices()
     {
-        $reviews = Review::with(['booking', 'rideRequest'])
-            ->where('reviewer_id', Auth::id())
-            ->get();
+        $reviews = Review::where('reviewer_id', Auth::id())->get();
 
         return response()->json([
             'status' => 'success',

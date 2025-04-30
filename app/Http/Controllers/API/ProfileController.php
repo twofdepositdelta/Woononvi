@@ -54,7 +54,6 @@ class ProfileController extends Controller
             'npi' => [
                 'required',
                 'string',
-                'size:9',
                 Rule::unique('users')->ignore($request->user()->id)
             ],
             'lastname' => 'required|min:2|max:255|string',
@@ -66,7 +65,6 @@ class ProfileController extends Controller
             'country_id' => 'required|max:255|string',
             'phone' => [
                 'required',
-                'max:13',
                 'string',
                 Rule::unique('users')->ignore($request->user()->id)
             ],
@@ -76,7 +74,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -89,7 +87,7 @@ class ProfileController extends Controller
         if ($age < 18) {
             return response()->json([
                 'success' => false,
-                'message' => "L'âge doit être supérieur ou égal à 18 ans.",
+                'errors' => ["L'âge doit être supérieur ou égal à 18 ans."],
                 'age' => $age
             ], 401); // Statut 401 pour indiquer que l'inscription est refusée
         }
@@ -134,7 +132,7 @@ class ProfileController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Il y a un soucis avec les informations de l\'utilisateur.',
+                'errors' => ['Il y a un soucis avec les informations de l\'utilisateur.'],
             ], 401);
         }
     }
@@ -149,8 +147,8 @@ class ProfileController extends Controller
             'npi' => 'required|string|max:255|unique:users',
             'birth_of_date' => 'required|date',
             'city_id' => 'required|string|max:255',
-            'npi_file' => 'required|mimes:pdf|max:1024',
-            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'npi_file' => 'required|mimes:pdf|max:6000',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
         ];
     
         $validator = Validator::make($request->all(), $rules);
@@ -158,7 +156,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -183,7 +181,7 @@ class ProfileController extends Controller
         if ($age < 18) {
             return response()->json([
                 'success' => false,
-                'message' => "Vous devez avoir au moins 18 ans pour continuer.",
+                'errors' => ["Vous devez avoir au moins 18 ans pour continuer."],
                 'age' => $age
             ], 401); // Statut 401 pour indiquer que l'inscription est refusée
         }
@@ -239,7 +237,7 @@ class ProfileController extends Controller
         if (is_null($smokingAllowed) || is_null($petAllowed)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid boolean values for smoking_allowed or pet_allowed.',
+                'errors' => ['Valeurs booléennes invalides pour smoking_allowed ou pet_allowed.'],
             ], 422);
         }
 
@@ -254,7 +252,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }

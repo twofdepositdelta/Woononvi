@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
             return response()->json([
                 'success' => false,
                 'reason' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -55,7 +55,7 @@ class AuthenticatedSessionController extends Controller
                 return response()->json([
                     'success' => false,
                     'reason' => true,
-                    'message' => "Votre compte n'est pas encore vérifié.",
+                    'errors' => ["Votre compte n'est pas encore vérifié."],
                 ], 401); // Statut 401 pour indiquer que l'authentification est refusée
             }
 
@@ -68,7 +68,7 @@ class AuthenticatedSessionController extends Controller
                     'token' => $token,
                     'reason' => true,
                     'role' => $role,
-                    'message' => "Veuillez finaliser votre compte afin de continuer.",
+                    'errors' => ["Veuillez finaliser votre compte afin de continuer."],
                     'cities' => City::whereCountryId($user->country_id)->get(),
                 ], 200);
             }
@@ -90,13 +90,13 @@ class AuthenticatedSessionController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => "Vous n'êtes pas autorisés à vous connecter !",
+                    'errors' => ["Vous n'êtes pas autorisés à vous connecter !"],
                 ], 200);
             }
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Les identifiants ne correspondent pas.'
+                'errors' => ['Les identifiants ne correspondent pas.']
             ], 401);
         }
     }
@@ -124,7 +124,7 @@ class AuthenticatedSessionController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -171,8 +171,8 @@ class AuthenticatedSessionController extends Controller
             'birth_of_date' => 'required|date',
             'expiry_date' => 'required|date',
             'city_id' => 'required',
-            'npi_file' => 'required|mimes:pdf|max:1024',
-            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'npi_file' => 'required|mimes:pdf|max:6000',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
         ];
     
         $validator = Validator::make($request->all(), $rules);
@@ -180,7 +180,7 @@ class AuthenticatedSessionController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Revoyez les champs svp.',
+                // 'message' => 'Revoyez les champs svp.',
                 'errors' => $validator->errors()->all()
             ], 422);
         }
@@ -260,6 +260,14 @@ class AuthenticatedSessionController extends Controller
             'email' => 'required|email|max:255',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                // 'message' => 'Revoyez les champs svp.',
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
         $user = User::whereEmail($request->email)->first();
 
         if($user) {
@@ -272,7 +280,7 @@ class AuthenticatedSessionController extends Controller
             if (!$otp) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'OTP invalide ou expiré !',
+                    'errors' => ['OTP invalide ou expiré !'],
                 ], 422);
             }
 
@@ -296,7 +304,7 @@ class AuthenticatedSessionController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Nom d\'utilisateur invalide !',
+                'errors' => ['Nom d\'utilisateur invalide !'],
             ], 422);
         }
     }
