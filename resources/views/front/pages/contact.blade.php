@@ -63,7 +63,7 @@
                         </div>
                         <div class="contact-info-content">
                             <h5>Heures d'ouverture</h5>
-                            <p>Lun - Dim (06h00 - 20h00)</p>
+                            <p>Lun - Dim (06h00 - 22h00)</p>
                         </div>
                     </div>
                 </div>
