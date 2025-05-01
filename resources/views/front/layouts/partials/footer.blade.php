@@ -93,9 +93,9 @@
                 </div>
                 <div class="col-md-6 align-self-center">
                     <ul class="footer-social">
-                        <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="https://www.facebook.com/share/1FWDUmG5bW/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="https://www.tiktok.com/@woononvi?_t=ZM-8vq0MKh0gel&_r=1" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="https://www.youtube.com/channel/UCdpFzbj7gqSmpv4mT_Dqa5w" target="_blank"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                 </div>
             </div>

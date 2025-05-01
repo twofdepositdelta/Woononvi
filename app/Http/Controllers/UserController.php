@@ -35,7 +35,8 @@ class UserController extends Controller
         public function index(Request $request)
         {
             // Récupérer tous les rôles
-            $roles = Role::all();
+            $roles = Role::whereNotIn('name', ['developer'])
+                          ->where('guard_name','web')->get();
             if (auth()->user()->hasRole('manager')) {
 
                 $auth_user = auth()->user();

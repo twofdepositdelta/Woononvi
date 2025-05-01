@@ -11,16 +11,14 @@
 
             <span class="logo-black">{{ explode('n', FrontHelper::getAppName())[0] }}</span><span class="logo-yellow">n{{ explode('n', FrontHelper::getAppName())[1] }}</span>
 
-            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-icon.png') }}"
-                alt="site logo" class="logo-icon">
-
         </a> --}}
-        <a class="sidebar-logo logo-text" href="{{ route('index') }}">
-            {{-- <img src="{{ asset(FrontHelper::getEnvFolder() . 'storage/front/assets/img/logo/logo.png') }}" alt="logo wononvi"> --}}
-            <span class="logo-black">{{ explode('ō', FrontHelper::getAppName())[0] }}ō</span><span class="logo-yellow">{{ explode('ō', FrontHelper::getAppName())[1] }}</span>
+        <a href="{{ route('index') }}" class="sidebar-logo">
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/logyelo.png') }}"alt="site logo" class="light-logo">
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
+            {{-- <span class="logo-black">{{ explode('ō', FrontHelper::getAppName())[0] }}ō</span><span class="logo-yellow">{{ explode('ō', FrontHelper::getAppName())[1] }}</span> --}}
+            <img src="{{ asset(BackHelper::getEnvFolder() . 'storage/back/assets/images/favilogo.png') }}" alt="site logo" class="logo-icon" style="height: 40px; width: auto;">
+
         </a>
-
-
 
     </div>
     <div class="sidebar-menu-area">
@@ -42,33 +40,6 @@
 
                 </ul>
             </li>
-
-
-            <li class="sidebar-menu-group-title">Application</li>
-            {{-- <li>
-                <a href="email.php">
-                    <iconify-icon icon="mage:email" class="menu-icon"></iconify-icon>
-                    <span>Email</span>
-                </a>
-            </li>
-            <li>
-                <a href="chat-message.php">
-                    <iconify-icon icon="bi:chat-dots" class="menu-icon"></iconify-icon>
-                    <span>Chat</span>
-                </a>
-            </li>
-            <li>
-                <a href="calendar-main.php">
-                    <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
-                    <span>Calendar</span>
-                </a>
-            </li>
-            <li>
-                <a href="kanban.php">
-                    <iconify-icon icon="material-symbols:map-outline" class="menu-icon"></iconify-icon>
-                    <span>Kanban</span>
-                </a>
-            </li> --}}
 
             {{-- trajets --}}
             <li class="dropdown">
@@ -96,8 +67,6 @@
                     </li>
                 </ul>
             </li>
-
-
 
             {{-- Reservation --}}
             <li class="dropdown">
@@ -144,8 +113,6 @@
                     </li>
                 </ul>
             </li>
-
-            {{-- <li class="sidebar-menu-group-title">UI Elements</li> --}}
 
             {{-- transactions --}}
             <li class="dropdown">
@@ -203,55 +170,54 @@
 
             {{-- support --}}
             @hasanyrole(['super admin', 'manager', 'support' ,'dev'])
-                <li class="dropdown">
-                    <a href="javascript:void(0)">
-                        <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
-                        <span>SUPPORT</span>
-                    </a>
-                    <ul class="sidebar-submenu">
-                        <li>
-                            <a href="{{ route('chat.index') }}"><i
-                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
-                        </li>
-                        <li>
-                            <a href="{{route('faqs.index')}}"><i
-                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
-                        </li>
-                        <li>
-                            <a href="{{route('contact.index')}}"><i
-                                    class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
+                    <span>SUPPORT</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('chat.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> chat en direct</a>
+                    </li>
+                    <li>
+                        <a href="{{route('faqs.index')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>faq</a>
+                    </li>
+                    <li>
+                        <a href="{{route('contact.index')}}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>Contact</a>
+                    </li>
+                </ul>
+            </li>
             @endhasanyrole
 
             @hasanyrole(['super admin', 'manager' ,'dev'])
             {{-- rapport --}}
-                <li class="dropdown">
-                    <a href="javascript:void(0)">
-                        <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
-                        <span>RAPPORTS</span>
-                    </a>
-                    <ul class="sidebar-submenu">
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:file-chart" class="menu-icon"></iconify-icon>
+                    <span>RAPPORTS</span>
+                </a>
+                <ul class="sidebar-submenu">
 
-                        <li>
-                            <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                                Trajet</a>
-                        </li>
+                    <li>
+                        <a href="{{route('rides.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Trajet</a>
+                    </li>
 
-                        <li>
-                            <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                                Réservation</a>
-                        </li>
+                    <li>
+                        <a href="{{route('bookings.rapports')}}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                            Réservation</a>
+                    </li>
 
-                        <li>
-                            <a href="{{route('commissions.index')}}"><i
-                                    class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
-                        </li>
-                    </ul>
-                </li>
+                    <li>
+                        <a href="{{route('commissions.index')}}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Comission</a>
+                    </li>
+                </ul>
+            </li>
             @endhasanyrole
-
 
             {{-- actualité --}}
             @hasanyrole(['super admin', 'manager' ,'dev'])
@@ -391,11 +357,7 @@
             </li>
 
 
-            <li>
-                <a href="{{ route('logout') }}">
-                    <iconify-icon icon="lucide:power" class="menu-icon"></iconify-icon> Déconnexion
-                </a>
-            </li>
+
         </ul>
     </div>
 </aside>
