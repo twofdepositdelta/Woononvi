@@ -469,30 +469,45 @@ class RideController extends Controller
         ]);
     }
 
-    private function haversineDistance($lat1, $lon1, $lat2, $lon2, $unit = 'km') {
-        $earthRadius = ($unit === 'km') ? 6371 : 3958.8; // Rayon de la Terre en kilomètres ou miles
+    // private function haversineDistance($lat1, $lon1, $lat2, $lon2, $unit = 'km') {
+    //     $earthRadius = ($unit === 'km') ? 6371 : 3958.8; // Rayon de la Terre en kilomètres ou miles
     
-        // Convertir les degrés en radians
-        $lat1Rad = deg2rad($lat1);
-        $lon1Rad = deg2rad($lon1);
-        $lat2Rad = deg2rad($lat2);
-        $lon2Rad = deg2rad($lon2);
+    //     // Convertir les degrés en radians
+    //     $lat1Rad = deg2rad($lat1);
+    //     $lon1Rad = deg2rad($lon1);
+    //     $lat2Rad = deg2rad($lat2);
+    //     $lon2Rad = deg2rad($lon2);
     
-        // Calcul des différences
-        $deltaLat = $lat2Rad - $lat1Rad;
-        $deltaLon = $lon2Rad - $lon1Rad;
+    //     // Calcul des différences
+    //     $deltaLat = $lat2Rad - $lat1Rad;
+    //     $deltaLon = $lon2Rad - $lon1Rad;
     
-        // Formule de Haversine
-        $a = sin($deltaLat / 2) ** 2 +
-             cos($lat1Rad) * cos($lat2Rad) *
-             sin($deltaLon / 2) ** 2;
+    //     // Formule de Haversine
+    //     $a = sin($deltaLat / 2) ** 2 +
+    //          cos($lat1Rad) * cos($lat2Rad) *
+    //          sin($deltaLon / 2) ** 2;
     
-        $c = 2 * asin(sqrt($a));
+    //     $c = 2 * asin(sqrt($a));
     
-        // Calcul de la distance
-        $distance = $earthRadius * $c;
+    //     // Calcul de la distance
+    //     $distance = $earthRadius * $c;
     
-        return $distance;
+    //     return $distance;
+    // }
+
+    private function haversineDistance($lat1, $lng1, $lat2, $lng2) {
+        $earthRadius = 6371000; // meters
+        
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+        
+        $a = sin($dLat/2) * sin($dLat/2) +
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+             sin($dLng/2) * sin($dLng/2);
+             
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+        
+        return $earthRadius * $c; // Distance in meters
     }
     
 
@@ -591,6 +606,7 @@ class RideController extends Controller
             $booking->status_name = $statusNames[$booking->status] ?? 'Inconnu';
 
             $booking->amount_received = $booking->total_price * (1 - ($booking->commission_rate / 100));
+            $booking->amount_received = floor($booking->amount_received / 5) * 5;
 
             // Formater departure_time et return_time
             $booking->departure_time = $booking->departure_time 
@@ -746,18 +762,35 @@ class RideController extends Controller
         ]);
     }
 
-    private function calculateBearing($lat1, $lng1, $lat2, $lng2)
-    {
+    // private function calculateBearing($lat1, $lng1, $lat2, $lng2)
+    // {
+    //     $lat1 = deg2rad($lat1);
+    //     $lat2 = deg2rad($lat2);
+    //     $deltaLng = deg2rad($lng2 - $lng1);
+
+    //     $y = sin($deltaLng) * cos($lat2);
+    //     $x = cos($lat1) * sin($lat2) - sin($lat1) * cos($lat2) * cos($deltaLng);
+
+    //     $bearing = atan2($y, $x);
+    //     $bearing = rad2deg($bearing);
+    //     return ($bearing + 360) % 360; // Normaliser entre 0 et 360°
+    // }
+
+    private function calculateBearing($lat1, $lng1, $lat2, $lng2) {
         $lat1 = deg2rad($lat1);
+        $lng1 = deg2rad($lng1);
         $lat2 = deg2rad($lat2);
-        $deltaLng = deg2rad($lng2 - $lng1);
-
-        $y = sin($deltaLng) * cos($lat2);
-        $x = cos($lat1) * sin($lat2) - sin($lat1) * cos($lat2) * cos($deltaLng);
-
+        $lng2 = deg2rad($lng2);
+        
+        $y = sin($lng2 - $lng1) * cos($lat2);
+        $x = cos($lat1) * sin($lat2) - sin($lat1) * cos($lat2) * cos($lng2 - $lng1);
         $bearing = atan2($y, $x);
+        
+        // Convert to degrees
         $bearing = rad2deg($bearing);
-        return ($bearing + 360) % 360; // Normaliser entre 0 et 360°
+        
+        // Normalize to 0-360 degrees
+        return ($bearing + 360) % 360;
     }
 
     /**
@@ -779,11 +812,17 @@ class RideController extends Controller
      */
     private function findAvailableRides(Request $request)
     {
-        Carbon::setLocale('fr'); // Configure la locale de Carbon en français
-        $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
-        $currentDate = now()->toDateString(); // Obtenir la date actuelle au format 'YYYY-MM-DD'
-        $now = Carbon::now()->format('H:i:s'); // Heure actuelle au format "HH:MM:SS"
+        Carbon::setLocale('fr'); // Configure locale to French
+        $currentDay = ucfirst(now()->translatedFormat('l')); // Get current day in French
+        $currentDate = now()->toDateString(); // Get current date in 'YYYY-MM-DD' format
+        $now = Carbon::now()->format('H:i:s'); // Current time in "HH:MM:SS" format
 
+        // Define search parameters
+        $startRadius = 6000; // 6km around passenger starting point
+        $endRadius = 10000;   // 10km around passenger destination
+        $routeMaxDistance = 10000; // 10km max deviation from driver's route
+
+        // Initial database query for potential rides
         $rides = DB::table('rides')->select([
             'rides.id',
             'rides.driver_id',
@@ -820,14 +859,30 @@ class RideController extends Controller
         ->join('users', 'rides.driver_id', '=', 'users.id')
         ->join('profiles', 'profiles.user_id', '=', 'users.id')
         ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
+        // Calculate distance to passenger starting point
         ->selectRaw('
-                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS start_distance',
                 ["POINT($request->start_lng $request->start_lat)"]
             )
+        // Calculate distance to passenger destination
+        ->selectRaw('
+                CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), end_location) AS SIGNED) AS end_distance',
+                ["POINT($request->end_lng $request->end_lat)"]
+            )
+        // Calculate driver's total route distance 
+        ->selectRaw('
+                CAST(ST_Distance_Sphere(start_location, end_location) AS SIGNED) AS driver_route_length'
+            )
+        // Filter by proximity to passenger's starting point
         ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
-            ["POINT($request->start_lng $request->start_lat)", 5000])
+            ["POINT($request->start_lng $request->start_lat)", $startRadius])
+        // Exclude rides where driver is the current user
         ->where('rides.driver_id', '!=', Auth::id())
-        // ->where('rides.available_seats', '>=', $request->seats_reserved)
+        // Filter by available seats if provided
+        ->when($request->has('seats_reserved'), function ($query) use ($request) {
+            return $query->where('rides.available_seats', '>=', $request->seats_reserved);
+        })
+        // Filter by timing (for both single and regular rides)
         ->where(function ($query) use ($currentDay, $currentDate, $now) {
             $query->where(function ($subQuery) use ($currentDate, $now) {
                 $subQuery->where('type', 'single')
@@ -845,8 +900,9 @@ class RideController extends Controller
         ->groupBy('rides.id')
         ->get();
 
-        // 2. Filtrage avancé en PHP
-        $rides = $rides->filter(function ($ride) use ($request) {
+        // Advanced filtering in PHP to check route compatibility
+        $rides = $rides->filter(function ($ride) use ($request, $routeMaxDistance, $endRadius) {
+            // Parse coordinates from point data
             preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->start_location, $startMatch);
             preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->end_location, $endMatch);
 
@@ -854,63 +910,302 @@ class RideController extends Controller
                 return false;
             }
 
-            $driverStartLng = $startMatch[1];
-            $driverStartLat = $startMatch[2];
-            $driverEndLng = $endMatch[1];
-            $driverEndLat = $endMatch[2];
+            $driverStartLng = (float)$startMatch[1];
+            $driverStartLat = (float)$startMatch[2];
+            $driverEndLng = (float)$endMatch[1];
+            $driverEndLat = (float)$endMatch[2];
 
-            $passengerStartLng = $request->start_lng;
-            $passengerStartLat = $request->start_lat;
-            $passengerEndLng = $request->end_lng;
-            $passengerEndLat = $request->end_lat;
+            $passengerStartLng = (float)$request->start_lng;
+            $passengerStartLat = (float)$request->start_lat;
+            $passengerEndLng = (float)$request->end_lng;
+            $passengerEndLat = (float)$request->end_lat;
 
-            // Direction de trajet (non utilisé ici, mais prêt pour plus tard)
+            // Check if passenger destination is close enough to driver's end point
+            if ($ride->end_distance > $endRadius) {
+                // Additional check if passenger destination is along the driver's route
+                $distanceToPath = $this->distanceToSegment(
+                    $passengerEndLng,
+                    $passengerEndLat,
+                    $driverStartLng,
+                    $driverStartLat,
+                    $driverEndLng,
+                    $driverEndLat
+                );
 
-            // Vérification que l'arrivée du passager est proche de la route
-            $distanceToPath = $this->distanceToSegment(
-                $passengerEndLng,
-                $passengerEndLat,
-                $driverStartLng,
-                $driverStartLat,
-                $driverEndLng,
-                $driverEndLat
+                if ($distanceToPath > $routeMaxDistance) {
+                    return false;
+                }
+            }
+
+            // Check directional compatibility
+            // Calculate bearing/direction for driver's route
+            $driverBearing = $this->calculateBearing(
+                $driverStartLat, $driverStartLng,
+                $driverEndLat, $driverEndLng
             );
 
-            if ($distanceToPath > 5000) { // 5km tolérance sur le chemin
+            // Calculate bearing/direction for passenger's route
+            $passengerBearing = $this->calculateBearing(
+                $passengerStartLat, $passengerStartLng,
+                $passengerEndLat, $passengerEndLng
+            );
+
+            // If directions differ by more than 60 degrees, the routes aren't compatible
+            $bearingDiff = abs($driverBearing - $passengerBearing);
+            if ($bearingDiff > 180) {
+                $bearingDiff = 360 - $bearingDiff;
+            }
+            
+            if ($bearingDiff > 60) {
                 return false;
             }
 
+            // Calculate how much of the passenger's journey is covered by the driver's route
+            $passengerRouteLength = $this->haversineDistance(
+                $passengerStartLat, $passengerStartLng,
+                $passengerEndLat, $passengerEndLng
+            );
+
+            $driverRouteLength = $ride->driver_route_length;
+            
+            // Minimum percentage of passenger's route that should be covered by driver's route
+            $minCoveragePercent = 50;
+            
+            // Determine if driver's route covers enough of the passenger's route
+            $projectedPassengerStartOnDriver = $this->projectPointOnLine(
+                $passengerStartLng, $passengerStartLat,
+                $driverStartLng, $driverStartLat,
+                $driverEndLng, $driverEndLat
+            );
+            
+            $projectedPassengerEndOnDriver = $this->projectPointOnLine(
+                $passengerEndLng, $passengerEndLat,
+                $driverStartLng, $driverStartLat,
+                $driverEndLng, $driverEndLat
+            );
+            
+            // Calculate distance between projected points
+            $projectedDistance = $this->haversineDistance(
+                $projectedPassengerStartOnDriver['lat'], $projectedPassengerStartOnDriver['lng'],
+                $projectedPassengerEndOnDriver['lat'], $projectedPassengerEndOnDriver['lng']
+            );
+            
+            $coveragePercent = ($projectedDistance / $passengerRouteLength) * 100;
+            
+            // Check if coverage is adequate
+            if ($coveragePercent < $minCoveragePercent) {
+                return false;
+            }
+            
             return true;
         });
 
-        return $rides->values(); // réindexer
+        return $rides->values(); // Reindex the collection
     }
 
-    private function distanceToSegment($px, $py, $ax, $ay, $bx, $by)
-    {
-        $A = $px - $ax;
-        $B = $py - $ay;
-        $C = $bx - $ax;
-        $D = $by - $ay;
+    // private function findAvailableRides(Request $request)
+    // {
+    //     Carbon::setLocale('fr'); // Configure la locale de Carbon en français
+    //     $currentDay = ucfirst(now()->translatedFormat('l')); // Obtenir le jour actuel en français
+    //     $currentDate = now()->toDateString(); // Obtenir la date actuelle au format 'YYYY-MM-DD'
+    //     $now = Carbon::now()->format('H:i:s'); // Heure actuelle au format "HH:MM:SS"
 
-        $dot = $A * $C + $B * $D;
-        $len_sq = $C * $C + $D * $D;
-        $param = $len_sq != 0 ? $dot / $len_sq : -1;
+    //     $rides = DB::table('rides')->select([
+    //         'rides.id',
+    //         'rides.driver_id',
+    //         'rides.available_seats',
+    //         'rides.vehicle_id',
+    //         'users.firstname',
+    //         'users.lastname',
+    //         'users.gender',
+    //         DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as user_created_at"),
+    //         'vehicles.licence_plate',
+    //         'vehicles.vehicle_mark',
+    //         'vehicles.vehicle_model',
+    //         'vehicles.color',
+    //         'vehicles.seats',
+    //         'vehicles.vehicle_year',
+    //         DB::raw("CONCAT('" . asset('storage') . "/', vehicles.main_image) as main_image"),
+    //         DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as avatar"),
+    //         'days',
+    //         'type',
+    //         'departure_time',
+    //         'return_time',
+    //         'price_per_km',
+    //         'total_price',
+    //         'is_nearby_ride',
+    //         'rides.status',
+    //         'start_location_name',
+    //         'end_location_name',
+    //         DB::raw('ST_AsText(start_location) as start_location'),
+    //         DB::raw('ST_AsText(end_location) as end_location'),
+    //         'available_seats',
+    //         'rides.created_at',
+    //         'rides.updated_at',
+    //     ])
+    //     ->join('users', 'rides.driver_id', '=', 'users.id')
+    //     ->join('profiles', 'profiles.user_id', '=', 'users.id')
+    //     ->join('vehicles', 'rides.vehicle_id', '=', 'vehicles.id')
+    //     ->selectRaw('
+    //             CAST(ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) AS SIGNED) AS distance',
+    //             ["POINT($request->start_lng $request->start_lat)"]
+    //         )
+    //     ->whereRaw('ST_Distance_Sphere(ST_GeomFromText(?, 4326), start_location) <= ?', 
+    //         ["POINT($request->start_lng $request->start_lat)", 5000])
+    //     ->where('rides.driver_id', '!=', Auth::id())
+    //     // ->where('rides.available_seats', '>=', $request->seats_reserved)
+    //     ->where(function ($query) use ($currentDay, $currentDate, $now) {
+    //         $query->where(function ($subQuery) use ($currentDate, $now) {
+    //             $subQuery->where('type', 'single')
+    //                     ->where('rides.status', 'active')
+    //                     ->whereDate('rides.created_at', $currentDate)
+    //                     ->where('departure_time', '>=', $now);
+    //         })
+    //         ->orWhere(function ($subQuery) use ($currentDay, $now) {
+    //             $subQuery->where('type', 'regular')
+    //                     ->where('rides.status', 'active')
+    //                     ->whereRaw('JSON_CONTAINS(JSON_UNQUOTE(days), JSON_QUOTE(?))', [$currentDay])
+    //                     ->where('departure_time', '>=', $now);
+    //         });
+    //     })
+    //     ->groupBy('rides.id')
+    //     ->get();
 
-        if ($param < 0) {
-            $xx = $ax;
-            $yy = $ay;
-        } elseif ($param > 1) {
-            $xx = $bx;
-            $yy = $by;
-        } else {
-            $xx = $ax + $param * $C;
-            $yy = $ay + $param * $D;
+    //     //2. Filtrage avancé en PHP
+    //     $rides = $rides->filter(function ($ride) use ($request) {
+    //         preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->start_location, $startMatch);
+    //         preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $ride->end_location, $endMatch);
+
+    //         if (!$startMatch || !$endMatch) {
+    //             return false;
+    //         }
+
+    //         $driverStartLng = $startMatch[1];
+    //         $driverStartLat = $startMatch[2];
+    //         $driverEndLng = $endMatch[1];
+    //         $driverEndLat = $endMatch[2];
+
+    //         $passengerStartLng = $request->start_lng;
+    //         $passengerStartLat = $request->start_lat;
+    //         $passengerEndLng = $request->end_lng;
+    //         $passengerEndLat = $request->end_lat;
+
+    //         // Direction de trajet (non utilisé ici, mais prêt pour plus tard)
+
+    //         // Vérification que l'arrivée du passager est proche de la route
+    //         $distanceToPath = $this->distanceToSegment(
+    //             $passengerEndLng,
+    //             $passengerEndLat,
+    //             $driverStartLng,
+    //             $driverStartLat,
+    //             $driverEndLng,
+    //             $driverEndLat
+    //         );
+
+    //         if ($distanceToPath > 10000) { // 5km tolérance sur le chemin
+    //             return false;
+    //         }
+
+    //         return true;
+    //     });
+
+    //     return $rides->values(); // réindexer
+    // }
+
+    // private function distanceToSegment($px, $py, $ax, $ay, $bx, $by)
+    // {
+    //     $A = $px - $ax;
+    //     $B = $py - $ay;
+    //     $C = $bx - $ax;
+    //     $D = $by - $ay;
+
+    //     $dot = $A * $C + $B * $D;
+    //     $len_sq = $C * $C + $D * $D;
+    //     $param = $len_sq != 0 ? $dot / $len_sq : -1;
+
+    //     if ($param < 0) {
+    //         $xx = $ax;
+    //         $yy = $ay;
+    //     } elseif ($param > 1) {
+    //         $xx = $bx;
+    //         $yy = $by;
+    //     } else {
+    //         $xx = $ax + $param * $C;
+    //         $yy = $ay + $param * $D;
+    //     }
+
+    //     $dx = $px - $xx;
+    //     $dy = $py - $yy;
+    //     return sqrt($dx * $dx + $dy * $dy) * 111320; // 111.32 km ≈ 1°
+    // }
+
+    private function distanceToSegment($px, $py, $x1, $y1, $x2, $y2) {
+        // Convert to radians for calculation
+        $px = deg2rad($px);
+        $py = deg2rad($py);
+        $x1 = deg2rad($x1);
+        $y1 = deg2rad($y1);
+        $x2 = deg2rad($x2);
+        $y2 = deg2rad($y2);
+        
+        // Calculate distances
+        $earthRadius = 6371000; // Earth radius in meters
+        
+        // If start and end are the same point
+        if ($x1 == $x2 && $y1 == $y2) {
+            return $this->haversineDistance($py, $px, $y1, $x1);
         }
+        
+        // Calculate the position of the projection
+        $projection = $this->projectPointOnLine($px, $py, $x1, $y1, $x2, $y2);
+        
+        // Calculate the distance from the point to the projection
+        return $this->haversineDistance($py, $px, $projection['lat'], $projection['lng']);
+    }
 
-        $dx = $px - $xx;
-        $dy = $py - $yy;
-        return sqrt($dx * $dx + $dy * $dy) * 111320; // 111.32 km ≈ 1°
+    private function projectPointOnLine($px, $py, $x1, $y1, $x2, $y2) {
+        // Convert all coordinates to Cartesian for simplicity
+        // (this is an approximation that works for small distances)
+        $earthRadius = 6371000; // meters
+        
+        // Convert to Cartesian coordinates (X = lng, Y = lat)
+        // This is a simple approximation for small distances
+        $pX = $px * cos(($py + 90) * M_PI / 180) * $earthRadius;
+        $pY = $py * $earthRadius;
+        
+        $x1X = $x1 * cos(($y1 + 90) * M_PI / 180) * $earthRadius;
+        $x1Y = $y1 * $earthRadius;
+        
+        $x2X = $x2 * cos(($y2 + 90) * M_PI / 180) * $earthRadius;
+        $x2Y = $y2 * $earthRadius;
+        
+        // Calculate the line segment vector
+        $dx = $x2X - $x1X;
+        $dy = $x2Y - $x1Y;
+        
+        // Calculate the dot product
+        $dot = ($pX - $x1X) * $dx + ($pY - $x1Y) * $dy;
+        $lengthSquared = $dx * $dx + $dy * $dy;
+        
+        // Calculate the projection parameter
+        if ($lengthSquared == 0) {
+            $t = 0; // Line segment is actually a point
+        } else {
+            $t = max(0, min(1, $dot / $lengthSquared));
+        }
+        
+        // Calculate the coordinates of the projection
+        $projX = $x1X + $t * $dx;
+        $projY = $x1Y + $t * $dy;
+        
+        // Convert back to lat/lng
+        $projLng = $projX / ($earthRadius * cos(($projY / $earthRadius + 90) * M_PI / 180));
+        $projLat = $projY / $earthRadius;
+        
+        return [
+            'lng' => $projLng,
+            'lat' => $projLat
+        ];
     }
 
     /**

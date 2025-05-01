@@ -48,14 +48,26 @@ class PaymentController extends Controller
                 ], 422);
             }
 
+            $apiKey = env('FEEXPAY_API_KEY');
+            $shopId = env('FEEXPAY_SHOP_ID');
+            $apiUrl = env('FEEXPAY_API_URL', 'https://api.feexpay.me/api');
+
             $response = Http::withHeaders([
-                'Authorization' => "Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL",
+                'Authorization' => "Bearer $apiKey",
                 'Content-Type' => 'application/json'
-            ])->post("https://api.feexpay.me/api/transactions/public/requesttopay/{$mode}", [
-                'shop' => '672dfbc9ff4146187db288cc',
+            ])->post("$apiUrl/transactions/public/requesttopay/{$mode}", [
+                'shop' => $shopId,
                 'amount' => $amount,
                 'phoneNumber' => $phoneNumber,
                 'description' => $description,
+            ]);
+
+            \Log::info('Réponse FeexPay', [
+                'body' => $response->body(),
+                'status' => $response->status(),
+                'apiKey' => $apiKey,
+                'shopId' => $shopId,
+                'apiUrl' => $apiUrl
             ]);
 
             if ($response->successful()) {
@@ -66,7 +78,10 @@ class PaymentController extends Controller
                         'message' => 'La transaction n’a pas pu être initiée correctement (référence manquante).',
                         'error' => $data
                     ], 422);
+
+                    \Log::warning('FeexPay - Référence manquante', ['response' => $data]);
                 }
+
                 $transactionRef = $data['reference'];
                 // $transactionRef = $response->json()['reference']; // Assume the response contains a 'reference'
         
@@ -140,9 +155,13 @@ class PaymentController extends Controller
 
     public function checkTransactionStatus($reference)
     {
+        $apiKey = env('FEEXPAY_API_KEY');
+        $shopId = env('FEEXPAY_SHOP_ID');
+        $apiUrl = env('FEEXPAY_API_URL', 'https://api.feexpay.me/api');
+
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer fp_a3MAyKOAMaMVwZPM49r0Szzju5DxEgPu5DwJiWWN1v8nHugYkhfUYTfvfc3SurnL',
-        ])->get("https://api.feexpay.me/api/transactions/public/single/status/{$reference}");
+            'Authorization' => "Bearer $apiKey",
+        ])->get("$apiUrl/transactions/public/single/status/{$reference}");
 
         // Retourner directement la réponse HTTP
         return $response;

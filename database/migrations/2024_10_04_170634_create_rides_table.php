@@ -34,6 +34,13 @@ return new class extends Migration
             $table->enum('status', ['active', 'pending', 'completed', 'cancelled', 'suspend'])->default('active');
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
+            // Route information
+            $table->geography('route_path', 'linestring', 4326)->nullable(); // Actual path as linestring
+            $table->unsignedInteger('route_distance')->nullable(); // Precalculated distance in meters
+            $table->unsignedSmallInteger('route_duration')->nullable(); // Estimated duration in minutes
+            $table->spatialIndex('start_location');
+            $table->spatialIndex('end_location');
+            $table->spatialIndex('route_path');
             $table->timestamps();
             // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         });
