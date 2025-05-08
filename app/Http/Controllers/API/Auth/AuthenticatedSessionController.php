@@ -166,45 +166,52 @@ class AuthenticatedSessionController extends Controller
 
     public function finalise(Request $request) {
         $rules = [
-            'gender' => ['required', 'string', Rule::in(['Masculin', 'Féminin', 'Autres'])],
-            // Validation du NPI (numéro d'identification professionnel)
-            'npi' => [
-                'required',
-                'string',
-                'regex:/^\d{8,13}$/', // Entre 8 et 13 chiffres
-                'unique:users,npi' . (isset($this->user) ? ',' . $this->user->id : ''),
-            ],
-            // Date de naissance avec vérification d'âge minimum
-            'birth_of_date' => [
-                'required',
-                'date',
-                'before:' . now()->subYears(18)->format('Y-m-d'), // Vérifier que l'utilisateur a au moins 18 ans
-            ],
-            // Date d'expiration avec vérification qu'elle est dans le futur
-            'expiry_date' => [
-                'required',
-                'date',
-                'after:today', // S'assurer que la date d'expiration est future
-            ],
-            'city_id' => [
-                'required',
-                'integer',
-                'exists:cities,id', // Vérifier que la ville existe dans la base de données
-            ],
-            // Fichier NPI limité en taille et format
-            'npi_file' => [
-                'required',
-                'file',
-                'mimes:pdf',
-                'max:6000', // 6 MB max
-            ],
-            // Avatar avec validation de dimensions et taille
-            'avatar' => [
-                'required',
-                'file',
-                'mimes:jpeg,png,jpg,gif',
-                'max:6000', // 2 MB max, réduit de 6 MB
-            ],
+            // 'gender' => ['required', 'string', Rule::in(['Masculin', 'Féminin', 'Autres'])],
+            // // Validation du NPI (numéro d'identification professionnel)
+            // 'npi' => [
+            //     'required',
+            //     'string',
+            //     'regex:/^\d{8,13}$/', // Entre 8 et 13 chiffres
+            //     'unique:users,npi' . (isset($this->user) ? ',' . $this->user->id : ''),
+            // ],
+            // // Date de naissance avec vérification d'âge minimum
+            // 'birth_of_date' => [
+            //     'required',
+            //     'date',
+            //     'before:' . now()->subYears(18)->format('Y-m-d'), // Vérifier que l'utilisateur a au moins 18 ans
+            // ],
+            // // Date d'expiration avec vérification qu'elle est dans le futur
+            // 'expiry_date' => [
+            //     'required',
+            //     'date',
+            //     'after:today', // S'assurer que la date d'expiration est future
+            // ],
+            // 'city_id' => [
+            //     'required',
+            //     'string',
+            //     'exists:cities,id', // Vérifier que la ville existe dans la base de données
+            // ],
+            // // Fichier NPI limité en taille et format
+            // 'npi_file' => [
+            //     'required',
+            //     'file',
+            //     'mimes:pdf',
+            //     'max:6000', // 6 MB max
+            // ],
+            // // Avatar avec validation de dimensions et taille
+            // 'avatar' => [
+            //     'required',
+            //     'file',
+            //     'mimes:jpeg,png,jpg,gif',
+            //     'max:6000', // 2 MB max, réduit de 6 MB
+            // ],
+            'gender' => 'required|string|max:255',
+            'npi' => 'required|string|max:255|unique:users',
+            'birth_of_date' => 'required|date',
+            'expiry_date' => 'required|date',
+            'city_id' => 'required',
+            'npi_file' => 'required|mimes:pdf|max:1024',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
         ];
     
         $validator = Validator::make($request->all(), $rules);
