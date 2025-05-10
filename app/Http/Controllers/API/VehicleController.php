@@ -68,13 +68,14 @@ class VehicleController extends Controller
             $existingVehicle = Vehicle::whereDriverId($user->id)->first();
 
             $is_active = true;
+            $message = "Véhicule ajouté avec succès !";
 
-            if($existingVehicle) {
-                $is_active = false;
-                $message = "Véhicule ajouté avec succès ! Activez cela pour le prendre en compte dans les prochains trajets.";
-            } else {
-                $message = "Véhicule ajouté avec succès !";
-            }
+            // if($existingVehicle) {
+            //     // $is_active = false;
+            //     // $message = "Véhicule ajouté avec succès ! Activez cela pour le prendre en compte dans les prochains trajets.";
+            // } else {
+            //     // $message = "Véhicule ajouté avec succès !";
+            // }
 
             $imagePath = null;
             if ($request->hasFile('image')) {

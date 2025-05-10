@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\API\Auth\AuthenticatedSessionController;
 
 class UserController extends Controller
@@ -79,7 +80,7 @@ class UserController extends Controller
     public function becomeDriver(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'driver_licence_number' => 'required',
+            'driver_licence_number' => 'required|string|min:8|max:10|unique:documents,number',
             'driver_licence_file' => 'required|mimes:pdf|max:6000',
             'address' => 'required',
         ]);
@@ -106,6 +107,11 @@ class UserController extends Controller
             try {
                 $licencePath = $request->file('driver_licence_file')->store("api/users/{$user->id}/documents", 'public');
             } catch (\Exception $e) {
+                Log::error("Erreur lors de l'enregistrement du fichier de permis : " . $e->getMessage(), [
+                    'user_id' => $user->id,
+                    'exception' => $e
+                ]);
+
                 return response()->json([
                     'success' => false,
                     'errors' => ['Une erreur est survenue lors de l\'enregistrement du fichier.'],
@@ -151,6 +157,11 @@ class UserController extends Controller
                 'message' => 'Votre compte a été mis à jour avec succès en tant que conducteur.',
             ], 200);
         } catch (\Exception $e) {
+            Log::error("Erreur lors de la mise à jour du compte conducteur : " . $e->getMessage(), [
+                'user_id' => $user->id,
+                'exception' => $e
+            ]);
+
             return response()->json([
                 'success' => false,
                 'errors' => ['Une erreur est survenue lors de la mise à jour de votre compte.'],

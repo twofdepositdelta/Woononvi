@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -206,12 +206,12 @@ class AuthenticatedSessionController extends Controller
             //     'max:6000', // 2 MB max, réduit de 6 MB
             // ],
             'gender' => 'required|string|max:255',
-            'npi' => 'required|string|max:255|unique:users',
+            'npi' => 'required|string|min:8|max:13|unique:users',
             'birth_of_date' => 'required|date',
             'expiry_date' => 'required|date',
             'city_id' => 'required',
-            'npi_file' => 'required|mimes:pdf|max:1024',
-            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:1024',
+            'npi_file' => 'required|mimes:pdf|max:6000',
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
         ];
     
         $validator = Validator::make($request->all(), $rules);

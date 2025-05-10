@@ -63,6 +63,44 @@ class PasswordResetLinkController extends Controller
         ]);
     }
 
+    public function resendOTP(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+
+        $email = $request->email;
+
+        // Génération de l'OTP
+        $otp = rand(1000, 9999);
+
+        // Stockage de l'OTP dans la table `password_resets`
+        DB::table('user_confirmations')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => $otp,
+                'expired_at' => Carbon::now()->addMinutes(30),
+                'created_at' => Carbon::now(),
+            ]
+        );
+
+        $user = User::whereEmail($email)->first();
+    
+        $user->sendOTPNotification($otp);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Un code OTP a été envoyé à votre adresse e-mail.',
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */

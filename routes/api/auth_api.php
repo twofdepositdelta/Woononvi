@@ -16,6 +16,7 @@ Route::middleware('guest:api')->group(function () {
     Route::post('login', [AuthenticatedSessionController::class, 'login'])->name('api.login');
     Route::post('verify-otp', [AuthenticatedSessionController::class, 'verifyOtp'])->name('api.verifyOtp');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
+    Route::post('resend-otp', [PasswordResetLinkController::class, 'resendOTP'])->name('api.resend.otp');
     Route::put('reset-password', [PasswordResetLinkController::class, 'update'])->name('api.password.reset');
 });
 

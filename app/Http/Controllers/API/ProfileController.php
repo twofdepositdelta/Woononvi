@@ -6,9 +6,14 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\Preference;
+use App\Models\Review;
+use App\Models\Ride;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -111,17 +116,19 @@ class ProfileController extends Controller
                 'city_id' => $city->id,
             ]);
 
-            $userArray = $user->toArray();
+            $userArray = $this->formatUserArray($user);
 
-            unset($userArray['roles']);
+            // $userArray = $user->toArray();
 
-            $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
-            $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
-            $country = Country::find($user->country_id);
-            $userArray['country_name'] = $user->country_name;
-            $userArray['city_name'] = $user->city_name;
-            $userArray['indicatif'] = $user->country_code;
-            $userArray['phone_number'] = $user->phone_number;
+            // unset($userArray['roles']);
+
+            // $userArray['username'] = $userArray['username'] ? $userArray['username'] : '';
+            // $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+            // $country = Country::find($user->country_id);
+            // $userArray['country_name'] = $user->country_name;
+            // $userArray['city_name'] = $user->city_name;
+            // $userArray['indicatif'] = $user->country_code;
+            // $userArray['phone_number'] = $user->phone_number;
 
             return response()->json([
                 'success' => true,
@@ -138,95 +145,73 @@ class ProfileController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function finalise(Request $request) {
-        $rules = [
-            'gender' => 'required|string|max:255',
-            'npi' => 'required|string|max:255|unique:users',
-            'birth_of_date' => 'required|date',
-            'city_id' => 'required|string|max:255',
-            'npi_file' => 'required|mimes:pdf|max:6000',
-            'avatar' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:6000',
-        ];
-    
-        $validator = Validator::make($request->all(), $rules);
-    
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                // 'message' => 'Revoyez les champs svp.',
-                'errors' => $validator->errors()->all()
-            ], 422);
-        }
-    
-        $user = $request->user();
-    
-        $npiPath = null;
-        if ($request->hasFile('npi_file')) {
-            $npiPath = $request->file('npi_file')->store("api/users/$user->id/documents", 'public'); 
-        }
-    
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store("api/users/$user->id/documents", 'public'); 
-        }
-    
-        // Vérification de l'âge de l'utilisateur (doit être au moins 18 ans)
-        $birthDate = new \DateTime($request->birth_of_date);
-        $today = new \DateTime();
-        $age = $today->diff($birthDate)->y;
-    
-        if ($age < 18) {
-            return response()->json([
-                'success' => false,
-                'errors' => ["Vous devez avoir au moins 18 ans pour continuer."],
-                'age' => $age
-            ], 401); // Statut 401 pour indiquer que l'inscription est refusée
-        }
-    
-        $city = City::whereName($request->city_id)->first();
-    
-        // Mise à jour en fonction du rôle de l'utilisateur
-        $userUpdateData = [
-            'date_of_birth' => $request->birth_of_date,
-            'gender' => $request->gender,
-            'city_id' => $city->id,
-        ];
-    
-        if ($user->hasRole('passenger')) { // Si l'utilisateur est un passager
-            $userUpdateData['npi'] = $request->npi;
-            Profile::create([
-                'user_id' => $user->id,
-                'avatar' => $avatarPath,
-                'identy_card' => $npiPath, // Enregistrement du fichier dans identity_card
-            ]);
-        } elseif ($user->hasRole('driver')) { // Si l'utilisateur est un conducteur
-            $userUpdateData['driving_license_number'] = $request->npi;
-            Profile::create([
-                'user_id' => $user->id,
-                'avatar' => $avatarPath,
-                'driver_licence_card' => $npiPath, // Enregistrement du fichier dans driver_licence_card
-            ]);
-        }
-    
-        $user->update($userUpdateData);
-    
-        Preference::create([
-            'user_id' => $user->id,
-        ]);
-    
-        // Appeler la méthode privée pour formater l'utilisateur
-        $userArray = $this->formatUserArray($user);
-    
-        return response()->json([
-            'success' => true,
-            'message' => 'Votre inscription a été finalisée avec succès.',
-            'user' => $userArray,
-        ], 201);
+    public function formatUserArray(User $user)
+    {
+        $user->load(['profile', 'preferences', 'vehicles']);
+
+        $userArray = $user->toArray();
+
+        unset($userArray['roles']); // Assurez-vous que ceci est avant le return
+
+        $userArray['username'] = $userArray['username'] ?? '';
+        $userArray['role'] = $user->roles->first() ? $user->roles->first()->name : null;
+
+        $userArray['country_name'] = $user->country_name;
+        $userArray['city_name'] = $user->city_name;
+        $userArray['indicatif'] = $user->country_code;
+        $userArray['phone_number'] = $user->phone_number;
+
+        $userArray['profile'] = $user->profile ? $user->profile->toArray() : null;
+        $userArray['preferences'] = $user->preferences ? $user->preferences->toArray() : null;
+
+        // Calcul de la note moyenne en tant que passager et conducteur
+        $userArray['average_rating_as_passenger'] = $this->getAverageRating($user, 'passenger');
+        $userArray['average_rating_as_driver'] = $this->getAverageRating($user, 'driver');
+
+        // Calcul du nombre de covoiturages passés en tant que passager et conducteur
+        $userArray['completed_rides_as_passenger'] = $this->getCompletedRidesCount($user, 'passenger');
+        $userArray['completed_rides_as_driver'] = $this->getCompletedRidesCount($user, 'driver');
+
+        $vehicles = $user->vehicles()->withCount('rides')->get();
+
+        $userArray['vehicles_count'] = $vehicles->count();
+        $userArray['vehicles'] = $user->vehicles;
+        $userArray['total_rides_count'] = $vehicles->sum('rides_count');
+
+        $rides = Ride::query()->whereDriverId($user->id)->get();
+        $userArray['rides'] = $rides;
+
+        return $userArray;
     }
     
+    // Méthode pour calculer le nombre de covoiturages passés de l'utilisateur (en tant que passager ou conducteur)
+    private function getCompletedRidesCount(User $user, $role)
+    {
+        if ($role == 'passenger') {
+            // Nombre de réservations où l'utilisateur est un passager et où le statut est "completed"
+            return Booking::where('passenger_id', $user->id)
+                        ->where('status', 'completed')->OrWhere('status', '')
+                        ->count();
+        } elseif ($role == 'driver') {
+            // Nombre de réservations où l'utilisateur est un conducteur et où le statut est "completed"
+            return Ride::where('driver_id', $user->id)
+                        ->whereHas('bookings', function($query) {
+                            $query->where('status', 'completed')->OrWhere('status', '');
+                        })
+                        ->count();
+        }
+
+        return 0;
+    }
+
+    // Méthode pour calculer la note moyenne de l'utilisateur
+    private function getAverageRating(User $user, $reviewerType)
+    {
+        $averageRating = Review::where('reviewer_id', $user->id)
+                                ->where('reviewer_type', $reviewerType)
+                                ->avg('rating');
+        return round($averageRating * 2) / 2;
+    }
 
     public function updateWishes(Request $request) {
         // Convertir les valeurs string en booléens pour les champs boolean

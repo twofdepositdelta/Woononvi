@@ -212,6 +212,20 @@ class RideController extends Controller
             ], 422);
         }
 
+        $distance = $this->haversineDistance(
+            $request->start_lat,
+            $request->start_lng,
+            $request->end_lat,
+            $request->end_lng
+        );
+        
+        if ($distance < 1) {
+            return response()->json([
+                'success' => false,
+                'errors' => ['Le point de départ et le point d\'arrivée sont trop proches. Veuillez choisir un trajet plus significatif.'],
+            ], 422);
+        }
+
         // Récupérer la valeur du paramètre 'suggested_price_per_km' dans la table settings
         // $setting = \DB::table('settings')->where('key', 'suggested_price_per_km')->first();
 
@@ -496,7 +510,7 @@ class RideController extends Controller
     // }
 
     private function haversineDistance($lat1, $lng1, $lat2, $lng2) {
-        $earthRadius = 6371000; // meters
+        $earthRadius = 6371; // kilomètres
         
         $dLat = deg2rad($lat2 - $lat1);
         $dLng = deg2rad($lng2 - $lng1);
@@ -622,6 +636,8 @@ class RideController extends Controller
                     'users.firstname as passenger_firstname',
                     'users.lastname as passenger_lastname',
                     'users.phone as passenger_phone',
+                    'users.gender as passenger_gender',
+                    'users.created_at as passenger_created_at',
                     DB::raw("CONCAT('" . asset('storage') . "/', profiles.avatar) as passenger_avatar")
                 ])
                 ->join('profiles', 'profiles.user_id', '=', 'users.id')
@@ -633,6 +649,8 @@ class RideController extends Controller
                     $booking->passenger_firstname = $passenger->passenger_firstname;
                     $booking->passenger_lastname = $passenger->passenger_lastname;
                     $booking->passenger_phone = $passenger->passenger_phone;
+                    $booking->passenger_gender = $passenger->passenger_gender;
+                    $booking->passenger_created_at = date('d-m-Y', strtotime($passenger->passenger_created_at));
                     $booking->passenger_avatar = $passenger->passenger_avatar;
                 }
 
@@ -1566,6 +1584,10 @@ class RideController extends Controller
             'message' => 'Mises à jour effectuée avec succès.',
         ]);
 
+    }
+
+    public function updateRideStatus(Request $request) {
+        
     }
 
     private function createReview($bookingId, $rating, $comment, $role)
