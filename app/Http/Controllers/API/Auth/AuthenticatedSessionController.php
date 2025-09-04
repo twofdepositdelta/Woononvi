@@ -22,6 +22,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
+use App\Facades\Sms;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -129,34 +130,47 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        $country = Country::whereIndicatif($request->country_id)->first();
-
-        $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'country_id' => $country->id
-        ]);
-
         // Générer un OTP aléatoire (par exemple, 6 chiffres)
         $otp = rand(1000, 9999);
 
-        DB::table('user_confirmations')->insert([
-            'user_id' => $user->id,
-            'otp_code' => $otp,
-            'expired_at' => Carbon::now()->addMinutes(60),
-            'created_at' => now(),
-        ]);
+        try {
+            Sms::sendSms($request->phone, 'Utilisez le code OTP suivant pour valider votre compte sur Woononvi : ' . $otp);
+            
+            $country = Country::whereIndicatif($request->country_id)->first();
 
-        // Envoyer la notification de confirmation
-        $user->sendAccountConfirmationNotification($otp);
+            $user = User::create([
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'country_id' => $country->id
+            ]);
 
-        $role = $request->role == "Passager" ? "passenger" : "driver";
+            DB::table('user_confirmations')->insert([
+                'user_id' => $user->id,
+                'otp_code' => $otp,
+                'expired_at' => Carbon::now()->addMinutes(60),
+                'created_at' => now(),
+            ]);
 
-        $role = Role::findByName($role, 'api');
-        $user->assignRole($role);
+            // Envoyer la notification de confirmation
+            $user->sendAccountConfirmationNotification($otp);
+
+            $role = $request->role == "Passager" ? "passenger" : "driver";
+
+            $role = Role::findByName($role, 'api');
+            $user->assignRole($role);
+            
+        } catch (\Exception $e) {
+            // Le logging a déjà été fait dans le service, mais vous pouvez ajouter des actions supplémentaires ici
+            
+            // Par exemple, informer l'utilisateur de l'échec
+            return response()->json([
+                'success' => false, 
+                'errors' => ['Impossible d\'envoyer le code de vérification. Veuillez réessayer.']
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,

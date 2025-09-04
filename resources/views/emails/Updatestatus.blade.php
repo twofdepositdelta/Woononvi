@@ -11,5 +11,5 @@ Vous trouverez ci-dessous le nouveau statut de votre transaction :
 Merci pour votre confiance !
 
 Cordialement,
-L'équipe {{ config('app.name') }}
+L'équipe {{ config('app.name') }} 
 @endcomponent
