@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('numero_ride')->unique();
             $table->enum('type', ['regular', 'single']); // Trajet régulier ou ponctuel
             $table->string('start_location_name');
-            $table->geography('start_location', 'point'); // Latitude et longitude de départ
+            $table->geography('start_location', 'point')->nullable(false); // Make this NOT NULL
             $table->string('end_location_name');
-            $table->geography('end_location', 'point'); // Latitude et longitude d’arrivée
+            $table->geography('end_location', 'point')->nullable(false); // Make this NOT NULL
             $table->json('days')->nullable(); // Jours pour les trajets réguliers
             $table->boolean('return_trip')->default(false); // S’il y a un retour
             $table->time('return_time')->nullable();
@@ -35,14 +35,13 @@ return new class extends Migration
             $table->foreignIdFor(Vehicle::class);
             $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             // Route information
-            $table->geography('route_path', 'linestring', 4326)->nullable(); // Actual path as linestring
+            $table->geography('route_path', 'linestring', 4326)->nullable(false); // Make this NOT NULL
             $table->unsignedInteger('route_distance')->nullable(); // Precalculated distance in meters
             $table->unsignedSmallInteger('route_duration')->nullable(); // Estimated duration in minutes
             $table->spatialIndex('start_location');
             $table->spatialIndex('end_location');
             $table->spatialIndex('route_path');
             $table->timestamps();
-            // // In the second go, set 0,0 values, make the column not null and finally add the spatial index
         });
 
         // Schema::table('rides', function (Blueprint $table) {
