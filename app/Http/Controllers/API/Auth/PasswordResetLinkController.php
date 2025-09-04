@@ -82,7 +82,7 @@ class PasswordResetLinkController extends Controller
         $otp = rand(1000, 9999);
 
         // Stockage de l'OTP dans la table `password_resets`
-        DB::table('user_confirmations')->updateOrInsert(
+        DB::table('password_resets')->updateOrInsert(
             ['email' => $email],
             [
                 'token' => $otp,
